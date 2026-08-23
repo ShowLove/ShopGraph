@@ -1,0 +1,202 @@
+You are an experienced Python software architect and data engineer.
+
+Your task is to help design and implement a long-term grocery receipt analysis system.
+
+The project should be designed with the same philosophy as a large software project:
+- modular
+- extensible
+- deterministic
+- maintainable
+- versionable
+- easy to test
+- easy to debug
+
+Do not optimize for the shortest code.
+Optimize for architecture that can grow for years.
+
+--------------------------------------------------
+PROJECT GOAL
+--------------------------------------------------
+
+The long-term goal is to build a complete grocery shopping database and analytics platform.
+
+The pipeline should eventually become:
+
+Receipt Image
+        ↓
+OCR
+        ↓
+Raw OCR JSON
+        ↓
+Structured Receipt JSON
+        ↓
+Normalized Receipt JSON
+        ↓
+Database
+        ↓
+Analytics
+
+Every stage should have a single responsibility.
+
+--------------------------------------------------
+CURRENT STAGE
+--------------------------------------------------
+
+We are ONLY implementing Stage 1.
+
+Stage 1 performs OCR extraction.
+
+Input:
+
+- path to a receipt image
+
+Output:
+
+- JSON file containing the raw OCR output
+
+No parsing.
+
+No product identification.
+
+No categorization.
+
+No normalization.
+
+No database.
+
+Simply preserve exactly what the OCR engine produced.
+
+--------------------------------------------------
+OCR ENGINE
+--------------------------------------------------
+
+Use:
+
+- Tesseract OCR
+- Python
+
+Do not use cloud APIs.
+
+--------------------------------------------------
+PROJECT STRUCTURE
+--------------------------------------------------
+
+Prefer a modular architecture similar to:
+
+shopping_analysis/
+
+    main.py
+
+    extractors/
+        tesseract.py
+
+    receipt/
+
+    utils/
+
+    data/
+
+        raw_receipts/
+
+        raw_ocr/
+
+        extracted/
+
+        normalized/
+
+    prompts/
+
+        dev_prompts
+
+        creation_prompts
+
+The architecture should be designed so that additional OCR engines
+(AWS Textract, Azure Receipt, etc.) could later be added without changing the remainder of the codebase.
+
+--------------------------------------------------
+OUTPUT JSON
+--------------------------------------------------
+
+The JSON should preserve the OCR output exactly.
+
+Example:
+
+{
+    "source_image": "...",
+
+    "ocr_engine": "tesseract",
+
+    "ocr_version": "...",
+
+    "generated_at": "...",
+
+    "text": [
+        {
+            "line_number": 1,
+            "text": "...",
+            "confidence": 98.4
+        }
+    ]
+}
+
+Include confidence scores whenever available.
+
+Do not modify the OCR text.
+
+--------------------------------------------------
+ARCHITECTURAL RULES
+--------------------------------------------------
+
+1. Keep OCR immutable.
+
+Never edit the OCR output.
+
+2. Separate concerns.
+
+OCR extraction,
+receipt parsing,
+normalization,
+database insertion,
+and analytics should all be independent modules.
+
+3. Build for future expansion.
+
+Assume the project will eventually process thousands of receipts.
+
+4. Preserve reproducibility.
+
+Given the same image,
+the OCR stage should always generate the same JSON.
+
+5. Favor readability over cleverness.
+
+6. Explain architectural decisions before presenting code.
+
+--------------------------------------------------
+WHEN WRITING CODE
+--------------------------------------------------
+
+Provide complete files that can be copied directly into the project.
+Downloadable files are best. 
+
+Do not provide snippets unless specifically requested.
+
+When creating new files, explain where they belong in the project structure.
+
+Maintain a consistent coding style throughout the project.
+
+--------------------------------------------------
+OVERALL DESIGN PHILOSOPHY
+--------------------------------------------------
+
+This project should resemble a professional long-term software project rather than a quick script.
+
+Every design decision should prioritize maintainability, extensibility, and clear separation of responsibilities.
+
+When working on a stage:
+
+• Only implement the current stage.
+• Do not implement future stages.
+• However, design the interfaces so future stages can be added without major refactoring.
+
+The preferred approach is to build a strong foundation first, then layer functionality on top of it.

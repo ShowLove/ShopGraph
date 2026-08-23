@@ -1,0 +1,349 @@
+{
+  "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/current_pic/aldi_8_23_26.jpg",
+  "ocr_engine": "tesseract",
+  "ocr_version": "5.5.3",
+  "ocr_config": "--psm 6",
+  "generated_at": "2026-08-23T20:44:27.924171+00:00",
+  "image": {
+    "width": 724,
+    "height": 1504
+  },
+  "raw_text": "= ALDI\nne Store #160\nq ae 1400 N Wickham Rd\nA oxGl Melbourne, FL\nWN thet ¥ https://help.al di .us\nYi): @ Your cashier today was Taryn\n1 fat 5\n\\ a 383212 GF Wide Pan Bread 8.79 FA\ney, ~ 356591 Zucchini 2.52 FAy\na pees 1,81 Ib x 1.99/1b\nile: = 356689 Yellow Sauash 2.60 FA\nWah a 1.87 Ip x 1.99/1b\ni 356421 Medley Potatoes 3.29 FA\nhit SMe ad 856537 Cilantro 0,89 FA\na ( Rees 356308 Broccoli Crowns 3.41 FA\nSN RES 1.63 Ib x 2.09/1b\ntae } Seseeceal 456496 Beefsteak Tonatoes 2-92 FA\ngn a 344230 Cauli Crust Pizza 8.29 FA\ni A eth tad 356427 Multi-Peppers 3pk 2.69 FA\n(y vee Spernnit 356591 Pink Lady Apple 3.69 FA\nfa TED 356488 Baby Carrots 4.29 FA\nPe eye 341979 Pine/Water Spears 3.89 FA\nAA pater 356504 Blueberries 2.59 FA\nMl eer 356374 Golden Kiw! 4.39 FA\nwider 343738 Hummus Mini Cups 3.45 FA\nLegere 369353 LesserEvil Popcorn 2.99 FA\nSp 262747 Bananas LRW 1.31 FA\nee (G) 2.681b - (1) 0.011b\nFires (N) 2.67 Ib x 0.49/1b\npie 308752 Fruit & Grain Bars 1.99 FA\noe 328752 Fruit & Grain Bars 1.99 FA\ni 356509 Red Onions 2.49 FA\n739153 Organic Chickpeas 0.99 FA\nft 381343 Dark Red Kidney 0.85 FA\n739153 Organic Chickpeas 0.99 FA\n381343 Dark Red Kidney 0.85 FA\n381359 Vinaigrette Drssng 2.99 FA\n366378 Parsley each 0.95 FA\ny 400462 0G Croutons 1.99 FA\n344583 Evryd Plate 8.5in 5.25 NB\n384545 NO Honey Wheat Brd 3.37 FA\n730325 3pk Gel Pens 5.99 NB\n720921 PB Toast Crackers 2.79 FA\n383648 Goat Cheese Loas 1.99 FA\n713372 Feta Crunbles 2.89 FA\n748929 CollapsibleStorage ‘5.99 NB\n748929 CollapsibleStorage 9.99 NB\nVISA 108.44\nPOKIRIKIRIII RIK BBOS: OTHER\n08/23/25 11:40 Ref/Seq # 0\nAuth # 002470\n‘azo A0000000031010\nTvR 0009000000\nTAO. 1F420131A00000000010030273000000\n0400002000000000000000000000000\nTSI 0000 ARC 00 EntryMode 07\n++APPROVED++\nSUBTOTAL 106.81\nB-Taxable @7,000% 63\n» A-Taxable @0,00% 0,00\nAOE OUE mei 108.44\n35 ITEMS Re.\nCredit Card $108.44 ]\nOK HRR RRR CKERAR Lt |\nJ\nfot\n=\n",
+  "text": [
+    {
+      "line_number": 1,
+      "text": "= ALDI",
+      "confidence": 81.5
+    },
+    {
+      "line_number": 2,
+      "text": "ne Store #160",
+      "confidence": 79.0
+    },
+    {
+      "line_number": 3,
+      "text": "q ae 1400 N Wickham Rd",
+      "confidence": 61.83
+    },
+    {
+      "line_number": 4,
+      "text": "A oxGl Melbourne, FL",
+      "confidence": 68.0
+    },
+    {
+      "line_number": 5,
+      "text": "WN thet ¥ https://help.al di .us",
+      "confidence": 40.5
+    },
+    {
+      "line_number": 6,
+      "text": "Yi): @ Your cashier today was Taryn",
+      "confidence": 71.0
+    },
+    {
+      "line_number": 7,
+      "text": "1 fat 5",
+      "confidence": 37.67
+    },
+    {
+      "line_number": 8,
+      "text": "\\ a 383212 GF Wide Pan Bread 8.79 FA",
+      "confidence": 62.0
+    },
+    {
+      "line_number": 9,
+      "text": "ey, ~ 356591 Zucchini 2.52 FAy",
+      "confidence": 60.5
+    },
+    {
+      "line_number": 10,
+      "text": "a pees 1,81 Ib x 1.99/1b",
+      "confidence": 48.17
+    },
+    {
+      "line_number": 11,
+      "text": "ile: = 356689 Yellow Sauash 2.60 FA",
+      "confidence": 67.71
+    },
+    {
+      "line_number": 12,
+      "text": "Wah a 1.87 Ip x 1.99/1b",
+      "confidence": 51.33
+    },
+    {
+      "line_number": 13,
+      "text": "i 356421 Medley Potatoes 3.29 FA",
+      "confidence": 71.33
+    },
+    {
+      "line_number": 14,
+      "text": "hit SMe ad 856537 Cilantro 0,89 FA",
+      "confidence": 54.14
+    },
+    {
+      "line_number": 15,
+      "text": "a ( Rees 356308 Broccoli Crowns 3.41 FA",
+      "confidence": 67.25
+    },
+    {
+      "line_number": 16,
+      "text": "SN RES 1.63 Ib x 2.09/1b",
+      "confidence": 46.67
+    },
+    {
+      "line_number": 17,
+      "text": "tae } Seseeceal 456496 Beefsteak Tonatoes 2-92 FA",
+      "confidence": 41.0
+    },
+    {
+      "line_number": 18,
+      "text": "gn a 344230 Cauli Crust Pizza 8.29 FA",
+      "confidence": 75.62
+    },
+    {
+      "line_number": 19,
+      "text": "i A eth tad 356427 Multi-Peppers 3pk 2.69 FA",
+      "confidence": 55.89
+    },
+    {
+      "line_number": 20,
+      "text": "(y vee Spernnit 356591 Pink Lady Apple 3.69 FA",
+      "confidence": 65.33
+    },
+    {
+      "line_number": 21,
+      "text": "fa TED 356488 Baby Carrots 4.29 FA",
+      "confidence": 74.86
+    },
+    {
+      "line_number": 22,
+      "text": "Pe eye 341979 Pine/Water Spears 3.89 FA",
+      "confidence": 74.86
+    },
+    {
+      "line_number": 23,
+      "text": "AA pater 356504 Blueberries 2.59 FA",
+      "confidence": 71.83
+    },
+    {
+      "line_number": 24,
+      "text": "Ml eer 356374 Golden Kiw! 4.39 FA",
+      "confidence": 57.71
+    },
+    {
+      "line_number": 25,
+      "text": "wider 343738 Hummus Mini Cups 3.45 FA",
+      "confidence": 73.29
+    },
+    {
+      "line_number": 26,
+      "text": "Legere 369353 LesserEvil Popcorn 2.99 FA",
+      "confidence": 68.17
+    },
+    {
+      "line_number": 27,
+      "text": "Sp 262747 Bananas LRW 1.31 FA",
+      "confidence": 76.33
+    },
+    {
+      "line_number": 28,
+      "text": "ee (G) 2.681b - (1) 0.011b",
+      "confidence": 62.5
+    },
+    {
+      "line_number": 29,
+      "text": "Fires (N) 2.67 Ib x 0.49/1b",
+      "confidence": 59.17
+    },
+    {
+      "line_number": 30,
+      "text": "pie 308752 Fruit & Grain Bars 1.99 FA",
+      "confidence": 73.12
+    },
+    {
+      "line_number": 31,
+      "text": "oe 328752 Fruit & Grain Bars 1.99 FA",
+      "confidence": 84.5
+    },
+    {
+      "line_number": 32,
+      "text": "i 356509 Red Onions 2.49 FA",
+      "confidence": 78.17
+    },
+    {
+      "line_number": 33,
+      "text": "739153 Organic Chickpeas 0.99 FA",
+      "confidence": 95.4
+    },
+    {
+      "line_number": 34,
+      "text": "ft 381343 Dark Red Kidney 0.85 FA",
+      "confidence": 87.71
+    },
+    {
+      "line_number": 35,
+      "text": "739153 Organic Chickpeas 0.99 FA",
+      "confidence": 95.4
+    },
+    {
+      "line_number": 36,
+      "text": "381343 Dark Red Kidney 0.85 FA",
+      "confidence": 91.0
+    },
+    {
+      "line_number": 37,
+      "text": "381359 Vinaigrette Drssng 2.99 FA",
+      "confidence": 82.6
+    },
+    {
+      "line_number": 38,
+      "text": "366378 Parsley each 0.95 FA",
+      "confidence": 89.6
+    },
+    {
+      "line_number": 39,
+      "text": "y 400462 0G Croutons 1.99 FA",
+      "confidence": 78.67
+    },
+    {
+      "line_number": 40,
+      "text": "344583 Evryd Plate 8.5in 5.25 NB",
+      "confidence": 85.5
+    },
+    {
+      "line_number": 41,
+      "text": "384545 NO Honey Wheat Brd 3.37 FA",
+      "confidence": 85.86
+    },
+    {
+      "line_number": 42,
+      "text": "730325 3pk Gel Pens 5.99 NB",
+      "confidence": 89.33
+    },
+    {
+      "line_number": 43,
+      "text": "720921 PB Toast Crackers 2.79 FA",
+      "confidence": 94.5
+    },
+    {
+      "line_number": 44,
+      "text": "383648 Goat Cheese Loas 1.99 FA",
+      "confidence": 89.83
+    },
+    {
+      "line_number": 45,
+      "text": "713372 Feta Crunbles 2.89 FA",
+      "confidence": 90.4
+    },
+    {
+      "line_number": 46,
+      "text": "748929 CollapsibleStorage ‘5.99 NB",
+      "confidence": 73.75
+    },
+    {
+      "line_number": 47,
+      "text": "748929 CollapsibleStorage 9.99 NB",
+      "confidence": 72.0
+    },
+    {
+      "line_number": 48,
+      "text": "VISA 108.44",
+      "confidence": 88.5
+    },
+    {
+      "line_number": 49,
+      "text": "POKIRIKIRIII RIK BBOS: OTHER",
+      "confidence": 28.25
+    },
+    {
+      "line_number": 50,
+      "text": "08/23/25 11:40 Ref/Seq # 0",
+      "confidence": 86.6
+    },
+    {
+      "line_number": 51,
+      "text": "Auth # 002470",
+      "confidence": 87.0
+    },
+    {
+      "line_number": 52,
+      "text": "‘azo A0000000031010",
+      "confidence": 62.5
+    },
+    {
+      "line_number": 53,
+      "text": "TvR 0009000000",
+      "confidence": 82.5
+    },
+    {
+      "line_number": 54,
+      "text": "TAO. 1F420131A00000000010030273000000",
+      "confidence": 54.5
+    },
+    {
+      "line_number": 55,
+      "text": "0400002000000000000000000000000",
+      "confidence": 50.0
+    },
+    {
+      "line_number": 56,
+      "text": "TSI 0000 ARC 00 EntryMode 07",
+      "confidence": 54.83
+    },
+    {
+      "line_number": 57,
+      "text": "++APPROVED++",
+      "confidence": 33.0
+    },
+    {
+      "line_number": 58,
+      "text": "SUBTOTAL 106.81",
+      "confidence": 81.0
+    },
+    {
+      "line_number": 59,
+      "text": "B-Taxable @7,000% 63",
+      "confidence": 58.0
+    },
+    {
+      "line_number": 60,
+      "text": "» A-Taxable @0,00% 0,00",
+      "confidence": 66.5
+    },
+    {
+      "line_number": 61,
+      "text": "AOE OUE mei 108.44",
+      "confidence": 37.75
+    },
+    {
+      "line_number": 62,
+      "text": "35 ITEMS Re.",
+      "confidence": 64.0
+    },
+    {
+      "line_number": 63,
+      "text": "Credit Card $108.44 ]",
+      "confidence": 65.25
+    },
+    {
+      "line_number": 64,
+      "text": "OK HRR RRR CKERAR Lt |",
+      "confidence": 19.67
+    },
+    {
+      "line_number": 65,
+      "text": "J",
+      "confidence": 57.0
+    },
+    {
+      "line_number": 66,
+      "text": "fot",
+      "confidence": 55.0
+    },
+    {
+      "line_number": 67,
+      "text": "=",
+      "confidence": 47.0
+    }
+  ]
+}

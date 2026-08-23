@@ -1,0 +1,589 @@
+=== SHOPGRAPH CLEAN CODEBASE FOR LLM ===
+
+shopping_analysis/
+    main.py
+    utils/
+        __init__.py
+        codebase_bundler.py
+        constants.py
+    receipt/
+    extractors/
+        __init__.py
+        tesseract.py
+    data/
+        prompts/
+            creation_prompts/
+            dev_prompts/
+        current_pic/
+
+================================================================================
+
+Generated: 2026-08-23 17:16:53.115701
+Root: /Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis
+Mode: LLM-clean export
+Excluded: receipt images, OCR JSON, datasets, databases, logs, caches
+
+================================================================================
+
+
+
+================================================================================
+FILE: main.py
+================================================================================
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+from extractors.tesseract import extract_receipt
+from utils.codebase_bundler import export_codebase_bundle
+
+
+DEFAULT_OUTPUT_DIR = Path("data/raw_ocr")
+
+
+def save_json(data: dict, output_path: Path) -> None:
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    with output_path.open("w", encoding="utf-8") as file:
+        json.dump(
+            data,
+            file,
+            ensure_ascii=False,
+            indent=2,
+        )
+        file.write("\n")
+
+
+def run_ocr() -> None:
+    print("\n=== Run OCR ===\n")
+
+    raw_path = input("Receipt image path: ").strip()
+
+    if not raw_path:
+        print("[ERROR] No image path provided.")
+        return
+
+    image_path = Path(raw_path).expanduser().resolve()
+
+    if not image_path.exists():
+        print(f"[ERROR] Receipt image does not exist: {image_path}")
+        return
+
+    if not image_path.is_file():
+        print(f"[ERROR] Receipt image path is not a file: {image_path}")
+        return
+
+    output_path = (
+        DEFAULT_OUTPUT_DIR
+        / f"{image_path.stem}_raw_ocr.json"
+    )
+
+    result = extract_receipt(image_path)
+
+    save_json(
+        data=result,
+        output_path=output_path,
+    )
+
+    print(
+        f"\n[OK] OCR JSON created:\n"
+        f"{output_path.resolve()}"
+    )
+
+
+def export_codebase() -> None:
+    print("\n=== Export Clean Codebase ===\n")
+
+    output_path = export_codebase_bundle()
+
+    print(
+        f"\n[OK] Codebase bundle created:\n"
+        f"{output_path}"
+    )
+
+
+def display_menu() -> None:
+    print("\n=== ShopGraph ===\n")
+    print("1. Run OCR")
+    print("2. Export Clean Codebase")
+    print("0. Exit")
+
+
+def main() -> None:
+    while True:
+        display_menu()
+
+        option = input("\nSelect option: ").strip()
+
+        if option == "1":
+            run_ocr()
+
+        elif option == "2":
+            export_codebase()
+
+        elif option == "0":
+            print("\nGoodbye.")
+            break
+
+        else:
+            print("\n[ERROR] Invalid option.")
+
+
+if __name__ == "__main__":
+    main()
+
+
+================================================================================
+FILE: utils/__init__.py
+================================================================================
+
+
+
+================================================================================
+FILE: utils/codebase_bundler.py
+================================================================================
+
+import os
+from pathlib import Path
+from datetime import datetime
+
+
+from utils.constants import PROJECT_ROOT, CODEBASE_OUTPUT_FILE
+
+
+# ----------------------------
+# CLEAN LLM EXPORT RULES
+# ----------------------------
+
+ALLOWED_SUFFIXES = {
+    ".py",
+    ".md",
+    ".txt"
+}
+
+IGNORE_DIRS = {
+    "__pycache__",
+    ".git",
+    ".idea",
+    ".vscode",
+    "venv",
+    ".venv",
+    "node_modules",
+
+    # ShopGraph data directories
+    "raw_receipts",
+    "raw_ocr",
+    "extracted",
+    "normalized",
+
+    # Generated / runtime directories
+    "logs",
+    "exports"
+}
+
+IGNORE_FILES = {
+    "shopgraph_codebase.txt",
+    ".DS_Store"
+}
+
+IGNORE_SUFFIXES = {
+    ".pyc",
+    ".json",
+    ".log",
+    ".sqlite",
+    ".sqlite3",
+    ".db",
+
+    # Receipt / image files
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".heic",
+    ".webp",
+    ".tif",
+    ".tiff",
+    ".pdf"
+}
+
+
+# ----------------------------
+# FILTER LOGIC
+# ----------------------------
+
+def _should_ignore(path: Path) -> bool:
+
+    if any(part in IGNORE_DIRS for part in path.parts):
+        return True
+
+    if path.name in IGNORE_FILES:
+        return True
+
+    if path.suffix.lower() in IGNORE_SUFFIXES:
+        return True
+
+    if path.suffix.lower() not in ALLOWED_SUFFIXES:
+        return True
+
+    return False
+
+
+# ----------------------------
+# TREE BUILDER
+# ----------------------------
+
+def _build_tree(root: Path) -> str:
+
+    lines = []
+
+    for dirpath, dirnames, filenames in os.walk(root):
+
+        dirpath = Path(dirpath)
+
+        dirnames[:] = [
+            directory
+            for directory in dirnames
+            if directory not in IGNORE_DIRS
+        ]
+
+        level = len(
+            dirpath.relative_to(root).parts
+        )
+
+        indent = "    " * level
+
+        lines.append(
+            f"{indent}{dirpath.name}/"
+        )
+
+        for filename in sorted(filenames):
+
+            file_path = (
+                dirpath
+                / filename
+            )
+
+            if not _should_ignore(file_path):
+
+                lines.append(
+                    f"{indent}    {filename}"
+                )
+
+    return "\n".join(lines)
+
+
+# ----------------------------
+# FILE COLLECTOR
+# ----------------------------
+
+def _collect_files(root: Path):
+
+    for dirpath, dirnames, filenames in os.walk(root):
+
+        dirpath = Path(dirpath)
+
+        dirnames[:] = [
+            directory
+            for directory in dirnames
+            if directory not in IGNORE_DIRS
+        ]
+
+        for filename in sorted(filenames):
+
+            file_path = (
+                dirpath
+                / filename
+            )
+
+            if not _should_ignore(file_path):
+                yield file_path
+
+
+# ----------------------------
+# EXPORT
+# ----------------------------
+
+def export_codebase_bundle(
+    root_path: str | None = None
+) -> str:
+
+    root = (
+        PROJECT_ROOT
+        if root_path is None
+        else Path(root_path).resolve()
+    )
+
+    output_path = (
+        CODEBASE_OUTPUT_FILE
+    )
+
+    output_path.parent.mkdir(
+        parents=True,
+        exist_ok=True
+    )
+
+    print(
+        f"\n[INFO] Exporting CLEAN ShopGraph codebase from: {root}"
+    )
+
+    tree = _build_tree(root)
+
+    files = list(
+        _collect_files(root)
+    )
+
+    with open(
+        output_path,
+        "w",
+        encoding="utf-8"
+    ) as out:
+
+        out.write(
+            "=== SHOPGRAPH CLEAN CODEBASE FOR LLM ===\n\n"
+        )
+
+        out.write(
+            tree
+        )
+
+        out.write(
+            "\n\n"
+        )
+
+        out.write(
+            "=" * 80
+            + "\n\n"
+        )
+
+        out.write(
+            f"Generated: {datetime.now()}\n"
+        )
+
+        out.write(
+            f"Root: {root}\n"
+        )
+
+        out.write(
+            "Mode: LLM-clean export\n"
+        )
+
+        out.write(
+            "Excluded: receipt images, OCR JSON, datasets, databases, logs, caches\n\n"
+        )
+
+        out.write(
+            "=" * 80
+            + "\n\n"
+        )
+
+        for file_path in files:
+
+            try:
+
+                relative = (
+                    file_path.relative_to(root)
+                )
+
+                out.write(
+                    "\n\n"
+                )
+
+                out.write(
+                    "=" * 80
+                    + "\n"
+                )
+
+                out.write(
+                    f"FILE: {relative}\n"
+                )
+
+                out.write(
+                    "=" * 80
+                    + "\n\n"
+                )
+
+                content = (
+                    file_path.read_text(
+                        encoding="utf-8",
+                        errors="ignore"
+                    )
+                )
+
+                out.write(
+                    content
+                )
+
+            except Exception as error:
+
+                out.write(
+                    f"\n"
+                    f"[ERROR READING FILE: {file_path}] "
+                    f"{error}\n"
+                )
+
+    print(
+        f"[OK] Clean ShopGraph codebase exported to: "
+        f"{output_path}"
+    )
+
+    return str(
+        output_path
+    )
+
+================================================================================
+FILE: utils/constants.py
+================================================================================
+
+from pathlib import Path
+
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
+DATA_DIR = PROJECT_ROOT / "data"
+
+EXPORT_DIR = DATA_DIR / "exports"
+
+CODEBASE_OUTPUT_FILE = (
+    EXPORT_DIR
+    / "codebase"
+    / "shopgraph_codebase.txt"
+)
+
+
+================================================================================
+FILE: extractors/__init__.py
+================================================================================
+
+
+
+================================================================================
+FILE: extractors/tesseract.py
+================================================================================
+
+from __future__ import annotations
+
+from datetime import datetime, timezone
+from pathlib import Path
+
+from PIL import Image
+import pytesseract
+from pytesseract import Output
+
+
+OCR_ENGINE = "tesseract"
+OCR_CONFIG = "--psm 6"
+
+
+def get_tesseract_version() -> str:
+    """
+    Return the installed Tesseract version.
+    """
+    version = str(pytesseract.get_tesseract_version())
+    return version.splitlines()[0].strip()
+
+
+def _average_confidence(values: list[float]) -> float | None:
+    valid_values = [value for value in values if value >= 0]
+
+    if not valid_values:
+        return None
+
+    return round(sum(valid_values) / len(valid_values), 2)
+
+
+def _extract_line_confidences(image: Image.Image) -> dict[int, float | None]:
+    """
+    Read Tesseract's word-level confidence values and aggregate them
+    by the text lines detected by Tesseract.
+
+    This does not interpret or normalize receipt contents.
+    """
+    data = pytesseract.image_to_data(
+        image,
+        config=OCR_CONFIG,
+        output_type=Output.DICT,
+    )
+
+    grouped: dict[tuple[int, int, int, int], list[float]] = {}
+
+    for index, raw_text in enumerate(data["text"]):
+        if raw_text is None or raw_text == "":
+            continue
+
+        key = (
+            int(data["page_num"][index]),
+            int(data["block_num"][index]),
+            int(data["par_num"][index]),
+            int(data["line_num"][index]),
+        )
+
+        try:
+            confidence = float(data["conf"][index])
+        except (TypeError, ValueError):
+            confidence = -1.0
+
+        grouped.setdefault(key, []).append(confidence)
+
+    return {
+        line_number: _average_confidence(grouped[key])
+        for line_number, key in enumerate(grouped.keys(), start=1)
+    }
+
+
+def extract_receipt(image_path: str | Path) -> dict:
+    """
+    Stage 1 receipt OCR extraction.
+
+    Input:
+        Path to a receipt image.
+
+    Output:
+        JSON-serializable dictionary containing raw Tesseract output
+        and OCR metadata.
+
+    No parsing, product identification, categorization,
+    normalization, or database work is performed here.
+    """
+    path = Path(image_path).expanduser().resolve()
+
+    if not path.exists():
+        raise FileNotFoundError(f"Receipt image does not exist: {path}")
+
+    if not path.is_file():
+        raise ValueError(f"Receipt image path is not a file: {path}")
+
+    with Image.open(path) as image:
+        width, height = image.size
+
+        raw_text = pytesseract.image_to_string(
+            image,
+            config=OCR_CONFIG,
+        )
+
+        confidence_by_line = _extract_line_confidences(image)
+
+    raw_lines = raw_text.splitlines()
+
+    text_lines = [
+        {
+            "line_number": line_number,
+            "text": line,
+            "confidence": confidence_by_line.get(line_number),
+        }
+        for line_number, line in enumerate(raw_lines, start=1)
+    ]
+
+    return {
+        "source_image": str(path),
+        "ocr_engine": OCR_ENGINE,
+        "ocr_version": get_tesseract_version(),
+        "ocr_config": OCR_CONFIG,
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "image": {
+            "width": width,
+            "height": height,
+        },
+        "raw_text": raw_text,
+        "text": text_lines,
+    }
