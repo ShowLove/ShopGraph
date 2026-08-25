@@ -1,41 +1,28 @@
-from utils.image_preprocessing import run_image_preprocessing
-from utils.run_ocr import run_ocr
-from utils.export_codebase import run_codebase_export
+from utils.utils_main import run_utils_menu
 
 
-def display_utils_menu() -> None:
-    print("\n=== ShopGraph Utilities ===\n")
-    print("1. Image Preprocessing")
-    print("2. Run OCR")
-    print("3. Export Clean Codebase")
-    print("0. Return to Main")
+def display_menu() -> None:
+    print("\n=== ShopGraph ===\n")
+    print("1. Utilities")
+    print("0. Exit")
 
 
-def run_utils_menu() -> None:
+def main() -> None:
     while True:
-        display_utils_menu()
+        display_menu()
 
-        option = input(
-            "\nSelect option: "
-        ).strip()
+        option = input("\nSelect option: ").strip()
 
         if option == "1":
-            run_image_preprocessing()
-
-        elif option == "2":
-            run_ocr()
-
-        elif option == "3":
-            run_codebase_export()
+            run_utils_menu()
 
         elif option == "0":
-            return
+            print("\nGoodbye.")
+            break
 
         else:
-            print(
-                "\n[ERROR] Invalid option."
-            )
+            print("\n[ERROR] Invalid option.")
 
 
 if __name__ == "__main__":
-    run_utils_menu()
+    main()

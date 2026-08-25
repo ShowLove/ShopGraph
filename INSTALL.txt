@@ -1,0 +1,87 @@
+ShopGraph - Perspective Correction Update
+
+NEW PIPELINE
+
+Original receipt
+    ↓
+1. Reliable Receipt Detection / Crop
+    ↓
+2. Perspective Correction
+    ↓
+3. Image Preprocessing / 2x Enlargement
+    ↓
+4. Run OCR
+    ↓
+5. Export Clean Codebase
+
+FILES TO COPY/REPLACE
+
+- main.py
+- utils/constants.py
+- utils/session_state.py
+- utils/perspective_correction.py       NEW
+- utils/image_preprocessing.py
+- utils/run_ocr.py
+- utils/utils_main.py
+- utils/codebase_bundler.py
+
+KEEP EXISTING
+
+- utils/reliable_receipt_crop.py
+- utils/receipt_picker.py
+- utils/export_codebase.py
+- extractors/tesseract.py
+- utils/__init__.py
+
+IMPORTANT
+
+The top-level main.py imports:
+
+    from utils.utils_main import run_utils_menu
+
+If utils/main.py still exists from an older version, delete it.
+Use only:
+
+    utils/utils_main.py
+
+SIMPLIFIED WORKFLOW
+
+You do not have to manually run every earlier step.
+
+If you choose Perspective Correction first:
+    choose receipt
+    -> crop automatically
+    -> perspective correction
+
+If you choose Image Preprocessing first:
+    choose receipt
+    -> crop automatically
+    -> perspective correction automatically
+    -> preprocessing
+
+If you choose Run OCR first:
+    choose receipt
+    -> crop automatically
+    -> perspective correction automatically
+    -> preprocessing automatically
+    -> OCR
+
+GENERATED DATA
+
+data/current_pic/
+    original receipt
+
+data/cropped/
+    <receipt>_cropped.png
+
+data/perspective_corrected/
+    <receipt>_perspective.png
+
+data/preprocessed/
+    <receipt>_preprocessed.png
+
+data/raw_ocr/
+    <receipt>_raw_ocr.json
+
+Every stage uses one deterministic output per original receipt.
+Running a stage again overwrites its existing output.

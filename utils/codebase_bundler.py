@@ -2,13 +2,8 @@ import os
 from pathlib import Path
 from datetime import datetime
 
-
 from utils.constants import PROJECT_ROOT, CODEBASE_OUTPUT_FILE
 
-
-# ----------------------------
-# CLEAN LLM EXPORT RULES
-# ----------------------------
 
 ALLOWED_SUFFIXES = {
     ".py",
@@ -27,6 +22,9 @@ IGNORE_DIRS = {
 
     # ShopGraph data directories
     "raw_receipts",
+    "cropped",
+    "perspective_corrected",
+    "preprocessed",
     "raw_ocr",
     "extracted",
     "normalized",
@@ -49,7 +47,6 @@ IGNORE_SUFFIXES = {
     ".sqlite3",
     ".db",
 
-    # Receipt / image files
     ".jpg",
     ".jpeg",
     ".png",
@@ -61,13 +58,11 @@ IGNORE_SUFFIXES = {
 }
 
 
-# ----------------------------
-# FILTER LOGIC
-# ----------------------------
-
 def _should_ignore(path: Path) -> bool:
-
-    if any(part in IGNORE_DIRS for part in path.parts):
+    if any(
+        part in IGNORE_DIRS
+        for part in path.parts
+    ):
         return True
 
     if path.name in IGNORE_FILES:
@@ -82,16 +77,10 @@ def _should_ignore(path: Path) -> bool:
     return False
 
 
-# ----------------------------
-# TREE BUILDER
-# ----------------------------
-
 def _build_tree(root: Path) -> str:
-
     lines = []
 
     for dirpath, dirnames, filenames in os.walk(root):
-
         dirpath = Path(dirpath)
 
         dirnames[:] = [
@@ -111,14 +100,12 @@ def _build_tree(root: Path) -> str:
         )
 
         for filename in sorted(filenames):
-
             file_path = (
                 dirpath
                 / filename
             )
 
             if not _should_ignore(file_path):
-
                 lines.append(
                     f"{indent}    {filename}"
                 )
@@ -126,14 +113,8 @@ def _build_tree(root: Path) -> str:
     return "\n".join(lines)
 
 
-# ----------------------------
-# FILE COLLECTOR
-# ----------------------------
-
 def _collect_files(root: Path):
-
     for dirpath, dirnames, filenames in os.walk(root):
-
         dirpath = Path(dirpath)
 
         dirnames[:] = [
@@ -143,7 +124,6 @@ def _collect_files(root: Path):
         ]
 
         for filename in sorted(filenames):
-
             file_path = (
                 dirpath
                 / filename
@@ -153,14 +133,9 @@ def _collect_files(root: Path):
                 yield file_path
 
 
-# ----------------------------
-# EXPORT
-# ----------------------------
-
 def export_codebase_bundle(
     root_path: str | None = None
 ) -> str:
-
     root = (
         PROJECT_ROOT
         if root_path is None
@@ -181,7 +156,6 @@ def export_codebase_bundle(
     )
 
     tree = _build_tree(root)
-
     files = list(
         _collect_files(root)
     )
@@ -191,70 +165,39 @@ def export_codebase_bundle(
         "w",
         encoding="utf-8"
     ) as out:
-
         out.write(
             "=== SHOPGRAPH CLEAN CODEBASE FOR LLM ===\n\n"
         )
 
-        out.write(
-            tree
-        )
-
-        out.write(
-            "\n\n"
-        )
-
-        out.write(
-            "=" * 80
-            + "\n\n"
-        )
-
+        out.write(tree)
+        out.write("\n\n")
+        out.write("=" * 80 + "\n\n")
         out.write(
             f"Generated: {datetime.now()}\n"
         )
-
         out.write(
             f"Root: {root}\n"
         )
-
         out.write(
             "Mode: LLM-clean export\n"
         )
-
         out.write(
             "Excluded: receipt images, OCR JSON, datasets, databases, logs, caches\n\n"
         )
-
-        out.write(
-            "=" * 80
-            + "\n\n"
-        )
+        out.write("=" * 80 + "\n\n")
 
         for file_path in files:
-
             try:
-
                 relative = (
                     file_path.relative_to(root)
                 )
 
-                out.write(
-                    "\n\n"
-                )
-
-                out.write(
-                    "=" * 80
-                    + "\n"
-                )
-
+                out.write("\n\n")
+                out.write("=" * 80 + "\n")
                 out.write(
                     f"FILE: {relative}\n"
                 )
-
-                out.write(
-                    "=" * 80
-                    + "\n\n"
-                )
+                out.write("=" * 80 + "\n\n")
 
                 content = (
                     file_path.read_text(
@@ -263,15 +206,11 @@ def export_codebase_bundle(
                     )
                 )
 
-                out.write(
-                    content
-                )
+                out.write(content)
 
             except Exception as error:
-
                 out.write(
-                    f"\n"
-                    f"[ERROR READING FILE: {file_path}] "
+                    f"\n[ERROR READING FILE: {file_path}] "
                     f"{error}\n"
                 )
 

@@ -6,8 +6,15 @@ from pathlib import Path
 from extractors.tesseract import extract_receipt
 from utils.constants import RAW_OCR_DIR
 from utils.image_preprocessing import preprocess_selected_receipt
+from utils.perspective_correction import correct_selected_receipt
 from utils.receipt_picker import choose_receipt_image
-from utils.session_state import get_selected_preprocessed_image
+from utils.reliable_receipt_crop import crop_selected_receipt
+from utils.session_state import (
+    get_selected_cropped_image,
+    get_selected_perspective_image,
+    get_selected_preprocessed_image,
+    get_selected_source_image,
+)
 
 
 def save_json(
@@ -29,26 +36,122 @@ def save_json(
             ensure_ascii=False,
             indent=2,
         )
+
         file.write("\n")
 
 
 def _get_ocr_input_image() -> Path | None:
-    selected_preprocessed = (
+    preprocessed_path = (
         get_selected_preprocessed_image()
     )
 
     if (
-        selected_preprocessed is not None
-        and selected_preprocessed.exists()
+        preprocessed_path is not None
+        and preprocessed_path.exists()
     ):
         print(
             "[INFO] Using selected preprocessed image:"
-            f"\n{selected_preprocessed}"
+            f"\n{preprocessed_path}"
         )
-        return selected_preprocessed
 
+        return preprocessed_path
+
+    source_path = (
+        get_selected_source_image()
+    )
+
+    cropped_path = (
+        get_selected_cropped_image()
+    )
+
+    perspective_path = (
+        get_selected_perspective_image()
+    )
+
+    # Selected receipt has reached perspective correction.
+    if (
+        source_path is not None
+        and source_path.exists()
+        and cropped_path is not None
+        and cropped_path.exists()
+        and perspective_path is not None
+        and perspective_path.exists()
+    ):
+        try:
+            preprocessed_path = (
+                preprocess_selected_receipt(
+                    source_path=source_path,
+                    cropped_path=cropped_path,
+                    perspective_path=perspective_path,
+                )
+            )
+        except (
+            FileNotFoundError,
+            ValueError,
+            RuntimeError,
+        ) as error:
+            print(
+                f"\n[ERROR] {error}"
+            )
+            return None
+
+        print(
+            "\n[OK] Preprocessed receipt created:"
+            f"\n{preprocessed_path}"
+        )
+
+        return preprocessed_path
+
+    # Selected receipt has only been cropped.
+    if (
+        source_path is not None
+        and source_path.exists()
+        and cropped_path is not None
+        and cropped_path.exists()
+    ):
+        try:
+            perspective_path = (
+                correct_selected_receipt(
+                    source_path=source_path,
+                    cropped_path=cropped_path,
+                )
+            )
+
+            print(
+                "\n[OK] Perspective-corrected receipt created:"
+                f"\n{perspective_path}"
+            )
+
+            preprocessed_path = (
+                preprocess_selected_receipt(
+                    source_path=source_path,
+                    cropped_path=cropped_path,
+                    perspective_path=perspective_path,
+                )
+            )
+
+            print(
+                "\n[OK] Preprocessed receipt created:"
+                f"\n{preprocessed_path}"
+            )
+
+        except (
+            FileNotFoundError,
+            ValueError,
+            RuntimeError,
+        ) as error:
+            print(
+                f"\n[ERROR] {error}"
+            )
+            return None
+
+        return preprocessed_path
+
+    # Simplified workflow:
+    # Nothing has been selected. Prompt once and automatically run
+    # crop -> perspective correction -> preprocessing.
     print(
-        "[INFO] No receipt has been preprocessed "
+        "[INFO] No receipt has been prepared "
         "in this session yet."
     )
 
@@ -58,11 +161,42 @@ def _get_ocr_input_image() -> Path | None:
         return None
 
     try:
-        preprocessed_path = (
-            preprocess_selected_receipt(
+        cropped_path = (
+            crop_selected_receipt(
                 source_path
             )
         )
+
+        print(
+            "\n[OK] Cropped receipt created:"
+            f"\n{cropped_path}"
+        )
+
+        perspective_path = (
+            correct_selected_receipt(
+                source_path=source_path,
+                cropped_path=cropped_path,
+            )
+        )
+
+        print(
+            "\n[OK] Perspective-corrected receipt created:"
+            f"\n{perspective_path}"
+        )
+
+        preprocessed_path = (
+            preprocess_selected_receipt(
+                source_path=source_path,
+                cropped_path=cropped_path,
+                perspective_path=perspective_path,
+            )
+        )
+
+        print(
+            "\n[OK] Preprocessed receipt created:"
+            f"\n{preprocessed_path}"
+        )
+
     except (
         FileNotFoundError,
         ValueError,
@@ -73,25 +207,40 @@ def _get_ocr_input_image() -> Path | None:
         )
         return None
 
-    print(
-        "\n[OK] Preprocessed receipt created:"
-        f"\n{preprocessed_path}"
-    )
-
     return preprocessed_path
 
 
 def run_ocr() -> None:
-    print("\n=== Run OCR ===\n")
+    print(
+        "\n=== Run OCR ===\n"
+    )
 
-    image_path = _get_ocr_input_image()
+    image_path = (
+        _get_ocr_input_image()
+    )
 
     if image_path is None:
         return
 
+    source_path = (
+        get_selected_source_image()
+    )
+
+    if source_path is not None:
+        output_stem = (
+            source_path.stem
+        )
+    else:
+        output_stem = (
+            image_path.stem
+            .removesuffix(
+                "_preprocessed"
+            )
+        )
+
     output_path = (
         RAW_OCR_DIR
-        / f"{image_path.stem}_raw_ocr.json"
+        / f"{output_stem}_raw_ocr.json"
     )
 
     result = extract_receipt(
