@@ -6,10 +6,13 @@ shopping_analysis/
     utils/
         __init__.py
         codebase_bundler.py
+        compare_ocr.py
         constants.py
         export_codebase.py
+        image_enlargement.py
         image_preprocessing.py
         main.py
+        ocr_image_variants.py
         perspective_correction.py
         receipt_picker.py
         reliable_receipt_crop.py
@@ -22,6 +25,7 @@ shopping_analysis/
         tesseract.py
     data/
         requirements.txt
+        preprocessed/
         prompts/
             creation_prompts/
             dev_prompts/
@@ -29,7 +33,7 @@ shopping_analysis/
 
 ================================================================================
 
-Generated: 2026-08-25 15:37:15.249487
+Generated: 2026-08-25 16:03:57.959769
 Root: /Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis
 Mode: LLM-clean export
 Excluded: receipt images, OCR JSON, datasets, databases, logs, caches
@@ -42,93 +46,65 @@ Excluded: receipt images, OCR JSON, datasets, databases, logs, caches
 FILE: INSTALL.txt
 ================================================================================
 
-ShopGraph - Perspective Correction Update
+ShopGraph - Consensus OCR Comparison Update
 
-NEW PIPELINE
+PURPOSE
 
-Original receipt
-    ↓
-1. Reliable Receipt Detection / Crop
-    ↓
-2. Perspective Correction
-    ↓
-3. Image Preprocessing / 2x Enlargement
-    ↓
-4. Run OCR
-    ↓
-5. Export Clean Codebase
+This update changes only Stage 6:
 
-FILES TO COPY/REPLACE
+6. Compare OCR Results / Build Raw OCR JSON
 
-- main.py
-- utils/constants.py
-- utils/session_state.py
-- utils/perspective_correction.py       NEW
-- utils/image_preprocessing.py
-- utils/run_ocr.py
-- utils/utils_main.py
-- utils/codebase_bundler.py
+Previously:
+- all six OCR candidates were ranked
+- one complete candidate won
+- the other five candidates were discarded from the final transcription
 
-KEEP EXISTING
+Now:
+- the best candidate is still used as the reading-order backbone
+- every backbone line is compared against corresponding lines from all six candidates
+- a clearer/more complete matching line can replace the backbone line
+- lines missing from the backbone but independently supported by at least two candidates
+  are preserved in supported_extra_lines
+- every final line records which candidate produced it
+- OCR characters are never silently corrected or rewritten
 
-- utils/reliable_receipt_crop.py
-- utils/receipt_picker.py
-- utils/export_codebase.py
-- extractors/tesseract.py
-- utils/__init__.py
+INSTALL
 
-IMPORTANT
+Replace:
 
-The top-level main.py imports:
+    utils/compare_ocr.py
 
-    from utils.utils_main import run_utils_menu
+No other project files need to change.
 
-If utils/main.py still exists from an older version, delete it.
-Use only:
+RUN
 
-    utils/utils_main.py
+From ShopGraph:
 
-SIMPLIFIED WORKFLOW
+    1. Utilities
+    6. Compare OCR Results / Build Raw OCR JSON
 
-You do not have to manually run every earlier step.
+The existing smart pipeline remains intact. If earlier stages have not run in the
+current session, they will run automatically.
 
-If you choose Perspective Correction first:
-    choose receipt
-    -> crop automatically
-    -> perspective correction
+OUTPUT
 
-If you choose Image Preprocessing first:
-    choose receipt
-    -> crop automatically
-    -> perspective correction automatically
-    -> preprocessing
+    data/raw_ocr/<receipt>_raw_ocr.json
 
-If you choose Run OCR first:
-    choose receipt
-    -> crop automatically
-    -> perspective correction automatically
-    -> preprocessing automatically
-    -> OCR
+Important fields:
 
-GENERATED DATA
+    backbone_candidate
+    consensus_summary
+    raw_text
+    text
+    supported_extra_lines
+    candidate_ranking
+    provenance
 
-data/current_pic/
-    original receipt
+The raw_text field contains the consensus backbone in receipt order.
 
-data/cropped/
-    <receipt>_cropped.png
-
-data/perspective_corrected/
-    <receipt>_perspective.png
-
-data/preprocessed/
-    <receipt>_preprocessed.png
-
-data/raw_ocr/
-    <receipt>_raw_ocr.json
-
-Every stage uses one deterministic output per original receipt.
-Running a stage again overwrites its existing output.
+The supported_extra_lines field is deliberately separate for this first test.
+This avoids guessing where an omitted line belongs while still preserving
+content seen independently by multiple OCR candidates.
 
 
 ================================================================================
@@ -197,16 +173,16 @@ IGNORE_DIRS = {
     ".venv",
     "node_modules",
 
-    # ShopGraph data directories
     "raw_receipts",
     "cropped",
     "perspective_corrected",
-    "preprocessed",
+    "enlarged",
+    "ocr_variants",
+    "ocr_candidates",
     "raw_ocr",
     "extracted",
     "normalized",
 
-    # Generated / runtime directories
     "logs",
     "exports"
 }
@@ -223,7 +199,6 @@ IGNORE_SUFFIXES = {
     ".sqlite",
     ".sqlite3",
     ".db",
-
     ".jpg",
     ".jpeg",
     ".png",
@@ -319,9 +294,7 @@ def export_codebase_bundle(
         else Path(root_path).resolve()
     )
 
-    output_path = (
-        CODEBASE_OUTPUT_FILE
-    )
+    output_path = CODEBASE_OUTPUT_FILE
 
     output_path.parent.mkdir(
         parents=True,
@@ -345,7 +318,6 @@ def export_codebase_bundle(
         out.write(
             "=== SHOPGRAPH CLEAN CODEBASE FOR LLM ===\n\n"
         )
-
         out.write(tree)
         out.write("\n\n")
         out.write("=" * 80 + "\n\n")
@@ -396,9 +368,670 @@ def export_codebase_bundle(
         f"{output_path}"
     )
 
-    return str(
-        output_path
+    return str(output_path)
+
+
+================================================================================
+FILE: utils/compare_ocr.py
+================================================================================
+
+from __future__ import annotations
+
+import json
+import re
+from difflib import SequenceMatcher
+from pathlib import Path
+
+from utils.constants import RAW_OCR_DIR
+from utils.run_ocr import run_all_ocr_candidates
+from utils.session_state import (
+    get_selected_ocr_candidates_file,
+    set_selected_raw_ocr_file,
+)
+
+
+MATCH_THRESHOLD = 0.58
+EXTRA_LINE_MIN_SUPPORT = 2
+
+
+def _load_json(path: Path) -> dict:
+    with path.open("r", encoding="utf-8") as file:
+        return json.load(file)
+
+
+def _normalize_line(text: str) -> str:
+    text = text.lower()
+    text = re.sub(r"[^a-z0-9]+", " ", text)
+    return " ".join(text.split())
+
+
+def _tokens(text: str) -> set[str]:
+    return set(_normalize_line(text).split())
+
+
+def _line_similarity(left: str, right: str) -> float:
+    left_norm = _normalize_line(left)
+    right_norm = _normalize_line(right)
+
+    if not left_norm or not right_norm:
+        return 0.0
+
+    sequence_score = SequenceMatcher(
+        None,
+        left_norm,
+        right_norm,
+    ).ratio()
+
+    left_tokens = _tokens(left)
+    right_tokens = _tokens(right)
+
+    union = left_tokens | right_tokens
+    token_score = (
+        len(left_tokens & right_tokens) / len(union)
+        if union
+        else 0.0
     )
+
+    # Strongly reward shared long numeric identifiers. This is useful for
+    # receipt SKUs while still allowing one candidate to contain extra fields
+    # such as a price or tax marker.
+    left_numbers = set(re.findall(r"\b\d{4,}\b", left_norm))
+    right_numbers = set(re.findall(r"\b\d{4,}\b", right_norm))
+
+    numeric_anchor = 1.0 if left_numbers & right_numbers else 0.0
+
+    return (
+        sequence_score * 0.55
+        + token_score * 0.30
+        + numeric_anchor * 0.15
+    )
+
+
+def _candidate_metrics(candidate: dict) -> dict:
+    result = candidate["result"]
+    metrics = result["metrics"]
+
+    mean_confidence = metrics["mean_word_confidence"] or 0.0
+    recognized_word_count = metrics["recognized_word_count"]
+    low_confidence_rate = metrics["low_confidence_rate"]
+    raw_text = result["raw_text"]
+
+    digit_count = len(re.findall(r"\d", raw_text))
+    price_like_count = len(
+        re.findall(r"\b\d+[.,]\d{2}\b", raw_text)
+    )
+
+    score = (
+        mean_confidence
+        + min(recognized_word_count, 250) * 0.03
+        + min(digit_count, 300) * 0.01
+        + min(price_like_count, 80) * 0.08
+        - low_confidence_rate * 15.0
+    )
+
+    return {
+        "score": round(score, 4),
+        "mean_word_confidence": mean_confidence,
+        "recognized_word_count": recognized_word_count,
+        "low_confidence_rate": low_confidence_rate,
+        "digit_count": digit_count,
+        "price_like_count": price_like_count,
+    }
+
+
+def _line_quality(line: dict) -> float:
+    text = line["text"]
+    confidence = line.get("confidence")
+
+    if confidence is None:
+        confidence = 0.0
+
+    token_count = len(text.split())
+    digit_count = len(re.findall(r"\d", text))
+    price_count = len(
+        re.findall(r"\b\d+[.,]\d{2}\b", text)
+    )
+    sku_count = len(
+        re.findall(r"\b\d{5,7}\b", text)
+    )
+
+    # Prefer high-confidence lines, but also reward useful receipt structure
+    # and fuller versions of the same line. This is intentionally a ranking
+    # score, not an accuracy percentage.
+    return (
+        float(confidence)
+        + min(token_count, 14) * 0.55
+        + min(digit_count, 16) * 0.22
+        + price_count * 3.0
+        + sku_count * 2.0
+    )
+
+
+def _build_line_records(candidates: list[dict]) -> list[dict]:
+    records = []
+
+    for candidate in candidates:
+        candidate_id = candidate["candidate_id"]
+        variant = candidate["image_variant"]
+        psm = candidate["psm"]
+
+        for index, line in enumerate(
+            candidate["result"]["text"]
+        ):
+            text = line.get("text", "").strip()
+
+            if not text:
+                continue
+
+            records.append(
+                {
+                    "candidate_id": candidate_id,
+                    "image_variant": variant,
+                    "psm": psm,
+                    "candidate_line_index": index,
+                    "text": text,
+                    "confidence": line.get("confidence"),
+                }
+            )
+
+    return records
+
+
+def _best_match(
+    target_text: str,
+    records: list[dict],
+    excluded_candidate_id: str | None = None,
+) -> tuple[dict | None, float]:
+    best_record = None
+    best_score = 0.0
+
+    for record in records:
+        if (
+            excluded_candidate_id is not None
+            and record["candidate_id"] == excluded_candidate_id
+        ):
+            continue
+
+        score = _line_similarity(
+            target_text,
+            record["text"],
+        )
+
+        if score > best_score:
+            best_record = record
+            best_score = score
+
+    return best_record, best_score
+
+
+def _support_for_line(
+    line: dict,
+    candidates: list[dict],
+) -> tuple[int, list[dict]]:
+    supporting = []
+
+    for candidate in candidates:
+        if candidate["candidate_id"] == line["candidate_id"]:
+            continue
+
+        best = None
+        best_similarity = 0.0
+
+        for candidate_line in candidate["result"]["text"]:
+            candidate_text = candidate_line.get("text", "").strip()
+
+            if not candidate_text:
+                continue
+
+            similarity = _line_similarity(
+                line["text"],
+                candidate_text,
+            )
+
+            if similarity > best_similarity:
+                best_similarity = similarity
+                best = candidate_line
+
+        if best is not None and best_similarity >= MATCH_THRESHOLD:
+            supporting.append(
+                {
+                    "candidate_id": candidate["candidate_id"],
+                    "similarity": round(best_similarity, 4),
+                    "text": best["text"],
+                }
+            )
+
+    return 1 + len(supporting), supporting
+
+
+def _choose_consensus_line(
+    backbone_line: dict,
+    all_records: list[dict],
+    candidates: list[dict],
+) -> dict:
+    alternatives = [backbone_line]
+
+    for candidate in candidates:
+        if candidate["candidate_id"] == backbone_line["candidate_id"]:
+            continue
+
+        candidate_records = [
+            record
+            for record in all_records
+            if record["candidate_id"] == candidate["candidate_id"]
+        ]
+
+        match, similarity = _best_match(
+            backbone_line["text"],
+            candidate_records,
+        )
+
+        if match is not None and similarity >= MATCH_THRESHOLD:
+            matched = dict(match)
+            matched["match_to_backbone"] = round(similarity, 4)
+            alternatives.append(matched)
+
+    scored = []
+
+    for alternative in alternatives:
+        support_count, supporting = _support_for_line(
+            alternative,
+            candidates,
+        )
+
+        quality = _line_quality(alternative)
+
+        # Consensus is important, but it does not automatically beat a much
+        # clearer, more complete line from a single OCR configuration.
+        consensus_score = (
+            quality
+            + (support_count - 1) * 4.0
+        )
+
+        scored.append(
+            {
+                **alternative,
+                "support_count": support_count,
+                "supporting_candidates": supporting,
+                "line_quality_score": round(quality, 4),
+                "consensus_score": round(consensus_score, 4),
+            }
+        )
+
+    scored.sort(
+        key=lambda item: (
+            item["consensus_score"],
+            len(item["text"]),
+        ),
+        reverse=True,
+    )
+
+    return scored[0]
+
+
+def _collect_supported_extra_lines(
+    backbone_candidate: dict,
+    candidates: list[dict],
+    all_records: list[dict],
+) -> list[dict]:
+    backbone_texts = [
+        line["text"]
+        for line in backbone_candidate["result"]["text"]
+        if line.get("text", "").strip()
+    ]
+
+    extras = []
+    seen_normalized = set()
+
+    for record in all_records:
+        if record["candidate_id"] == backbone_candidate["candidate_id"]:
+            continue
+
+        normalized = _normalize_line(record["text"])
+
+        if not normalized or normalized in seen_normalized:
+            continue
+
+        seen_normalized.add(normalized)
+
+        best_backbone_similarity = max(
+            (
+                _line_similarity(record["text"], text)
+                for text in backbone_texts
+            ),
+            default=0.0,
+        )
+
+        if best_backbone_similarity >= MATCH_THRESHOLD:
+            continue
+
+        support_count, supporting = _support_for_line(
+            record,
+            candidates,
+        )
+
+        if support_count < EXTRA_LINE_MIN_SUPPORT:
+            continue
+
+        extras.append(
+            {
+                **record,
+                "support_count": support_count,
+                "supporting_candidates": supporting,
+                "line_quality_score": round(
+                    _line_quality(record),
+                    4,
+                ),
+            }
+        )
+
+    # Deduplicate extras that represent the same line.
+    deduplicated = []
+
+    for extra in sorted(
+        extras,
+        key=lambda item: (
+            item["support_count"],
+            item["line_quality_score"],
+            len(item["text"]),
+        ),
+        reverse=True,
+    ):
+        if any(
+            _line_similarity(
+                extra["text"],
+                existing["text"],
+            ) >= MATCH_THRESHOLD
+            for existing in deduplicated
+        ):
+            continue
+
+        deduplicated.append(extra)
+
+    return deduplicated
+
+
+def _score_and_rank_candidates(
+    candidates: list[dict],
+) -> list[dict]:
+    scored = []
+
+    for candidate in candidates:
+        scored.append(
+            {
+                "candidate_id": candidate["candidate_id"],
+                "image_variant": candidate["image_variant"],
+                "psm": candidate["psm"],
+                "comparison_metrics": _candidate_metrics(
+                    candidate
+                ),
+                "result": candidate["result"],
+            }
+        )
+
+    scored.sort(
+        key=lambda item: item[
+            "comparison_metrics"
+        ]["score"],
+        reverse=True,
+    )
+
+    return scored
+
+
+def _get_or_create_candidates_file() -> Path | None:
+    candidates_path = get_selected_ocr_candidates_file()
+
+    if (
+        candidates_path is not None
+        and candidates_path.exists()
+    ):
+        return candidates_path
+
+    print(
+        "[INFO] OCR candidates have not been generated "
+        "in this session yet. Running the earlier pipeline "
+        "automatically."
+    )
+
+    return run_all_ocr_candidates()
+
+
+def compare_and_build_raw_ocr() -> Path | None:
+    candidates_path = _get_or_create_candidates_file()
+
+    if candidates_path is None:
+        return None
+
+    candidates_data = _load_json(candidates_path)
+    candidates = candidates_data["candidates"]
+
+    if not candidates:
+        raise ValueError("OCR candidates file contains no candidates.")
+
+    ranked_candidates = _score_and_rank_candidates(
+        candidates
+    )
+
+    backbone_ranked = ranked_candidates[0]
+    backbone_id = backbone_ranked["candidate_id"]
+
+    backbone_candidate = next(
+        candidate
+        for candidate in candidates
+        if candidate["candidate_id"] == backbone_id
+    )
+
+    all_records = _build_line_records(candidates)
+
+    consensus_lines = []
+
+    for line_index, line in enumerate(
+        backbone_candidate["result"]["text"],
+        start=1,
+    ):
+        text = line.get("text", "").strip()
+
+        if not text:
+            continue
+
+        backbone_record = {
+            "candidate_id": backbone_candidate["candidate_id"],
+            "image_variant": backbone_candidate["image_variant"],
+            "psm": backbone_candidate["psm"],
+            "candidate_line_index": line_index - 1,
+            "text": text,
+            "confidence": line.get("confidence"),
+        }
+
+        chosen = _choose_consensus_line(
+            backbone_record,
+            all_records,
+            candidates,
+        )
+
+        consensus_lines.append(
+            {
+                "line_number": len(consensus_lines) + 1,
+                "text": chosen["text"],
+                "confidence": chosen["confidence"],
+                "source_candidate": chosen["candidate_id"],
+                "image_variant": chosen["image_variant"],
+                "psm": chosen["psm"],
+                "support_count": chosen["support_count"],
+                "line_quality_score": chosen[
+                    "line_quality_score"
+                ],
+                "consensus_score": chosen[
+                    "consensus_score"
+                ],
+            }
+        )
+
+    # Preserve additional content that the clean backbone omitted when that
+    # content is independently seen by at least two OCR candidates. Extras
+    # are kept separate rather than silently spliced into existing lines.
+    extra_lines = _collect_supported_extra_lines(
+        backbone_candidate,
+        candidates,
+        all_records,
+    )
+
+    source_receipt = Path(
+        candidates_data["source_receipt"]
+    )
+
+    output_path = (
+        RAW_OCR_DIR
+        / f"{source_receipt.stem}_raw_ocr.json"
+    )
+
+    raw_text = "\n".join(
+        line["text"]
+        for line in consensus_lines
+    )
+
+    output = {
+        "source_receipt": str(source_receipt),
+        "selection_method": (
+            "multi-candidate consensus: highest-ranked OCR candidate "
+            "is used as the reading-order backbone; each backbone line "
+            "may be replaced by a higher-quality matching line from any "
+            "of the six OCR candidates; independently supported lines "
+            "missing from the backbone are preserved separately"
+        ),
+        "backbone_candidate": {
+            "candidate_id": backbone_ranked["candidate_id"],
+            "image_variant": backbone_ranked["image_variant"],
+            "psm": backbone_ranked["psm"],
+            "comparison_metrics": backbone_ranked[
+                "comparison_metrics"
+            ],
+        },
+        "consensus_summary": {
+            "backbone_line_count": len(
+                backbone_candidate["result"]["text"]
+            ),
+            "consensus_line_count": len(consensus_lines),
+            "supported_extra_line_count": len(extra_lines),
+            "candidate_count": len(candidates),
+            "match_threshold": MATCH_THRESHOLD,
+            "extra_line_min_support": EXTRA_LINE_MIN_SUPPORT,
+        },
+        "raw_text": raw_text,
+        "text": consensus_lines,
+        "supported_extra_lines": [
+            {
+                "text": line["text"],
+                "confidence": line["confidence"],
+                "source_candidate": line["candidate_id"],
+                "image_variant": line["image_variant"],
+                "psm": line["psm"],
+                "support_count": line["support_count"],
+                "line_quality_score": line[
+                    "line_quality_score"
+                ],
+            }
+            for line in extra_lines
+        ],
+        "candidate_ranking": [
+            {
+                "rank": rank,
+                "candidate_id": candidate["candidate_id"],
+                "image_variant": candidate["image_variant"],
+                "psm": candidate["psm"],
+                "comparison_metrics": candidate[
+                    "comparison_metrics"
+                ],
+            }
+            for rank, candidate in enumerate(
+                ranked_candidates,
+                start=1,
+            )
+        ],
+        "provenance": {
+            "candidates_file": str(
+                candidates_path.resolve()
+            ),
+            "rule": (
+                "Consensus output never edits OCR characters inside a "
+                "chosen line. Every emitted line is copied verbatim from "
+                "one Tesseract candidate, with its source recorded."
+            ),
+        },
+    }
+
+    output_path.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    with output_path.open(
+        "w",
+        encoding="utf-8",
+    ) as file:
+        json.dump(
+            output,
+            file,
+            ensure_ascii=False,
+            indent=2,
+        )
+        file.write("\n")
+
+    set_selected_raw_ocr_file(output_path)
+
+    return output_path.resolve()
+
+
+def run_compare_ocr() -> None:
+    print(
+        "\n=== Compare OCR Results / Build Consensus ===\n"
+    )
+
+    try:
+        output_path = compare_and_build_raw_ocr()
+
+        if output_path is None:
+            return
+
+        data = _load_json(output_path)
+        backbone = data["backbone_candidate"]
+        summary = data["consensus_summary"]
+
+        print(
+            "[OK] Consensus OCR built from all candidates."
+        )
+
+        print(
+            "\nBackbone candidate:"
+            f"\nVariant: {backbone['image_variant']}"
+            f"\nPSM: {backbone['psm']}"
+            "\nScore: "
+            f"{backbone['comparison_metrics']['score']}"
+        )
+
+        print(
+            "\nConsensus:"
+            f"\nLines: {summary['consensus_line_count']}"
+            "\nSupported extra lines: "
+            f"{summary['supported_extra_line_count']}"
+        )
+
+        print(
+            "\n[OK] Final raw OCR JSON created:"
+            f"\n{output_path}"
+        )
+
+    except (
+        FileNotFoundError,
+        ValueError,
+        RuntimeError,
+        KeyError,
+        json.JSONDecodeError,
+    ) as error:
+        print(
+            f"\n[ERROR] {error}"
+        )
 
 
 ================================================================================
@@ -415,7 +1048,9 @@ DATA_DIR = PROJECT_ROOT / "data"
 CURRENT_PIC_DIR = DATA_DIR / "current_pic"
 CROPPED_DIR = DATA_DIR / "cropped"
 PERSPECTIVE_DIR = DATA_DIR / "perspective_corrected"
-PREPROCESSED_DIR = DATA_DIR / "preprocessed"
+ENLARGED_DIR = DATA_DIR / "enlarged"
+OCR_VARIANTS_DIR = DATA_DIR / "ocr_variants"
+OCR_CANDIDATES_DIR = DATA_DIR / "ocr_candidates"
 RAW_OCR_DIR = DATA_DIR / "raw_ocr"
 
 EXPORT_DIR = DATA_DIR / "exports"
@@ -450,6 +1085,216 @@ def run_codebase_export() -> None:
         f"\n[OK] Codebase bundle created:\n"
         f"{output_path}"
     )
+
+================================================================================
+FILE: utils/image_enlargement.py
+================================================================================
+
+from __future__ import annotations
+
+from pathlib import Path
+
+import cv2
+
+from utils.constants import ENLARGED_DIR
+from utils.perspective_correction import correct_selected_receipt
+from utils.receipt_picker import choose_receipt_image
+from utils.reliable_receipt_crop import crop_selected_receipt
+from utils.session_state import (
+    get_selected_cropped_image,
+    get_selected_enlarged_image,
+    get_selected_perspective_image,
+    get_selected_source_image,
+    set_selected_enlarged_image,
+)
+
+
+SCALE_FACTOR = 2.0
+
+
+def get_enlarged_path(
+    source_path: str | Path,
+) -> Path:
+    source = Path(source_path)
+
+    return (
+        ENLARGED_DIR
+        / f"{source.stem}_2x.png"
+    )
+
+
+def enlarge_receipt(
+    perspective_image_path: str | Path,
+    source_image_path: str | Path,
+) -> Path:
+    perspective_path = (
+        Path(perspective_image_path)
+        .expanduser()
+        .resolve()
+    )
+
+    source_path = (
+        Path(source_image_path)
+        .expanduser()
+        .resolve()
+    )
+
+    if not perspective_path.exists():
+        raise FileNotFoundError(
+            "Perspective-corrected receipt does not exist: "
+            f"{perspective_path}"
+        )
+
+    image = cv2.imread(
+        str(perspective_path)
+    )
+
+    if image is None:
+        raise ValueError(
+            "OpenCV could not read perspective-corrected receipt: "
+            f"{perspective_path}"
+        )
+
+    enlarged = cv2.resize(
+        image,
+        None,
+        fx=SCALE_FACTOR,
+        fy=SCALE_FACTOR,
+        interpolation=cv2.INTER_CUBIC,
+    )
+
+    destination = get_enlarged_path(
+        source_path
+    )
+
+    destination.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    if not cv2.imwrite(
+        str(destination),
+        enlarged,
+    ):
+        raise RuntimeError(
+            "OpenCV could not save enlarged receipt: "
+            f"{destination}"
+        )
+
+    return destination.resolve()
+
+
+def ensure_enlarged_receipt() -> tuple[Path, Path, Path, Path] | None:
+    source_path = get_selected_source_image()
+    cropped_path = get_selected_cropped_image()
+    perspective_path = get_selected_perspective_image()
+    enlarged_path = get_selected_enlarged_image()
+
+    if (
+        source_path is not None
+        and source_path.exists()
+        and cropped_path is not None
+        and cropped_path.exists()
+        and perspective_path is not None
+        and perspective_path.exists()
+        and enlarged_path is not None
+        and enlarged_path.exists()
+    ):
+        return (
+            source_path,
+            cropped_path,
+            perspective_path,
+            enlarged_path,
+        )
+
+    if (
+        source_path is None
+        or not source_path.exists()
+    ):
+        source_path = choose_receipt_image()
+
+        if source_path is None:
+            return None
+
+    if (
+        cropped_path is None
+        or not cropped_path.exists()
+    ):
+        cropped_path = crop_selected_receipt(
+            source_path
+        )
+
+        print(
+            "\n[OK] Cropped receipt created:"
+            f"\n{cropped_path}"
+        )
+
+    if (
+        perspective_path is None
+        or not perspective_path.exists()
+    ):
+        perspective_path = correct_selected_receipt(
+            source_path=source_path,
+            cropped_path=cropped_path,
+        )
+
+        print(
+            "\n[OK] Perspective-corrected receipt created:"
+            f"\n{perspective_path}"
+        )
+
+    enlarged_path = enlarge_receipt(
+        perspective_image_path=perspective_path,
+        source_image_path=source_path,
+    )
+
+    set_selected_enlarged_image(
+        source_image=source_path,
+        cropped_image=cropped_path,
+        perspective_image=perspective_path,
+        enlarged_image=enlarged_path,
+    )
+
+    return (
+        source_path,
+        cropped_path,
+        perspective_path,
+        enlarged_path,
+    )
+
+
+def run_image_enlargement() -> None:
+    print(
+        "\n=== 2x Enlargement ===\n"
+    )
+
+    try:
+        selected = ensure_enlarged_receipt()
+
+        if selected is None:
+            return
+
+        enlarged_path = selected[3]
+
+        print(
+            "\n[OK] Enlarged receipt created:"
+            f"\n{enlarged_path}"
+        )
+
+        print(
+            "\nThis receipt is now selected "
+            "for OCR Image Variants."
+        )
+
+    except (
+        FileNotFoundError,
+        ValueError,
+        RuntimeError,
+    ) as error:
+        print(
+            f"\n[ERROR] {error}"
+        )
+
 
 ================================================================================
 FILE: utils/image_preprocessing.py
@@ -818,6 +1663,236 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
+================================================================================
+FILE: utils/ocr_image_variants.py
+================================================================================
+
+from __future__ import annotations
+
+from pathlib import Path
+
+import cv2
+
+from utils.constants import OCR_VARIANTS_DIR
+from utils.image_enlargement import ensure_enlarged_receipt
+from utils.session_state import (
+    get_selected_grayscale_image,
+    get_selected_threshold_image,
+    set_selected_ocr_variants,
+)
+
+
+def get_grayscale_path(
+    source_path: str | Path,
+) -> Path:
+    source = Path(source_path)
+
+    return (
+        OCR_VARIANTS_DIR
+        / f"{source.stem}_grayscale.png"
+    )
+
+
+def get_threshold_path(
+    source_path: str | Path,
+) -> Path:
+    source = Path(source_path)
+
+    return (
+        OCR_VARIANTS_DIR
+        / f"{source.stem}_threshold.png"
+    )
+
+
+def generate_variants(
+    enlarged_image_path: str | Path,
+    source_image_path: str | Path,
+) -> tuple[Path, Path]:
+    enlarged_path = (
+        Path(enlarged_image_path)
+        .expanduser()
+        .resolve()
+    )
+
+    source_path = (
+        Path(source_image_path)
+        .expanduser()
+        .resolve()
+    )
+
+    image = cv2.imread(
+        str(enlarged_path)
+    )
+
+    if image is None:
+        raise ValueError(
+            "OpenCV could not read enlarged image: "
+            f"{enlarged_path}"
+        )
+
+    gray = cv2.cvtColor(
+        image,
+        cv2.COLOR_BGR2GRAY,
+    )
+
+    clahe = cv2.createCLAHE(
+        clipLimit=2.0,
+        tileGridSize=(8, 8),
+    )
+
+    grayscale_enhanced = clahe.apply(
+        gray
+    )
+
+    grayscale_enhanced = cv2.fastNlMeansDenoising(
+        grayscale_enhanced,
+        None,
+        h=5,
+        templateWindowSize=7,
+        searchWindowSize=21,
+    )
+
+    thresholded = cv2.adaptiveThreshold(
+        grayscale_enhanced,
+        255,
+        cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+        cv2.THRESH_BINARY,
+        41,
+        15,
+    )
+
+    grayscale_path = get_grayscale_path(
+        source_path
+    )
+
+    threshold_path = get_threshold_path(
+        source_path
+    )
+
+    OCR_VARIANTS_DIR.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    if not cv2.imwrite(
+        str(grayscale_path),
+        grayscale_enhanced,
+    ):
+        raise RuntimeError(
+            "Could not save grayscale OCR variant."
+        )
+
+    if not cv2.imwrite(
+        str(threshold_path),
+        thresholded,
+    ):
+        raise RuntimeError(
+            "Could not save threshold OCR variant."
+        )
+
+    return (
+        grayscale_path.resolve(),
+        threshold_path.resolve(),
+    )
+
+
+def ensure_ocr_variants() -> tuple[Path, Path, Path, Path, Path, Path] | None:
+    selected = ensure_enlarged_receipt()
+
+    if selected is None:
+        return None
+
+    (
+        source_path,
+        cropped_path,
+        perspective_path,
+        enlarged_path,
+    ) = selected
+
+    grayscale_path = get_selected_grayscale_image()
+    threshold_path = get_selected_threshold_image()
+
+    if (
+        grayscale_path is not None
+        and grayscale_path.exists()
+        and threshold_path is not None
+        and threshold_path.exists()
+    ):
+        return (
+            source_path,
+            cropped_path,
+            perspective_path,
+            enlarged_path,
+            grayscale_path,
+            threshold_path,
+        )
+
+    (
+        grayscale_path,
+        threshold_path,
+    ) = generate_variants(
+        enlarged_image_path=enlarged_path,
+        source_image_path=source_path,
+    )
+
+    set_selected_ocr_variants(
+        source_image=source_path,
+        cropped_image=cropped_path,
+        perspective_image=perspective_path,
+        enlarged_image=enlarged_path,
+        grayscale_image=grayscale_path,
+        threshold_image=threshold_path,
+    )
+
+    return (
+        source_path,
+        cropped_path,
+        perspective_path,
+        enlarged_path,
+        grayscale_path,
+        threshold_path,
+    )
+
+
+def run_ocr_image_variants() -> None:
+    print(
+        "\n=== OCR Image Variants ===\n"
+    )
+
+    try:
+        selected = ensure_ocr_variants()
+
+        if selected is None:
+            return
+
+        grayscale_path = selected[4]
+        threshold_path = selected[5]
+
+        print(
+            "\n[OK] Grayscale enhanced variant:"
+            f"\n{grayscale_path}"
+        )
+
+        print(
+            "\n[OK] Thresholded variant:"
+            f"\n{threshold_path}"
+        )
+
+        print(
+            "\nThese variants are now selected "
+            "for multi-PSM OCR."
+        )
+
+    except (
+        FileNotFoundError,
+        ValueError,
+        RuntimeError,
+    ) as error:
+        print(
+            f"\n[ERROR] {error}"
+        )
 
 
 ================================================================================
@@ -2018,20 +3093,19 @@ import json
 from pathlib import Path
 
 from extractors.tesseract import extract_receipt
-from utils.constants import RAW_OCR_DIR
-from utils.image_preprocessing import preprocess_selected_receipt
-from utils.perspective_correction import correct_selected_receipt
-from utils.receipt_picker import choose_receipt_image
-from utils.reliable_receipt_crop import crop_selected_receipt
-from utils.session_state import (
-    get_selected_cropped_image,
-    get_selected_perspective_image,
-    get_selected_preprocessed_image,
-    get_selected_source_image,
+from utils.constants import OCR_CANDIDATES_DIR
+from utils.ocr_image_variants import ensure_ocr_variants
+from utils.session_state import set_selected_ocr_candidates_file
+
+
+PSM_MODES = (
+    4,
+    6,
+    11,
 )
 
 
-def save_json(
+def _save_json(
     data: dict,
     output_path: Path,
 ) -> None:
@@ -2054,161 +3128,115 @@ def save_json(
         file.write("\n")
 
 
-def _get_ocr_input_image() -> Path | None:
-    preprocessed_path = (
-        get_selected_preprocessed_image()
+def get_ocr_candidates_path(
+    source_path: str | Path,
+) -> Path:
+    source = Path(
+        source_path
     )
 
-    if (
-        preprocessed_path is not None
-        and preprocessed_path.exists()
-    ):
-        print(
-            "[INFO] Using selected preprocessed image:"
-            f"\n{preprocessed_path}"
-        )
-
-        return preprocessed_path
-
-    source_path = (
-        get_selected_source_image()
+    return (
+        OCR_CANDIDATES_DIR
+        / f"{source.stem}_ocr_candidates.json"
     )
 
-    cropped_path = (
-        get_selected_cropped_image()
-    )
 
-    perspective_path = (
-        get_selected_perspective_image()
-    )
+def run_all_ocr_candidates() -> Path | None:
+    selected = ensure_ocr_variants()
 
-    # Selected receipt has reached perspective correction.
-    if (
-        source_path is not None
-        and source_path.exists()
-        and cropped_path is not None
-        and cropped_path.exists()
-        and perspective_path is not None
-        and perspective_path.exists()
-    ):
-        try:
-            preprocessed_path = (
-                preprocess_selected_receipt(
-                    source_path=source_path,
-                    cropped_path=cropped_path,
-                    perspective_path=perspective_path,
-                )
-            )
-        except (
-            FileNotFoundError,
-            ValueError,
-            RuntimeError,
-        ) as error:
-            print(
-                f"\n[ERROR] {error}"
-            )
-            return None
-
-        print(
-            "\n[OK] Preprocessed receipt created:"
-            f"\n{preprocessed_path}"
-        )
-
-        return preprocessed_path
-
-    # Selected receipt has only been cropped.
-    if (
-        source_path is not None
-        and source_path.exists()
-        and cropped_path is not None
-        and cropped_path.exists()
-    ):
-        try:
-            perspective_path = (
-                correct_selected_receipt(
-                    source_path=source_path,
-                    cropped_path=cropped_path,
-                )
-            )
-
-            print(
-                "\n[OK] Perspective-corrected receipt created:"
-                f"\n{perspective_path}"
-            )
-
-            preprocessed_path = (
-                preprocess_selected_receipt(
-                    source_path=source_path,
-                    cropped_path=cropped_path,
-                    perspective_path=perspective_path,
-                )
-            )
-
-            print(
-                "\n[OK] Preprocessed receipt created:"
-                f"\n{preprocessed_path}"
-            )
-
-        except (
-            FileNotFoundError,
-            ValueError,
-            RuntimeError,
-        ) as error:
-            print(
-                f"\n[ERROR] {error}"
-            )
-            return None
-
-        return preprocessed_path
-
-    # Simplified workflow:
-    # Nothing has been selected. Prompt once and automatically run
-    # crop -> perspective correction -> preprocessing.
-    print(
-        "[INFO] No receipt has been prepared "
-        "in this session yet."
-    )
-
-    source_path = choose_receipt_image()
-
-    if source_path is None:
+    if selected is None:
         return None
 
+    source_path = selected[0]
+    grayscale_path = selected[4]
+    threshold_path = selected[5]
+
+    variants = {
+        "grayscale": grayscale_path,
+        "threshold": threshold_path,
+    }
+
+    candidates = []
+
+    for variant_name, image_path in variants.items():
+        for psm in PSM_MODES:
+            print(
+                "[INFO] OCR "
+                f"{variant_name} / PSM {psm}"
+            )
+
+            result = extract_receipt(
+                image_path=image_path,
+                psm=psm,
+            )
+
+            candidates.append(
+                {
+                    "candidate_id": (
+                        f"{variant_name}_psm{psm}"
+                    ),
+                    "image_variant": variant_name,
+                    "psm": psm,
+                    "result": result,
+                }
+            )
+
+    output = {
+        "source_receipt": str(
+            source_path
+        ),
+        "candidate_count": len(
+            candidates
+        ),
+        "candidates": candidates,
+    }
+
+    output_path = (
+        get_ocr_candidates_path(
+            source_path
+        )
+    )
+
+    _save_json(
+        output,
+        output_path,
+    )
+
+    set_selected_ocr_candidates_file(
+        output_path
+    )
+
+    return output_path.resolve()
+
+
+def run_ocr() -> None:
+    print(
+        "\n=== Multi-PSM OCR ===\n"
+    )
+
     try:
-        cropped_path = (
-            crop_selected_receipt(
-                source_path
-            )
+        output_path = run_all_ocr_candidates()
+
+        if output_path is None:
+            return
+
+        print(
+            "\n[OK] OCR candidates created:"
+            f"\n{output_path}"
         )
 
         print(
-            "\n[OK] Cropped receipt created:"
-            f"\n{cropped_path}"
-        )
-
-        perspective_path = (
-            correct_selected_receipt(
-                source_path=source_path,
-                cropped_path=cropped_path,
-            )
-        )
-
-        print(
-            "\n[OK] Perspective-corrected receipt created:"
-            f"\n{perspective_path}"
-        )
-
-        preprocessed_path = (
-            preprocess_selected_receipt(
-                source_path=source_path,
-                cropped_path=cropped_path,
-                perspective_path=perspective_path,
-            )
+            "\nGenerated 6 candidates:"
+            "\n- grayscale / PSM 4"
+            "\n- grayscale / PSM 6"
+            "\n- grayscale / PSM 11"
+            "\n- threshold / PSM 4"
+            "\n- threshold / PSM 6"
+            "\n- threshold / PSM 11"
         )
 
         print(
-            "\n[OK] Preprocessed receipt created:"
-            f"\n{preprocessed_path}"
+            "\nNext step: Compare OCR Results."
         )
 
     except (
@@ -2219,57 +3247,6 @@ def _get_ocr_input_image() -> Path | None:
         print(
             f"\n[ERROR] {error}"
         )
-        return None
-
-    return preprocessed_path
-
-
-def run_ocr() -> None:
-    print(
-        "\n=== Run OCR ===\n"
-    )
-
-    image_path = (
-        _get_ocr_input_image()
-    )
-
-    if image_path is None:
-        return
-
-    source_path = (
-        get_selected_source_image()
-    )
-
-    if source_path is not None:
-        output_stem = (
-            source_path.stem
-        )
-    else:
-        output_stem = (
-            image_path.stem
-            .removesuffix(
-                "_preprocessed"
-            )
-        )
-
-    output_path = (
-        RAW_OCR_DIR
-        / f"{output_stem}_raw_ocr.json"
-    )
-
-    result = extract_receipt(
-        image_path
-    )
-
-    save_json(
-        data=result,
-        output_path=output_path,
-    )
-
-    print(
-        "\n[OK] OCR JSON created:"
-        f"\n{output_path.resolve()}"
-    )
 
 
 ================================================================================
@@ -2284,15 +3261,11 @@ from pathlib import Path
 _selected_source_image: Path | None = None
 _selected_cropped_image: Path | None = None
 _selected_perspective_image: Path | None = None
-_selected_preprocessed_image: Path | None = None
-
-
-def set_selected_source_image(
-    source_image: Path,
-) -> None:
-    global _selected_source_image
-
-    _selected_source_image = source_image.resolve()
+_selected_enlarged_image: Path | None = None
+_selected_grayscale_image: Path | None = None
+_selected_threshold_image: Path | None = None
+_selected_ocr_candidates_file: Path | None = None
+_selected_raw_ocr_file: Path | None = None
 
 
 def set_selected_cropped_image(
@@ -2302,14 +3275,21 @@ def set_selected_cropped_image(
     global _selected_source_image
     global _selected_cropped_image
     global _selected_perspective_image
-    global _selected_preprocessed_image
+    global _selected_enlarged_image
+    global _selected_grayscale_image
+    global _selected_threshold_image
+    global _selected_ocr_candidates_file
+    global _selected_raw_ocr_file
 
     _selected_source_image = source_image.resolve()
     _selected_cropped_image = cropped_image.resolve()
 
-    # New crop invalidates downstream artifacts for this session.
     _selected_perspective_image = None
-    _selected_preprocessed_image = None
+    _selected_enlarged_image = None
+    _selected_grayscale_image = None
+    _selected_threshold_image = None
+    _selected_ocr_candidates_file = None
+    _selected_raw_ocr_file = None
 
 
 def set_selected_perspective_image(
@@ -2320,31 +3300,89 @@ def set_selected_perspective_image(
     global _selected_source_image
     global _selected_cropped_image
     global _selected_perspective_image
-    global _selected_preprocessed_image
+    global _selected_enlarged_image
+    global _selected_grayscale_image
+    global _selected_threshold_image
+    global _selected_ocr_candidates_file
+    global _selected_raw_ocr_file
 
     _selected_source_image = source_image.resolve()
     _selected_cropped_image = cropped_image.resolve()
     _selected_perspective_image = perspective_image.resolve()
 
-    # New perspective correction invalidates preprocessing.
-    _selected_preprocessed_image = None
+    _selected_enlarged_image = None
+    _selected_grayscale_image = None
+    _selected_threshold_image = None
+    _selected_ocr_candidates_file = None
+    _selected_raw_ocr_file = None
 
 
-def set_selected_preprocessed_image(
+def set_selected_enlarged_image(
     source_image: Path,
     cropped_image: Path,
     perspective_image: Path,
-    preprocessed_image: Path,
+    enlarged_image: Path,
 ) -> None:
     global _selected_source_image
     global _selected_cropped_image
     global _selected_perspective_image
-    global _selected_preprocessed_image
+    global _selected_enlarged_image
+    global _selected_grayscale_image
+    global _selected_threshold_image
+    global _selected_ocr_candidates_file
+    global _selected_raw_ocr_file
 
     _selected_source_image = source_image.resolve()
     _selected_cropped_image = cropped_image.resolve()
     _selected_perspective_image = perspective_image.resolve()
-    _selected_preprocessed_image = preprocessed_image.resolve()
+    _selected_enlarged_image = enlarged_image.resolve()
+
+    _selected_grayscale_image = None
+    _selected_threshold_image = None
+    _selected_ocr_candidates_file = None
+    _selected_raw_ocr_file = None
+
+
+def set_selected_ocr_variants(
+    source_image: Path,
+    cropped_image: Path,
+    perspective_image: Path,
+    enlarged_image: Path,
+    grayscale_image: Path,
+    threshold_image: Path,
+) -> None:
+    global _selected_source_image
+    global _selected_cropped_image
+    global _selected_perspective_image
+    global _selected_enlarged_image
+    global _selected_grayscale_image
+    global _selected_threshold_image
+    global _selected_ocr_candidates_file
+    global _selected_raw_ocr_file
+
+    _selected_source_image = source_image.resolve()
+    _selected_cropped_image = cropped_image.resolve()
+    _selected_perspective_image = perspective_image.resolve()
+    _selected_enlarged_image = enlarged_image.resolve()
+    _selected_grayscale_image = grayscale_image.resolve()
+    _selected_threshold_image = threshold_image.resolve()
+
+    _selected_ocr_candidates_file = None
+    _selected_raw_ocr_file = None
+
+
+def set_selected_ocr_candidates_file(path: Path) -> None:
+    global _selected_ocr_candidates_file
+    global _selected_raw_ocr_file
+
+    _selected_ocr_candidates_file = path.resolve()
+    _selected_raw_ocr_file = None
+
+
+def set_selected_raw_ocr_file(path: Path) -> None:
+    global _selected_raw_ocr_file
+
+    _selected_raw_ocr_file = path.resolve()
 
 
 def get_selected_source_image() -> Path | None:
@@ -2359,20 +3397,44 @@ def get_selected_perspective_image() -> Path | None:
     return _selected_perspective_image
 
 
-def get_selected_preprocessed_image() -> Path | None:
-    return _selected_preprocessed_image
+def get_selected_enlarged_image() -> Path | None:
+    return _selected_enlarged_image
+
+
+def get_selected_grayscale_image() -> Path | None:
+    return _selected_grayscale_image
+
+
+def get_selected_threshold_image() -> Path | None:
+    return _selected_threshold_image
+
+
+def get_selected_ocr_candidates_file() -> Path | None:
+    return _selected_ocr_candidates_file
+
+
+def get_selected_raw_ocr_file() -> Path | None:
+    return _selected_raw_ocr_file
 
 
 def clear_selected_receipt() -> None:
     global _selected_source_image
     global _selected_cropped_image
     global _selected_perspective_image
-    global _selected_preprocessed_image
+    global _selected_enlarged_image
+    global _selected_grayscale_image
+    global _selected_threshold_image
+    global _selected_ocr_candidates_file
+    global _selected_raw_ocr_file
 
     _selected_source_image = None
     _selected_cropped_image = None
     _selected_perspective_image = None
-    _selected_preprocessed_image = None
+    _selected_enlarged_image = None
+    _selected_grayscale_image = None
+    _selected_threshold_image = None
+    _selected_ocr_candidates_file = None
+    _selected_raw_ocr_file = None
 
 
 ================================================================================
@@ -2381,8 +3443,10 @@ FILE: utils/utils_main.py
 
 from utils.reliable_receipt_crop import run_reliable_receipt_crop
 from utils.perspective_correction import run_perspective_correction
-from utils.image_preprocessing import run_image_preprocessing
+from utils.image_enlargement import run_image_enlargement
+from utils.ocr_image_variants import run_ocr_image_variants
 from utils.run_ocr import run_ocr
+from utils.compare_ocr import run_compare_ocr
 from utils.export_codebase import run_codebase_export
 
 
@@ -2400,15 +3464,23 @@ def display_utils_menu() -> None:
     )
 
     print(
-        "3. Image Preprocessing / 2x Enlargement"
+        "3. 2x Enlargement"
     )
 
     print(
-        "4. Run OCR"
+        "4. Generate OCR Image Variants"
     )
 
     print(
-        "5. Export Clean Codebase"
+        "5. Run OCR - PSM 4 / 6 / 11"
+    )
+
+    print(
+        "6. Compare OCR Results / Build Raw OCR JSON"
+    )
+
+    print(
+        "7. Export Clean Codebase"
     )
 
     print(
@@ -2431,12 +3503,18 @@ def run_utils_menu() -> None:
             run_perspective_correction()
 
         elif option == "3":
-            run_image_preprocessing()
+            run_image_enlargement()
 
         elif option == "4":
-            run_ocr()
+            run_ocr_image_variants()
 
         elif option == "5":
+            run_ocr()
+
+        elif option == "6":
+            run_compare_ocr()
+
+        elif option == "7":
             run_codebase_export()
 
         elif option == "0":
@@ -2473,43 +3551,77 @@ from pytesseract import Output
 
 
 OCR_ENGINE = "tesseract"
-OCR_CONFIG = "--psm 6"
 
 
 def get_tesseract_version() -> str:
-    """
-    Return the installed Tesseract version.
-    """
-    version = str(pytesseract.get_tesseract_version())
+    version = str(
+        pytesseract.get_tesseract_version()
+    )
+
     return version.splitlines()[0].strip()
 
 
-def _average_confidence(values: list[float]) -> float | None:
-    valid_values = [value for value in values if value >= 0]
+def _average_confidence(
+    values: list[float],
+) -> float | None:
+    valid_values = [
+        value
+        for value in values
+        if value >= 0
+    ]
 
     if not valid_values:
         return None
 
-    return round(sum(valid_values) / len(valid_values), 2)
-
-
-def _extract_line_confidences(image: Image.Image) -> dict[int, float | None]:
-    """
-    Read Tesseract's word-level confidence values and aggregate them
-    by the text lines detected by Tesseract.
-
-    This does not interpret or normalize receipt contents.
-    """
-    data = pytesseract.image_to_data(
-        image,
-        config=OCR_CONFIG,
-        output_type=Output.DICT,
+    return round(
+        sum(valid_values)
+        / len(valid_values),
+        2,
     )
 
-    grouped: dict[tuple[int, int, int, int], list[float]] = {}
 
-    for index, raw_text in enumerate(data["text"]):
-        if raw_text is None or raw_text == "":
+def extract_receipt(
+    image_path: str | Path,
+    psm: int,
+) -> dict:
+    path = (
+        Path(image_path)
+        .expanduser()
+        .resolve()
+    )
+
+    if not path.exists():
+        raise FileNotFoundError(
+            f"Receipt image does not exist: {path}"
+        )
+
+    config = f"--psm {psm}"
+
+    with Image.open(path) as image:
+        width, height = image.size
+
+        data = pytesseract.image_to_data(
+            image,
+            config=config,
+            output_type=Output.DICT,
+        )
+
+    grouped: dict[
+        tuple[int, int, int, int],
+        list[dict],
+    ] = {}
+
+    confidences: list[float] = []
+
+    for index, raw_text in enumerate(
+        data["text"]
+    ):
+        if raw_text is None:
+            continue
+
+        text = raw_text.strip()
+
+        if not text:
             continue
 
         key = (
@@ -2520,70 +3632,110 @@ def _extract_line_confidences(image: Image.Image) -> dict[int, float | None]:
         )
 
         try:
-            confidence = float(data["conf"][index])
-        except (TypeError, ValueError):
+            confidence = float(
+                data["conf"][index]
+            )
+        except (
+            TypeError,
+            ValueError,
+        ):
             confidence = -1.0
 
-        grouped.setdefault(key, []).append(confidence)
-
-    return {
-        line_number: _average_confidence(grouped[key])
-        for line_number, key in enumerate(grouped.keys(), start=1)
-    }
-
-
-def extract_receipt(image_path: str | Path) -> dict:
-    """
-    Stage 1 receipt OCR extraction.
-
-    Input:
-        Path to a receipt image.
-
-    Output:
-        JSON-serializable dictionary containing raw Tesseract output
-        and OCR metadata.
-
-    No parsing, product identification, categorization,
-    normalization, or database work is performed here.
-    """
-    path = Path(image_path).expanduser().resolve()
-
-    if not path.exists():
-        raise FileNotFoundError(f"Receipt image does not exist: {path}")
-
-    if not path.is_file():
-        raise ValueError(f"Receipt image path is not a file: {path}")
-
-    with Image.open(path) as image:
-        width, height = image.size
-
-        raw_text = pytesseract.image_to_string(
-            image,
-            config=OCR_CONFIG,
+        grouped.setdefault(
+            key,
+            [],
+        ).append(
+            {
+                "text": text,
+                "confidence": confidence,
+            }
         )
 
-        confidence_by_line = _extract_line_confidences(image)
+        if confidence >= 0:
+            confidences.append(
+                confidence
+            )
 
-    raw_lines = raw_text.splitlines()
+    text_lines = []
+    raw_lines = []
 
-    text_lines = [
-        {
-            "line_number": line_number,
-            "text": line,
-            "confidence": confidence_by_line.get(line_number),
-        }
-        for line_number, line in enumerate(raw_lines, start=1)
-    ]
+    for line_number, words in enumerate(
+        grouped.values(),
+        start=1,
+    ):
+        line_text = " ".join(
+            word["text"]
+            for word in words
+        )
+
+        line_confidence = (
+            _average_confidence(
+                [
+                    word["confidence"]
+                    for word in words
+                ]
+            )
+        )
+
+        raw_lines.append(
+            line_text
+        )
+
+        text_lines.append(
+            {
+                "line_number": line_number,
+                "text": line_text,
+                "confidence": line_confidence,
+            }
+        )
+
+    raw_text = "\n".join(
+        raw_lines
+    )
+
+    mean_confidence = (
+        _average_confidence(
+            confidences
+        )
+    )
+
+    low_confidence_count = sum(
+        1
+        for confidence in confidences
+        if confidence < 50
+    )
+
+    recognized_word_count = len(
+        confidences
+    )
+
+    low_confidence_rate = (
+        round(
+            low_confidence_count
+            / recognized_word_count,
+            4,
+        )
+        if recognized_word_count
+        else 1.0
+    )
 
     return {
         "source_image": str(path),
         "ocr_engine": OCR_ENGINE,
         "ocr_version": get_tesseract_version(),
-        "ocr_config": OCR_CONFIG,
-        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "ocr_config": config,
+        "generated_at": datetime.now(
+            timezone.utc
+        ).isoformat(),
         "image": {
             "width": width,
             "height": height,
+        },
+        "metrics": {
+            "mean_word_confidence": mean_confidence,
+            "recognized_word_count": recognized_word_count,
+            "low_confidence_word_count": low_confidence_count,
+            "low_confidence_rate": low_confidence_rate,
         },
         "raw_text": raw_text,
         "text": text_lines,

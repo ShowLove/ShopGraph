@@ -1,96 +1,59 @@
-ShopGraph - Full OCR Candidate Pipeline Update
+ShopGraph - Consensus OCR Comparison Update
 
-NEW UTILS ORDER
+PURPOSE
 
-1. Reliable Receipt Detection / Crop
-2. Perspective Correction
-3. 2x Enlargement
-4. Generate OCR Image Variants
-5. Run OCR - PSM 4 / 6 / 11
+This update changes only Stage 6:
+
 6. Compare OCR Results / Build Raw OCR JSON
-7. Export Clean Codebase
-0. Return to Main
 
-PIPELINE
+Previously:
+- all six OCR candidates were ranked
+- one complete candidate won
+- the other five candidates were discarded from the final transcription
 
-Original receipt
-    ↓
-Reliable crop
-    ↓
-Perspective correction
-    ↓
-2x enlargement
-    ↓
-Grayscale enhanced + thresholded variant
-    ↓
-Tesseract PSM 4 / 6 / 11 on both variants
-    ↓
-6 OCR candidates
-    ↓
-Heuristic comparison
-    ↓
-Final raw OCR JSON
+Now:
+- the best candidate is still used as the reading-order backbone
+- every backbone line is compared against corresponding lines from all six candidates
+- a clearer/more complete matching line can replace the backbone line
+- lines missing from the backbone but independently supported by at least two candidates
+  are preserved in supported_extra_lines
+- every final line records which candidate produced it
+- OCR characters are never silently corrected or rewritten
 
-SIMPLIFIED WORKFLOW
+INSTALL
 
-You can run any later stage directly.
+Replace:
 
-For example, if you select option 6 first:
-- choose the receipt once
-- crop runs automatically
-- perspective correction runs automatically
-- enlargement runs automatically
-- image variants are generated automatically
-- all six OCR candidates run automatically
-- comparison runs automatically
-- final raw OCR JSON is created
+    utils/compare_ocr.py
 
-OUTPUTS
+No other project files need to change.
 
-data/cropped/
-    <receipt>_cropped.png
+RUN
 
-data/perspective_corrected/
-    <receipt>_perspective.png
+From ShopGraph:
 
-data/enlarged/
-    <receipt>_2x.png
+    1. Utilities
+    6. Compare OCR Results / Build Raw OCR JSON
 
-data/ocr_variants/
-    <receipt>_grayscale.png
-    <receipt>_threshold.png
+The existing smart pipeline remains intact. If earlier stages have not run in the
+current session, they will run automatically.
 
-data/ocr_candidates/
-    <receipt>_ocr_candidates.json
+OUTPUT
 
-data/raw_ocr/
-    <receipt>_raw_ocr.json
+    data/raw_ocr/<receipt>_raw_ocr.json
 
-IMPORTANT CLEANUP
+Important fields:
 
-Delete the old:
-    utils/main.py
+    backbone_candidate
+    consensus_summary
+    raw_text
+    text
+    supported_extra_lines
+    candidate_ranking
+    provenance
 
-Keep:
-    utils/utils_main.py
+The raw_text field contains the consensus backbone in receipt order.
 
-COPY/REPLACE
-
-- main.py
-- utils/constants.py
-- utils/session_state.py
-- utils/image_enlargement.py
-- utils/ocr_image_variants.py
-- utils/run_ocr.py
-- utils/compare_ocr.py
-- utils/utils_main.py
-- utils/codebase_bundler.py
-- extractors/tesseract.py
-
-KEEP YOUR CURRENT
-
-- utils/reliable_receipt_crop.py
-- utils/perspective_correction.py
-- utils/receipt_picker.py
-- utils/export_codebase.py
-- utils/__init__.py
+The supported_extra_lines field is deliberately separate for this first test.
+This avoids guessing where an omitted line belongs while still preserving
+content seen independently by multiple OCR candidates.
