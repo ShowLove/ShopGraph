@@ -1,0 +1,4021 @@
+{
+  "source_receipt": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/current_pic/aldi_8_23_26.jpg",
+  "candidate_count": 6,
+  "candidates": [
+    {
+      "candidate_id": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "result": {
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/aldi_8_23_26_grayscale.png",
+        "ocr_engine": "tesseract",
+        "ocr_version": "5.5.3",
+        "ocr_config": "--psm 4",
+        "generated_at": "2026-08-25T19:45:22.096482+00:00",
+        "image": {
+          "width": 1504,
+          "height": 3066
+        },
+        "metrics": {
+          "mean_word_confidence": 81.81,
+          "recognized_word_count": 208,
+          "low_confidence_word_count": 19,
+          "low_confidence_rate": 0.0913
+        },
+        "raw_text": "Sore\nore #160\n1400 N Wickhon Rd\nMelbourne, FL\nhttps: //hellp.al di .us\nYour cashier today was Taryn\n383212 GF Wide Pan Bread\n356691 Zucchini\n1.81 1b x 1.39/1b\n356689 Yellow Squash\n1.87 lb x 1.99/1b\n356421 Medley Potatoes\n856537 Cilantro\n356508 Broccoli Crowns\n1.63 1b x 2.09/1b\n356496 Beefsteak Tomatoes\n344280 Cauli Crust Pizza\n356427 Multi-Peppers 3pk.\n356591 Pink Lady Apple\n956488 Baby Carrots\n341979 Pine/Water Spears\n356504 Blueberries\n956374 Golden Kiwi\n343738 Hummus Mini Cups\n369553 LesserEvil Popcorn\n262747 Bananas LRW\n(G) 2.681b - T) 0,011b\n(N) 2.67 1b x 0.49/1b\n328752 Fruit & Grain Bars\n328752 Fruit & Grain Bars\n356609 Red Onions\n739153 Organic Chickpeas\n281343 Dark Red Kidney\n739153 Organic Chickpeas\n381343 Dark Red Kidney\n381859 Vinaigrette Drssng\n256578 Parsley each\n400462 0G Croutons\n344683 Evryd Plate 8.5in\n384545 NO Honey Wheat Brd\n730325 3pk Gel Pens ~\n720921 PB Toast Crackers\n383548 Goat Cheese Logs\n713372 Feta Crumbles\n718929 Col lapsibleStorage\n718929. Col lapsibleStorage 5.99 NB\nvISA 108.44\nSKK KEK EREXERER GOOD OTHER\n08/23/26 11:40 Ref/Seq # 0\nAuth # 002470\nAID 0000000031010\nTVR 0009000000\nTAO 41F420131A00000000010030273000000\n9040000900000000000'\nTSI 0000 ARC 00 EntryMode 07\n++APPROVED++\nSUBTOTAL 106.8\nB-Taxable @7.000% *\nA-Taxable @0,00%\nAMOUNT DUE\nT Of\n35 ITEM\n»5511 FK49/008/011 08/23/2\nRRKKERKKE!",
+        "text": [
+          {
+            "line_number": 1,
+            "text": "Sore",
+            "confidence": 30.0
+          },
+          {
+            "line_number": 2,
+            "text": "ore #160",
+            "confidence": 95.0
+          },
+          {
+            "line_number": 3,
+            "text": "1400 N Wickhon Rd",
+            "confidence": 75.5
+          },
+          {
+            "line_number": 4,
+            "text": "Melbourne, FL",
+            "confidence": 94.0
+          },
+          {
+            "line_number": 5,
+            "text": "https: //hellp.al di .us",
+            "confidence": 37.25
+          },
+          {
+            "line_number": 6,
+            "text": "Your cashier today was Taryn",
+            "confidence": 94.2
+          },
+          {
+            "line_number": 7,
+            "text": "383212 GF Wide Pan Bread",
+            "confidence": 86.0
+          },
+          {
+            "line_number": 8,
+            "text": "356691 Zucchini",
+            "confidence": 93.0
+          },
+          {
+            "line_number": 9,
+            "text": "1.81 1b x 1.39/1b",
+            "confidence": 70.75
+          },
+          {
+            "line_number": 10,
+            "text": "356689 Yellow Squash",
+            "confidence": 87.0
+          },
+          {
+            "line_number": 11,
+            "text": "1.87 lb x 1.99/1b",
+            "confidence": 73.25
+          },
+          {
+            "line_number": 12,
+            "text": "356421 Medley Potatoes",
+            "confidence": 80.67
+          },
+          {
+            "line_number": 13,
+            "text": "856537 Cilantro",
+            "confidence": 83.5
+          },
+          {
+            "line_number": 14,
+            "text": "356508 Broccoli Crowns",
+            "confidence": 85.0
+          },
+          {
+            "line_number": 15,
+            "text": "1.63 1b x 2.09/1b",
+            "confidence": 60.75
+          },
+          {
+            "line_number": 16,
+            "text": "356496 Beefsteak Tomatoes",
+            "confidence": 88.33
+          },
+          {
+            "line_number": 17,
+            "text": "344280 Cauli Crust Pizza",
+            "confidence": 92.5
+          },
+          {
+            "line_number": 18,
+            "text": "356427 Multi-Peppers 3pk.",
+            "confidence": 75.33
+          },
+          {
+            "line_number": 19,
+            "text": "356591 Pink Lady Apple",
+            "confidence": 95.5
+          },
+          {
+            "line_number": 20,
+            "text": "956488 Baby Carrots",
+            "confidence": 88.67
+          },
+          {
+            "line_number": 21,
+            "text": "341979 Pine/Water Spears",
+            "confidence": 92.67
+          },
+          {
+            "line_number": 22,
+            "text": "356504 Blueberries",
+            "confidence": 92.5
+          },
+          {
+            "line_number": 23,
+            "text": "956374 Golden Kiwi",
+            "confidence": 76.67
+          },
+          {
+            "line_number": 24,
+            "text": "343738 Hummus Mini Cups",
+            "confidence": 87.0
+          },
+          {
+            "line_number": 25,
+            "text": "369553 LesserEvil Popcorn",
+            "confidence": 84.67
+          },
+          {
+            "line_number": 26,
+            "text": "262747 Bananas LRW",
+            "confidence": 93.0
+          },
+          {
+            "line_number": 27,
+            "text": "(G) 2.681b - T) 0,011b",
+            "confidence": 68.4
+          },
+          {
+            "line_number": 28,
+            "text": "(N) 2.67 1b x 0.49/1b",
+            "confidence": 75.8
+          },
+          {
+            "line_number": 29,
+            "text": "328752 Fruit & Grain Bars",
+            "confidence": 93.8
+          },
+          {
+            "line_number": 30,
+            "text": "328752 Fruit & Grain Bars",
+            "confidence": 93.8
+          },
+          {
+            "line_number": 31,
+            "text": "356609 Red Onions",
+            "confidence": 92.67
+          },
+          {
+            "line_number": 32,
+            "text": "739153 Organic Chickpeas",
+            "confidence": 94.0
+          },
+          {
+            "line_number": 33,
+            "text": "281343 Dark Red Kidney",
+            "confidence": 92.0
+          },
+          {
+            "line_number": 34,
+            "text": "739153 Organic Chickpeas",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 35,
+            "text": "381343 Dark Red Kidney",
+            "confidence": 95.5
+          },
+          {
+            "line_number": 36,
+            "text": "381859 Vinaigrette Drssng",
+            "confidence": 91.0
+          },
+          {
+            "line_number": 37,
+            "text": "256578 Parsley each",
+            "confidence": 91.67
+          },
+          {
+            "line_number": 38,
+            "text": "400462 0G Croutons",
+            "confidence": 95.67
+          },
+          {
+            "line_number": 39,
+            "text": "344683 Evryd Plate 8.5in",
+            "confidence": 92.0
+          },
+          {
+            "line_number": 40,
+            "text": "384545 NO Honey Wheat Brd",
+            "confidence": 89.0
+          },
+          {
+            "line_number": 41,
+            "text": "730325 3pk Gel Pens ~",
+            "confidence": 81.4
+          },
+          {
+            "line_number": 42,
+            "text": "720921 PB Toast Crackers",
+            "confidence": 95.5
+          },
+          {
+            "line_number": 43,
+            "text": "383548 Goat Cheese Logs",
+            "confidence": 95.25
+          },
+          {
+            "line_number": 44,
+            "text": "713372 Feta Crumbles",
+            "confidence": 93.0
+          },
+          {
+            "line_number": 45,
+            "text": "718929 Col lapsibleStorage",
+            "confidence": 76.33
+          },
+          {
+            "line_number": 46,
+            "text": "718929. Col lapsibleStorage 5.99 NB",
+            "confidence": 80.0
+          },
+          {
+            "line_number": 47,
+            "text": "vISA 108.44",
+            "confidence": 78.5
+          },
+          {
+            "line_number": 48,
+            "text": "SKK KEK EREXERER GOOD OTHER",
+            "confidence": 33.8
+          },
+          {
+            "line_number": 49,
+            "text": "08/23/26 11:40 Ref/Seq # 0",
+            "confidence": 84.6
+          },
+          {
+            "line_number": 50,
+            "text": "Auth # 002470",
+            "confidence": 85.33
+          },
+          {
+            "line_number": 51,
+            "text": "AID 0000000031010",
+            "confidence": 36.0
+          },
+          {
+            "line_number": 52,
+            "text": "TVR 0009000000",
+            "confidence": 76.5
+          },
+          {
+            "line_number": 53,
+            "text": "TAO 41F420131A00000000010030273000000",
+            "confidence": 49.0
+          },
+          {
+            "line_number": 54,
+            "text": "9040000900000000000'",
+            "confidence": 73.0
+          },
+          {
+            "line_number": 55,
+            "text": "TSI 0000 ARC 00 EntryMode 07",
+            "confidence": 92.67
+          },
+          {
+            "line_number": 56,
+            "text": "++APPROVED++",
+            "confidence": 86.0
+          },
+          {
+            "line_number": 57,
+            "text": "SUBTOTAL 106.8",
+            "confidence": 90.5
+          },
+          {
+            "line_number": 58,
+            "text": "B-Taxable @7.000% *",
+            "confidence": 76.33
+          },
+          {
+            "line_number": 59,
+            "text": "A-Taxable @0,00%",
+            "confidence": 74.5
+          },
+          {
+            "line_number": 60,
+            "text": "AMOUNT DUE",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 61,
+            "text": "T Of",
+            "confidence": 65.5
+          },
+          {
+            "line_number": 62,
+            "text": "35 ITEM",
+            "confidence": 93.0
+          },
+          {
+            "line_number": 63,
+            "text": "»5511 FK49/008/011 08/23/2",
+            "confidence": 49.67
+          },
+          {
+            "line_number": 64,
+            "text": "RRKKERKKE!",
+            "confidence": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "candidate_id": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "result": {
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/aldi_8_23_26_grayscale.png",
+        "ocr_engine": "tesseract",
+        "ocr_version": "5.5.3",
+        "ocr_config": "--psm 6",
+        "generated_at": "2026-08-25T19:45:23.710288+00:00",
+        "image": {
+          "width": 1504,
+          "height": 3066
+        },
+        "metrics": {
+          "mean_word_confidence": 61.2,
+          "recognized_word_count": 441,
+          "low_confidence_word_count": 163,
+          "low_confidence_rate": 0.3696
+        },
+        "raw_text": ". a ¥\na = 1400 N Wickhen Rd ‘\ni oe te Melbourne, FL '\nrh paket https://hellp.al di .us “\na ise Your cashier today was Taryn |\nALAS, wri A> ~\nBy he te 383212 GF Wide Pan Bread 6,79 FA»\nNgee Pt een 356691 Zucchini 2.52 y 48\ni 4 i 1.81 lb x 1.39/1b\nNE cia 356689 Yellow Squash 2,600FA\niY i wee 1.87 lb x 1.39/1b\nyang: 4: wn 356421 Medley Potatoes 3.29 FA\n(\\ mp) f — 356537 Cilantro 0.89 FAS 4)\n|) ese 356508 Broccoli Crowns 3.41 FA iY\n(PE A <2 1.63 Ib x _2.09/1b\nBL) “scar 956496 Beeteteek Tomatoes 2.99 FA Wi\nOey Miley ae 344230 Cauli Crust Pizza 8.29 FA Pi,\nsf ne eee 356427 Multi-Peppers Sk. 269 EA ce,\nWAR 4 Coeer, 356501 Pink Lady Apple 3.69 FA ty\nFN RO se 356488 Baby Carrots 1.29 FA }\niS ayht, ne ae 341979 Pine/Water Spears 3.89 FA ft\ney AN ace: 356504 Blueberries 2.59 FA Cy\nLa Nie secre 356374 Golden Kiwi 4.39 FA\nse Sitter 343736 Hummus Mini Cups 3.45 FA\nhes Mere 369553 LesserEvil Popcorn 2.39 FA j,\nae OM bananas 262747 Bananas LRW 1.31 FA\nif Gs as ee (G) 2.681b - (1) 0,011b if\nAi tee \\lpabte *: (N) 2.67 1b x. 0.49/1b\n4, tie of Fi 328752 Fruit & Grain Bars 1.99 FA\n» ye ny Ulges = 328752 Fruit & Grain Bars 1.99 FA\nPl Meee pce 356609 Red Onions 2.49 FA\nLi yes Gog AS Gi 739153 Organic Chickpeas 0.99 FA\nhak EYL 381343 Dark Red Kidney 0.85 FA\ny le Me (A, 739153 Organic Chickpeas 0.99 FA Oy\nMi. 34 . 381343 Dark Red Kidney 0.85 FA t}\ne/a. (Se 381259 Vinaigrette Drseng 2.99 FA ‘\n(Lf, Bhar er2 356578 Parsley each 0.95 FA\nPC hi Besa e- 400462 0G Croutons 1.99 FA is\nWot) ae 344583 Evryd Plate 8.5in 5.25 NB uh\n(i 384545 NO Honey Wheat Brd 3.37 FA ;\nWi) Geri 730325 3pk Gel Pens - 5.99 NB\nyy 720921 PB Toast Crackers 2.79 FA\nLi we 383548 Goat Cheese Logs 1.99 FA\n: 713372 Feta Crumbles 2.89 FA\n, fy Ce 718929 Col lapsibleStorage 5.99 NB\nVy 718929. Col lapsibleStorage 5.99 NB\n' 7 VISA 108.44\nJ KEKKKRKKRERKEKGOOS OTHER\ny om 08/23/26 11:40 Ref/Seq # 0\n4 Auth # 002470\nAID 40090000031010\n; TVR 0009000000\nTAD 41F420131A00000000010030273000000\n0400002000000000000000000000000\nTSI 0000 ARC 00 EntryMode 07\n++APPROVED++\nSUBTOTAL 106.8\nB-Taxable @7.000% x\n~~ A-Taxable @0,00% .\nAMOUNT DUE\nTOT GS 1!\n35 ITEM\nCredi 3.44\n5511 FK49/008/011 08/23/26 11:40\nRRKKERKKKI EKA KKRERE\nor 7 Als os |\n’ |",
+        "text": [
+          {
+            "line_number": 1,
+            "text": ". a ¥",
+            "confidence": 31.33
+          },
+          {
+            "line_number": 2,
+            "text": "a = 1400 N Wickhen Rd ‘",
+            "confidence": 44.14
+          },
+          {
+            "line_number": 3,
+            "text": "i oe te Melbourne, FL '",
+            "confidence": 42.33
+          },
+          {
+            "line_number": 4,
+            "text": "rh paket https://hellp.al di .us “",
+            "confidence": 43.5
+          },
+          {
+            "line_number": 5,
+            "text": "a ise Your cashier today was Taryn |",
+            "confidence": 75.38
+          },
+          {
+            "line_number": 6,
+            "text": "ALAS, wri A> ~",
+            "confidence": 31.75
+          },
+          {
+            "line_number": 7,
+            "text": "By he te 383212 GF Wide Pan Bread 6,79 FA»",
+            "confidence": 57.9
+          },
+          {
+            "line_number": 8,
+            "text": "Ngee Pt een 356691 Zucchini 2.52 y 48",
+            "confidence": 58.5
+          },
+          {
+            "line_number": 9,
+            "text": "i 4 i 1.81 lb x 1.39/1b",
+            "confidence": 43.71
+          },
+          {
+            "line_number": 10,
+            "text": "NE cia 356689 Yellow Squash 2,600FA",
+            "confidence": 50.33
+          },
+          {
+            "line_number": 11,
+            "text": "iY i wee 1.87 lb x 1.39/1b",
+            "confidence": 44.14
+          },
+          {
+            "line_number": 12,
+            "text": "yang: 4: wn 356421 Medley Potatoes 3.29 FA",
+            "confidence": 71.75
+          },
+          {
+            "line_number": 13,
+            "text": "(\\ mp) f — 356537 Cilantro 0.89 FAS 4)",
+            "confidence": 48.33
+          },
+          {
+            "line_number": 14,
+            "text": "|) ese 356508 Broccoli Crowns 3.41 FA iY",
+            "confidence": 53.62
+          },
+          {
+            "line_number": 15,
+            "text": "(PE A <2 1.63 Ib x _2.09/1b",
+            "confidence": 46.43
+          },
+          {
+            "line_number": 16,
+            "text": "BL) “scar 956496 Beeteteek Tomatoes 2.99 FA Wi",
+            "confidence": 46.5
+          },
+          {
+            "line_number": 17,
+            "text": "Oey Miley ae 344230 Cauli Crust Pizza 8.29 FA Pi,",
+            "confidence": 59.8
+          },
+          {
+            "line_number": 18,
+            "text": "sf ne eee 356427 Multi-Peppers Sk. 269 EA ce,",
+            "confidence": 43.89
+          },
+          {
+            "line_number": 19,
+            "text": "WAR 4 Coeer, 356501 Pink Lady Apple 3.69 FA ty",
+            "confidence": 66.3
+          },
+          {
+            "line_number": 20,
+            "text": "FN RO se 356488 Baby Carrots 1.29 FA }",
+            "confidence": 63.11
+          },
+          {
+            "line_number": 21,
+            "text": "iS ayht, ne ae 341979 Pine/Water Spears 3.89 FA ft",
+            "confidence": 56.3
+          },
+          {
+            "line_number": 22,
+            "text": "ey AN ace: 356504 Blueberries 2.59 FA Cy",
+            "confidence": 63.62
+          },
+          {
+            "line_number": 23,
+            "text": "La Nie secre 356374 Golden Kiwi 4.39 FA",
+            "confidence": 64.25
+          },
+          {
+            "line_number": 24,
+            "text": "se Sitter 343736 Hummus Mini Cups 3.45 FA",
+            "confidence": 72.88
+          },
+          {
+            "line_number": 25,
+            "text": "hes Mere 369553 LesserEvil Popcorn 2.39 FA j,",
+            "confidence": 62.88
+          },
+          {
+            "line_number": 26,
+            "text": "ae OM bananas 262747 Bananas LRW 1.31 FA",
+            "confidence": 70.12
+          },
+          {
+            "line_number": 27,
+            "text": "if Gs as ee (G) 2.681b - (1) 0,011b if",
+            "confidence": 39.0
+          },
+          {
+            "line_number": 28,
+            "text": "Ai tee \\lpabte *: (N) 2.67 1b x. 0.49/1b",
+            "confidence": 54.56
+          },
+          {
+            "line_number": 29,
+            "text": "4, tie of Fi 328752 Fruit & Grain Bars 1.99 FA",
+            "confidence": 70.36
+          },
+          {
+            "line_number": 30,
+            "text": "» ye ny Ulges = 328752 Fruit & Grain Bars 1.99 FA",
+            "confidence": 55.5
+          },
+          {
+            "line_number": 31,
+            "text": "Pl Meee pce 356609 Red Onions 2.49 FA",
+            "confidence": 68.0
+          },
+          {
+            "line_number": 32,
+            "text": "Li yes Gog AS Gi 739153 Organic Chickpeas 0.99 FA",
+            "confidence": 62.7
+          },
+          {
+            "line_number": 33,
+            "text": "hak EYL 381343 Dark Red Kidney 0.85 FA",
+            "confidence": 75.88
+          },
+          {
+            "line_number": 34,
+            "text": "y le Me (A, 739153 Organic Chickpeas 0.99 FA Oy",
+            "confidence": 57.5
+          },
+          {
+            "line_number": 35,
+            "text": "Mi. 34 . 381343 Dark Red Kidney 0.85 FA t}",
+            "confidence": 78.2
+          },
+          {
+            "line_number": 36,
+            "text": "e/a. (Se 381259 Vinaigrette Drseng 2.99 FA ‘",
+            "confidence": 61.38
+          },
+          {
+            "line_number": 37,
+            "text": "(Lf, Bhar er2 356578 Parsley each 0.95 FA",
+            "confidence": 61.62
+          },
+          {
+            "line_number": 38,
+            "text": "PC hi Besa e- 400462 0G Croutons 1.99 FA is",
+            "confidence": 61.2
+          },
+          {
+            "line_number": 39,
+            "text": "Wot) ae 344583 Evryd Plate 8.5in 5.25 NB uh",
+            "confidence": 73.44
+          },
+          {
+            "line_number": 40,
+            "text": "(i 384545 NO Honey Wheat Brd 3.37 FA ;",
+            "confidence": 72.89
+          },
+          {
+            "line_number": 41,
+            "text": "Wi) Geri 730325 3pk Gel Pens - 5.99 NB",
+            "confidence": 60.67
+          },
+          {
+            "line_number": 42,
+            "text": "yy 720921 PB Toast Crackers 2.79 FA",
+            "confidence": 86.71
+          },
+          {
+            "line_number": 43,
+            "text": "Li we 383548 Goat Cheese Logs 1.99 FA",
+            "confidence": 79.88
+          },
+          {
+            "line_number": 44,
+            "text": ": 713372 Feta Crumbles 2.89 FA",
+            "confidence": 85.17
+          },
+          {
+            "line_number": 45,
+            "text": ", fy Ce 718929 Col lapsibleStorage 5.99 NB",
+            "confidence": 74.38
+          },
+          {
+            "line_number": 46,
+            "text": "Vy 718929. Col lapsibleStorage 5.99 NB",
+            "confidence": 75.33
+          },
+          {
+            "line_number": 47,
+            "text": "' 7 VISA 108.44",
+            "confidence": 59.5
+          },
+          {
+            "line_number": 48,
+            "text": "J KEKKKRKKRERKEKGOOS OTHER",
+            "confidence": 52.67
+          },
+          {
+            "line_number": 49,
+            "text": "y om 08/23/26 11:40 Ref/Seq # 0",
+            "confidence": 73.0
+          },
+          {
+            "line_number": 50,
+            "text": "4 Auth # 002470",
+            "confidence": 82.0
+          },
+          {
+            "line_number": 51,
+            "text": "AID 40090000031010",
+            "confidence": 73.0
+          },
+          {
+            "line_number": 52,
+            "text": "; TVR 0009000000",
+            "confidence": 56.33
+          },
+          {
+            "line_number": 53,
+            "text": "TAD 41F420131A00000000010030273000000",
+            "confidence": 51.0
+          },
+          {
+            "line_number": 54,
+            "text": "0400002000000000000000000000000",
+            "confidence": 26.0
+          },
+          {
+            "line_number": 55,
+            "text": "TSI 0000 ARC 00 EntryMode 07",
+            "confidence": 86.33
+          },
+          {
+            "line_number": 56,
+            "text": "++APPROVED++",
+            "confidence": 86.0
+          },
+          {
+            "line_number": 57,
+            "text": "SUBTOTAL 106.8",
+            "confidence": 93.0
+          },
+          {
+            "line_number": 58,
+            "text": "B-Taxable @7.000% x",
+            "confidence": 54.0
+          },
+          {
+            "line_number": 59,
+            "text": "~~ A-Taxable @0,00% .",
+            "confidence": 49.0
+          },
+          {
+            "line_number": 60,
+            "text": "AMOUNT DUE",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 61,
+            "text": "TOT GS 1!",
+            "confidence": 43.67
+          },
+          {
+            "line_number": 62,
+            "text": "35 ITEM",
+            "confidence": 91.0
+          },
+          {
+            "line_number": 63,
+            "text": "Credi 3.44",
+            "confidence": 76.5
+          },
+          {
+            "line_number": 64,
+            "text": "5511 FK49/008/011 08/23/26 11:40",
+            "confidence": 61.75
+          },
+          {
+            "line_number": 65,
+            "text": "RRKKERKKKI EKA KKRERE",
+            "confidence": 2.33
+          },
+          {
+            "line_number": 66,
+            "text": "or 7 Als os |",
+            "confidence": 49.0
+          },
+          {
+            "line_number": 67,
+            "text": "’ |",
+            "confidence": 41.5
+          }
+        ]
+      }
+    },
+    {
+      "candidate_id": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "result": {
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/aldi_8_23_26_grayscale.png",
+        "ocr_engine": "tesseract",
+        "ocr_version": "5.5.3",
+        "ocr_config": "--psm 11",
+        "generated_at": "2026-08-25T19:45:25.053735+00:00",
+        "image": {
+          "width": 1504,
+          "height": 3066
+        },
+        "metrics": {
+          "mean_word_confidence": 72.71,
+          "recognized_word_count": 341,
+          "low_confidence_word_count": 82,
+          "low_confidence_rate": 0.2405
+        },
+        "raw_text": "‘Wy\nALD:\nLn mn\nay\n—\n1400 N Wickham Rd\n~~\nJaf AA\nMelbourne, FL\nhttps://hellp.al di .us\n4)\nYour cashier today was Taryn\nyA\nray\nme\nWw\n383212 GF Wide Pan Bread\n6,79 FA®\n‘i:\n356591 Zucchin\n2.52 F.\n4\nwid\n.81 Ib X\n.39/1b\n356689 Yellow Squash\n2.60:FA\n‘fu\n1.87 |b x\n1.39/1b\nLe\n3.29 FA\nAd\n724)\n356421 Medley Potatoes\n0.89 FA\ndl\n‘Si\nee\n856537 Cilantro\n3.41 PA\n} '\nnn SS\n356508 Broccoli Crowns\n1.63 1b xX\n2.09/1b\n2.99 FA\n356496 Beefsteak Tomatoes\n8.29 FA\nVe\n‘)\n344280 Cauli Crust Pizza\n2069 FA\nif\nTel\n356427 Mul ti-Peppers Spk.\n3.69 FA\npeat\n356591 Pink Lady Apple\n1.29 FA\nWy\n956488 Baby Carrots\n3.89 FA\n341979 Pine/Water Spears\nYO\noy\n356504 Blueberries\n2.59 FA\nin\npaw J\n956374 Golden Kiwi\n4.39 FA\n343738 Hummus Mini Cups\n3.45 FA\n1}\nGe\n369553 LesserEvil Popcorn\n2.39 FA\ny/) Py\nSESE\n262747 Bananas L\n1.31 FA\nson pee BO.\neons or\n(\n1 0,011b\ndoled\n(G) 2.681b -\n0.49/1b\n(N) 2.67 1b xX\n1.99 FA\nJEG\nUe nd\n328752 Fruit & Grain Bars\n1.99 FA\n328752 Fruit & Grain Bars\n2.49 FA\n356609 Red Onions\n0.99 FA\nih,\n739153 Organic Chickpeas\n0.85 FA\nff\nif\nones - cA 2\n381843 Dark Red Kidney\n0.99 FA\n739153 Organic Chickpeas\n0.85 FA\n381343 Dark Red Kidney\n2.99 FA\nfi\nKo\n381859 Vinaigrette Drssng\n0.95 FA\nove\n256578 Parsley each\n1.99 FA\nby\n400462 0G Croutons\ni\n‘ov\n344583 Evryd Plate 8.5in\n5.25 NB\n4G?\n384545 NO Honey Wheat Br\n3.37 FA\n730325 3pk Gel Pens ~\n5.99 NB\n720921 PB Toast Crackers\n2.79 FA\n383548 Goat Cheese Logs\n1.99 FA\n713372 Feta Crumbles\n2.89 FA\n718929 Col lapsibleStorage\n5.99 NB\n718929. Col lapsibleStorage\n5.99 NB\n108.44\nyIS\n*8808 OTHER\nKKKKKERKERAKERKE\n08/23/26 11:40 Ref/Seq #0\nAuth # 002470\n31010\nAID A0O\nTAD 0031 400000000010030273000000\n004000090000\n(0000\nTSI 0000\nARC 00\nEntryMode 07\n++APPROVED*+\nTOTAL\n106.8\nB-Taxable @7.000%\nA-Taxable 00,00%\nAMO\nT\nS$ 1\neH\nCredi\n/ 4\nuv\n+5911 FK49/003/011\ni\nRRKKERK\nine",
+        "text": [
+          {
+            "line_number": 1,
+            "text": "‘Wy",
+            "confidence": 29.0
+          },
+          {
+            "line_number": 2,
+            "text": "ALD:",
+            "confidence": 45.0
+          },
+          {
+            "line_number": 3,
+            "text": "Ln mn",
+            "confidence": 25.5
+          },
+          {
+            "line_number": 4,
+            "text": "ay",
+            "confidence": 62.0
+          },
+          {
+            "line_number": 5,
+            "text": "—",
+            "confidence": 47.0
+          },
+          {
+            "line_number": 6,
+            "text": "1400 N Wickham Rd",
+            "confidence": 67.75
+          },
+          {
+            "line_number": 7,
+            "text": "~~",
+            "confidence": 43.0
+          },
+          {
+            "line_number": 8,
+            "text": "Jaf AA",
+            "confidence": 43.5
+          },
+          {
+            "line_number": 9,
+            "text": "Melbourne, FL",
+            "confidence": 85.5
+          },
+          {
+            "line_number": 10,
+            "text": "https://hellp.al di .us",
+            "confidence": 81.0
+          },
+          {
+            "line_number": 11,
+            "text": "4)",
+            "confidence": 31.0
+          },
+          {
+            "line_number": 12,
+            "text": "Your cashier today was Taryn",
+            "confidence": 93.0
+          },
+          {
+            "line_number": 13,
+            "text": "yA",
+            "confidence": 36.0
+          },
+          {
+            "line_number": 14,
+            "text": "ray",
+            "confidence": 64.0
+          },
+          {
+            "line_number": 15,
+            "text": "me",
+            "confidence": 47.0
+          },
+          {
+            "line_number": 16,
+            "text": "Ww",
+            "confidence": 35.0
+          },
+          {
+            "line_number": 17,
+            "text": "383212 GF Wide Pan Bread",
+            "confidence": 93.2
+          },
+          {
+            "line_number": 18,
+            "text": "6,79 FA®",
+            "confidence": 85.0
+          },
+          {
+            "line_number": 19,
+            "text": "‘i:",
+            "confidence": 25.0
+          },
+          {
+            "line_number": 20,
+            "text": "356591 Zucchin",
+            "confidence": 81.0
+          },
+          {
+            "line_number": 21,
+            "text": "2.52 F.",
+            "confidence": 71.5
+          },
+          {
+            "line_number": 22,
+            "text": "4",
+            "confidence": 53.0
+          },
+          {
+            "line_number": 23,
+            "text": "wid",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 24,
+            "text": ".81 Ib X",
+            "confidence": 70.67
+          },
+          {
+            "line_number": 25,
+            "text": ".39/1b",
+            "confidence": 55.0
+          },
+          {
+            "line_number": 26,
+            "text": "356689 Yellow Squash",
+            "confidence": 87.0
+          },
+          {
+            "line_number": 27,
+            "text": "2.60:FA",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 28,
+            "text": "‘fu",
+            "confidence": 15.0
+          },
+          {
+            "line_number": 29,
+            "text": "1.87 |b x",
+            "confidence": 87.67
+          },
+          {
+            "line_number": 30,
+            "text": "1.39/1b",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 31,
+            "text": "Le",
+            "confidence": 28.0
+          },
+          {
+            "line_number": 32,
+            "text": "3.29 FA",
+            "confidence": 93.0
+          },
+          {
+            "line_number": 33,
+            "text": "Ad",
+            "confidence": 62.0
+          },
+          {
+            "line_number": 34,
+            "text": "724)",
+            "confidence": 12.0
+          },
+          {
+            "line_number": 35,
+            "text": "356421 Medley Potatoes",
+            "confidence": 80.67
+          },
+          {
+            "line_number": 36,
+            "text": "0.89 FA",
+            "confidence": 95.5
+          },
+          {
+            "line_number": 37,
+            "text": "dl",
+            "confidence": 34.0
+          },
+          {
+            "line_number": 38,
+            "text": "‘Si",
+            "confidence": 26.0
+          },
+          {
+            "line_number": 39,
+            "text": "ee",
+            "confidence": 33.0
+          },
+          {
+            "line_number": 40,
+            "text": "856537 Cilantro",
+            "confidence": 77.0
+          },
+          {
+            "line_number": 41,
+            "text": "3.41 PA",
+            "confidence": 86.5
+          },
+          {
+            "line_number": 42,
+            "text": "} '",
+            "confidence": 25.5
+          },
+          {
+            "line_number": 43,
+            "text": "nn SS",
+            "confidence": 18.5
+          },
+          {
+            "line_number": 44,
+            "text": "356508 Broccoli Crowns",
+            "confidence": 85.0
+          },
+          {
+            "line_number": 45,
+            "text": "1.63 1b xX",
+            "confidence": 87.0
+          },
+          {
+            "line_number": 46,
+            "text": "2.09/1b",
+            "confidence": 76.0
+          },
+          {
+            "line_number": 47,
+            "text": "2.99 FA",
+            "confidence": 79.0
+          },
+          {
+            "line_number": 48,
+            "text": "356496 Beefsteak Tomatoes",
+            "confidence": 88.33
+          },
+          {
+            "line_number": 49,
+            "text": "8.29 FA",
+            "confidence": 95.0
+          },
+          {
+            "line_number": 50,
+            "text": "Ve",
+            "confidence": 70.0
+          },
+          {
+            "line_number": 51,
+            "text": "‘)",
+            "confidence": 23.0
+          },
+          {
+            "line_number": 52,
+            "text": "344280 Cauli Crust Pizza",
+            "confidence": 92.5
+          },
+          {
+            "line_number": 53,
+            "text": "2069 FA",
+            "confidence": 82.5
+          },
+          {
+            "line_number": 54,
+            "text": "if",
+            "confidence": 60.0
+          },
+          {
+            "line_number": 55,
+            "text": "Tel",
+            "confidence": 56.0
+          },
+          {
+            "line_number": 56,
+            "text": "356427 Mul ti-Peppers Spk.",
+            "confidence": 72.5
+          },
+          {
+            "line_number": 57,
+            "text": "3.69 FA",
+            "confidence": 95.0
+          },
+          {
+            "line_number": 58,
+            "text": "peat",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 59,
+            "text": "356591 Pink Lady Apple",
+            "confidence": 95.5
+          },
+          {
+            "line_number": 60,
+            "text": "1.29 FA",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 61,
+            "text": "Wy",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 62,
+            "text": "956488 Baby Carrots",
+            "confidence": 88.67
+          },
+          {
+            "line_number": 63,
+            "text": "3.89 FA",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 64,
+            "text": "341979 Pine/Water Spears",
+            "confidence": 92.67
+          },
+          {
+            "line_number": 65,
+            "text": "YO",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 66,
+            "text": "oy",
+            "confidence": 9.0
+          },
+          {
+            "line_number": 67,
+            "text": "356504 Blueberries",
+            "confidence": 92.5
+          },
+          {
+            "line_number": 68,
+            "text": "2.59 FA",
+            "confidence": 95.0
+          },
+          {
+            "line_number": 69,
+            "text": "in",
+            "confidence": 17.0
+          },
+          {
+            "line_number": 70,
+            "text": "paw J",
+            "confidence": 29.5
+          },
+          {
+            "line_number": 71,
+            "text": "956374 Golden Kiwi",
+            "confidence": 76.67
+          },
+          {
+            "line_number": 72,
+            "text": "4.39 FA",
+            "confidence": 95.5
+          },
+          {
+            "line_number": 73,
+            "text": "343738 Hummus Mini Cups",
+            "confidence": 87.0
+          },
+          {
+            "line_number": 74,
+            "text": "3.45 FA",
+            "confidence": 93.0
+          },
+          {
+            "line_number": 75,
+            "text": "1}",
+            "confidence": 47.0
+          },
+          {
+            "line_number": 76,
+            "text": "Ge",
+            "confidence": 29.0
+          },
+          {
+            "line_number": 77,
+            "text": "369553 LesserEvil Popcorn",
+            "confidence": 84.67
+          },
+          {
+            "line_number": 78,
+            "text": "2.39 FA",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 79,
+            "text": "y/) Py",
+            "confidence": 18.0
+          },
+          {
+            "line_number": 80,
+            "text": "SESE",
+            "confidence": 36.0
+          },
+          {
+            "line_number": 81,
+            "text": "262747 Bananas L",
+            "confidence": 76.0
+          },
+          {
+            "line_number": 82,
+            "text": "1.31 FA",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 83,
+            "text": "son pee BO.",
+            "confidence": 14.67
+          },
+          {
+            "line_number": 84,
+            "text": "eons or",
+            "confidence": 13.5
+          },
+          {
+            "line_number": 85,
+            "text": "(",
+            "confidence": 85.0
+          },
+          {
+            "line_number": 86,
+            "text": "1 0,011b",
+            "confidence": 42.5
+          },
+          {
+            "line_number": 87,
+            "text": "doled",
+            "confidence": 29.0
+          },
+          {
+            "line_number": 88,
+            "text": "(G) 2.681b -",
+            "confidence": 69.67
+          },
+          {
+            "line_number": 89,
+            "text": "0.49/1b",
+            "confidence": 34.0
+          },
+          {
+            "line_number": 90,
+            "text": "(N) 2.67 1b xX",
+            "confidence": 81.25
+          },
+          {
+            "line_number": 91,
+            "text": "1.99 FA",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 92,
+            "text": "JEG",
+            "confidence": 29.0
+          },
+          {
+            "line_number": 93,
+            "text": "Ue nd",
+            "confidence": 8.5
+          },
+          {
+            "line_number": 94,
+            "text": "328752 Fruit & Grain Bars",
+            "confidence": 93.8
+          },
+          {
+            "line_number": 95,
+            "text": "1.99 FA",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 96,
+            "text": "328752 Fruit & Grain Bars",
+            "confidence": 93.8
+          },
+          {
+            "line_number": 97,
+            "text": "2.49 FA",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 98,
+            "text": "356609 Red Onions",
+            "confidence": 92.67
+          },
+          {
+            "line_number": 99,
+            "text": "0.99 FA",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 100,
+            "text": "ih,",
+            "confidence": 31.0
+          },
+          {
+            "line_number": 101,
+            "text": "739153 Organic Chickpeas",
+            "confidence": 94.0
+          },
+          {
+            "line_number": 102,
+            "text": "0.85 FA",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 103,
+            "text": "ff",
+            "confidence": 42.0
+          },
+          {
+            "line_number": 104,
+            "text": "if",
+            "confidence": 46.0
+          },
+          {
+            "line_number": 105,
+            "text": "ones - cA 2",
+            "confidence": 15.25
+          },
+          {
+            "line_number": 106,
+            "text": "381843 Dark Red Kidney",
+            "confidence": 95.5
+          },
+          {
+            "line_number": 107,
+            "text": "0.99 FA",
+            "confidence": 95.5
+          },
+          {
+            "line_number": 108,
+            "text": "739153 Organic Chickpeas",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 109,
+            "text": "0.85 FA",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 110,
+            "text": "381343 Dark Red Kidney",
+            "confidence": 95.5
+          },
+          {
+            "line_number": 111,
+            "text": "2.99 FA",
+            "confidence": 95.0
+          },
+          {
+            "line_number": 112,
+            "text": "fi",
+            "confidence": 32.0
+          },
+          {
+            "line_number": 113,
+            "text": "Ko",
+            "confidence": 26.0
+          },
+          {
+            "line_number": 114,
+            "text": "381859 Vinaigrette Drssng",
+            "confidence": 91.0
+          },
+          {
+            "line_number": 115,
+            "text": "0.95 FA",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 116,
+            "text": "ove",
+            "confidence": 51.0
+          },
+          {
+            "line_number": 117,
+            "text": "256578 Parsley each",
+            "confidence": 91.67
+          },
+          {
+            "line_number": 118,
+            "text": "1.99 FA",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 119,
+            "text": "by",
+            "confidence": 51.0
+          },
+          {
+            "line_number": 120,
+            "text": "400462 0G Croutons",
+            "confidence": 94.67
+          },
+          {
+            "line_number": 121,
+            "text": "i",
+            "confidence": 15.0
+          },
+          {
+            "line_number": 122,
+            "text": "‘ov",
+            "confidence": 4.0
+          },
+          {
+            "line_number": 123,
+            "text": "344583 Evryd Plate 8.5in",
+            "confidence": 89.5
+          },
+          {
+            "line_number": 124,
+            "text": "5.25 NB",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 125,
+            "text": "4G?",
+            "confidence": 47.0
+          },
+          {
+            "line_number": 126,
+            "text": "384545 NO Honey Wheat Br",
+            "confidence": 93.0
+          },
+          {
+            "line_number": 127,
+            "text": "3.37 FA",
+            "confidence": 95.5
+          },
+          {
+            "line_number": 128,
+            "text": "730325 3pk Gel Pens ~",
+            "confidence": 81.4
+          },
+          {
+            "line_number": 129,
+            "text": "5.99 NB",
+            "confidence": 95.0
+          },
+          {
+            "line_number": 130,
+            "text": "720921 PB Toast Crackers",
+            "confidence": 95.5
+          },
+          {
+            "line_number": 131,
+            "text": "2.79 FA",
+            "confidence": 81.5
+          },
+          {
+            "line_number": 132,
+            "text": "383548 Goat Cheese Logs",
+            "confidence": 95.25
+          },
+          {
+            "line_number": 133,
+            "text": "1.99 FA",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 134,
+            "text": "713372 Feta Crumbles",
+            "confidence": 93.0
+          },
+          {
+            "line_number": 135,
+            "text": "2.89 FA",
+            "confidence": 94.5
+          },
+          {
+            "line_number": 136,
+            "text": "718929 Col lapsibleStorage",
+            "confidence": 76.33
+          },
+          {
+            "line_number": 137,
+            "text": "5.99 NB",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 138,
+            "text": "718929. Col lapsibleStorage",
+            "confidence": 69.67
+          },
+          {
+            "line_number": 139,
+            "text": "5.99 NB",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 140,
+            "text": "108.44",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 141,
+            "text": "yIS",
+            "confidence": 14.0
+          },
+          {
+            "line_number": 142,
+            "text": "*8808 OTHER",
+            "confidence": 83.0
+          },
+          {
+            "line_number": 143,
+            "text": "KKKKKERKERAKERKE",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 144,
+            "text": "08/23/26 11:40 Ref/Seq #0",
+            "confidence": 84.0
+          },
+          {
+            "line_number": 145,
+            "text": "Auth # 002470",
+            "confidence": 85.33
+          },
+          {
+            "line_number": 146,
+            "text": "31010",
+            "confidence": 90.0
+          },
+          {
+            "line_number": 147,
+            "text": "AID A0O",
+            "confidence": 77.0
+          },
+          {
+            "line_number": 148,
+            "text": "TAD 0031 400000000010030273000000",
+            "confidence": 46.0
+          },
+          {
+            "line_number": 149,
+            "text": "004000090000",
+            "confidence": 84.0
+          },
+          {
+            "line_number": 150,
+            "text": "(0000",
+            "confidence": 75.0
+          },
+          {
+            "line_number": 151,
+            "text": "TSI 0000",
+            "confidence": 92.0
+          },
+          {
+            "line_number": 152,
+            "text": "ARC 00",
+            "confidence": 95.0
+          },
+          {
+            "line_number": 153,
+            "text": "EntryMode 07",
+            "confidence": 92.5
+          },
+          {
+            "line_number": 154,
+            "text": "++APPROVED*+",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 155,
+            "text": "TOTAL",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 156,
+            "text": "106.8",
+            "confidence": 90.0
+          },
+          {
+            "line_number": 157,
+            "text": "B-Taxable @7.000%",
+            "confidence": 90.5
+          },
+          {
+            "line_number": 158,
+            "text": "A-Taxable 00,00%",
+            "confidence": 57.0
+          },
+          {
+            "line_number": 159,
+            "text": "AMO",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 160,
+            "text": "T",
+            "confidence": 87.0
+          },
+          {
+            "line_number": 161,
+            "text": "S$ 1",
+            "confidence": 63.5
+          },
+          {
+            "line_number": 162,
+            "text": "eH",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 163,
+            "text": "Credi",
+            "confidence": 91.0
+          },
+          {
+            "line_number": 164,
+            "text": "/ 4",
+            "confidence": 17.0
+          },
+          {
+            "line_number": 165,
+            "text": "uv",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 166,
+            "text": "+5911 FK49/003/011",
+            "confidence": 33.0
+          },
+          {
+            "line_number": 167,
+            "text": "i",
+            "confidence": 44.0
+          },
+          {
+            "line_number": 168,
+            "text": "RRKKERK",
+            "confidence": 20.0
+          },
+          {
+            "line_number": 169,
+            "text": "ine",
+            "confidence": 30.0
+          }
+        ]
+      }
+    },
+    {
+      "candidate_id": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "result": {
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/aldi_8_23_26_threshold.png",
+        "ocr_engine": "tesseract",
+        "ocr_version": "5.5.3",
+        "ocr_config": "--psm 4",
+        "generated_at": "2026-08-25T19:45:26.270250+00:00",
+        "image": {
+          "width": 1504,
+          "height": 3066
+        },
+        "metrics": {
+          "mean_word_confidence": 73.51,
+          "recognized_word_count": 319,
+          "low_confidence_word_count": 60,
+          "low_confidence_rate": 0.1881
+        },
+        "raw_text": "store f\nore #160\n140) N Wickham Rd ~N Te\net@tbourne) FL\nps://help.al dl .us | Jt\nYour cashier today was Taryn! ; \\<\n4 ,\n983212 CF Wide Pan'Bread®, 6.79 FA)\n356591 Zucchini‘? ’ ,° (2.52 F.\n1.81 lb x 1-39/lb “NL,\n356689 Yellow Squash © 72.60 FA\n1.87 Ib x 1.-89/1b f if\n956421 Medley Potatoes 3.29 FA“\n356537 Cilantro 0.89 FA\n356508 Broccoli Crowns\n1.63 Ib x 2.09/1b\n356496 Beefsteak Tomatoes 2.99 FA\n344280 Cauli Crust Pizza 8.29 FA\n356427 Multt-Peppers 3pk. 2-68 fA\n356591 Pink Lady Apple .\n356488 Baby Carrots ‘1.29 FA\n341979 Pine/Water Spears 3.89 FA\n356304 Blueberries 2.59 FA\n956374 Golden Kiwi 4.39 FA\nw~ , 343738 Hummus Mini Cups 7 3.45 FR\n369553 LesserEvil Popcorn .\n_ 262747 Bananas LRW 1.31 FA\n(G) 2.681b ~ (T) 0.011b\n+N) 2.67 Ib x 0.49/1b\n’ 398752 Fruit & Grain. Bars 1.99 FA\n328752 Fruit & Grain Bars 1.99 FA\n956609 Red Onions 2.49 FA\n_ 739153 Organic .Chickpeas 0.99 FA\n’ 381848 Dark Red Kidney. 0\n739153 “Organic Chickpeas 0.99 FA\n381343 Dark Red Kidney\n? 381359 Vinaigrette Drssng 2.\n356578 Parsley each 0.95 FA\n400462 0G Croutons 1.99 FA\n344583 Evryd Plate 8.5in 5.25 NB\n384545 NO Honey Wheat Brd 3.37 FA\n730325 Spk Gel Pens - 5.99 NB\n720321 PB Toast Crackers 2.79 FA\n383348 Goat Cheese Logs 1.99 FA\n713372 Feta. Crumbles 2.89 FA\n718929 CollapsibleStorage 5.99 NB\n718929 CollapsibleStorage 5.99 NB\n1\nVISA\nRAKENKKEAEEERE QBS OTHER\n08/23/26 11:40 Ref/Seq # 0\nAuth # 002470 -\nAID A0030000031010\nTvR 0009000000\nTAO 1F420131A00000000010030273000000\n100400003000000000000000000000000\nTSI 0000 ARC 00 —EntryMode 07\n++APPROVED++\nSUBTOTAL 106.81\nB-Taxable @7.000% 1,63\nA-Taxable @0,00% 0.00\n; ; AMOUNT OUE . 108.44\n| TOTAL Gi108.44\n35 ITEMS\nCredit Card $ 108.44\n45514 FK49/003/011 08/23/26 41:40AM\n\\\nRUE OUCIIORR ITUCO IO REID RS\nSign up for ALDI emails\nfor 4 snoak peck on tho woekly ad!\nww. ald ua/slanip",
+        "text": [
+          {
+            "line_number": 1,
+            "text": "store f",
+            "confidence": 43.5
+          },
+          {
+            "line_number": 2,
+            "text": "ore #160",
+            "confidence": 80.5
+          },
+          {
+            "line_number": 3,
+            "text": "140) N Wickham Rd ~N Te",
+            "confidence": 63.33
+          },
+          {
+            "line_number": 4,
+            "text": "et@tbourne) FL",
+            "confidence": 11.0
+          },
+          {
+            "line_number": 5,
+            "text": "ps://help.al dl .us | Jt",
+            "confidence": 31.2
+          },
+          {
+            "line_number": 6,
+            "text": "Your cashier today was Taryn! ; \\<",
+            "confidence": 65.29
+          },
+          {
+            "line_number": 7,
+            "text": "4 ,",
+            "confidence": 17.5
+          },
+          {
+            "line_number": 8,
+            "text": "983212 CF Wide Pan'Bread®, 6.79 FA)",
+            "confidence": 62.33
+          },
+          {
+            "line_number": 9,
+            "text": "356591 Zucchini‘? ’ ,° (2.52 F.",
+            "confidence": 41.83
+          },
+          {
+            "line_number": 10,
+            "text": "1.81 lb x 1-39/lb “NL,",
+            "confidence": 57.0
+          },
+          {
+            "line_number": 11,
+            "text": "356689 Yellow Squash © 72.60 FA",
+            "confidence": 77.33
+          },
+          {
+            "line_number": 12,
+            "text": "1.87 Ib x 1.-89/1b f if",
+            "confidence": 45.83
+          },
+          {
+            "line_number": 13,
+            "text": "956421 Medley Potatoes 3.29 FA“",
+            "confidence": 78.6
+          },
+          {
+            "line_number": 14,
+            "text": "356537 Cilantro 0.89 FA",
+            "confidence": 94.75
+          },
+          {
+            "line_number": 15,
+            "text": "356508 Broccoli Crowns",
+            "confidence": 68.67
+          },
+          {
+            "line_number": 16,
+            "text": "1.63 Ib x 2.09/1b",
+            "confidence": 74.25
+          },
+          {
+            "line_number": 17,
+            "text": "356496 Beefsteak Tomatoes 2.99 FA",
+            "confidence": 93.2
+          },
+          {
+            "line_number": 18,
+            "text": "344280 Cauli Crust Pizza 8.29 FA",
+            "confidence": 92.17
+          },
+          {
+            "line_number": 19,
+            "text": "356427 Multt-Peppers 3pk. 2-68 fA",
+            "confidence": 73.0
+          },
+          {
+            "line_number": 20,
+            "text": "356591 Pink Lady Apple .",
+            "confidence": 87.8
+          },
+          {
+            "line_number": 21,
+            "text": "356488 Baby Carrots ‘1.29 FA",
+            "confidence": 87.2
+          },
+          {
+            "line_number": 22,
+            "text": "341979 Pine/Water Spears 3.89 FA",
+            "confidence": 88.8
+          },
+          {
+            "line_number": 23,
+            "text": "356304 Blueberries 2.59 FA",
+            "confidence": 94.5
+          },
+          {
+            "line_number": 24,
+            "text": "956374 Golden Kiwi 4.39 FA",
+            "confidence": 90.8
+          },
+          {
+            "line_number": 25,
+            "text": "w~ , 343738 Hummus Mini Cups 7 3.45 FR",
+            "confidence": 57.0
+          },
+          {
+            "line_number": 26,
+            "text": "369553 LesserEvil Popcorn .",
+            "confidence": 71.0
+          },
+          {
+            "line_number": 27,
+            "text": "_ 262747 Bananas LRW 1.31 FA",
+            "confidence": 83.83
+          },
+          {
+            "line_number": 28,
+            "text": "(G) 2.681b ~ (T) 0.011b",
+            "confidence": 51.4
+          },
+          {
+            "line_number": 29,
+            "text": "+N) 2.67 Ib x 0.49/1b",
+            "confidence": 59.6
+          },
+          {
+            "line_number": 30,
+            "text": "’ 398752 Fruit & Grain. Bars 1.99 FA",
+            "confidence": 85.0
+          },
+          {
+            "line_number": 31,
+            "text": "328752 Fruit & Grain Bars 1.99 FA",
+            "confidence": 94.29
+          },
+          {
+            "line_number": 32,
+            "text": "956609 Red Onions 2.49 FA",
+            "confidence": 91.4
+          },
+          {
+            "line_number": 33,
+            "text": "_ 739153 Organic .Chickpeas 0.99 FA",
+            "confidence": 72.33
+          },
+          {
+            "line_number": 34,
+            "text": "’ 381848 Dark Red Kidney. 0",
+            "confidence": 56.33
+          },
+          {
+            "line_number": 35,
+            "text": "739153 “Organic Chickpeas 0.99 FA",
+            "confidence": 89.2
+          },
+          {
+            "line_number": 36,
+            "text": "381343 Dark Red Kidney",
+            "confidence": 95.25
+          },
+          {
+            "line_number": 37,
+            "text": "? 381359 Vinaigrette Drssng 2.",
+            "confidence": 86.2
+          },
+          {
+            "line_number": 38,
+            "text": "356578 Parsley each 0.95 FA",
+            "confidence": 93.4
+          },
+          {
+            "line_number": 39,
+            "text": "400462 0G Croutons 1.99 FA",
+            "confidence": 95.4
+          },
+          {
+            "line_number": 40,
+            "text": "344583 Evryd Plate 8.5in 5.25 NB",
+            "confidence": 92.33
+          },
+          {
+            "line_number": 41,
+            "text": "384545 NO Honey Wheat Brd 3.37 FA",
+            "confidence": 93.0
+          },
+          {
+            "line_number": 42,
+            "text": "730325 Spk Gel Pens - 5.99 NB",
+            "confidence": 90.29
+          },
+          {
+            "line_number": 43,
+            "text": "720321 PB Toast Crackers 2.79 FA",
+            "confidence": 89.5
+          },
+          {
+            "line_number": 44,
+            "text": "383348 Goat Cheese Logs 1.99 FA",
+            "confidence": 93.33
+          },
+          {
+            "line_number": 45,
+            "text": "713372 Feta. Crumbles 2.89 FA",
+            "confidence": 57.2
+          },
+          {
+            "line_number": 46,
+            "text": "718929 CollapsibleStorage 5.99 NB",
+            "confidence": 92.0
+          },
+          {
+            "line_number": 47,
+            "text": "718929 CollapsibleStorage 5.99 NB",
+            "confidence": 72.25
+          },
+          {
+            "line_number": 48,
+            "text": "1",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 49,
+            "text": "VISA",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 50,
+            "text": "RAKENKKEAEEERE QBS OTHER",
+            "confidence": 32.0
+          },
+          {
+            "line_number": 51,
+            "text": "08/23/26 11:40 Ref/Seq # 0",
+            "confidence": 89.0
+          },
+          {
+            "line_number": 52,
+            "text": "Auth # 002470 -",
+            "confidence": 71.25
+          },
+          {
+            "line_number": 53,
+            "text": "AID A0030000031010",
+            "confidence": 71.0
+          },
+          {
+            "line_number": 54,
+            "text": "TvR 0009000000",
+            "confidence": 72.5
+          },
+          {
+            "line_number": 55,
+            "text": "TAO 1F420131A00000000010030273000000",
+            "confidence": 58.5
+          },
+          {
+            "line_number": 56,
+            "text": "100400003000000000000000000000000",
+            "confidence": 59.0
+          },
+          {
+            "line_number": 57,
+            "text": "TSI 0000 ARC 00 —EntryMode 07",
+            "confidence": 62.67
+          },
+          {
+            "line_number": 58,
+            "text": "++APPROVED++",
+            "confidence": 58.0
+          },
+          {
+            "line_number": 59,
+            "text": "SUBTOTAL 106.81",
+            "confidence": 94.0
+          },
+          {
+            "line_number": 60,
+            "text": "B-Taxable @7.000% 1,63",
+            "confidence": 89.0
+          },
+          {
+            "line_number": 61,
+            "text": "A-Taxable @0,00% 0.00",
+            "confidence": 87.0
+          },
+          {
+            "line_number": 62,
+            "text": "; ; AMOUNT OUE . 108.44",
+            "confidence": 50.83
+          },
+          {
+            "line_number": 63,
+            "text": "| TOTAL Gi108.44",
+            "confidence": 63.67
+          },
+          {
+            "line_number": 64,
+            "text": "35 ITEMS",
+            "confidence": 94.5
+          },
+          {
+            "line_number": 65,
+            "text": "Credit Card $ 108.44",
+            "confidence": 94.25
+          },
+          {
+            "line_number": 66,
+            "text": "45514 FK49/003/011 08/23/26 41:40AM",
+            "confidence": 79.0
+          },
+          {
+            "line_number": 67,
+            "text": "\\",
+            "confidence": 60.0
+          },
+          {
+            "line_number": 68,
+            "text": "RUE OUCIIORR ITUCO IO REID RS",
+            "confidence": 14.83
+          },
+          {
+            "line_number": 69,
+            "text": "Sign up for ALDI emails",
+            "confidence": 86.2
+          },
+          {
+            "line_number": 70,
+            "text": "for 4 snoak peck on tho woekly ad!",
+            "confidence": 70.62
+          },
+          {
+            "line_number": 71,
+            "text": "ww. ald ua/slanip",
+            "confidence": 12.0
+          }
+        ]
+      }
+    },
+    {
+      "candidate_id": "threshold_psm6",
+      "image_variant": "threshold",
+      "psm": 6,
+      "result": {
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/aldi_8_23_26_threshold.png",
+        "ocr_engine": "tesseract",
+        "ocr_version": "5.5.3",
+        "ocr_config": "--psm 6",
+        "generated_at": "2026-08-25T19:45:28.301698+00:00",
+        "image": {
+          "width": 1504,
+          "height": 3066
+        },
+        "metrics": {
+          "mean_word_confidence": 48.76,
+          "recognized_word_count": 566,
+          "low_confidence_word_count": 313,
+          "low_confidence_rate": 0.553
+        },
+        "raw_text": "eto\n{, fi J / ath\nyd \\ __- an ray { Pa ‘\na vane ve,\nAM wos ALDI fyi | ue\n) 6s Store {160 Wed\nZe a ne 1409 N Wickham Rd oN “fe\na ets] Melbourne FL? Whe Ob\n' ‘a epee tors __ https://help.aldl .us ye\nfi rs ie Your cashier today was Taryn: ; , fe Cy\nAO I odie en my ayo Y\nGel Mpwomerts! 983212 GF ide Pan Bread, 6.72 FAT\nand tees Sea ZuceN sovib, | ee 4 ae)\n7 a 1 Aerts og : x . . ‘ \\ . Ly ? . , eld i\nve we 356689 Yellow Squash © 72.60 FA fee thy\nSa eae 356421 Medley Potatoes 3.29 FAY Poe gis\nea wee 356537 Cilantro 0:89 FAA fyi, Has\n‘ (i ereenese| 356508 Broccol! Crowns 3.41 F. um vo Ny y\nPy cee? 1.63 Ib x _2.09/1b pee he\nTAH ecercaat 356496 Beefsteak Tomatoes 2.99 FA ff, f Viti\nel (a aces 344280 Cauli Crust Pizza 8.29 FA h aM\n: igo wigencres 356427 Multi-Peppers 3pk. 2.69 FA hy the\nBNI Vigne 356591 Pink Lady Apple (3.69 FA Yh, i\nRIVA Cor eeaucuatt 356488 Baby Carrots 1.29 FA Tyas ay\nf Yruis CANAcoHe 341979 Pine/Water Spears 3.89 FA Pye\nPit \\| ee 966504 Blueberries 2.59 FA fie\nig VA Sree pe 356374 Golden Kiwt 4.39 FA Bal\nSONY Eigeyl ~~. 943798 Hunnus Mint cups 4 S45FA fy\nLEY limpet : 369553 LesserEvi] Popeprn 2.39 FA SpA\n\"3 fi if fees | 262747 Bananas LRi 1.31 FA Bh ea\nNAA eee: (G) 2.681b - (1) 0.011b here)\n4 lip? ere WN) 2,67 Ib x 0.49/16 ane\npI Nie § =~ 328752 Fruit & Grain Bars 1.99 FA tee\nfils Ne ees aopyo2 Fruit &GrainBars 9 1.99FA fry\nLG he 356609 Red Onions 2.49 FA pe\neS Me OF aw ES _ 739153 Organic .Chickpeas 0.99 FA re tent\n7, ie \"erriags 981843 Dark Red Kidney... 0.85 FA REAKA\nis (nes 539153 Organic Chickpeas -0.99 FA vohe\nWiggs Vee int | 381343 Dark Red Kidney 0.85 FA hy\nOEY Ve we tod 381359 Vinaigrette Orssng 2.99 FA es\nBry ie Nomis 356578 Parsley each 0.95 FA ELS\nFMEA Vestas 400462 0G Croutons 1.99 FA aS\nAyes Site Oa 344583 Evryd Plate 8.5in 5.25 NB te\nRien ea 384545 NO Honey Wheat Brd 3.37 FA ee\niLev a Sega 730325 3pk Gel Pens - 5.99 NB 7s\nrR a we aie 720321 PB Toast Crackers 2.79 FA ee\nUSnay ae 383548 Goat Cheese Logs 1.99 FA gs\nLipa, Cte 713372 Feta. Crumbles 2.89 FA ace\nGy ata Waa 718929 CollapsibleStorage 5.99 NB SY\nLe PN; anos 718929 Col lapsibleStorage 5.99 NB aoe\nmedic | VISA 108.44 oy\n“4 Lp sh nes RAKENKKEAEEERE QBS OTHER “\nEAL Vas 08/23/26 11:40 Ref/Seq # 0 :\nPL A AG path # 002470 ~\n7h, Nes] AID 4000000031010 a,\nho 8 ‘1 TvR 0009000000 f\nrn pees ee 1F420131A00000000010030273000000 ‘\nPore, |? 00400003000000000000000000000000\na f -) st: TSE 0000 ARC 00 EntryMode 07 a\npo ++APPROVED?+\nstr SUBTOTAL 106.81\nhh ro B-Taxable @7,000% 1.63\n0) Us A-Taxable @0,00% 0.00\n: AMOUNT QUE . 108.44\nTOTAL G 108.44\n95 ITEMS\nCredit Card $ 108.44\n45541 FK49/003/011 08/23/26 11:40AM\nRUE OUCIIORR ITUCO IO REID RS\nSign up for ALDI omalts\nfor 4 snoak peck on tho woekly ad!\nww. ald ua/slanip",
+        "text": [
+          {
+            "line_number": 1,
+            "text": "eto",
+            "confidence": 15.0
+          },
+          {
+            "line_number": 2,
+            "text": "{, fi J / ath",
+            "confidence": 23.4
+          },
+          {
+            "line_number": 3,
+            "text": "yd \\ __- an ray { Pa ‘",
+            "confidence": 39.5
+          },
+          {
+            "line_number": 4,
+            "text": "a vane ve,",
+            "confidence": 17.33
+          },
+          {
+            "line_number": 5,
+            "text": "AM wos ALDI fyi | ue",
+            "confidence": 53.17
+          },
+          {
+            "line_number": 6,
+            "text": ") 6s Store {160 Wed",
+            "confidence": 41.2
+          },
+          {
+            "line_number": 7,
+            "text": "Ze a ne 1409 N Wickham Rd oN “fe",
+            "confidence": 56.11
+          },
+          {
+            "line_number": 8,
+            "text": "a ets] Melbourne FL? Whe Ob",
+            "confidence": 36.0
+          },
+          {
+            "line_number": 9,
+            "text": "' ‘a epee tors __ https://help.aldl .us ye",
+            "confidence": 20.38
+          },
+          {
+            "line_number": 10,
+            "text": "fi rs ie Your cashier today was Taryn: ; , fe Cy",
+            "confidence": 45.92
+          },
+          {
+            "line_number": 11,
+            "text": "AO I odie en my ayo Y",
+            "confidence": 18.57
+          },
+          {
+            "line_number": 12,
+            "text": "Gel Mpwomerts! 983212 GF ide Pan Bread, 6.72 FAT",
+            "confidence": 55.44
+          },
+          {
+            "line_number": 13,
+            "text": "and tees Sea ZuceN sovib, | ee 4 ae)",
+            "confidence": 27.67
+          },
+          {
+            "line_number": 14,
+            "text": "7 a 1 Aerts og : x . . ‘ \\ . Ly ? . , eld i",
+            "confidence": 40.39
+          },
+          {
+            "line_number": 15,
+            "text": "ve we 356689 Yellow Squash © 72.60 FA fee thy",
+            "confidence": 63.0
+          },
+          {
+            "line_number": 16,
+            "text": "Sa eae 356421 Medley Potatoes 3.29 FAY Poe gis",
+            "confidence": 58.22
+          },
+          {
+            "line_number": 17,
+            "text": "ea wee 356537 Cilantro 0:89 FAA fyi, Has",
+            "confidence": 54.38
+          },
+          {
+            "line_number": 18,
+            "text": "‘ (i ereenese| 356508 Broccol! Crowns 3.41 F. um vo Ny y",
+            "confidence": 38.42
+          },
+          {
+            "line_number": 19,
+            "text": "Py cee? 1.63 Ib x _2.09/1b pee he",
+            "confidence": 48.5
+          },
+          {
+            "line_number": 20,
+            "text": "TAH ecercaat 356496 Beefsteak Tomatoes 2.99 FA ff, f Viti",
+            "confidence": 44.9
+          },
+          {
+            "line_number": 21,
+            "text": "el (a aces 344280 Cauli Crust Pizza 8.29 FA h aM",
+            "confidence": 58.91
+          },
+          {
+            "line_number": 22,
+            "text": ": igo wigencres 356427 Multi-Peppers 3pk. 2.69 FA hy the",
+            "confidence": 33.5
+          },
+          {
+            "line_number": 23,
+            "text": "BNI Vigne 356591 Pink Lady Apple (3.69 FA Yh, i",
+            "confidence": 47.3
+          },
+          {
+            "line_number": 24,
+            "text": "RIVA Cor eeaucuatt 356488 Baby Carrots 1.29 FA Tyas ay",
+            "confidence": 44.9
+          },
+          {
+            "line_number": 25,
+            "text": "f Yruis CANAcoHe 341979 Pine/Water Spears 3.89 FA Pye",
+            "confidence": 49.78
+          },
+          {
+            "line_number": 26,
+            "text": "Pit \\| ee 966504 Blueberries 2.59 FA fie",
+            "confidence": 26.12
+          },
+          {
+            "line_number": 27,
+            "text": "ig VA Sree pe 356374 Golden Kiwt 4.39 FA Bal",
+            "confidence": 56.5
+          },
+          {
+            "line_number": 28,
+            "text": "SONY Eigeyl ~~. 943798 Hunnus Mint cups 4 S45FA fy",
+            "confidence": 41.5
+          },
+          {
+            "line_number": 29,
+            "text": "LEY limpet : 369553 LesserEvi] Popeprn 2.39 FA SpA",
+            "confidence": 47.67
+          },
+          {
+            "line_number": 30,
+            "text": "\"3 fi if fees | 262747 Bananas LRi 1.31 FA Bh ea",
+            "confidence": 46.58
+          },
+          {
+            "line_number": 31,
+            "text": "NAA eee: (G) 2.681b - (1) 0.011b here)",
+            "confidence": 52.12
+          },
+          {
+            "line_number": 32,
+            "text": "4 lip? ere WN) 2,67 Ib x 0.49/16 ane",
+            "confidence": 36.44
+          },
+          {
+            "line_number": 33,
+            "text": "pI Nie § =~ 328752 Fruit & Grain Bars 1.99 FA tee",
+            "confidence": 47.25
+          },
+          {
+            "line_number": 34,
+            "text": "fils Ne ees aopyo2 Fruit &GrainBars 9 1.99FA fry",
+            "confidence": 20.11
+          },
+          {
+            "line_number": 35,
+            "text": "LG he 356609 Red Onions 2.49 FA pe",
+            "confidence": 71.62
+          },
+          {
+            "line_number": 36,
+            "text": "eS Me OF aw ES _ 739153 Organic .Chickpeas 0.99 FA re tent",
+            "confidence": 49.77
+          },
+          {
+            "line_number": 37,
+            "text": "7, ie \"erriags 981843 Dark Red Kidney... 0.85 FA REAKA",
+            "confidence": 39.0
+          },
+          {
+            "line_number": 38,
+            "text": "is (nes 539153 Organic Chickpeas -0.99 FA vohe",
+            "confidence": 49.12
+          },
+          {
+            "line_number": 39,
+            "text": "Wiggs Vee int | 381343 Dark Red Kidney 0.85 FA hy",
+            "confidence": 65.0
+          },
+          {
+            "line_number": 40,
+            "text": "OEY Ve we tod 381359 Vinaigrette Orssng 2.99 FA es",
+            "confidence": 39.7
+          },
+          {
+            "line_number": 41,
+            "text": "Bry ie Nomis 356578 Parsley each 0.95 FA ELS",
+            "confidence": 58.22
+          },
+          {
+            "line_number": 42,
+            "text": "FMEA Vestas 400462 0G Croutons 1.99 FA aS",
+            "confidence": 63.5
+          },
+          {
+            "line_number": 43,
+            "text": "Ayes Site Oa 344583 Evryd Plate 8.5in 5.25 NB te",
+            "confidence": 67.8
+          },
+          {
+            "line_number": 44,
+            "text": "Rien ea 384545 NO Honey Wheat Brd 3.37 FA ee",
+            "confidence": 72.1
+          },
+          {
+            "line_number": 45,
+            "text": "iLev a Sega 730325 3pk Gel Pens - 5.99 NB 7s",
+            "confidence": 62.73
+          },
+          {
+            "line_number": 46,
+            "text": "rR a we aie 720321 PB Toast Crackers 2.79 FA ee",
+            "confidence": 59.18
+          },
+          {
+            "line_number": 47,
+            "text": "USnay ae 383548 Goat Cheese Logs 1.99 FA gs",
+            "confidence": 67.11
+          },
+          {
+            "line_number": 48,
+            "text": "Lipa, Cte 713372 Feta. Crumbles 2.89 FA ace",
+            "confidence": 59.88
+          },
+          {
+            "line_number": 49,
+            "text": "Gy ata Waa 718929 CollapsibleStorage 5.99 NB SY",
+            "confidence": 42.38
+          },
+          {
+            "line_number": 50,
+            "text": "Le PN; anos 718929 Col lapsibleStorage 5.99 NB aoe",
+            "confidence": 65.11
+          },
+          {
+            "line_number": 51,
+            "text": "medic | VISA 108.44 oy",
+            "confidence": 33.4
+          },
+          {
+            "line_number": 52,
+            "text": "“4 Lp sh nes RAKENKKEAEEERE QBS OTHER “",
+            "confidence": 34.88
+          },
+          {
+            "line_number": 53,
+            "text": "EAL Vas 08/23/26 11:40 Ref/Seq # 0 :",
+            "confidence": 69.38
+          },
+          {
+            "line_number": 54,
+            "text": "PL A AG path # 002470 ~",
+            "confidence": 47.0
+          },
+          {
+            "line_number": 55,
+            "text": "7h, Nes] AID 4000000031010 a,",
+            "confidence": 29.6
+          },
+          {
+            "line_number": 56,
+            "text": "ho 8 ‘1 TvR 0009000000 f",
+            "confidence": 56.0
+          },
+          {
+            "line_number": 57,
+            "text": "rn pees ee 1F420131A00000000010030273000000 ‘",
+            "confidence": 29.8
+          },
+          {
+            "line_number": 58,
+            "text": "Pore, |? 00400003000000000000000000000000",
+            "confidence": 30.67
+          },
+          {
+            "line_number": 59,
+            "text": "a f -) st: TSE 0000 ARC 00 EntryMode 07 a",
+            "confidence": 36.55
+          },
+          {
+            "line_number": 60,
+            "text": "po ++APPROVED?+",
+            "confidence": 10.5
+          },
+          {
+            "line_number": 61,
+            "text": "str SUBTOTAL 106.81",
+            "confidence": 61.0
+          },
+          {
+            "line_number": 62,
+            "text": "hh ro B-Taxable @7,000% 1.63",
+            "confidence": 71.2
+          },
+          {
+            "line_number": 63,
+            "text": "0) Us A-Taxable @0,00% 0.00",
+            "confidence": 71.4
+          },
+          {
+            "line_number": 64,
+            "text": ": AMOUNT QUE . 108.44",
+            "confidence": 60.2
+          },
+          {
+            "line_number": 65,
+            "text": "TOTAL G 108.44",
+            "confidence": 66.33
+          },
+          {
+            "line_number": 66,
+            "text": "95 ITEMS",
+            "confidence": 83.0
+          },
+          {
+            "line_number": 67,
+            "text": "Credit Card $ 108.44",
+            "confidence": 95.0
+          },
+          {
+            "line_number": 68,
+            "text": "45541 FK49/003/011 08/23/26 11:40AM",
+            "confidence": 67.5
+          },
+          {
+            "line_number": 69,
+            "text": "RUE OUCIIORR ITUCO IO REID RS",
+            "confidence": 14.83
+          },
+          {
+            "line_number": 70,
+            "text": "Sign up for ALDI omalts",
+            "confidence": 69.4
+          },
+          {
+            "line_number": 71,
+            "text": "for 4 snoak peck on tho woekly ad!",
+            "confidence": 70.62
+          },
+          {
+            "line_number": 72,
+            "text": "ww. ald ua/slanip",
+            "confidence": 12.0
+          }
+        ]
+      }
+    },
+    {
+      "candidate_id": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "result": {
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/aldi_8_23_26_threshold.png",
+        "ocr_engine": "tesseract",
+        "ocr_version": "5.5.3",
+        "ocr_config": "--psm 11",
+        "generated_at": "2026-08-25T19:45:30.214047+00:00",
+        "image": {
+          "width": 1504,
+          "height": 3066
+        },
+        "metrics": {
+          "mean_word_confidence": 58.34,
+          "recognized_word_count": 544,
+          "low_confidence_word_count": 227,
+          "low_confidence_rate": 0.4173
+        },
+        "raw_text": "—_—\nY\nsth\n(v { ,\n{,\n“Tet\nan)\n'\n\\\n~_ae)\nALDI\n(\nyous\nStore {1160\n¥,\nie) ie\nal\n140) N Wickham Rd\nai\n‘An\nae Oo\nbane\nMelbourne ) FL\nPa\nay\n(6\nfy\nN\not pe CPOE\nhttps://help.al\n{.us\na\nty\nDan\nporta\nYour cashier today was Taryn:\nF\nif\n5 se)\nat\n4,\nal)\nb ted ates\n383212 GF tide pan’Bread \\\n{\\\nte,\nY (EA\nyt\n356591 Zucchini\n4)\nVi\na}\nhy\n81 1b X — 1.39/Ib,\n™~\nfe\noe\niis y fi\ney!\noP tad\n' 12.60 FA\n\\\nf\npe\na\n+ aie\nyg.\nCam\n356421 Medley Potatoes\n3.29 FA\nOr\nAy\nCARAS\ney\n356537 Cilantro\n0.89 FA\nVe\nae)\nxg\nte\n356508 Broccoli Crowns\n3.41 Fi\n¥\n;\n(\ntn\n1.63 Ib xX\n2.09/1b\n|\nyh\nwel\n2.99 FA\n: -\na\n356496 Beefsteak Tomatoes\n29 FA\nIke\n\")\n(*\nPaes adres\n344280 Cauli Crust Pizza\n2.69 FA\n4r\nies\noi TRS\net\n4\n356427 Multt-Peppers 3pk.\n3.69 FA\nvy\nOCs\nveer\n356591 Pink Lady Apple\n29 FA\nha\nwt\nAW\nie\nh7eRS\n356488 Baby Carrots\n3.89 FA\nfe\nwie\nan\n341979 Pine/Water Spears\n2.59 FA\nvey\niff\n356504 Blueberries\n4.39 FA\nei\n356374 Golden Kiwi\n3.45: FA\nty\npees\nwens\n343738 Humnus Mini Cups ,¢\n39 FA\nrd\n44a\nA\noe.\n369553 LesserEvil Popcorn\n1.31 FA\ntf\n262747 Bananas LR\nVv’\nji\n“ef\nanos\n‘(G) 2.681b ~\n) 0.011b\nor\na a\nA\n(te Se\niad\npore\nWN) 2,67 Ib x 0.49/16\n1.99 FA\ni\nvd\nAe\n’ 398752 Fruit & Grain. Bars\n1.99 FA\n+.\nye\nve\nwe.\n328752 Fruit & Grain Bars\n2.49 FA\nfond\n(f\n{¢,\nny\nCe gl\n356509 Red Onio\nINS\n0.99 FA\nreg\njt\nried\nif\nia\nwe\n739153 Organic.\nChickpeas\n.85 FA\ntye\nwo ret Pi, 4\npee\n9813843 Dark Red Kidney__—. -\n0.99 FA\nwe\nee\naf\n-\\939153 “Organic Chickpeas\n0.85 FA\nte\nFf\nE uy\nvb\n381343 Dark Red Kidney\n99 FA\nat\n7. ff\n381359 Vinaigrette Drssng\n0.95 FA\nigh\n4A\n%\note\nmo)\n356578 Parsley ea\nXs\n“LEY\naye\n400462 0G Croutons\n1.99 FA\nrie ss\nhr\nTena\nPRE VMGS\n344533 Evryd Plate 8.5in\n5.25 NB\n‘¢\n7)\nree\n/*\n384545 NO Honey Wheat Brd\n3.37 FA\noe\not\nree\nom\n730325 Spk Gel Pens -\n5.99 NB\nfi\"\nwe\nif\naie\nter\n720921 PB Toast Crackers\n2.79 FA\nV1 ef\nAN\n\\,\nyrs t\nte at\n383348 Goat Cheese Logs\n1.99 FA\nate\niy\nMga!\n54\nty ‘\naf\nwt?\n713372 Feta. Crumbles\n2.89 FA\nat\nShiry\nide\n718929 CollapsibleStorage\n5.99 NB\nate\ntar Gf ¢\n\\\nA”\n718929 CollapsibleStorage\n5.99 NB\nyl\n‘gi\n08.44\nog\nwd\nww\nKAREREKERKEREERGOOS_ OTHER\nA\n123/26 11:40 Ref/Seq # 0\nrf\n4%\nty\n}\na\n.\nAuth # 0024\nTD A002000\n0031010\nvR 000!\njE\nnth\nv4\nF4\n35131800000000010030273000000\nof\nTAD 1\n(003000000000000000000000000\n00400\nARC 00\nEntryMode 07\nrt\nTSI 0000\n++APPROVED+ +\nTOTAL\n106.81\n1,63\nB-Taxable 97 ,000%\n0.00\nf\nA-Taxable @0,00%\n108.44\nb\nAMOUNT OUE\nG 108.44\nTO\nT\nAL\n35 ITEMS\n$ 108.44\nCredit Card\n25511 FK49/003/011 08/23/26 1\n1:40AM\nAKRRRRAERAD\nRKAKKAAKKRRARE RAKE KK RARER KER\nSlgn up fer\nALOI emails\nfor 3 snouk peok on tho woe\nKy ad!\nww. ald ua/slanip",
+        "text": [
+          {
+            "line_number": 1,
+            "text": "—_—",
+            "confidence": 64.0
+          },
+          {
+            "line_number": 2,
+            "text": "Y",
+            "confidence": 33.0
+          },
+          {
+            "line_number": 3,
+            "text": "sth",
+            "confidence": 32.0
+          },
+          {
+            "line_number": 4,
+            "text": "(v { ,",
+            "confidence": 27.33
+          },
+          {
+            "line_number": 5,
+            "text": "{,",
+            "confidence": 44.0
+          },
+          {
+            "line_number": 6,
+            "text": "“Tet",
+            "confidence": 35.0
+          },
+          {
+            "line_number": 7,
+            "text": "an)",
+            "confidence": 31.0
+          },
+          {
+            "line_number": 8,
+            "text": "'",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 9,
+            "text": "\\",
+            "confidence": 24.0
+          },
+          {
+            "line_number": 10,
+            "text": "~_ae)",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 11,
+            "text": "ALDI",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 12,
+            "text": "(",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 13,
+            "text": "yous",
+            "confidence": 15.0
+          },
+          {
+            "line_number": 14,
+            "text": "Store {1160",
+            "confidence": 70.0
+          },
+          {
+            "line_number": 15,
+            "text": "¥,",
+            "confidence": 67.0
+          },
+          {
+            "line_number": 16,
+            "text": "ie) ie",
+            "confidence": 17.5
+          },
+          {
+            "line_number": 17,
+            "text": "al",
+            "confidence": 89.0
+          },
+          {
+            "line_number": 18,
+            "text": "140) N Wickham Rd",
+            "confidence": 89.5
+          },
+          {
+            "line_number": 19,
+            "text": "ai",
+            "confidence": 37.0
+          },
+          {
+            "line_number": 20,
+            "text": "‘An",
+            "confidence": 26.0
+          },
+          {
+            "line_number": 21,
+            "text": "ae Oo",
+            "confidence": 34.5
+          },
+          {
+            "line_number": 22,
+            "text": "bane",
+            "confidence": 36.0
+          },
+          {
+            "line_number": 23,
+            "text": "Melbourne ) FL",
+            "confidence": 73.0
+          },
+          {
+            "line_number": 24,
+            "text": "Pa",
+            "confidence": 38.0
+          },
+          {
+            "line_number": 25,
+            "text": "ay",
+            "confidence": 27.0
+          },
+          {
+            "line_number": 26,
+            "text": "(6",
+            "confidence": 39.0
+          },
+          {
+            "line_number": 27,
+            "text": "fy",
+            "confidence": 29.0
+          },
+          {
+            "line_number": 28,
+            "text": "N",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 29,
+            "text": "ot pe CPOE",
+            "confidence": 23.33
+          },
+          {
+            "line_number": 30,
+            "text": "https://help.al",
+            "confidence": 86.0
+          },
+          {
+            "line_number": 31,
+            "text": "{.us",
+            "confidence": 22.0
+          },
+          {
+            "line_number": 32,
+            "text": "a",
+            "confidence": 81.0
+          },
+          {
+            "line_number": 33,
+            "text": "ty",
+            "confidence": 55.0
+          },
+          {
+            "line_number": 34,
+            "text": "Dan",
+            "confidence": 41.0
+          },
+          {
+            "line_number": 35,
+            "text": "porta",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 36,
+            "text": "Your cashier today was Taryn:",
+            "confidence": 84.0
+          },
+          {
+            "line_number": 37,
+            "text": "F",
+            "confidence": 25.0
+          },
+          {
+            "line_number": 38,
+            "text": "if",
+            "confidence": 67.0
+          },
+          {
+            "line_number": 39,
+            "text": "5 se)",
+            "confidence": 9.5
+          },
+          {
+            "line_number": 40,
+            "text": "at",
+            "confidence": 85.0
+          },
+          {
+            "line_number": 41,
+            "text": "4,",
+            "confidence": 73.0
+          },
+          {
+            "line_number": 42,
+            "text": "al)",
+            "confidence": 54.0
+          },
+          {
+            "line_number": 43,
+            "text": "b ted ates",
+            "confidence": 24.0
+          },
+          {
+            "line_number": 44,
+            "text": "383212 GF tide pan’Bread \\",
+            "confidence": 59.6
+          },
+          {
+            "line_number": 45,
+            "text": "{\\",
+            "confidence": 4.0
+          },
+          {
+            "line_number": 46,
+            "text": "te,",
+            "confidence": 51.0
+          },
+          {
+            "line_number": 47,
+            "text": "Y (EA",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 48,
+            "text": "yt",
+            "confidence": 47.0
+          },
+          {
+            "line_number": 49,
+            "text": "356591 Zucchini",
+            "confidence": 72.5
+          },
+          {
+            "line_number": 50,
+            "text": "4)",
+            "confidence": 63.0
+          },
+          {
+            "line_number": 51,
+            "text": "Vi",
+            "confidence": 50.0
+          },
+          {
+            "line_number": 52,
+            "text": "a}",
+            "confidence": 32.0
+          },
+          {
+            "line_number": 53,
+            "text": "hy",
+            "confidence": 25.0
+          },
+          {
+            "line_number": 54,
+            "text": "81 1b X — 1.39/Ib,",
+            "confidence": 37.8
+          },
+          {
+            "line_number": 55,
+            "text": "™~",
+            "confidence": 43.0
+          },
+          {
+            "line_number": 56,
+            "text": "fe",
+            "confidence": 75.0
+          },
+          {
+            "line_number": 57,
+            "text": "oe",
+            "confidence": 30.0
+          },
+          {
+            "line_number": 58,
+            "text": "iis y fi",
+            "confidence": 32.67
+          },
+          {
+            "line_number": 59,
+            "text": "ey!",
+            "confidence": 40.0
+          },
+          {
+            "line_number": 60,
+            "text": "oP tad",
+            "confidence": 16.0
+          },
+          {
+            "line_number": 61,
+            "text": "' 12.60 FA",
+            "confidence": 74.0
+          },
+          {
+            "line_number": 62,
+            "text": "\\",
+            "confidence": 64.0
+          },
+          {
+            "line_number": 63,
+            "text": "f",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 64,
+            "text": "pe",
+            "confidence": 42.0
+          },
+          {
+            "line_number": 65,
+            "text": "a",
+            "confidence": 63.0
+          },
+          {
+            "line_number": 66,
+            "text": "+ aie",
+            "confidence": 61.0
+          },
+          {
+            "line_number": 67,
+            "text": "yg.",
+            "confidence": 21.0
+          },
+          {
+            "line_number": 68,
+            "text": "Cam",
+            "confidence": 11.0
+          },
+          {
+            "line_number": 69,
+            "text": "356421 Medley Potatoes",
+            "confidence": 90.67
+          },
+          {
+            "line_number": 70,
+            "text": "3.29 FA",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 71,
+            "text": "Or",
+            "confidence": 5.0
+          },
+          {
+            "line_number": 72,
+            "text": "Ay",
+            "confidence": 28.0
+          },
+          {
+            "line_number": 73,
+            "text": "CARAS",
+            "confidence": 11.0
+          },
+          {
+            "line_number": 74,
+            "text": "ey",
+            "confidence": 21.0
+          },
+          {
+            "line_number": 75,
+            "text": "356537 Cilantro",
+            "confidence": 95.0
+          },
+          {
+            "line_number": 76,
+            "text": "0.89 FA",
+            "confidence": 95.5
+          },
+          {
+            "line_number": 77,
+            "text": "Ve",
+            "confidence": 63.0
+          },
+          {
+            "line_number": 78,
+            "text": "ae)",
+            "confidence": 40.0
+          },
+          {
+            "line_number": 79,
+            "text": "xg",
+            "confidence": 27.0
+          },
+          {
+            "line_number": 80,
+            "text": "te",
+            "confidence": 26.0
+          },
+          {
+            "line_number": 81,
+            "text": "356508 Broccoli Crowns",
+            "confidence": 68.67
+          },
+          {
+            "line_number": 82,
+            "text": "3.41 Fi",
+            "confidence": 84.0
+          },
+          {
+            "line_number": 83,
+            "text": "¥",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 84,
+            "text": ";",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 85,
+            "text": "(",
+            "confidence": 4.0
+          },
+          {
+            "line_number": 86,
+            "text": "tn",
+            "confidence": 42.0
+          },
+          {
+            "line_number": 87,
+            "text": "1.63 Ib xX",
+            "confidence": 80.0
+          },
+          {
+            "line_number": 88,
+            "text": "2.09/1b",
+            "confidence": 81.0
+          },
+          {
+            "line_number": 89,
+            "text": "|",
+            "confidence": 93.0
+          },
+          {
+            "line_number": 90,
+            "text": "yh",
+            "confidence": 17.0
+          },
+          {
+            "line_number": 91,
+            "text": "wel",
+            "confidence": 53.0
+          },
+          {
+            "line_number": 92,
+            "text": "2.99 FA",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 93,
+            "text": ": -",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 94,
+            "text": "a",
+            "confidence": 59.0
+          },
+          {
+            "line_number": 95,
+            "text": "356496 Beefsteak Tomatoes",
+            "confidence": 93.0
+          },
+          {
+            "line_number": 96,
+            "text": "29 FA",
+            "confidence": 95.0
+          },
+          {
+            "line_number": 97,
+            "text": "Ike",
+            "confidence": 38.0
+          },
+          {
+            "line_number": 98,
+            "text": "\")",
+            "confidence": 45.0
+          },
+          {
+            "line_number": 99,
+            "text": "(*",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 100,
+            "text": "Paes adres",
+            "confidence": 8.5
+          },
+          {
+            "line_number": 101,
+            "text": "344280 Cauli Crust Pizza",
+            "confidence": 90.25
+          },
+          {
+            "line_number": 102,
+            "text": "2.69 FA",
+            "confidence": 89.5
+          },
+          {
+            "line_number": 103,
+            "text": "4r",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 104,
+            "text": "ies",
+            "confidence": 34.0
+          },
+          {
+            "line_number": 105,
+            "text": "oi TRS",
+            "confidence": 15.5
+          },
+          {
+            "line_number": 106,
+            "text": "et",
+            "confidence": 25.0
+          },
+          {
+            "line_number": 107,
+            "text": "4",
+            "confidence": 30.0
+          },
+          {
+            "line_number": 108,
+            "text": "356427 Multt-Peppers 3pk.",
+            "confidence": 78.67
+          },
+          {
+            "line_number": 109,
+            "text": "3.69 FA",
+            "confidence": 95.5
+          },
+          {
+            "line_number": 110,
+            "text": "vy",
+            "confidence": 69.0
+          },
+          {
+            "line_number": 111,
+            "text": "OCs",
+            "confidence": 23.0
+          },
+          {
+            "line_number": 112,
+            "text": "veer",
+            "confidence": 17.0
+          },
+          {
+            "line_number": 113,
+            "text": "356591 Pink Lady Apple",
+            "confidence": 94.25
+          },
+          {
+            "line_number": 114,
+            "text": "29 FA",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 115,
+            "text": "ha",
+            "confidence": 32.0
+          },
+          {
+            "line_number": 116,
+            "text": "wt",
+            "confidence": 42.0
+          },
+          {
+            "line_number": 117,
+            "text": "AW",
+            "confidence": 52.0
+          },
+          {
+            "line_number": 118,
+            "text": "ie",
+            "confidence": 20.0
+          },
+          {
+            "line_number": 119,
+            "text": "h7eRS",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 120,
+            "text": "356488 Baby Carrots",
+            "confidence": 95.33
+          },
+          {
+            "line_number": 121,
+            "text": "3.89 FA",
+            "confidence": 95.0
+          },
+          {
+            "line_number": 122,
+            "text": "fe",
+            "confidence": 78.0
+          },
+          {
+            "line_number": 123,
+            "text": "wie",
+            "confidence": 51.0
+          },
+          {
+            "line_number": 124,
+            "text": "an",
+            "confidence": 1.0
+          },
+          {
+            "line_number": 125,
+            "text": "341979 Pine/Water Spears",
+            "confidence": 84.0
+          },
+          {
+            "line_number": 126,
+            "text": "2.59 FA",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 127,
+            "text": "vey",
+            "confidence": 51.0
+          },
+          {
+            "line_number": 128,
+            "text": "iff",
+            "confidence": 14.0
+          },
+          {
+            "line_number": 129,
+            "text": "356504 Blueberries",
+            "confidence": 93.5
+          },
+          {
+            "line_number": 130,
+            "text": "4.39 FA",
+            "confidence": 95.5
+          },
+          {
+            "line_number": 131,
+            "text": "ei",
+            "confidence": 8.0
+          },
+          {
+            "line_number": 132,
+            "text": "356374 Golden Kiwi",
+            "confidence": 95.33
+          },
+          {
+            "line_number": 133,
+            "text": "3.45: FA",
+            "confidence": 6.0
+          },
+          {
+            "line_number": 134,
+            "text": "ty",
+            "confidence": 57.0
+          },
+          {
+            "line_number": 135,
+            "text": "pees",
+            "confidence": 40.0
+          },
+          {
+            "line_number": 136,
+            "text": "wens",
+            "confidence": 38.0
+          },
+          {
+            "line_number": 137,
+            "text": "343738 Humnus Mini Cups ,¢",
+            "confidence": 55.0
+          },
+          {
+            "line_number": 138,
+            "text": "39 FA",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 139,
+            "text": "rd",
+            "confidence": 49.0
+          },
+          {
+            "line_number": 140,
+            "text": "44a",
+            "confidence": 24.0
+          },
+          {
+            "line_number": 141,
+            "text": "A",
+            "confidence": 36.0
+          },
+          {
+            "line_number": 142,
+            "text": "oe.",
+            "confidence": 45.0
+          },
+          {
+            "line_number": 143,
+            "text": "369553 LesserEvil Popcorn",
+            "confidence": 80.33
+          },
+          {
+            "line_number": 144,
+            "text": "1.31 FA",
+            "confidence": 95.5
+          },
+          {
+            "line_number": 145,
+            "text": "tf",
+            "confidence": 58.0
+          },
+          {
+            "line_number": 146,
+            "text": "262747 Bananas LR",
+            "confidence": 89.33
+          },
+          {
+            "line_number": 147,
+            "text": "Vv’",
+            "confidence": 48.0
+          },
+          {
+            "line_number": 148,
+            "text": "ji",
+            "confidence": 51.0
+          },
+          {
+            "line_number": 149,
+            "text": "“ef",
+            "confidence": 26.0
+          },
+          {
+            "line_number": 150,
+            "text": "anos",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 151,
+            "text": "‘(G) 2.681b ~",
+            "confidence": 40.33
+          },
+          {
+            "line_number": 152,
+            "text": ") 0.011b",
+            "confidence": 72.5
+          },
+          {
+            "line_number": 153,
+            "text": "or",
+            "confidence": 41.0
+          },
+          {
+            "line_number": 154,
+            "text": "a a",
+            "confidence": 34.5
+          },
+          {
+            "line_number": 155,
+            "text": "A",
+            "confidence": 49.0
+          },
+          {
+            "line_number": 156,
+            "text": "(te Se",
+            "confidence": 24.5
+          },
+          {
+            "line_number": 157,
+            "text": "iad",
+            "confidence": 24.0
+          },
+          {
+            "line_number": 158,
+            "text": "pore",
+            "confidence": 17.0
+          },
+          {
+            "line_number": 159,
+            "text": "WN) 2,67 Ib x 0.49/16",
+            "confidence": 48.0
+          },
+          {
+            "line_number": 160,
+            "text": "1.99 FA",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 161,
+            "text": "i",
+            "confidence": 25.0
+          },
+          {
+            "line_number": 162,
+            "text": "vd",
+            "confidence": 66.0
+          },
+          {
+            "line_number": 163,
+            "text": "Ae",
+            "confidence": 30.0
+          },
+          {
+            "line_number": 164,
+            "text": "’ 398752 Fruit & Grain. Bars",
+            "confidence": 81.33
+          },
+          {
+            "line_number": 165,
+            "text": "1.99 FA",
+            "confidence": 95.5
+          },
+          {
+            "line_number": 166,
+            "text": "+.",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 167,
+            "text": "ye",
+            "confidence": 55.0
+          },
+          {
+            "line_number": 168,
+            "text": "ve",
+            "confidence": 18.0
+          },
+          {
+            "line_number": 169,
+            "text": "we.",
+            "confidence": 60.0
+          },
+          {
+            "line_number": 170,
+            "text": "328752 Fruit & Grain Bars",
+            "confidence": 93.6
+          },
+          {
+            "line_number": 171,
+            "text": "2.49 FA",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 172,
+            "text": "fond",
+            "confidence": 42.0
+          },
+          {
+            "line_number": 173,
+            "text": "(f",
+            "confidence": 42.0
+          },
+          {
+            "line_number": 174,
+            "text": "{¢,",
+            "confidence": 43.0
+          },
+          {
+            "line_number": 175,
+            "text": "ny",
+            "confidence": 31.0
+          },
+          {
+            "line_number": 176,
+            "text": "Ce gl",
+            "confidence": 14.0
+          },
+          {
+            "line_number": 177,
+            "text": "356509 Red Onio",
+            "confidence": 87.33
+          },
+          {
+            "line_number": 178,
+            "text": "INS",
+            "confidence": 69.0
+          },
+          {
+            "line_number": 179,
+            "text": "0.99 FA",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 180,
+            "text": "reg",
+            "confidence": 29.0
+          },
+          {
+            "line_number": 181,
+            "text": "jt",
+            "confidence": 59.0
+          },
+          {
+            "line_number": 182,
+            "text": "ried",
+            "confidence": 40.0
+          },
+          {
+            "line_number": 183,
+            "text": "if",
+            "confidence": 44.0
+          },
+          {
+            "line_number": 184,
+            "text": "ia",
+            "confidence": 47.0
+          },
+          {
+            "line_number": 185,
+            "text": "we",
+            "confidence": 60.0
+          },
+          {
+            "line_number": 186,
+            "text": "739153 Organic.",
+            "confidence": 85.0
+          },
+          {
+            "line_number": 187,
+            "text": "Chickpeas",
+            "confidence": 94.0
+          },
+          {
+            "line_number": 188,
+            "text": ".85 FA",
+            "confidence": 89.0
+          },
+          {
+            "line_number": 189,
+            "text": "tye",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 190,
+            "text": "wo ret Pi, 4",
+            "confidence": 59.0
+          },
+          {
+            "line_number": 191,
+            "text": "pee",
+            "confidence": 29.0
+          },
+          {
+            "line_number": 192,
+            "text": "9813843 Dark Red Kidney__—. -",
+            "confidence": 72.6
+          },
+          {
+            "line_number": 193,
+            "text": "0.99 FA",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 194,
+            "text": "we",
+            "confidence": 18.0
+          },
+          {
+            "line_number": 195,
+            "text": "ee",
+            "confidence": 19.0
+          },
+          {
+            "line_number": 196,
+            "text": "af",
+            "confidence": 57.0
+          },
+          {
+            "line_number": 197,
+            "text": "-\\939153 “Organic Chickpeas",
+            "confidence": 63.33
+          },
+          {
+            "line_number": 198,
+            "text": "0.85 FA",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 199,
+            "text": "te",
+            "confidence": 53.0
+          },
+          {
+            "line_number": 200,
+            "text": "Ff",
+            "confidence": 36.0
+          },
+          {
+            "line_number": 201,
+            "text": "E uy",
+            "confidence": 9.0
+          },
+          {
+            "line_number": 202,
+            "text": "vb",
+            "confidence": 48.0
+          },
+          {
+            "line_number": 203,
+            "text": "381343 Dark Red Kidney",
+            "confidence": 95.25
+          },
+          {
+            "line_number": 204,
+            "text": "99 FA",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 205,
+            "text": "at",
+            "confidence": 53.0
+          },
+          {
+            "line_number": 206,
+            "text": "7. ff",
+            "confidence": 31.0
+          },
+          {
+            "line_number": 207,
+            "text": "381359 Vinaigrette Drssng",
+            "confidence": 83.67
+          },
+          {
+            "line_number": 208,
+            "text": "0.95 FA",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 209,
+            "text": "igh",
+            "confidence": 64.0
+          },
+          {
+            "line_number": 210,
+            "text": "4A",
+            "confidence": 26.0
+          },
+          {
+            "line_number": 211,
+            "text": "%",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 212,
+            "text": "ote",
+            "confidence": 24.0
+          },
+          {
+            "line_number": 213,
+            "text": "mo)",
+            "confidence": 36.0
+          },
+          {
+            "line_number": 214,
+            "text": "356578 Parsley ea",
+            "confidence": 86.67
+          },
+          {
+            "line_number": 215,
+            "text": "Xs",
+            "confidence": 32.0
+          },
+          {
+            "line_number": 216,
+            "text": "“LEY",
+            "confidence": 25.0
+          },
+          {
+            "line_number": 217,
+            "text": "aye",
+            "confidence": 39.0
+          },
+          {
+            "line_number": 218,
+            "text": "400462 0G Croutons",
+            "confidence": 95.0
+          },
+          {
+            "line_number": 219,
+            "text": "1.99 FA",
+            "confidence": 95.5
+          },
+          {
+            "line_number": 220,
+            "text": "rie ss",
+            "confidence": 27.5
+          },
+          {
+            "line_number": 221,
+            "text": "hr",
+            "confidence": 24.0
+          },
+          {
+            "line_number": 222,
+            "text": "Tena",
+            "confidence": 14.0
+          },
+          {
+            "line_number": 223,
+            "text": "PRE VMGS",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 224,
+            "text": "344533 Evryd Plate 8.5in",
+            "confidence": 84.75
+          },
+          {
+            "line_number": 225,
+            "text": "5.25 NB",
+            "confidence": 95.0
+          },
+          {
+            "line_number": 226,
+            "text": "‘¢",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 227,
+            "text": "7)",
+            "confidence": 78.0
+          },
+          {
+            "line_number": 228,
+            "text": "ree",
+            "confidence": 54.0
+          },
+          {
+            "line_number": 229,
+            "text": "/*",
+            "confidence": 40.0
+          },
+          {
+            "line_number": 230,
+            "text": "384545 NO Honey Wheat Brd",
+            "confidence": 94.0
+          },
+          {
+            "line_number": 231,
+            "text": "3.37 FA",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 232,
+            "text": "oe",
+            "confidence": 23.0
+          },
+          {
+            "line_number": 233,
+            "text": "ot",
+            "confidence": 15.0
+          },
+          {
+            "line_number": 234,
+            "text": "ree",
+            "confidence": 22.0
+          },
+          {
+            "line_number": 235,
+            "text": "om",
+            "confidence": 33.0
+          },
+          {
+            "line_number": 236,
+            "text": "730325 Spk Gel Pens -",
+            "confidence": 88.4
+          },
+          {
+            "line_number": 237,
+            "text": "5.99 NB",
+            "confidence": 95.0
+          },
+          {
+            "line_number": 238,
+            "text": "fi\"",
+            "confidence": 56.0
+          },
+          {
+            "line_number": 239,
+            "text": "we",
+            "confidence": 41.0
+          },
+          {
+            "line_number": 240,
+            "text": "if",
+            "confidence": 40.0
+          },
+          {
+            "line_number": 241,
+            "text": "aie",
+            "confidence": 45.0
+          },
+          {
+            "line_number": 242,
+            "text": "ter",
+            "confidence": 51.0
+          },
+          {
+            "line_number": 243,
+            "text": "720921 PB Toast Crackers",
+            "confidence": 95.5
+          },
+          {
+            "line_number": 244,
+            "text": "2.79 FA",
+            "confidence": 95.5
+          },
+          {
+            "line_number": 245,
+            "text": "V1 ef",
+            "confidence": 25.0
+          },
+          {
+            "line_number": 246,
+            "text": "AN",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 247,
+            "text": "\\,",
+            "confidence": 59.0
+          },
+          {
+            "line_number": 248,
+            "text": "yrs t",
+            "confidence": 20.0
+          },
+          {
+            "line_number": 249,
+            "text": "te at",
+            "confidence": 39.5
+          },
+          {
+            "line_number": 250,
+            "text": "383348 Goat Cheese Logs",
+            "confidence": 92.25
+          },
+          {
+            "line_number": 251,
+            "text": "1.99 FA",
+            "confidence": 95.0
+          },
+          {
+            "line_number": 252,
+            "text": "ate",
+            "confidence": 50.0
+          },
+          {
+            "line_number": 253,
+            "text": "iy",
+            "confidence": 53.0
+          },
+          {
+            "line_number": 254,
+            "text": "Mga!",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 255,
+            "text": "54",
+            "confidence": 26.0
+          },
+          {
+            "line_number": 256,
+            "text": "ty ‘",
+            "confidence": 20.0
+          },
+          {
+            "line_number": 257,
+            "text": "af",
+            "confidence": 59.0
+          },
+          {
+            "line_number": 258,
+            "text": "wt?",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 259,
+            "text": "713372 Feta. Crumbles",
+            "confidence": 32.0
+          },
+          {
+            "line_number": 260,
+            "text": "2.89 FA",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 261,
+            "text": "at",
+            "confidence": 69.0
+          },
+          {
+            "line_number": 262,
+            "text": "Shiry",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 263,
+            "text": "ide",
+            "confidence": 35.0
+          },
+          {
+            "line_number": 264,
+            "text": "718929 CollapsibleStorage",
+            "confidence": 88.0
+          },
+          {
+            "line_number": 265,
+            "text": "5.99 NB",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 266,
+            "text": "ate",
+            "confidence": 33.0
+          },
+          {
+            "line_number": 267,
+            "text": "tar Gf ¢",
+            "confidence": 24.67
+          },
+          {
+            "line_number": 268,
+            "text": "\\",
+            "confidence": 8.0
+          },
+          {
+            "line_number": 269,
+            "text": "A”",
+            "confidence": 44.0
+          },
+          {
+            "line_number": 270,
+            "text": "718929 CollapsibleStorage",
+            "confidence": 49.5
+          },
+          {
+            "line_number": 271,
+            "text": "5.99 NB",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 272,
+            "text": "yl",
+            "confidence": 18.0
+          },
+          {
+            "line_number": 273,
+            "text": "‘gi",
+            "confidence": 5.0
+          },
+          {
+            "line_number": 274,
+            "text": "08.44",
+            "confidence": 93.0
+          },
+          {
+            "line_number": 275,
+            "text": "og",
+            "confidence": 31.0
+          },
+          {
+            "line_number": 276,
+            "text": "wd",
+            "confidence": 80.0
+          },
+          {
+            "line_number": 277,
+            "text": "ww",
+            "confidence": 33.0
+          },
+          {
+            "line_number": 278,
+            "text": "KAREREKERKEREERGOOS_ OTHER",
+            "confidence": 47.5
+          },
+          {
+            "line_number": 279,
+            "text": "A",
+            "confidence": 7.0
+          },
+          {
+            "line_number": 280,
+            "text": "123/26 11:40 Ref/Seq # 0",
+            "confidence": 81.8
+          },
+          {
+            "line_number": 281,
+            "text": "rf",
+            "confidence": 39.0
+          },
+          {
+            "line_number": 282,
+            "text": "4%",
+            "confidence": 22.0
+          },
+          {
+            "line_number": 283,
+            "text": "ty",
+            "confidence": 44.0
+          },
+          {
+            "line_number": 284,
+            "text": "}",
+            "confidence": 46.0
+          },
+          {
+            "line_number": 285,
+            "text": "a",
+            "confidence": 63.0
+          },
+          {
+            "line_number": 286,
+            "text": ".",
+            "confidence": 25.0
+          },
+          {
+            "line_number": 287,
+            "text": "Auth # 0024",
+            "confidence": 93.33
+          },
+          {
+            "line_number": 288,
+            "text": "TD A002000",
+            "confidence": 74.0
+          },
+          {
+            "line_number": 289,
+            "text": "0031010",
+            "confidence": 90.0
+          },
+          {
+            "line_number": 290,
+            "text": "vR 000!",
+            "confidence": 44.5
+          },
+          {
+            "line_number": 291,
+            "text": "jE",
+            "confidence": 40.0
+          },
+          {
+            "line_number": 292,
+            "text": "nth",
+            "confidence": 48.0
+          },
+          {
+            "line_number": 293,
+            "text": "v4",
+            "confidence": 67.0
+          },
+          {
+            "line_number": 294,
+            "text": "F4",
+            "confidence": 92.0
+          },
+          {
+            "line_number": 295,
+            "text": "35131800000000010030273000000",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 296,
+            "text": "of",
+            "confidence": 76.0
+          },
+          {
+            "line_number": 297,
+            "text": "TAD 1",
+            "confidence": 94.0
+          },
+          {
+            "line_number": 298,
+            "text": "(003000000000000000000000000",
+            "confidence": 53.0
+          },
+          {
+            "line_number": 299,
+            "text": "00400",
+            "confidence": 93.0
+          },
+          {
+            "line_number": 300,
+            "text": "ARC 00",
+            "confidence": 93.0
+          },
+          {
+            "line_number": 301,
+            "text": "EntryMode 07",
+            "confidence": 87.0
+          },
+          {
+            "line_number": 302,
+            "text": "rt",
+            "confidence": 65.0
+          },
+          {
+            "line_number": 303,
+            "text": "TSI 0000",
+            "confidence": 92.0
+          },
+          {
+            "line_number": 304,
+            "text": "++APPROVED+ +",
+            "confidence": 47.0
+          },
+          {
+            "line_number": 305,
+            "text": "TOTAL",
+            "confidence": 73.0
+          },
+          {
+            "line_number": 306,
+            "text": "106.81",
+            "confidence": 95.0
+          },
+          {
+            "line_number": 307,
+            "text": "1,63",
+            "confidence": 73.0
+          },
+          {
+            "line_number": 308,
+            "text": "B-Taxable 97 ,000%",
+            "confidence": 63.33
+          },
+          {
+            "line_number": 309,
+            "text": "0.00",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 310,
+            "text": "f",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 311,
+            "text": "A-Taxable @0,00%",
+            "confidence": 89.0
+          },
+          {
+            "line_number": 312,
+            "text": "108.44",
+            "confidence": 51.0
+          },
+          {
+            "line_number": 313,
+            "text": "b",
+            "confidence": 57.0
+          },
+          {
+            "line_number": 314,
+            "text": "AMOUNT OUE",
+            "confidence": 78.5
+          },
+          {
+            "line_number": 315,
+            "text": "G 108.44",
+            "confidence": 71.0
+          },
+          {
+            "line_number": 316,
+            "text": "TO",
+            "confidence": 55.0
+          },
+          {
+            "line_number": 317,
+            "text": "T",
+            "confidence": 86.0
+          },
+          {
+            "line_number": 318,
+            "text": "AL",
+            "confidence": 71.0
+          },
+          {
+            "line_number": 319,
+            "text": "35 ITEMS",
+            "confidence": 94.0
+          },
+          {
+            "line_number": 320,
+            "text": "$ 108.44",
+            "confidence": 94.5
+          },
+          {
+            "line_number": 321,
+            "text": "Credit Card",
+            "confidence": 95.5
+          },
+          {
+            "line_number": 322,
+            "text": "25511 FK49/003/011 08/23/26 1",
+            "confidence": 78.75
+          },
+          {
+            "line_number": 323,
+            "text": "1:40AM",
+            "confidence": 84.0
+          },
+          {
+            "line_number": 324,
+            "text": "AKRRRRAERAD",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 325,
+            "text": "RKAKKAAKKRRARE RAKE KK RARER KER",
+            "confidence": 0.6
+          },
+          {
+            "line_number": 326,
+            "text": "Slgn up fer",
+            "confidence": 74.0
+          },
+          {
+            "line_number": 327,
+            "text": "ALOI emails",
+            "confidence": 44.5
+          },
+          {
+            "line_number": 328,
+            "text": "for 3 snouk peok on tho woe",
+            "confidence": 79.86
+          },
+          {
+            "line_number": 329,
+            "text": "Ky ad!",
+            "confidence": 37.5
+          },
+          {
+            "line_number": 330,
+            "text": "ww. ald ua/slanip",
+            "confidence": 12.0
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,15 +1,16 @@
 === SHOPGRAPH CLEAN CODEBASE FOR LLM ===
 
 shopping_analysis/
+    INSTALL.txt
     main.py
     utils/
-        INSTALL.txt
         __init__.py
         codebase_bundler.py
         constants.py
         export_codebase.py
         image_preprocessing.py
         main.py
+        perspective_correction.py
         receipt_picker.py
         reliable_receipt_crop.py
         run_ocr.py
@@ -21,16 +22,14 @@ shopping_analysis/
         tesseract.py
     data/
         requirements.txt
-        preprocessed/
         prompts/
             creation_prompts/
             dev_prompts/
         current_pic/
-        cropped/
 
 ================================================================================
 
-Generated: 2026-08-25 15:22:24.537789
+Generated: 2026-08-25 15:37:15.249487
 Root: /Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis
 Mode: LLM-clean export
 Excluded: receipt images, OCR JSON, datasets, databases, logs, caches
@@ -40,10 +39,103 @@ Excluded: receipt images, OCR JSON, datasets, databases, logs, caches
 
 
 ================================================================================
+FILE: INSTALL.txt
+================================================================================
+
+ShopGraph - Perspective Correction Update
+
+NEW PIPELINE
+
+Original receipt
+    ↓
+1. Reliable Receipt Detection / Crop
+    ↓
+2. Perspective Correction
+    ↓
+3. Image Preprocessing / 2x Enlargement
+    ↓
+4. Run OCR
+    ↓
+5. Export Clean Codebase
+
+FILES TO COPY/REPLACE
+
+- main.py
+- utils/constants.py
+- utils/session_state.py
+- utils/perspective_correction.py       NEW
+- utils/image_preprocessing.py
+- utils/run_ocr.py
+- utils/utils_main.py
+- utils/codebase_bundler.py
+
+KEEP EXISTING
+
+- utils/reliable_receipt_crop.py
+- utils/receipt_picker.py
+- utils/export_codebase.py
+- extractors/tesseract.py
+- utils/__init__.py
+
+IMPORTANT
+
+The top-level main.py imports:
+
+    from utils.utils_main import run_utils_menu
+
+If utils/main.py still exists from an older version, delete it.
+Use only:
+
+    utils/utils_main.py
+
+SIMPLIFIED WORKFLOW
+
+You do not have to manually run every earlier step.
+
+If you choose Perspective Correction first:
+    choose receipt
+    -> crop automatically
+    -> perspective correction
+
+If you choose Image Preprocessing first:
+    choose receipt
+    -> crop automatically
+    -> perspective correction automatically
+    -> preprocessing
+
+If you choose Run OCR first:
+    choose receipt
+    -> crop automatically
+    -> perspective correction automatically
+    -> preprocessing automatically
+    -> OCR
+
+GENERATED DATA
+
+data/current_pic/
+    original receipt
+
+data/cropped/
+    <receipt>_cropped.png
+
+data/perspective_corrected/
+    <receipt>_perspective.png
+
+data/preprocessed/
+    <receipt>_preprocessed.png
+
+data/raw_ocr/
+    <receipt>_raw_ocr.json
+
+Every stage uses one deterministic output per original receipt.
+Running a stage again overwrites its existing output.
+
+
+================================================================================
 FILE: main.py
 ================================================================================
 
-from utils.main import run_utils_menu
+from utils.utils_main import run_utils_menu
 
 
 def display_menu() -> None:
@@ -72,54 +164,6 @@ def main() -> None:
 if __name__ == "__main__":
     main()
 
-================================================================================
-FILE: utils/INSTALL.txt
-================================================================================
-
-ShopGraph reliable crop update
-
-COPY/REPLACE:
-- main.py
-- utils/constants.py
-- utils/session_state.py
-- utils/receipt_picker.py
-- utils/reliable_receipt_crop.py
-- utils/image_preprocessing.py
-- utils/run_ocr.py
-- utils/utils_main.py
-- utils/codebase_bundler.py
-- utils/export_codebase.py
-- extractors/tesseract.py
-- data/requirements.txt
-
-IMPORTANT:
-Delete the old file:
-    utils/main.py
-
-It has been renamed to:
-    utils/utils_main.py
-
-The top-level main.py now imports:
-    from utils.utils_main import run_utils_menu
-
-Workflow:
-1. Reliable Receipt Detection / Crop
-   current_pic -> cropped
-
-2. Image Preprocessing
-   cropped -> preprocessed
-
-3. Run OCR
-   preprocessed -> raw_ocr JSON
-
-4. Export Clean Codebase
-
-If step 2 is run before step 1, the program asks for a receipt,
-automatically crops it, then preprocesses it.
-
-If step 3 is run before steps 1 and 2, the program asks for a receipt,
-automatically crops it, preprocesses it, then runs OCR.
-
 
 ================================================================================
 FILE: utils/__init__.py
@@ -135,13 +179,8 @@ import os
 from pathlib import Path
 from datetime import datetime
 
-
 from utils.constants import PROJECT_ROOT, CODEBASE_OUTPUT_FILE
 
-
-# ----------------------------
-# CLEAN LLM EXPORT RULES
-# ----------------------------
 
 ALLOWED_SUFFIXES = {
     ".py",
@@ -160,6 +199,9 @@ IGNORE_DIRS = {
 
     # ShopGraph data directories
     "raw_receipts",
+    "cropped",
+    "perspective_corrected",
+    "preprocessed",
     "raw_ocr",
     "extracted",
     "normalized",
@@ -182,7 +224,6 @@ IGNORE_SUFFIXES = {
     ".sqlite3",
     ".db",
 
-    # Receipt / image files
     ".jpg",
     ".jpeg",
     ".png",
@@ -194,13 +235,11 @@ IGNORE_SUFFIXES = {
 }
 
 
-# ----------------------------
-# FILTER LOGIC
-# ----------------------------
-
 def _should_ignore(path: Path) -> bool:
-
-    if any(part in IGNORE_DIRS for part in path.parts):
+    if any(
+        part in IGNORE_DIRS
+        for part in path.parts
+    ):
         return True
 
     if path.name in IGNORE_FILES:
@@ -215,16 +254,10 @@ def _should_ignore(path: Path) -> bool:
     return False
 
 
-# ----------------------------
-# TREE BUILDER
-# ----------------------------
-
 def _build_tree(root: Path) -> str:
-
     lines = []
 
     for dirpath, dirnames, filenames in os.walk(root):
-
         dirpath = Path(dirpath)
 
         dirnames[:] = [
@@ -244,14 +277,12 @@ def _build_tree(root: Path) -> str:
         )
 
         for filename in sorted(filenames):
-
             file_path = (
                 dirpath
                 / filename
             )
 
             if not _should_ignore(file_path):
-
                 lines.append(
                     f"{indent}    {filename}"
                 )
@@ -259,14 +290,8 @@ def _build_tree(root: Path) -> str:
     return "\n".join(lines)
 
 
-# ----------------------------
-# FILE COLLECTOR
-# ----------------------------
-
 def _collect_files(root: Path):
-
     for dirpath, dirnames, filenames in os.walk(root):
-
         dirpath = Path(dirpath)
 
         dirnames[:] = [
@@ -276,7 +301,6 @@ def _collect_files(root: Path):
         ]
 
         for filename in sorted(filenames):
-
             file_path = (
                 dirpath
                 / filename
@@ -286,14 +310,9 @@ def _collect_files(root: Path):
                 yield file_path
 
 
-# ----------------------------
-# EXPORT
-# ----------------------------
-
 def export_codebase_bundle(
     root_path: str | None = None
 ) -> str:
-
     root = (
         PROJECT_ROOT
         if root_path is None
@@ -314,7 +333,6 @@ def export_codebase_bundle(
     )
 
     tree = _build_tree(root)
-
     files = list(
         _collect_files(root)
     )
@@ -324,70 +342,39 @@ def export_codebase_bundle(
         "w",
         encoding="utf-8"
     ) as out:
-
         out.write(
             "=== SHOPGRAPH CLEAN CODEBASE FOR LLM ===\n\n"
         )
 
-        out.write(
-            tree
-        )
-
-        out.write(
-            "\n\n"
-        )
-
-        out.write(
-            "=" * 80
-            + "\n\n"
-        )
-
+        out.write(tree)
+        out.write("\n\n")
+        out.write("=" * 80 + "\n\n")
         out.write(
             f"Generated: {datetime.now()}\n"
         )
-
         out.write(
             f"Root: {root}\n"
         )
-
         out.write(
             "Mode: LLM-clean export\n"
         )
-
         out.write(
             "Excluded: receipt images, OCR JSON, datasets, databases, logs, caches\n\n"
         )
-
-        out.write(
-            "=" * 80
-            + "\n\n"
-        )
+        out.write("=" * 80 + "\n\n")
 
         for file_path in files:
-
             try:
-
                 relative = (
                     file_path.relative_to(root)
                 )
 
-                out.write(
-                    "\n\n"
-                )
-
-                out.write(
-                    "=" * 80
-                    + "\n"
-                )
-
+                out.write("\n\n")
+                out.write("=" * 80 + "\n")
                 out.write(
                     f"FILE: {relative}\n"
                 )
-
-                out.write(
-                    "=" * 80
-                    + "\n\n"
-                )
+                out.write("=" * 80 + "\n\n")
 
                 content = (
                     file_path.read_text(
@@ -396,15 +383,11 @@ def export_codebase_bundle(
                     )
                 )
 
-                out.write(
-                    content
-                )
+                out.write(content)
 
             except Exception as error:
-
                 out.write(
-                    f"\n"
-                    f"[ERROR READING FILE: {file_path}] "
+                    f"\n[ERROR READING FILE: {file_path}] "
                     f"{error}\n"
                 )
 
@@ -416,6 +399,7 @@ def export_codebase_bundle(
     return str(
         output_path
     )
+
 
 ================================================================================
 FILE: utils/constants.py
@@ -430,6 +414,7 @@ DATA_DIR = PROJECT_ROOT / "data"
 
 CURRENT_PIC_DIR = DATA_DIR / "current_pic"
 CROPPED_DIR = DATA_DIR / "cropped"
+PERSPECTIVE_DIR = DATA_DIR / "perspective_corrected"
 PREPROCESSED_DIR = DATA_DIR / "preprocessed"
 RAW_OCR_DIR = DATA_DIR / "raw_ocr"
 
@@ -478,10 +463,12 @@ import cv2
 import numpy as np
 
 from utils.constants import PREPROCESSED_DIR
+from utils.perspective_correction import correct_selected_receipt
 from utils.receipt_picker import choose_receipt_image
 from utils.reliable_receipt_crop import crop_selected_receipt
 from utils.session_state import (
     get_selected_cropped_image,
+    get_selected_perspective_image,
     get_selected_source_image,
     set_selected_preprocessed_image,
 )
@@ -491,18 +478,21 @@ def _enhance_for_ocr(
     image: np.ndarray,
 ) -> np.ndarray:
     """
-    Enhance an already-cropped receipt for OCR.
+    Current preprocessing stage:
 
-    Receipt detection/cropping is intentionally handled by
-    reliable_receipt_crop.py so this module has one responsibility.
+    Perspective-corrected receipt
+        -> 2x enlargement
+        -> grayscale
+        -> CLAHE contrast enhancement
+        -> light denoising
+
+    Thresholded variants will be added as a later pipeline stage.
     """
     gray = cv2.cvtColor(
         image,
         cv2.COLOR_BGR2GRAY,
     )
 
-    # Upscale after cropping so Tesseract receives more pixels
-    # per printed character.
     gray = cv2.resize(
         gray,
         None,
@@ -511,8 +501,6 @@ def _enhance_for_ocr(
         interpolation=cv2.INTER_CUBIC,
     )
 
-    # CLAHE improves local contrast without forcing a harsh binary
-    # threshold across the entire thermal receipt.
     clahe = cv2.createCLAHE(
         clipLimit=2.0,
         tileGridSize=(8, 8),
@@ -522,8 +510,6 @@ def _enhance_for_ocr(
         gray
     )
 
-    # Very light denoising. Avoid morphology that can destroy the
-    # thin strokes of thermal-printer characters.
     enhanced = cv2.fastNlMeansDenoising(
         enhanced,
         None,
@@ -549,11 +535,11 @@ def get_preprocessed_path(
 
 
 def preprocess_receipt(
-    cropped_image_path: str | Path,
+    perspective_image_path: str | Path,
     source_image_path: str | Path,
 ) -> Path:
-    cropped_path = (
-        Path(cropped_image_path)
+    perspective_path = (
+        Path(perspective_image_path)
         .expanduser()
         .resolve()
     )
@@ -564,28 +550,30 @@ def preprocess_receipt(
         .resolve()
     )
 
-    if not cropped_path.exists():
+    if not perspective_path.exists():
         raise FileNotFoundError(
-            "Cropped receipt image does not exist: "
-            f"{cropped_path}"
+            "Perspective-corrected receipt does not exist: "
+            f"{perspective_path}"
         )
 
     image = cv2.imread(
-        str(cropped_path)
+        str(perspective_path)
     )
 
     if image is None:
         raise ValueError(
-            "OpenCV could not read cropped image: "
-            f"{cropped_path}"
+            "OpenCV could not read perspective-corrected image: "
+            f"{perspective_path}"
         )
 
     processed = _enhance_for_ocr(
         image
     )
 
-    destination = get_preprocessed_path(
-        source_path
+    destination = (
+        get_preprocessed_path(
+            source_path
+        )
     )
 
     destination.parent.mkdir(
@@ -607,33 +595,79 @@ def preprocess_receipt(
     return destination.resolve()
 
 
-def _get_or_create_cropped_image() -> tuple[Path, Path] | None:
-    selected_cropped = (
-        get_selected_cropped_image()
-    )
-
-    selected_source = (
+def _get_or_create_perspective_image() -> tuple[Path, Path, Path] | None:
+    source_path = (
         get_selected_source_image()
     )
 
+    cropped_path = (
+        get_selected_cropped_image()
+    )
+
+    perspective_path = (
+        get_selected_perspective_image()
+    )
+
     if (
-        selected_cropped is not None
-        and selected_cropped.exists()
-        and selected_source is not None
-        and selected_source.exists()
+        source_path is not None
+        and source_path.exists()
+        and cropped_path is not None
+        and cropped_path.exists()
+        and perspective_path is not None
+        and perspective_path.exists()
     ):
         print(
-            "[INFO] Using selected cropped receipt:"
-            f"\n{selected_cropped}"
+            "[INFO] Using selected perspective-corrected receipt:"
+            f"\n{perspective_path}"
         )
 
         return (
-            selected_source,
-            selected_cropped,
+            source_path,
+            cropped_path,
+            perspective_path,
+        )
+
+    if (
+        source_path is not None
+        and source_path.exists()
+        and cropped_path is not None
+        and cropped_path.exists()
+    ):
+        print(
+            "[INFO] Perspective correction has not been run yet. "
+            "Running it automatically."
+        )
+
+        try:
+            perspective_path = (
+                correct_selected_receipt(
+                    source_path=source_path,
+                    cropped_path=cropped_path,
+                )
+            )
+        except (
+            FileNotFoundError,
+            ValueError,
+            RuntimeError,
+        ) as error:
+            print(
+                f"\n[ERROR] {error}"
+            )
+            return None
+
+        print(
+            "\n[OK] Perspective-corrected receipt created:"
+            f"\n{perspective_path}"
+        )
+
+        return (
+            source_path,
+            cropped_path,
+            perspective_path,
         )
 
     print(
-        "[INFO] No receipt has been cropped "
+        "[INFO] No receipt has been selected "
         "in this session yet."
     )
 
@@ -648,6 +682,24 @@ def _get_or_create_cropped_image() -> tuple[Path, Path] | None:
                 source_path
             )
         )
+
+        print(
+            "\n[OK] Cropped receipt created:"
+            f"\n{cropped_path}"
+        )
+
+        perspective_path = (
+            correct_selected_receipt(
+                source_path=source_path,
+                cropped_path=cropped_path,
+            )
+        )
+
+        print(
+            "\n[OK] Perspective-corrected receipt created:"
+            f"\n{perspective_path}"
+        )
+
     except (
         FileNotFoundError,
         ValueError,
@@ -658,24 +710,21 @@ def _get_or_create_cropped_image() -> tuple[Path, Path] | None:
         )
         return None
 
-    print(
-        "\n[OK] Cropped receipt created:"
-        f"\n{cropped_path}"
-    )
-
     return (
         source_path,
         cropped_path,
+        perspective_path,
     )
 
 
 def preprocess_selected_receipt(
     source_path: Path,
     cropped_path: Path,
+    perspective_path: Path,
 ) -> Path:
     preprocessed_path = (
         preprocess_receipt(
-            cropped_image_path=cropped_path,
+            perspective_image_path=perspective_path,
             source_image_path=source_path,
         )
     )
@@ -683,6 +732,7 @@ def preprocess_selected_receipt(
     set_selected_preprocessed_image(
         source_image=source_path,
         cropped_image=cropped_path,
+        perspective_image=perspective_path,
         preprocessed_image=preprocessed_path,
     )
 
@@ -695,21 +745,24 @@ def run_image_preprocessing() -> None:
     )
 
     selected = (
-        _get_or_create_cropped_image()
+        _get_or_create_perspective_image()
     )
 
     if selected is None:
         return
 
-    source_path, cropped_path = (
-        selected
-    )
+    (
+        source_path,
+        cropped_path,
+        perspective_path,
+    ) = selected
 
     try:
         output_path = (
             preprocess_selected_receipt(
                 source_path=source_path,
                 cropped_path=cropped_path,
+                perspective_path=perspective_path,
             )
         )
 
@@ -765,6 +818,528 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
+================================================================================
+FILE: utils/perspective_correction.py
+================================================================================
+
+from __future__ import annotations
+
+from pathlib import Path
+
+import cv2
+import numpy as np
+
+from utils.constants import PERSPECTIVE_DIR
+from utils.receipt_picker import choose_receipt_image
+from utils.reliable_receipt_crop import crop_selected_receipt
+from utils.session_state import (
+    get_selected_cropped_image,
+    get_selected_source_image,
+    set_selected_perspective_image,
+)
+
+
+def _order_points(
+    points: np.ndarray,
+) -> np.ndarray:
+    """
+    Order four points:
+    top-left, top-right, bottom-right, bottom-left.
+    """
+    rectangle = np.zeros(
+        (4, 2),
+        dtype="float32",
+    )
+
+    point_sum = points.sum(axis=1)
+
+    point_diff = np.diff(
+        points,
+        axis=1,
+    ).reshape(-1)
+
+    rectangle[0] = points[
+        np.argmin(point_sum)
+    ]
+
+    rectangle[2] = points[
+        np.argmax(point_sum)
+    ]
+
+    rectangle[1] = points[
+        np.argmin(point_diff)
+    ]
+
+    rectangle[3] = points[
+        np.argmax(point_diff)
+    ]
+
+    return rectangle
+
+
+def _find_document_corners(
+    image: np.ndarray,
+) -> np.ndarray | None:
+    """
+    Detect the four outer corners of the already-cropped receipt.
+
+    This stage intentionally operates on the cropped receipt rather
+    than the original photograph. That makes perspective estimation
+    less vulnerable to the table/background.
+    """
+    gray = cv2.cvtColor(
+        image,
+        cv2.COLOR_BGR2GRAY,
+    )
+
+    blurred = cv2.GaussianBlur(
+        gray,
+        (5, 5),
+        0,
+    )
+
+    # Use both thresholding and edges to make the outer paper boundary
+    # easier to recover from unevenly lit thermal-paper photos.
+    _, thresholded = cv2.threshold(
+        blurred,
+        0,
+        255,
+        cv2.THRESH_BINARY + cv2.THRESH_OTSU,
+    )
+
+    edges = cv2.Canny(
+        thresholded,
+        40,
+        120,
+    )
+
+    kernel = cv2.getStructuringElement(
+        cv2.MORPH_RECT,
+        (9, 9),
+    )
+
+    edges = cv2.morphologyEx(
+        edges,
+        cv2.MORPH_CLOSE,
+        kernel,
+        iterations=2,
+    )
+
+    contours, _ = cv2.findContours(
+        edges,
+        cv2.RETR_EXTERNAL,
+        cv2.CHAIN_APPROX_SIMPLE,
+    )
+
+    if not contours:
+        return None
+
+    image_area = (
+        image.shape[0]
+        * image.shape[1]
+    )
+
+    contours = sorted(
+        contours,
+        key=cv2.contourArea,
+        reverse=True,
+    )
+
+    for contour in contours:
+        area = cv2.contourArea(
+            contour
+        )
+
+        if area < image_area * 0.30:
+            continue
+
+        perimeter = cv2.arcLength(
+            contour,
+            True,
+        )
+
+        for epsilon in (
+            0.015,
+            0.02,
+            0.025,
+            0.03,
+            0.04,
+            0.05,
+        ):
+            approximation = cv2.approxPolyDP(
+                contour,
+                epsilon * perimeter,
+                True,
+            )
+
+            if len(approximation) == 4:
+                return (
+                    approximation
+                    .reshape(4, 2)
+                    .astype("float32")
+                )
+
+    # Final fallback: use the minimum-area rectangle around the
+    # largest substantial contour.
+    for contour in contours:
+        area = cv2.contourArea(
+            contour
+        )
+
+        if area < image_area * 0.30:
+            continue
+
+        rectangle = cv2.minAreaRect(
+            contour
+        )
+
+        return cv2.boxPoints(
+            rectangle
+        ).astype(
+            "float32"
+        )
+
+    return None
+
+
+def _warp_receipt(
+    image: np.ndarray,
+    corners: np.ndarray,
+) -> np.ndarray:
+    rectangle = _order_points(
+        corners
+    )
+
+    (
+        top_left,
+        top_right,
+        bottom_right,
+        bottom_left,
+    ) = rectangle
+
+    width_bottom = np.linalg.norm(
+        bottom_right - bottom_left
+    )
+
+    width_top = np.linalg.norm(
+        top_right - top_left
+    )
+
+    output_width = max(
+        int(
+            round(
+                max(
+                    width_bottom,
+                    width_top,
+                )
+            )
+        ),
+        1,
+    )
+
+    height_right = np.linalg.norm(
+        top_right - bottom_right
+    )
+
+    height_left = np.linalg.norm(
+        top_left - bottom_left
+    )
+
+    output_height = max(
+        int(
+            round(
+                max(
+                    height_right,
+                    height_left,
+                )
+            )
+        ),
+        1,
+    )
+
+    destination = np.array(
+        [
+            [0, 0],
+            [output_width - 1, 0],
+            [output_width - 1, output_height - 1],
+            [0, output_height - 1],
+        ],
+        dtype="float32",
+    )
+
+    transform = cv2.getPerspectiveTransform(
+        rectangle,
+        destination,
+    )
+
+    corrected = cv2.warpPerspective(
+        image,
+        transform,
+        (
+            output_width,
+            output_height,
+        ),
+        flags=cv2.INTER_CUBIC,
+        borderMode=cv2.BORDER_CONSTANT,
+        borderValue=(255, 255, 255),
+    )
+
+    return cv2.copyMakeBorder(
+        corrected,
+        8,
+        8,
+        8,
+        8,
+        cv2.BORDER_CONSTANT,
+        value=(255, 255, 255),
+    )
+
+
+def get_perspective_corrected_path(
+    source_path: str | Path,
+) -> Path:
+    source = Path(
+        source_path
+    )
+
+    return (
+        PERSPECTIVE_DIR
+        / f"{source.stem}_perspective.png"
+    )
+
+
+def correct_perspective(
+    cropped_image_path: str | Path,
+    source_image_path: str | Path,
+) -> Path:
+    """
+    Perspective-correct an already-cropped receipt.
+
+    The cropped image is never modified.
+
+    One original source receipt maps to exactly one perspective output.
+    Re-running overwrites that same output.
+    """
+    cropped_path = (
+        Path(cropped_image_path)
+        .expanduser()
+        .resolve()
+    )
+
+    source_path = (
+        Path(source_image_path)
+        .expanduser()
+        .resolve()
+    )
+
+    if not cropped_path.exists():
+        raise FileNotFoundError(
+            "Cropped receipt image does not exist: "
+            f"{cropped_path}"
+        )
+
+    if not cropped_path.is_file():
+        raise ValueError(
+            "Cropped receipt path is not a file: "
+            f"{cropped_path}"
+        )
+
+    image = cv2.imread(
+        str(cropped_path)
+    )
+
+    if image is None:
+        raise ValueError(
+            "OpenCV could not read cropped image: "
+            f"{cropped_path}"
+        )
+
+    corners = _find_document_corners(
+        image
+    )
+
+    if corners is None:
+        # The crop stage may already have produced a good rectangular
+        # receipt. In that case, keep the image rather than failing the
+        # streamlined pipeline.
+        corrected = image.copy()
+
+        correction_status = (
+            "no additional perspective distortion detected; "
+            "using cropped image as-is"
+        )
+
+    else:
+        corrected = _warp_receipt(
+            image,
+            corners,
+        )
+
+        correction_status = (
+            "perspective correction applied"
+        )
+
+    destination = (
+        get_perspective_corrected_path(
+            source_path
+        )
+    )
+
+    destination.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    saved = cv2.imwrite(
+        str(destination),
+        corrected,
+    )
+
+    if not saved:
+        raise RuntimeError(
+            "OpenCV could not save perspective-corrected image: "
+            f"{destination}"
+        )
+
+    print(
+        "[INFO] Perspective result: "
+        f"{correction_status}"
+    )
+
+    print(
+        "[INFO] Perspective-corrected dimensions: "
+        f"{corrected.shape[1]} x {corrected.shape[0]}"
+    )
+
+    return destination.resolve()
+
+
+def correct_selected_receipt(
+    source_path: Path,
+    cropped_path: Path,
+) -> Path:
+    perspective_path = (
+        correct_perspective(
+            cropped_image_path=cropped_path,
+            source_image_path=source_path,
+        )
+    )
+
+    set_selected_perspective_image(
+        source_image=source_path,
+        cropped_image=cropped_path,
+        perspective_image=perspective_path,
+    )
+
+    return perspective_path
+
+
+def _get_or_create_cropped_receipt() -> tuple[Path, Path] | None:
+    source_path = (
+        get_selected_source_image()
+    )
+
+    cropped_path = (
+        get_selected_cropped_image()
+    )
+
+    if (
+        source_path is not None
+        and source_path.exists()
+        and cropped_path is not None
+        and cropped_path.exists()
+    ):
+        print(
+            "[INFO] Using selected cropped receipt:"
+            f"\n{cropped_path}"
+        )
+
+        return (
+            source_path,
+            cropped_path,
+        )
+
+    print(
+        "[INFO] No receipt has been cropped "
+        "in this session yet."
+    )
+
+    source_path = choose_receipt_image()
+
+    if source_path is None:
+        return None
+
+    try:
+        cropped_path = (
+            crop_selected_receipt(
+                source_path
+            )
+        )
+    except (
+        FileNotFoundError,
+        ValueError,
+        RuntimeError,
+    ) as error:
+        print(
+            f"\n[ERROR] {error}"
+        )
+        return None
+
+    print(
+        "\n[OK] Cropped receipt created:"
+        f"\n{cropped_path}"
+    )
+
+    return (
+        source_path,
+        cropped_path,
+    )
+
+
+def run_perspective_correction() -> None:
+    print(
+        "\n=== Perspective Correction ===\n"
+    )
+
+    selected = (
+        _get_or_create_cropped_receipt()
+    )
+
+    if selected is None:
+        return
+
+    source_path, cropped_path = (
+        selected
+    )
+
+    try:
+        output_path = (
+            correct_selected_receipt(
+                source_path=source_path,
+                cropped_path=cropped_path,
+            )
+        )
+
+        print(
+            "\n[OK] Perspective-corrected receipt created:"
+            f"\n{output_path}"
+        )
+
+        print(
+            "\nThis receipt is now selected "
+            "for Image Preprocessing."
+        )
+
+    except (
+        FileNotFoundError,
+        ValueError,
+        RuntimeError,
+    ) as error:
+        print(
+            f"\n[ERROR] {error}"
+        )
 
 
 ================================================================================
@@ -1445,10 +2020,12 @@ from pathlib import Path
 from extractors.tesseract import extract_receipt
 from utils.constants import RAW_OCR_DIR
 from utils.image_preprocessing import preprocess_selected_receipt
+from utils.perspective_correction import correct_selected_receipt
 from utils.receipt_picker import choose_receipt_image
 from utils.reliable_receipt_crop import crop_selected_receipt
 from utils.session_state import (
     get_selected_cropped_image,
+    get_selected_perspective_image,
     get_selected_preprocessed_image,
     get_selected_source_image,
 )
@@ -1478,25 +2055,20 @@ def save_json(
 
 
 def _get_ocr_input_image() -> Path | None:
-    selected_preprocessed = (
+    preprocessed_path = (
         get_selected_preprocessed_image()
     )
 
     if (
-        selected_preprocessed is not None
-        and selected_preprocessed.exists()
+        preprocessed_path is not None
+        and preprocessed_path.exists()
     ):
         print(
             "[INFO] Using selected preprocessed image:"
-            f"\n{selected_preprocessed}"
+            f"\n{preprocessed_path}"
         )
 
-        return selected_preprocessed
-
-    print(
-        "[INFO] No receipt has been preprocessed "
-        "in this session yet."
-    )
+        return preprocessed_path
 
     source_path = (
         get_selected_source_image()
@@ -1506,19 +2078,25 @@ def _get_ocr_input_image() -> Path | None:
         get_selected_cropped_image()
     )
 
-    # If the user already ran Reliable Receipt Detection / Crop,
-    # reuse that selected crop and only run preprocessing.
+    perspective_path = (
+        get_selected_perspective_image()
+    )
+
+    # Selected receipt has reached perspective correction.
     if (
         source_path is not None
         and source_path.exists()
         and cropped_path is not None
         and cropped_path.exists()
+        and perspective_path is not None
+        and perspective_path.exists()
     ):
         try:
             preprocessed_path = (
                 preprocess_selected_receipt(
                     source_path=source_path,
                     cropped_path=cropped_path,
+                    perspective_path=perspective_path,
                 )
             )
         except (
@@ -1538,8 +2116,59 @@ def _get_ocr_input_image() -> Path | None:
 
         return preprocessed_path
 
-    # Nothing has been selected yet. Preserve the simplified
-    # workflow: prompt once, then automatically crop + preprocess.
+    # Selected receipt has only been cropped.
+    if (
+        source_path is not None
+        and source_path.exists()
+        and cropped_path is not None
+        and cropped_path.exists()
+    ):
+        try:
+            perspective_path = (
+                correct_selected_receipt(
+                    source_path=source_path,
+                    cropped_path=cropped_path,
+                )
+            )
+
+            print(
+                "\n[OK] Perspective-corrected receipt created:"
+                f"\n{perspective_path}"
+            )
+
+            preprocessed_path = (
+                preprocess_selected_receipt(
+                    source_path=source_path,
+                    cropped_path=cropped_path,
+                    perspective_path=perspective_path,
+                )
+            )
+
+            print(
+                "\n[OK] Preprocessed receipt created:"
+                f"\n{preprocessed_path}"
+            )
+
+        except (
+            FileNotFoundError,
+            ValueError,
+            RuntimeError,
+        ) as error:
+            print(
+                f"\n[ERROR] {error}"
+            )
+            return None
+
+        return preprocessed_path
+
+    # Simplified workflow:
+    # Nothing has been selected. Prompt once and automatically run
+    # crop -> perspective correction -> preprocessing.
+    print(
+        "[INFO] No receipt has been prepared "
+        "in this session yet."
+    )
+
     source_path = choose_receipt_image()
 
     if source_path is None:
@@ -1557,10 +2186,23 @@ def _get_ocr_input_image() -> Path | None:
             f"\n{cropped_path}"
         )
 
+        perspective_path = (
+            correct_selected_receipt(
+                source_path=source_path,
+                cropped_path=cropped_path,
+            )
+        )
+
+        print(
+            "\n[OK] Perspective-corrected receipt created:"
+            f"\n{perspective_path}"
+        )
+
         preprocessed_path = (
             preprocess_selected_receipt(
                 source_path=source_path,
                 cropped_path=cropped_path,
+                perspective_path=perspective_path,
             )
         )
 
@@ -1594,8 +2236,6 @@ def run_ocr() -> None:
     if image_path is None:
         return
 
-    # Keep one OCR JSON per original receipt rather than creating
-    # filenames based on intermediate "_preprocessed" suffixes.
     source_path = (
         get_selected_source_image()
     )
@@ -1643,6 +2283,7 @@ from pathlib import Path
 
 _selected_source_image: Path | None = None
 _selected_cropped_image: Path | None = None
+_selected_perspective_image: Path | None = None
 _selected_preprocessed_image: Path | None = None
 
 
@@ -1660,26 +2301,49 @@ def set_selected_cropped_image(
 ) -> None:
     global _selected_source_image
     global _selected_cropped_image
+    global _selected_perspective_image
     global _selected_preprocessed_image
 
     _selected_source_image = source_image.resolve()
     _selected_cropped_image = cropped_image.resolve()
 
-    # A newly cropped image invalidates any older preprocessing selection.
+    # New crop invalidates downstream artifacts for this session.
+    _selected_perspective_image = None
+    _selected_preprocessed_image = None
+
+
+def set_selected_perspective_image(
+    source_image: Path,
+    cropped_image: Path,
+    perspective_image: Path,
+) -> None:
+    global _selected_source_image
+    global _selected_cropped_image
+    global _selected_perspective_image
+    global _selected_preprocessed_image
+
+    _selected_source_image = source_image.resolve()
+    _selected_cropped_image = cropped_image.resolve()
+    _selected_perspective_image = perspective_image.resolve()
+
+    # New perspective correction invalidates preprocessing.
     _selected_preprocessed_image = None
 
 
 def set_selected_preprocessed_image(
     source_image: Path,
     cropped_image: Path,
+    perspective_image: Path,
     preprocessed_image: Path,
 ) -> None:
     global _selected_source_image
     global _selected_cropped_image
+    global _selected_perspective_image
     global _selected_preprocessed_image
 
     _selected_source_image = source_image.resolve()
     _selected_cropped_image = cropped_image.resolve()
+    _selected_perspective_image = perspective_image.resolve()
     _selected_preprocessed_image = preprocessed_image.resolve()
 
 
@@ -1691,6 +2355,10 @@ def get_selected_cropped_image() -> Path | None:
     return _selected_cropped_image
 
 
+def get_selected_perspective_image() -> Path | None:
+    return _selected_perspective_image
+
+
 def get_selected_preprocessed_image() -> Path | None:
     return _selected_preprocessed_image
 
@@ -1698,10 +2366,12 @@ def get_selected_preprocessed_image() -> Path | None:
 def clear_selected_receipt() -> None:
     global _selected_source_image
     global _selected_cropped_image
+    global _selected_perspective_image
     global _selected_preprocessed_image
 
     _selected_source_image = None
     _selected_cropped_image = None
+    _selected_perspective_image = None
     _selected_preprocessed_image = None
 
 
@@ -1710,6 +2380,7 @@ FILE: utils/utils_main.py
 ================================================================================
 
 from utils.reliable_receipt_crop import run_reliable_receipt_crop
+from utils.perspective_correction import run_perspective_correction
 from utils.image_preprocessing import run_image_preprocessing
 from utils.run_ocr import run_ocr
 from utils.export_codebase import run_codebase_export
@@ -1725,15 +2396,19 @@ def display_utils_menu() -> None:
     )
 
     print(
-        "2. Image Preprocessing"
+        "2. Perspective Correction"
     )
 
     print(
-        "3. Run OCR"
+        "3. Image Preprocessing / 2x Enlargement"
     )
 
     print(
-        "4. Export Clean Codebase"
+        "4. Run OCR"
+    )
+
+    print(
+        "5. Export Clean Codebase"
     )
 
     print(
@@ -1753,12 +2428,15 @@ def run_utils_menu() -> None:
             run_reliable_receipt_crop()
 
         elif option == "2":
-            run_image_preprocessing()
+            run_perspective_correction()
 
         elif option == "3":
-            run_ocr()
+            run_image_preprocessing()
 
         elif option == "4":
+            run_ocr()
+
+        elif option == "5":
             run_codebase_export()
 
         elif option == "0":

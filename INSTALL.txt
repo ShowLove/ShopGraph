@@ -1,75 +1,51 @@
-ShopGraph - Perspective Correction Update
+ShopGraph - Full OCR Candidate Pipeline Update
 
-NEW PIPELINE
+NEW UTILS ORDER
+
+1. Reliable Receipt Detection / Crop
+2. Perspective Correction
+3. 2x Enlargement
+4. Generate OCR Image Variants
+5. Run OCR - PSM 4 / 6 / 11
+6. Compare OCR Results / Build Raw OCR JSON
+7. Export Clean Codebase
+0. Return to Main
+
+PIPELINE
 
 Original receipt
     ↓
-1. Reliable Receipt Detection / Crop
+Reliable crop
     ↓
-2. Perspective Correction
+Perspective correction
     ↓
-3. Image Preprocessing / 2x Enlargement
+2x enlargement
     ↓
-4. Run OCR
+Grayscale enhanced + thresholded variant
     ↓
-5. Export Clean Codebase
-
-FILES TO COPY/REPLACE
-
-- main.py
-- utils/constants.py
-- utils/session_state.py
-- utils/perspective_correction.py       NEW
-- utils/image_preprocessing.py
-- utils/run_ocr.py
-- utils/utils_main.py
-- utils/codebase_bundler.py
-
-KEEP EXISTING
-
-- utils/reliable_receipt_crop.py
-- utils/receipt_picker.py
-- utils/export_codebase.py
-- extractors/tesseract.py
-- utils/__init__.py
-
-IMPORTANT
-
-The top-level main.py imports:
-
-    from utils.utils_main import run_utils_menu
-
-If utils/main.py still exists from an older version, delete it.
-Use only:
-
-    utils/utils_main.py
+Tesseract PSM 4 / 6 / 11 on both variants
+    ↓
+6 OCR candidates
+    ↓
+Heuristic comparison
+    ↓
+Final raw OCR JSON
 
 SIMPLIFIED WORKFLOW
 
-You do not have to manually run every earlier step.
+You can run any later stage directly.
 
-If you choose Perspective Correction first:
-    choose receipt
-    -> crop automatically
-    -> perspective correction
+For example, if you select option 6 first:
+- choose the receipt once
+- crop runs automatically
+- perspective correction runs automatically
+- enlargement runs automatically
+- image variants are generated automatically
+- all six OCR candidates run automatically
+- comparison runs automatically
+- final raw OCR JSON is created
 
-If you choose Image Preprocessing first:
-    choose receipt
-    -> crop automatically
-    -> perspective correction automatically
-    -> preprocessing
-
-If you choose Run OCR first:
-    choose receipt
-    -> crop automatically
-    -> perspective correction automatically
-    -> preprocessing automatically
-    -> OCR
-
-GENERATED DATA
-
-data/current_pic/
-    original receipt
+OUTPUTS
 
 data/cropped/
     <receipt>_cropped.png
@@ -77,11 +53,44 @@ data/cropped/
 data/perspective_corrected/
     <receipt>_perspective.png
 
-data/preprocessed/
-    <receipt>_preprocessed.png
+data/enlarged/
+    <receipt>_2x.png
+
+data/ocr_variants/
+    <receipt>_grayscale.png
+    <receipt>_threshold.png
+
+data/ocr_candidates/
+    <receipt>_ocr_candidates.json
 
 data/raw_ocr/
     <receipt>_raw_ocr.json
 
-Every stage uses one deterministic output per original receipt.
-Running a stage again overwrites its existing output.
+IMPORTANT CLEANUP
+
+Delete the old:
+    utils/main.py
+
+Keep:
+    utils/utils_main.py
+
+COPY/REPLACE
+
+- main.py
+- utils/constants.py
+- utils/session_state.py
+- utils/image_enlargement.py
+- utils/ocr_image_variants.py
+- utils/run_ocr.py
+- utils/compare_ocr.py
+- utils/utils_main.py
+- utils/codebase_bundler.py
+- extractors/tesseract.py
+
+KEEP YOUR CURRENT
+
+- utils/reliable_receipt_crop.py
+- utils/perspective_correction.py
+- utils/receipt_picker.py
+- utils/export_codebase.py
+- utils/__init__.py

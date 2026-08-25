@@ -20,16 +20,16 @@ IGNORE_DIRS = {
     ".venv",
     "node_modules",
 
-    # ShopGraph data directories
     "raw_receipts",
     "cropped",
     "perspective_corrected",
-    "preprocessed",
+    "enlarged",
+    "ocr_variants",
+    "ocr_candidates",
     "raw_ocr",
     "extracted",
     "normalized",
 
-    # Generated / runtime directories
     "logs",
     "exports"
 }
@@ -46,7 +46,6 @@ IGNORE_SUFFIXES = {
     ".sqlite",
     ".sqlite3",
     ".db",
-
     ".jpg",
     ".jpeg",
     ".png",
@@ -142,9 +141,7 @@ def export_codebase_bundle(
         else Path(root_path).resolve()
     )
 
-    output_path = (
-        CODEBASE_OUTPUT_FILE
-    )
+    output_path = CODEBASE_OUTPUT_FILE
 
     output_path.parent.mkdir(
         parents=True,
@@ -168,7 +165,6 @@ def export_codebase_bundle(
         out.write(
             "=== SHOPGRAPH CLEAN CODEBASE FOR LLM ===\n\n"
         )
-
         out.write(tree)
         out.write("\n\n")
         out.write("=" * 80 + "\n\n")
@@ -219,6 +215,4 @@ def export_codebase_bundle(
         f"{output_path}"
     )
 
-    return str(
-        output_path
-    )
+    return str(output_path)

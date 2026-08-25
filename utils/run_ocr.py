@@ -4,20 +4,19 @@ import json
 from pathlib import Path
 
 from extractors.tesseract import extract_receipt
-from utils.constants import RAW_OCR_DIR
-from utils.image_preprocessing import preprocess_selected_receipt
-from utils.perspective_correction import correct_selected_receipt
-from utils.receipt_picker import choose_receipt_image
-from utils.reliable_receipt_crop import crop_selected_receipt
-from utils.session_state import (
-    get_selected_cropped_image,
-    get_selected_perspective_image,
-    get_selected_preprocessed_image,
-    get_selected_source_image,
+from utils.constants import OCR_CANDIDATES_DIR
+from utils.ocr_image_variants import ensure_ocr_variants
+from utils.session_state import set_selected_ocr_candidates_file
+
+
+PSM_MODES = (
+    4,
+    6,
+    11,
 )
 
 
-def save_json(
+def _save_json(
     data: dict,
     output_path: Path,
 ) -> None:
@@ -40,161 +39,115 @@ def save_json(
         file.write("\n")
 
 
-def _get_ocr_input_image() -> Path | None:
-    preprocessed_path = (
-        get_selected_preprocessed_image()
+def get_ocr_candidates_path(
+    source_path: str | Path,
+) -> Path:
+    source = Path(
+        source_path
     )
 
-    if (
-        preprocessed_path is not None
-        and preprocessed_path.exists()
-    ):
-        print(
-            "[INFO] Using selected preprocessed image:"
-            f"\n{preprocessed_path}"
-        )
-
-        return preprocessed_path
-
-    source_path = (
-        get_selected_source_image()
+    return (
+        OCR_CANDIDATES_DIR
+        / f"{source.stem}_ocr_candidates.json"
     )
 
-    cropped_path = (
-        get_selected_cropped_image()
-    )
 
-    perspective_path = (
-        get_selected_perspective_image()
-    )
+def run_all_ocr_candidates() -> Path | None:
+    selected = ensure_ocr_variants()
 
-    # Selected receipt has reached perspective correction.
-    if (
-        source_path is not None
-        and source_path.exists()
-        and cropped_path is not None
-        and cropped_path.exists()
-        and perspective_path is not None
-        and perspective_path.exists()
-    ):
-        try:
-            preprocessed_path = (
-                preprocess_selected_receipt(
-                    source_path=source_path,
-                    cropped_path=cropped_path,
-                    perspective_path=perspective_path,
-                )
-            )
-        except (
-            FileNotFoundError,
-            ValueError,
-            RuntimeError,
-        ) as error:
-            print(
-                f"\n[ERROR] {error}"
-            )
-            return None
-
-        print(
-            "\n[OK] Preprocessed receipt created:"
-            f"\n{preprocessed_path}"
-        )
-
-        return preprocessed_path
-
-    # Selected receipt has only been cropped.
-    if (
-        source_path is not None
-        and source_path.exists()
-        and cropped_path is not None
-        and cropped_path.exists()
-    ):
-        try:
-            perspective_path = (
-                correct_selected_receipt(
-                    source_path=source_path,
-                    cropped_path=cropped_path,
-                )
-            )
-
-            print(
-                "\n[OK] Perspective-corrected receipt created:"
-                f"\n{perspective_path}"
-            )
-
-            preprocessed_path = (
-                preprocess_selected_receipt(
-                    source_path=source_path,
-                    cropped_path=cropped_path,
-                    perspective_path=perspective_path,
-                )
-            )
-
-            print(
-                "\n[OK] Preprocessed receipt created:"
-                f"\n{preprocessed_path}"
-            )
-
-        except (
-            FileNotFoundError,
-            ValueError,
-            RuntimeError,
-        ) as error:
-            print(
-                f"\n[ERROR] {error}"
-            )
-            return None
-
-        return preprocessed_path
-
-    # Simplified workflow:
-    # Nothing has been selected. Prompt once and automatically run
-    # crop -> perspective correction -> preprocessing.
-    print(
-        "[INFO] No receipt has been prepared "
-        "in this session yet."
-    )
-
-    source_path = choose_receipt_image()
-
-    if source_path is None:
+    if selected is None:
         return None
 
+    source_path = selected[0]
+    grayscale_path = selected[4]
+    threshold_path = selected[5]
+
+    variants = {
+        "grayscale": grayscale_path,
+        "threshold": threshold_path,
+    }
+
+    candidates = []
+
+    for variant_name, image_path in variants.items():
+        for psm in PSM_MODES:
+            print(
+                "[INFO] OCR "
+                f"{variant_name} / PSM {psm}"
+            )
+
+            result = extract_receipt(
+                image_path=image_path,
+                psm=psm,
+            )
+
+            candidates.append(
+                {
+                    "candidate_id": (
+                        f"{variant_name}_psm{psm}"
+                    ),
+                    "image_variant": variant_name,
+                    "psm": psm,
+                    "result": result,
+                }
+            )
+
+    output = {
+        "source_receipt": str(
+            source_path
+        ),
+        "candidate_count": len(
+            candidates
+        ),
+        "candidates": candidates,
+    }
+
+    output_path = (
+        get_ocr_candidates_path(
+            source_path
+        )
+    )
+
+    _save_json(
+        output,
+        output_path,
+    )
+
+    set_selected_ocr_candidates_file(
+        output_path
+    )
+
+    return output_path.resolve()
+
+
+def run_ocr() -> None:
+    print(
+        "\n=== Multi-PSM OCR ===\n"
+    )
+
     try:
-        cropped_path = (
-            crop_selected_receipt(
-                source_path
-            )
+        output_path = run_all_ocr_candidates()
+
+        if output_path is None:
+            return
+
+        print(
+            "\n[OK] OCR candidates created:"
+            f"\n{output_path}"
         )
 
         print(
-            "\n[OK] Cropped receipt created:"
-            f"\n{cropped_path}"
-        )
-
-        perspective_path = (
-            correct_selected_receipt(
-                source_path=source_path,
-                cropped_path=cropped_path,
-            )
-        )
-
-        print(
-            "\n[OK] Perspective-corrected receipt created:"
-            f"\n{perspective_path}"
-        )
-
-        preprocessed_path = (
-            preprocess_selected_receipt(
-                source_path=source_path,
-                cropped_path=cropped_path,
-                perspective_path=perspective_path,
-            )
+            "\nGenerated 6 candidates:"
+            "\n- grayscale / PSM 4"
+            "\n- grayscale / PSM 6"
+            "\n- grayscale / PSM 11"
+            "\n- threshold / PSM 4"
+            "\n- threshold / PSM 6"
+            "\n- threshold / PSM 11"
         )
 
         print(
-            "\n[OK] Preprocessed receipt created:"
-            f"\n{preprocessed_path}"
+            "\nNext step: Compare OCR Results."
         )
 
     except (
@@ -205,54 +158,3 @@ def _get_ocr_input_image() -> Path | None:
         print(
             f"\n[ERROR] {error}"
         )
-        return None
-
-    return preprocessed_path
-
-
-def run_ocr() -> None:
-    print(
-        "\n=== Run OCR ===\n"
-    )
-
-    image_path = (
-        _get_ocr_input_image()
-    )
-
-    if image_path is None:
-        return
-
-    source_path = (
-        get_selected_source_image()
-    )
-
-    if source_path is not None:
-        output_stem = (
-            source_path.stem
-        )
-    else:
-        output_stem = (
-            image_path.stem
-            .removesuffix(
-                "_preprocessed"
-            )
-        )
-
-    output_path = (
-        RAW_OCR_DIR
-        / f"{output_stem}_raw_ocr.json"
-    )
-
-    result = extract_receipt(
-        image_path
-    )
-
-    save_json(
-        data=result,
-        output_path=output_path,
-    )
-
-    print(
-        "\n[OK] OCR JSON created:"
-        f"\n{output_path.resolve()}"
-    )
