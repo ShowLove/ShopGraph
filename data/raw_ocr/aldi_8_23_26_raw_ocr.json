@@ -1,6 +1,6 @@
 {
   "source_receipt": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/current_pic/aldi_8_23_26.jpg",
-  "selection_method": "multi-candidate consensus: highest-ranked OCR candidate is used as the reading-order backbone; each backbone line may be replaced by a higher-quality matching line from any of the six OCR candidates; independently supported lines missing from the backbone are preserved separately",
+  "selection_method": "multi-candidate SKU-anchored consensus: highest-ranked OCR candidate supplies reading order; exact six-digit product codes are used as hard alignment anchors across candidates; the highest-quality supported verbatim OCR reading is selected for each backbone line; fuzzy matching is retained for non-product lines",
   "backbone_candidate": {
     "candidate_id": "grayscale_psm4",
     "image_variant": "grayscale",
@@ -17,12 +17,13 @@
   "consensus_summary": {
     "backbone_line_count": 64,
     "consensus_line_count": 64,
-    "supported_extra_line_count": 68,
+    "supported_extra_line_count": 51,
     "candidate_count": 6,
     "match_threshold": 0.58,
-    "extra_line_min_support": 2
+    "extra_line_min_support": 2,
+    "sku_anchored_replacements": 21
   },
-  "raw_text": "Sore\nore #160\n1400 N Wickham Rd\nMelbourne, FL\nhttps://hellp.al di .us\nYour cashier today was Taryn\n383212 GF Wide Pan Bread\n356691 Zucchini\n1.81 1b x 1.39/1b\n356689 Yellow Squash\n1.87 lb x 1.99/1b\n356421 Medley Potatoes\n356537 Cilantro\n356508 Broccoli Crowns\n1.63 Ib x 2.09/1b\n356496 Beefsteak Tomatoes 2.99 FA\n344280 Cauli Crust Pizza 8.29 FA\n356427 Multi-Peppers 3pk.\n356591 Pink Lady Apple\n356488 Baby Carrots\n341979 Pine/Water Spears 3.89 FA\n356504 Blueberries\n356374 Golden Kiwi\n343738 Hummus Mini Cups\n369553 LesserEvil Popcorn\n_ 262747 Bananas LRW 1.31 FA\n(G) 2.681b - T) 0,011b\n(N) 2.67 1b x 0.49/1b\n328752 Fruit & Grain Bars 1.99 FA\n328752 Fruit & Grain Bars 1.99 FA\n356609 Red Onions\n739153 Organic Chickpeas\n381343 Dark Red Kidney\n739153 Organic Chickpeas\n381343 Dark Red Kidney\n? 381359 Vinaigrette Drssng 2.\n256578 Parsley each\n400462 0G Croutons 1.99 FA\n344583 Evryd Plate 8.5in 5.25 NB\n384545 NO Honey Wheat Brd 3.37 FA\n730325 Spk Gel Pens - 5.99 NB\nyy 720921 PB Toast Crackers 2.79 FA\n383548 Goat Cheese Logs\n713372 Feta Crumbles\n718929 CollapsibleStorage 5.99 NB\n718929 CollapsibleStorage 5.99 NB\n108.44\nSKK KEK EREXERER GOOD OTHER\n08/23/26 11:40 Ref/Seq # 0\nAuth # 0024\nAID 40090000031010\nTVR 0009000000\nTAO 1F420131A00000000010030273000000\n9040000900000000000'\nTSI 0000 ARC 00 EntryMode 07\n++APPROVED++\nSUBTOTAL 106.81\nB-Taxable @7.000% 1,63\nA-Taxable @0,00% 0.00\nAMOUNT DUE\nT Of\n35 ITEMS\n25511 FK49/003/011 08/23/26 1\nRRKKERKKE!",
+  "raw_text": "Sore\nore #160\n1400 N Wickham Rd\nMelbourne, FL\nhttps://hellp.al di .us\nYour cashier today was Taryn\n383212 GF Wide Pan Bread\n356691 Zucchini\n1.81 1b x 1.39/1b\n356689 Yellow Squash © 72.60 FA\n1.87 lb x 1.99/1b\n356421 Medley Potatoes\n356537 Cilantro\n356508 Broccoli Crowns\n1.63 Ib x 2.09/1b\n356496 Beefsteak Tomatoes 2.99 FA\n344280 Cauli Crust Pizza 8.29 FA\n356427 Multt-Peppers 3pk.\n356591 Pink Lady Apple\n356488 Baby Carrots\n341979 Pine/Water Spears 3.89 FA\n356504 Blueberries\n356374 Golden Kiwi\n343738 Hummus Mini Cups\n369553 LesserEvil Popcorn\n_ 262747 Bananas LRW 1.31 FA\n(G) 2.681b - T) 0,011b\n(N) 2.67 1b x 0.49/1b\n328752 Fruit & Grain Bars 1.99 FA\n328752 Fruit & Grain Bars 1.99 FA\n356609 Red Onions\n739153 “Organic Chickpeas 0.99 FA\n381343 Dark Red Kidney\n739153 “Organic Chickpeas 0.99 FA\n381343 Dark Red Kidney\n? 381359 Vinaigrette Drssng 2.\n256578 Parsley each\n400462 0G Croutons 1.99 FA\n344583 Evryd Plate 8.5in 5.25 NB\n384545 NO Honey Wheat Brd 3.37 FA\n730325 Spk Gel Pens - 5.99 NB\nyy 720921 PB Toast Crackers 2.79 FA\n383548 Goat Cheese Logs\n: 713372 Feta Crumbles 2.89 FA\n718929 CollapsibleStorage 5.99 NB\n718929 CollapsibleStorage 5.99 NB\n108.44\nSKK KEK EREXERER GOOD OTHER\n08/23/26 11:40 Ref/Seq # 0\nAuth # 002470\nAID 40090000031010\nTVR 0009000000\nTAO 1F420131A00000000010030273000000\n9040000900000000000'\nTSI 0000 ARC 00 EntryMode 07\n++APPROVED++\nSUBTOTAL 106.81\nB-Taxable @7.000% 1,63\nA-Taxable @0,00% 0.00\nAMOUNT DUE\nT Of\n35 ITEMS\n25511 FK49/003/011 08/23/26 1\nRRKKERKKE!",
   "text": [
     {
       "line_number": 1,
@@ -32,6 +33,7 @@
       "image_variant": "grayscale",
       "psm": 4,
       "support_count": 1,
+      "match_method": "backbone",
       "line_quality_score": 30.55,
       "consensus_score": 30.55
     },
@@ -43,6 +45,7 @@
       "image_variant": "grayscale",
       "psm": 4,
       "support_count": 2,
+      "match_method": "backbone",
       "line_quality_score": 96.76,
       "consensus_score": 100.76
     },
@@ -54,6 +57,7 @@
       "image_variant": "grayscale",
       "psm": 11,
       "support_count": 5,
+      "match_method": "fuzzy",
       "line_quality_score": 70.83,
       "consensus_score": 86.83
     },
@@ -65,6 +69,7 @@
       "image_variant": "grayscale",
       "psm": 4,
       "support_count": 3,
+      "match_method": "backbone",
       "line_quality_score": 95.1,
       "consensus_score": 103.1
     },
@@ -76,6 +81,7 @@
       "image_variant": "grayscale",
       "psm": 11,
       "support_count": 3,
+      "match_method": "fuzzy",
       "line_quality_score": 82.65,
       "consensus_score": 90.65
     },
@@ -87,6 +93,7 @@
       "image_variant": "grayscale",
       "psm": 4,
       "support_count": 6,
+      "match_method": "backbone",
       "line_quality_score": 96.95,
       "consensus_score": 116.95
     },
@@ -98,6 +105,7 @@
       "image_variant": "grayscale",
       "psm": 11,
       "support_count": 4,
+      "match_method": "sku",
       "line_quality_score": 99.27,
       "consensus_score": 111.27
     },
@@ -108,9 +116,10 @@
       "source_candidate": "grayscale_psm4",
       "image_variant": "grayscale",
       "psm": 4,
-      "support_count": 2,
+      "support_count": 3,
+      "match_method": "backbone",
       "line_quality_score": 97.42,
-      "consensus_score": 101.42
+      "consensus_score": 105.42
     },
     {
       "line_number": 9,
@@ -120,19 +129,21 @@
       "image_variant": "grayscale",
       "psm": 4,
       "support_count": 4,
+      "match_method": "backbone",
       "line_quality_score": 80.71,
       "consensus_score": 92.71
     },
     {
       "line_number": 10,
-      "text": "356689 Yellow Squash",
-      "confidence": 87.0,
-      "source_candidate": "grayscale_psm4",
-      "image_variant": "grayscale",
+      "text": "356689 Yellow Squash © 72.60 FA",
+      "confidence": 77.33,
+      "source_candidate": "threshold_psm4",
+      "image_variant": "threshold",
       "psm": 4,
       "support_count": 5,
-      "line_quality_score": 91.97,
-      "consensus_score": 107.97
+      "match_method": "sku",
+      "line_quality_score": 89.33,
+      "consensus_score": 109.33
     },
     {
       "line_number": 11,
@@ -142,6 +153,7 @@
       "image_variant": "grayscale",
       "psm": 4,
       "support_count": 1,
+      "match_method": "backbone",
       "line_quality_score": 82.99,
       "consensus_score": 82.99
     },
@@ -153,6 +165,7 @@
       "image_variant": "threshold",
       "psm": 11,
       "support_count": 5,
+      "match_method": "sku",
       "line_quality_score": 95.64,
       "consensus_score": 111.64
     },
@@ -163,9 +176,10 @@
       "source_candidate": "threshold_psm11",
       "image_variant": "threshold",
       "psm": 11,
-      "support_count": 5,
+      "support_count": 6,
+      "match_method": "fuzzy",
       "line_quality_score": 99.42,
-      "consensus_score": 115.42
+      "consensus_score": 119.42
     },
     {
       "line_number": 14,
@@ -174,9 +188,10 @@
       "source_candidate": "grayscale_psm4",
       "image_variant": "grayscale",
       "psm": 4,
-      "support_count": 5,
+      "support_count": 6,
+      "match_method": "backbone",
       "line_quality_score": 89.97,
-      "consensus_score": 105.97
+      "consensus_score": 109.97
     },
     {
       "line_number": 15,
@@ -186,6 +201,7 @@
       "image_variant": "threshold",
       "psm": 4,
       "support_count": 4,
+      "match_method": "fuzzy",
       "line_quality_score": 83.99,
       "consensus_score": 95.99
     },
@@ -197,8 +213,9 @@
       "image_variant": "threshold",
       "psm": 4,
       "support_count": 5,
-      "line_quality_score": 102.93,
-      "consensus_score": 118.93
+      "match_method": "sku",
+      "line_quality_score": 104.43,
+      "consensus_score": 124.43
     },
     {
       "line_number": 17,
@@ -208,19 +225,21 @@
       "image_variant": "threshold",
       "psm": 4,
       "support_count": 5,
-      "line_quality_score": 102.45,
-      "consensus_score": 118.45
+      "match_method": "sku",
+      "line_quality_score": 103.95,
+      "consensus_score": 123.95
     },
     {
       "line_number": 18,
-      "text": "356427 Multi-Peppers 3pk.",
-      "confidence": 75.33,
-      "source_candidate": "grayscale_psm4",
-      "image_variant": "grayscale",
-      "psm": 4,
+      "text": "356427 Multt-Peppers 3pk.",
+      "confidence": 78.67,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
       "support_count": 6,
-      "line_quality_score": 80.52,
-      "consensus_score": 100.52
+      "match_method": "sku",
+      "line_quality_score": 83.86,
+      "consensus_score": 103.86
     },
     {
       "line_number": 19,
@@ -230,6 +249,7 @@
       "image_variant": "grayscale",
       "psm": 4,
       "support_count": 5,
+      "match_method": "backbone",
       "line_quality_score": 101.02,
       "consensus_score": 117.02
     },
@@ -240,9 +260,10 @@
       "source_candidate": "threshold_psm11",
       "image_variant": "threshold",
       "psm": 11,
-      "support_count": 5,
+      "support_count": 6,
+      "match_method": "fuzzy",
       "line_quality_score": 100.3,
-      "consensus_score": 116.3
+      "consensus_score": 120.3
     },
     {
       "line_number": 21,
@@ -252,8 +273,9 @@
       "image_variant": "threshold",
       "psm": 4,
       "support_count": 6,
-      "line_quality_score": 98.53,
-      "consensus_score": 118.53
+      "match_method": "sku",
+      "line_quality_score": 100.03,
+      "consensus_score": 124.03
     },
     {
       "line_number": 22,
@@ -262,9 +284,10 @@
       "source_candidate": "threshold_psm11",
       "image_variant": "threshold",
       "psm": 11,
-      "support_count": 3,
+      "support_count": 4,
+      "match_method": "sku",
       "line_quality_score": 97.92,
-      "consensus_score": 105.92
+      "consensus_score": 109.92
     },
     {
       "line_number": 23,
@@ -273,9 +296,10 @@
       "source_candidate": "threshold_psm11",
       "image_variant": "threshold",
       "psm": 11,
-      "support_count": 4,
+      "support_count": 5,
+      "match_method": "fuzzy",
       "line_quality_score": 100.3,
-      "consensus_score": 112.3
+      "consensus_score": 116.3
     },
     {
       "line_number": 24,
@@ -285,6 +309,7 @@
       "image_variant": "grayscale",
       "psm": 4,
       "support_count": 4,
+      "match_method": "backbone",
       "line_quality_score": 92.52,
       "consensus_score": 104.52
     },
@@ -295,9 +320,10 @@
       "source_candidate": "grayscale_psm4",
       "image_variant": "grayscale",
       "psm": 4,
-      "support_count": 5,
+      "support_count": 6,
+      "match_method": "backbone",
       "line_quality_score": 89.64,
-      "consensus_score": 105.64
+      "consensus_score": 109.64
     },
     {
       "line_number": 26,
@@ -307,8 +333,9 @@
       "image_variant": "threshold",
       "psm": 4,
       "support_count": 6,
-      "line_quality_score": 94.11,
-      "consensus_score": 114.11
+      "match_method": "sku",
+      "line_quality_score": 95.61,
+      "consensus_score": 119.61
     },
     {
       "line_number": 27,
@@ -318,6 +345,7 @@
       "image_variant": "grayscale",
       "psm": 4,
       "support_count": 2,
+      "match_method": "backbone",
       "line_quality_score": 72.91,
       "consensus_score": 76.91
     },
@@ -329,6 +357,7 @@
       "image_variant": "grayscale",
       "psm": 4,
       "support_count": 4,
+      "match_method": "backbone",
       "line_quality_score": 86.31,
       "consensus_score": 98.31
     },
@@ -340,8 +369,9 @@
       "image_variant": "threshold",
       "psm": 4,
       "support_count": 6,
-      "line_quality_score": 105.12,
-      "consensus_score": 125.12
+      "match_method": "sku",
+      "line_quality_score": 106.62,
+      "consensus_score": 130.62
     },
     {
       "line_number": 30,
@@ -351,8 +381,9 @@
       "image_variant": "threshold",
       "psm": 4,
       "support_count": 6,
-      "line_quality_score": 105.12,
-      "consensus_score": 125.12
+      "match_method": "sku",
+      "line_quality_score": 106.62,
+      "consensus_score": 130.62
     },
     {
       "line_number": 31,
@@ -362,19 +393,21 @@
       "image_variant": "grayscale",
       "psm": 4,
       "support_count": 4,
+      "match_method": "backbone",
       "line_quality_score": 97.64,
       "consensus_score": 109.64
     },
     {
       "line_number": 32,
-      "text": "739153 Organic Chickpeas",
-      "confidence": 94.0,
-      "source_candidate": "grayscale_psm4",
-      "image_variant": "grayscale",
+      "text": "739153 “Organic Chickpeas 0.99 FA",
+      "confidence": 89.2,
+      "source_candidate": "threshold_psm4",
+      "image_variant": "threshold",
       "psm": 4,
-      "support_count": 5,
-      "line_quality_score": 98.97,
-      "consensus_score": 114.97
+      "support_count": 6,
+      "match_method": "sku",
+      "line_quality_score": 100.43,
+      "consensus_score": 124.43
     },
     {
       "line_number": 33,
@@ -384,19 +417,21 @@
       "image_variant": "grayscale",
       "psm": 11,
       "support_count": 6,
+      "match_method": "fuzzy",
       "line_quality_score": 101.02,
       "consensus_score": 121.02
     },
     {
       "line_number": 34,
-      "text": "739153 Organic Chickpeas",
-      "confidence": 96.0,
-      "source_candidate": "grayscale_psm4",
-      "image_variant": "grayscale",
+      "text": "739153 “Organic Chickpeas 0.99 FA",
+      "confidence": 89.2,
+      "source_candidate": "threshold_psm4",
+      "image_variant": "threshold",
       "psm": 4,
-      "support_count": 5,
-      "line_quality_score": 100.97,
-      "consensus_score": 116.97
+      "support_count": 6,
+      "match_method": "sku",
+      "line_quality_score": 100.43,
+      "consensus_score": 124.43
     },
     {
       "line_number": 35,
@@ -406,6 +441,7 @@
       "image_variant": "grayscale",
       "psm": 4,
       "support_count": 6,
+      "match_method": "backbone",
       "line_quality_score": 101.02,
       "consensus_score": 121.02
     },
@@ -417,6 +453,7 @@
       "image_variant": "threshold",
       "psm": 4,
       "support_count": 5,
+      "match_method": "fuzzy",
       "line_quality_score": 92.49,
       "consensus_score": 108.49
     },
@@ -428,6 +465,7 @@
       "image_variant": "grayscale",
       "psm": 4,
       "support_count": 2,
+      "match_method": "backbone",
       "line_quality_score": 96.64,
       "consensus_score": 100.64
     },
@@ -439,8 +477,9 @@
       "image_variant": "threshold",
       "psm": 4,
       "support_count": 6,
-      "line_quality_score": 105.35,
-      "consensus_score": 125.35
+      "match_method": "sku",
+      "line_quality_score": 106.85,
+      "consensus_score": 130.85
     },
     {
       "line_number": 39,
@@ -450,8 +489,9 @@
       "image_variant": "threshold",
       "psm": 4,
       "support_count": 6,
-      "line_quality_score": 103.05,
-      "consensus_score": 123.05
+      "match_method": "fuzzy",
+      "line_quality_score": 104.55,
+      "consensus_score": 128.55
     },
     {
       "line_number": 40,
@@ -461,8 +501,9 @@
       "image_variant": "threshold",
       "psm": 4,
       "support_count": 6,
-      "line_quality_score": 103.83,
-      "consensus_score": 123.83
+      "match_method": "sku",
+      "line_quality_score": 105.33,
+      "consensus_score": 129.33
     },
     {
       "line_number": 41,
@@ -472,8 +513,9 @@
       "image_variant": "threshold",
       "psm": 4,
       "support_count": 6,
-      "line_quality_score": 101.12,
-      "consensus_score": 121.12
+      "match_method": "sku",
+      "line_quality_score": 102.62,
+      "consensus_score": 126.62
     },
     {
       "line_number": 42,
@@ -483,8 +525,9 @@
       "image_variant": "grayscale",
       "psm": 6,
       "support_count": 5,
-      "line_quality_score": 97.54,
-      "consensus_score": 113.54
+      "match_method": "sku",
+      "line_quality_score": 99.04,
+      "consensus_score": 119.04
     },
     {
       "line_number": 43,
@@ -494,19 +537,21 @@
       "image_variant": "grayscale",
       "psm": 4,
       "support_count": 5,
+      "match_method": "backbone",
       "line_quality_score": 100.77,
       "consensus_score": 116.77
     },
     {
       "line_number": 44,
-      "text": "713372 Feta Crumbles",
-      "confidence": 93.0,
-      "source_candidate": "grayscale_psm4",
+      "text": ": 713372 Feta Crumbles 2.89 FA",
+      "confidence": 85.17,
+      "source_candidate": "grayscale_psm6",
       "image_variant": "grayscale",
-      "psm": 4,
+      "psm": 6,
       "support_count": 6,
-      "line_quality_score": 97.97,
-      "consensus_score": 117.97
+      "match_method": "sku",
+      "line_quality_score": 96.95,
+      "consensus_score": 120.95
     },
     {
       "line_number": 45,
@@ -516,8 +561,9 @@
       "image_variant": "threshold",
       "psm": 4,
       "support_count": 6,
-      "line_quality_score": 101.18,
-      "consensus_score": 121.18
+      "match_method": "sku",
+      "line_quality_score": 102.68,
+      "consensus_score": 126.68
     },
     {
       "line_number": 46,
@@ -527,8 +573,9 @@
       "image_variant": "threshold",
       "psm": 4,
       "support_count": 6,
-      "line_quality_score": 101.18,
-      "consensus_score": 121.18
+      "match_method": "sku",
+      "line_quality_score": 102.68,
+      "consensus_score": 126.68
     },
     {
       "line_number": 47,
@@ -538,6 +585,7 @@
       "image_variant": "grayscale",
       "psm": 11,
       "support_count": 3,
+      "match_method": "fuzzy",
       "line_quality_score": 100.65,
       "consensus_score": 108.65
     },
@@ -549,6 +597,7 @@
       "image_variant": "grayscale",
       "psm": 4,
       "support_count": 1,
+      "match_method": "backbone",
       "line_quality_score": 36.55,
       "consensus_score": 36.55
     },
@@ -560,19 +609,21 @@
       "image_variant": "threshold",
       "psm": 4,
       "support_count": 6,
+      "match_method": "fuzzy",
       "line_quality_score": 94.17,
       "consensus_score": 114.17
     },
     {
       "line_number": 50,
-      "text": "Auth # 0024",
-      "confidence": 93.33,
-      "source_candidate": "threshold_psm11",
-      "image_variant": "threshold",
-      "psm": 11,
-      "support_count": 4,
-      "line_quality_score": 95.86,
-      "consensus_score": 107.86
+      "text": "Auth # 002470",
+      "confidence": 85.33,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 6,
+      "match_method": "backbone",
+      "line_quality_score": 90.3,
+      "consensus_score": 110.3
     },
     {
       "line_number": 51,
@@ -582,6 +633,7 @@
       "image_variant": "grayscale",
       "psm": 6,
       "support_count": 3,
+      "match_method": "fuzzy",
       "line_quality_score": 77.18,
       "consensus_score": 85.18
     },
@@ -593,6 +645,7 @@
       "image_variant": "grayscale",
       "psm": 4,
       "support_count": 4,
+      "match_method": "backbone",
       "line_quality_score": 79.8,
       "consensus_score": 91.8
     },
@@ -603,9 +656,10 @@
       "source_candidate": "threshold_psm4",
       "image_variant": "threshold",
       "psm": 4,
-      "support_count": 2,
-      "line_quality_score": 63.12,
-      "consensus_score": 67.12
+      "support_count": 4,
+      "match_method": "sku",
+      "line_quality_score": 65.12,
+      "consensus_score": 77.12
     },
     {
       "line_number": 54,
@@ -615,6 +669,7 @@
       "image_variant": "grayscale",
       "psm": 4,
       "support_count": 1,
+      "match_method": "backbone",
       "line_quality_score": 77.07,
       "consensus_score": 77.07
     },
@@ -626,6 +681,7 @@
       "image_variant": "grayscale",
       "psm": 4,
       "support_count": 4,
+      "match_method": "backbone",
       "line_quality_score": 97.73,
       "consensus_score": 109.73
     },
@@ -637,6 +693,7 @@
       "image_variant": "grayscale",
       "psm": 4,
       "support_count": 6,
+      "match_method": "backbone",
       "line_quality_score": 86.55,
       "consensus_score": 106.55
     },
@@ -648,6 +705,7 @@
       "image_variant": "threshold",
       "psm": 4,
       "support_count": 4,
+      "match_method": "fuzzy",
       "line_quality_score": 99.2,
       "consensus_score": 111.2
     },
@@ -659,6 +717,7 @@
       "image_variant": "threshold",
       "psm": 4,
       "support_count": 6,
+      "match_method": "fuzzy",
       "line_quality_score": 95.19,
       "consensus_score": 115.19
     },
@@ -670,6 +729,7 @@
       "image_variant": "threshold",
       "psm": 4,
       "support_count": 6,
+      "match_method": "fuzzy",
       "line_quality_score": 95.97,
       "consensus_score": 115.97
     },
@@ -681,6 +741,7 @@
       "image_variant": "grayscale",
       "psm": 4,
       "support_count": 3,
+      "match_method": "backbone",
       "line_quality_score": 97.1,
       "consensus_score": 105.1
     },
@@ -692,6 +753,7 @@
       "image_variant": "grayscale",
       "psm": 4,
       "support_count": 1,
+      "match_method": "backbone",
       "line_quality_score": 66.6,
       "consensus_score": 66.6
     },
@@ -703,6 +765,7 @@
       "image_variant": "threshold",
       "psm": 4,
       "support_count": 5,
+      "match_method": "fuzzy",
       "line_quality_score": 96.04,
       "consensus_score": 112.04
     },
@@ -714,8 +777,9 @@
       "image_variant": "threshold",
       "psm": 11,
       "support_count": 5,
-      "line_quality_score": 86.47,
-      "consensus_score": 102.47
+      "match_method": "fuzzy",
+      "line_quality_score": 84.47,
+      "consensus_score": 100.47
     },
     {
       "line_number": 64,
@@ -725,20 +789,12 @@
       "image_variant": "grayscale",
       "psm": 4,
       "support_count": 1,
+      "match_method": "backbone",
       "line_quality_score": 1.55,
       "consensus_score": 1.55
     }
   ],
   "supported_extra_lines": [
-    {
-      "text": "356537 Cilantro 0.89 FA",
-      "confidence": 94.75,
-      "source_candidate": "threshold_psm4",
-      "image_variant": "threshold",
-      "psm": 4,
-      "support_count": 4,
-      "line_quality_score": 103.93
-    },
     {
       "text": "383348 Goat Cheese Logs 1.99 FA",
       "confidence": 93.33,
@@ -746,7 +802,7 @@
       "image_variant": "threshold",
       "psm": 4,
       "support_count": 4,
-      "line_quality_score": 103.61
+      "line_quality_score": 105.11
     },
     {
       "text": "356578 Parsley each 0.95 FA",
@@ -755,106 +811,25 @@
       "image_variant": "threshold",
       "psm": 4,
       "support_count": 4,
-      "line_quality_score": 103.13
+      "line_quality_score": 104.63
     },
     {
-      "text": "356488 Baby Carrots ‘1.29 FA",
-      "confidence": 87.2,
-      "source_candidate": "threshold_psm4",
-      "image_variant": "threshold",
-      "psm": 4,
-      "support_count": 4,
-      "line_quality_score": 96.93
-    },
-    {
-      "text": "’ 398752 Fruit & Grain. Bars 1.99 FA",
-      "confidence": 85.0,
-      "source_candidate": "threshold_psm4",
-      "image_variant": "threshold",
-      "psm": 4,
-      "support_count": 4,
-      "line_quality_score": 96.38
-    },
-    {
-      "text": "45514 FK49/003/011 08/23/26 41:40AM",
-      "confidence": 79.0,
-      "source_candidate": "threshold_psm4",
-      "image_variant": "threshold",
-      "psm": 4,
-      "support_count": 4,
-      "line_quality_score": 86.72
-    },
-    {
-      "text": "Wot) ae 344583 Evryd Plate 8.5in 5.25 NB uh",
-      "confidence": 73.44,
-      "source_candidate": "grayscale_psm6",
-      "image_variant": "grayscale",
-      "psm": 6,
-      "support_count": 4,
-      "line_quality_score": 85.81
-    },
-    {
-      "text": "720321 PB Toast Crackers 2.79 FA",
-      "confidence": 89.5,
-      "source_candidate": "threshold_psm4",
-      "image_variant": "threshold",
-      "psm": 4,
-      "support_count": 3,
-      "line_quality_score": 99.78
-    },
-    {
-      "text": "140) N Wickham Rd",
-      "confidence": 89.5,
+      "text": "’ 398752 Fruit & Grain. Bars",
+      "confidence": 81.33,
       "source_candidate": "threshold_psm11",
       "image_variant": "threshold",
       "psm": 11,
-      "support_count": 3,
-      "line_quality_score": 92.36
+      "support_count": 4,
+      "line_quality_score": 87.95
     },
     {
-      "text": "356591 Zucchin",
-      "confidence": 81.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 3,
-      "line_quality_score": 85.42
-    },
-    {
-      "text": "95 ITEMS",
-      "confidence": 83.0,
-      "source_candidate": "threshold_psm6",
+      "text": "956374 Golden Kiwi 4.39 FA",
+      "confidence": 90.8,
+      "source_candidate": "threshold_psm4",
       "image_variant": "threshold",
-      "psm": 6,
+      "psm": 4,
       "support_count": 3,
-      "line_quality_score": 84.54
-    },
-    {
-      "text": "G 108.44",
-      "confidence": 71.0,
-      "source_candidate": "threshold_psm11",
-      "image_variant": "threshold",
-      "psm": 11,
-      "support_count": 3,
-      "line_quality_score": 76.2
-    },
-    {
-      "text": "La Nie secre 356374 Golden Kiwi 4.39 FA",
-      "confidence": 64.25,
-      "source_candidate": "grayscale_psm6",
-      "image_variant": "grayscale",
-      "psm": 6,
-      "support_count": 3,
-      "line_quality_score": 75.63
-    },
-    {
-      "text": "PC hi Besa e- 400462 0G Croutons 1.99 FA is",
-      "confidence": 61.2,
-      "source_candidate": "grayscale_psm6",
-      "image_variant": "grayscale",
-      "psm": 6,
-      "support_count": 3,
-      "line_quality_score": 73.9
+      "line_quality_score": 102.03
     },
     {
       "text": "983212 CF Wide Pan'Bread®, 6.79 FA)",
@@ -863,25 +838,25 @@
       "image_variant": "threshold",
       "psm": 4,
       "support_count": 3,
-      "line_quality_score": 72.61
+      "line_quality_score": 74.11
     },
     {
-      "text": "eS Me OF aw ES _ 739153 Organic .Chickpeas 0.99 FA re tent",
-      "confidence": 49.77,
+      "text": "TOTAL G 108.44",
+      "confidence": 66.33,
       "source_candidate": "threshold_psm6",
       "image_variant": "threshold",
       "psm": 6,
       "support_count": 3,
-      "line_quality_score": 63.9
+      "line_quality_score": 72.08
     },
     {
-      "text": "\"3 fi if fees | 262747 Bananas LRi 1.31 FA Bh ea",
-      "confidence": 46.58,
-      "source_candidate": "threshold_psm6",
+      "text": "-\\939153 “Organic Chickpeas",
+      "confidence": 63.33,
+      "source_candidate": "threshold_psm11",
       "image_variant": "threshold",
-      "psm": 6,
+      "psm": 11,
       "support_count": 3,
-      "line_quality_score": 60.38
+      "line_quality_score": 68.3
     },
     {
       "text": "4)",
@@ -908,7 +883,7 @@
       "image_variant": "threshold",
       "psm": 4,
       "support_count": 2,
-      "line_quality_score": 101.13
+      "line_quality_score": 102.63
     },
     {
       "text": "1.29 FA",
@@ -917,7 +892,7 @@
       "image_variant": "grayscale",
       "psm": 11,
       "support_count": 2,
-      "line_quality_score": 100.76
+      "line_quality_score": 102.26
     },
     {
       "text": "3.89 FA",
@@ -926,7 +901,7 @@
       "image_variant": "grayscale",
       "psm": 11,
       "support_count": 2,
-      "line_quality_score": 100.76
+      "line_quality_score": 102.26
     },
     {
       "text": "2.39 FA",
@@ -935,7 +910,7 @@
       "image_variant": "grayscale",
       "psm": 11,
       "support_count": 2,
-      "line_quality_score": 100.76
+      "line_quality_score": 102.26
     },
     {
       "text": "1.31 FA",
@@ -944,7 +919,7 @@
       "image_variant": "grayscale",
       "psm": 11,
       "support_count": 2,
-      "line_quality_score": 100.76
+      "line_quality_score": 102.26
     },
     {
       "text": "0.99 FA",
@@ -953,7 +928,7 @@
       "image_variant": "grayscale",
       "psm": 11,
       "support_count": 2,
-      "line_quality_score": 100.76
+      "line_quality_score": 102.26
     },
     {
       "text": "0.85 FA",
@@ -962,7 +937,7 @@
       "image_variant": "grayscale",
       "psm": 11,
       "support_count": 2,
-      "line_quality_score": 100.76
+      "line_quality_score": 102.26
     },
     {
       "text": "5.25 NB",
@@ -971,7 +946,25 @@
       "image_variant": "grayscale",
       "psm": 11,
       "support_count": 2,
-      "line_quality_score": 100.76
+      "line_quality_score": 102.26
+    },
+    {
+      "text": "3.37 FA",
+      "confidence": 95.5,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 101.76
+    },
+    {
+      "text": "5.99 NB",
+      "confidence": 95.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 101.26
     },
     {
       "text": "Credit Card $ 108.44",
@@ -981,24 +974,6 @@
       "psm": 4,
       "support_count": 2,
       "line_quality_score": 100.55
-    },
-    {
-      "text": "3.37 FA",
-      "confidence": 95.5,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 2,
-      "line_quality_score": 100.26
-    },
-    {
-      "text": "5.99 NB",
-      "confidence": 95.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 2,
-      "line_quality_score": 99.76
     },
     {
       "text": "106.81",
@@ -1016,16 +991,7 @@
       "image_variant": "grayscale",
       "psm": 11,
       "support_count": 2,
-      "line_quality_score": 97.76
-    },
-    {
-      "text": "08.44",
-      "confidence": 93.0,
-      "source_candidate": "threshold_psm11",
-      "image_variant": "threshold",
-      "psm": 11,
-      "support_count": 2,
-      "line_quality_score": 97.43
+      "line_quality_score": 99.26
     },
     {
       "text": "TOTAL",
@@ -1079,7 +1045,16 @@
       "image_variant": "grayscale",
       "psm": 11,
       "support_count": 2,
-      "line_quality_score": 89.76
+      "line_quality_score": 91.26
+    },
+    {
+      "text": "956421 Medley Potatoes 3.29 FA“",
+      "confidence": 78.6,
+      "source_candidate": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "support_count": 2,
+      "line_quality_score": 89.83
     },
     {
       "text": "Sign up for ALDI emails",
@@ -1091,15 +1066,6 @@
       "line_quality_score": 88.95
     },
     {
-      "text": "956421 Medley Potatoes 3.29 FA“",
-      "confidence": 78.6,
-      "source_candidate": "threshold_psm4",
-      "image_variant": "threshold",
-      "psm": 4,
-      "support_count": 2,
-      "line_quality_score": 88.33
-    },
-    {
       "text": "T",
       "confidence": 87.0,
       "source_candidate": "grayscale_psm11",
@@ -1109,6 +1075,15 @@
       "line_quality_score": 87.55
     },
     {
+      "text": "' 12.60 FA",
+      "confidence": 74.0,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 81.03
+    },
+    {
       "text": "2.09/1b",
       "confidence": 76.0,
       "source_candidate": "grayscale_psm11",
@@ -1116,24 +1091,6 @@
       "psm": 11,
       "support_count": 2,
       "line_quality_score": 80.43
-    },
-    {
-      "text": "' 12.60 FA",
-      "confidence": 74.0,
-      "source_candidate": "threshold_psm11",
-      "image_variant": "threshold",
-      "psm": 11,
-      "support_count": 2,
-      "line_quality_score": 79.53
-    },
-    {
-      "text": "hh ro B-Taxable @7,000% 1.63",
-      "confidence": 71.2,
-      "source_candidate": "threshold_psm6",
-      "image_variant": "threshold",
-      "psm": 6,
-      "support_count": 2,
-      "line_quality_score": 78.49
     },
     {
       "text": "for 4 snoak peck on tho woekly ad!",
@@ -1152,6 +1109,15 @@
       "psm": 11,
       "support_count": 2,
       "line_quality_score": 74.48
+    },
+    {
+      "text": "rR a we aie 720321 PB Toast Crackers 2.79 FA ee",
+      "confidence": 59.18,
+      "source_candidate": "threshold_psm6",
+      "image_variant": "threshold",
+      "psm": 6,
+      "support_count": 2,
+      "line_quality_score": 73.71
     },
     {
       "text": "(G) 2.681b -",
@@ -1181,13 +1147,13 @@
       "line_quality_score": 67.05
     },
     {
-      "text": "| TOTAL Gi108.44",
-      "confidence": 63.67,
-      "source_candidate": "threshold_psm4",
-      "image_variant": "threshold",
-      "psm": 4,
+      "text": "' 7 VISA 108.44",
+      "confidence": 59.5,
+      "source_candidate": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
       "support_count": 2,
-      "line_quality_score": 66.42
+      "line_quality_score": 66.02
     },
     {
       "text": "ay",
@@ -1206,60 +1172,6 @@
       "psm": 11,
       "support_count": 2,
       "line_quality_score": 60.55
-    },
-    {
-      "text": "is (nes 539153 Organic Chickpeas -0.99 FA vohe",
-      "confidence": 49.12,
-      "source_candidate": "threshold_psm6",
-      "image_variant": "threshold",
-      "psm": 6,
-      "support_count": 2,
-      "line_quality_score": 60.5
-    },
-    {
-      "text": "LEY limpet : 369553 LesserEvi] Popeprn 2.39 FA SpA",
-      "confidence": 47.67,
-      "source_candidate": "threshold_psm6",
-      "image_variant": "threshold",
-      "psm": 6,
-      "support_count": 2,
-      "line_quality_score": 59.6
-    },
-    {
-      "text": "Py cee? 1.63 Ib x _2.09/1b pee he",
-      "confidence": 48.5,
-      "source_candidate": "threshold_psm6",
-      "image_variant": "threshold",
-      "psm": 6,
-      "support_count": 2,
-      "line_quality_score": 57.44
-    },
-    {
-      "text": "TAH ecercaat 356496 Beefsteak Tomatoes 2.99 FA ff, f Viti",
-      "confidence": 44.9,
-      "source_candidate": "threshold_psm6",
-      "image_variant": "threshold",
-      "psm": 6,
-      "support_count": 2,
-      "line_quality_score": 57.38
-    },
-    {
-      "text": "OEY Ve we tod 381359 Vinaigrette Orssng 2.99 FA es",
-      "confidence": 39.7,
-      "source_candidate": "threshold_psm6",
-      "image_variant": "threshold",
-      "psm": 6,
-      "support_count": 2,
-      "line_quality_score": 52.18
-    },
-    {
-      "text": "‘ (i ereenese| 356508 Broccol! Crowns 3.41 F. um vo Ny y",
-      "confidence": 38.42,
-      "source_candidate": "threshold_psm6",
-      "image_variant": "threshold",
-      "psm": 6,
-      "support_count": 2,
-      "line_quality_score": 52.0
     },
     {
       "text": "4 lip? ere WN) 2,67 Ib x 0.49/16 ane",
@@ -1431,6 +1343,6 @@
   ],
   "provenance": {
     "candidates_file": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_candidates/aldi_8_23_26_ocr_candidates.json",
-    "rule": "Consensus output never edits OCR characters inside a chosen line. Every emitted line is copied verbatim from one Tesseract candidate, with its source recorded."
+    "rule": "Consensus output never edits OCR characters inside a chosen line. Exact six-digit SKUs are used only to align competing OCR observations. Every emitted line is copied verbatim from one Tesseract candidate, with its source recorded."
   }
 }
