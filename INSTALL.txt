@@ -1,24 +1,46 @@
-ShopGraph - Consensus OCR Comparison Update
+ShopGraph - Component Consensus OCR Update
 
 PURPOSE
 
-This update changes only Stage 6:
+This update changes only:
 
-6. Compare OCR Results / Build Raw OCR JSON
+    utils/compare_ocr.py
 
-Previously:
-- all six OCR candidates were ranked
-- one complete candidate won
-- the other five candidates were discarded from the final transcription
+The previous version chose one complete OCR line for each consensus line.
 
-Now:
-- the best candidate is still used as the reading-order backbone
-- every backbone line is compared against corresponding lines from all six candidates
-- a clearer/more complete matching line can replace the backbone line
-- lines missing from the backbone but independently supported by at least two candidates
-  are preserved in supported_extra_lines
-- every final line records which candidate produced it
-- OCR characters are never silently corrected or rewritten
+This version keeps the same six-candidate pipeline but changes product-line
+assembly.
+
+For a line containing exactly one six-digit SKU, the program now treats these
+as independent components:
+
+    SKU
+    description
+    price
+    tax code
+
+Example OCR evidence:
+
+    356537 Cilantro
+    356537 Cilantro
+    356537 Cilantro 0.89 FA
+    356537 Cilantro 0.89 FA
+
+The program can reconstruct:
+
+    356537 Cilantro 0.89 FA
+
+without inventing a product name or price.
+
+RULES
+
+- Exact six-digit SKU is the alignment key.
+- Description remains OCR-derived.
+- Price must appear in an OCR candidate.
+- Tax code must appear in an OCR candidate.
+- No product dictionary is used.
+- No spelling correction is performed.
+- Near-SKU values such as 256578 vs 356578 are NOT merged yet.
 
 INSTALL
 
@@ -26,34 +48,45 @@ Replace:
 
     utils/compare_ocr.py
 
-No other project files need to change.
+No other file needs to change.
 
 RUN
 
-From ShopGraph:
+    python3 main.py
+
+Then:
 
     1. Utilities
     6. Compare OCR Results / Build Raw OCR JSON
 
-The existing smart pipeline remains intact. If earlier stages have not run in the
-current session, they will run automatically.
+The smart pipeline still runs all missing earlier stages automatically.
+
+EXPECTED TERMINAL OUTPUT
+
+    === Compare OCR Results / Build Component Consensus ===
+
+    [OK] Component consensus OCR built from all candidates.
+
+    Backbone candidate:
+    Variant: grayscale
+    PSM: 4
+    Score: ...
+
+    Consensus:
+    Lines: ...
+    Product lines reconstructed: ...
+    Supported extra lines: ...
 
 OUTPUT
 
     data/raw_ocr/<receipt>_raw_ocr.json
 
-Important fields:
+New useful fields on reconstructed product lines:
 
-    backbone_candidate
-    consensus_summary
-    raw_text
-    text
-    supported_extra_lines
-    candidate_ranking
-    provenance
+    reconstructed
+    original_consensus_text
+    reconstruction_method
+    component_support
 
-The raw_text field contains the consensus backbone in receipt order.
-
-The supported_extra_lines field is deliberately separate for this first test.
-This avoids guessing where an omitted line belongs while still preserving
-content seen independently by multiple OCR candidates.
+This makes it possible to inspect exactly which OCR evidence supplied the
+description, price, and tax code.

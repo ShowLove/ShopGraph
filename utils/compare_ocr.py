@@ -13,22 +13,12 @@ from utils.session_state import (
 )
 
 
-# ---------------------------------------------------------------------------
-# CONSENSUS SETTINGS
-# ---------------------------------------------------------------------------
-
 MATCH_THRESHOLD = 0.58
 EXTRA_LINE_MIN_SUPPORT = 2
-
-# Aldi item/product codes in the current receipts are normally six digits.
-# Keeping this strict prevents prices, dates, transaction numbers, etc.
-# from accidentally becoming product-line anchors.
 SKU_PATTERN = re.compile(r"(?<!\d)(\d{6})(?!\d)")
+PRICE_PATTERN = re.compile(r"(?<!\d)(\d+[.,]\d{2})(?!\d)")
+TAX_PATTERN = re.compile(r"\b(FA|FB|NA|NB)\b", re.IGNORECASE)
 
-
-# ---------------------------------------------------------------------------
-# BASIC HELPERS
-# ---------------------------------------------------------------------------
 
 def _load_json(path: Path) -> dict:
     with path.open("r", encoding="utf-8") as file:
@@ -46,43 +36,19 @@ def _tokens(text: str) -> set[str]:
 
 
 def _extract_skus(text: str) -> set[str]:
-    """
-    Return all exact six-digit product codes found in an OCR line.
-
-    We deliberately do NOT try to repair OCR mistakes here.
-
-    Example:
-
-        356537 Cilantro
-        356537 Cilantro 0.89 FA
-
-    both return:
-
-        {"356537"}
-
-    while:
-
-        356578 Parsley each
-
-    returns a different SKU and therefore cannot be hard-matched to
-    256578 Parsley each.
-    """
-    return set(
-        SKU_PATTERN.findall(text)
-    )
+    return set(SKU_PATTERN.findall(text))
 
 
-def _shared_sku(
-    left: str,
-    right: str,
-) -> str | None:
-    """
-    Return an exact SKU shared by both lines, if one exists.
-    """
-    shared = (
-        _extract_skus(left)
-        & _extract_skus(right)
-    )
+def _extract_prices(text: str) -> list[str]:
+    return PRICE_PATTERN.findall(text)
+
+
+def _extract_tax_codes(text: str) -> list[str]:
+    return [match.upper() for match in TAX_PATTERN.findall(text)]
+
+
+def _shared_sku(left: str, right: str) -> str | None:
+    shared = _extract_skus(left) & _extract_skus(right)
 
     if not shared:
         return None
@@ -90,28 +56,11 @@ def _shared_sku(
     return sorted(shared)[0]
 
 
-def _same_sku_line(
-    left: str,
-    right: str,
-) -> bool:
+def _same_sku_line(left: str, right: str) -> bool:
     return _shared_sku(left, right) is not None
 
 
-# ---------------------------------------------------------------------------
-# LINE SIMILARITY
-# ---------------------------------------------------------------------------
-
-def _line_similarity(
-    left: str,
-    right: str,
-) -> float:
-    """
-    General fuzzy similarity for lines that do not necessarily contain
-    an exact SKU.
-
-    Exact shared SKUs receive a strong bonus because they are excellent
-    evidence that two OCR candidates are looking at the same product line.
-    """
+def _line_similarity(left: str, right: str) -> float:
     left_norm = _normalize_line(left)
     right_norm = _normalize_line(right)
 
@@ -128,26 +77,17 @@ def _line_similarity(
     right_tokens = _tokens(right)
 
     union = left_tokens | right_tokens
-
     token_score = (
-        len(left_tokens & right_tokens)
-        / len(union)
+        len(left_tokens & right_tokens) / len(union)
         if union
         else 0.0
     )
 
     left_numbers = set(
-        re.findall(
-            r"\b\d{4,}\b",
-            left_norm,
-        )
+        re.findall(r"\b\d{4,}\b", left_norm)
     )
-
     right_numbers = set(
-        re.findall(
-            r"\b\d{4,}\b",
-            right_norm,
-        )
+        re.findall(r"\b\d{4,}\b", right_norm)
     )
 
     numeric_anchor = (
@@ -162,21 +102,11 @@ def _line_similarity(
         + numeric_anchor * 0.15
     )
 
-    # Exact six-digit SKU agreement is stronger evidence than ordinary
-    # fuzzy similarity. Raise the effective similarity enough to guarantee
-    # that the lines are eligible to compete with each other.
     if _same_sku_line(left, right):
-        score = max(
-            score,
-            0.90,
-        )
+        score = max(score, 0.90)
 
     return min(score, 1.0)
 
-
-# ---------------------------------------------------------------------------
-# CANDIDATE RANKING
-# ---------------------------------------------------------------------------
 
 def _candidate_metrics(candidate: dict) -> dict:
     result = candidate["result"]
@@ -198,33 +128,18 @@ def _candidate_metrics(candidate: dict) -> dict:
     raw_text = result["raw_text"]
 
     digit_count = len(
-        re.findall(
-            r"\d",
-            raw_text,
-        )
+        re.findall(r"\d", raw_text)
     )
 
     price_like_count = len(
-        re.findall(
-            r"\b\d+[.,]\d{2}\b",
-            raw_text,
-        )
+        PRICE_PATTERN.findall(raw_text)
     )
 
     score = (
         mean_confidence
-        + min(
-            recognized_word_count,
-            250,
-        ) * 0.03
-        + min(
-            digit_count,
-            300,
-        ) * 0.01
-        + min(
-            price_like_count,
-            80,
-        ) * 0.08
+        + min(recognized_word_count, 250) * 0.03
+        + min(digit_count, 300) * 0.01
+        + min(price_like_count, 80) * 0.08
         - low_confidence_rate * 15.0
     )
 
@@ -238,82 +153,29 @@ def _candidate_metrics(candidate: dict) -> dict:
     }
 
 
-# ---------------------------------------------------------------------------
-# LINE QUALITY
-# ---------------------------------------------------------------------------
-
 def _line_quality(line: dict) -> float:
-    """
-    Rank competing OCR readings.
-
-    This is NOT an accuracy percentage.
-
-    The score favors:
-        - Tesseract confidence
-        - complete product descriptions
-        - numeric information
-        - prices
-        - SKUs
-        - common receipt tax/category markers
-    """
     text = line["text"]
 
-    confidence = line.get(
-        "confidence"
-    )
+    confidence = line.get("confidence")
 
     if confidence is None:
         confidence = 0.0
 
-    token_count = len(
-        text.split()
-    )
-
-    digit_count = len(
-        re.findall(
-            r"\d",
-            text,
-        )
-    )
-
-    price_count = len(
-        re.findall(
-            r"\b\d+[.,]\d{2}\b",
-            text,
-        )
-    )
-
-    sku_count = len(
-        _extract_skus(text)
-    )
-
-    tax_marker_count = len(
-        re.findall(
-            r"\b(?:FA|FB|NA|NB)\b",
-            text,
-            flags=re.IGNORECASE,
-        )
-    )
+    token_count = len(text.split())
+    digit_count = len(re.findall(r"\d", text))
+    price_count = len(_extract_prices(text))
+    sku_count = len(_extract_skus(text))
+    tax_marker_count = len(_extract_tax_codes(text))
 
     return (
         float(confidence)
-        + min(
-            token_count,
-            14,
-        ) * 0.55
-        + min(
-            digit_count,
-            16,
-        ) * 0.22
+        + min(token_count, 14) * 0.55
+        + min(digit_count, 16) * 0.22
         + price_count * 3.0
         + sku_count * 2.0
         + tax_marker_count * 1.5
     )
 
-
-# ---------------------------------------------------------------------------
-# BUILD FLAT LINE RECORDS
-# ---------------------------------------------------------------------------
 
 def _build_line_records(
     candidates: list[dict],
@@ -321,23 +183,14 @@ def _build_line_records(
     records = []
 
     for candidate in candidates:
-        candidate_id = candidate[
-            "candidate_id"
-        ]
-
-        variant = candidate[
-            "image_variant"
-        ]
-
+        candidate_id = candidate["candidate_id"]
+        variant = candidate["image_variant"]
         psm = candidate["psm"]
 
         for index, line in enumerate(
             candidate["result"]["text"]
         ):
-            text = line.get(
-                "text",
-                "",
-            ).strip()
+            text = line.get("text", "").strip()
 
             if not text:
                 continue
@@ -349,41 +202,19 @@ def _build_line_records(
                     "psm": psm,
                     "candidate_line_index": index,
                     "text": text,
-                    "confidence": line.get(
-                        "confidence"
-                    ),
-                    "skus": sorted(
-                        _extract_skus(text)
-                    ),
+                    "confidence": line.get("confidence"),
+                    "skus": sorted(_extract_skus(text)),
                 }
             )
 
     return records
 
 
-# ---------------------------------------------------------------------------
-# MATCHING
-# ---------------------------------------------------------------------------
-
 def _best_match(
     target_text: str,
     records: list[dict],
     excluded_candidate_id: str | None = None,
 ) -> tuple[dict | None, float, str]:
-    """
-    Find the best corresponding OCR line.
-
-    Matching priority:
-
-        1. exact shared SKU
-        2. ordinary fuzzy similarity
-
-    Returns:
-
-        record
-        score
-        match_method
-    """
     eligible_records = []
 
     for record in records:
@@ -395,10 +226,6 @@ def _best_match(
             continue
 
         eligible_records.append(record)
-
-    # ---------------------------------------------------------------
-    # FIRST PASS: exact SKU
-    # ---------------------------------------------------------------
 
     sku_matches = []
 
@@ -416,9 +243,7 @@ def _best_match(
             record["text"],
         )
 
-        quality = _line_quality(
-            record
-        )
+        quality = _line_quality(record)
 
         sku_matches.append(
             (
@@ -438,19 +263,13 @@ def _best_match(
             reverse=True,
         )
 
-        record, similarity, _ = (
-            sku_matches[0]
-        )
+        record, similarity, _ = sku_matches[0]
 
         return (
             record,
             similarity,
             "sku",
         )
-
-    # ---------------------------------------------------------------
-    # SECOND PASS: fuzzy matching
-    # ---------------------------------------------------------------
 
     best_record = None
     best_score = 0.0
@@ -472,20 +291,10 @@ def _best_match(
     )
 
 
-# ---------------------------------------------------------------------------
-# SUPPORT COUNTING
-# ---------------------------------------------------------------------------
-
 def _support_for_line(
     line: dict,
     candidates: list[dict],
 ) -> tuple[int, list[dict]]:
-    """
-    Count how many OCR candidates independently support this reading.
-
-    An exact SKU match counts as support even when the remainder of the
-    line differs substantially.
-    """
     supporting = []
 
     for candidate in candidates:
@@ -525,23 +334,18 @@ def _support_for_line(
                 }
             )
 
-        best, similarity, method = (
-            _best_match(
-                line["text"],
-                candidate_records,
-            )
+        best, similarity, method = _best_match(
+            line["text"],
+            candidate_records,
         )
 
         if best is None:
             continue
 
-        supported = (
-            method == "sku"
-            or similarity
-            >= MATCH_THRESHOLD
-        )
-
-        if not supported:
+        if (
+            method != "sku"
+            and similarity < MATCH_THRESHOLD
+        ):
             continue
 
         supporting.append(
@@ -564,22 +368,418 @@ def _support_for_line(
     )
 
 
-# ---------------------------------------------------------------------------
-# CONSENSUS SELECTION
-# ---------------------------------------------------------------------------
+def _description_without_components(
+    text: str,
+    sku: str,
+) -> str:
+    """
+    Remove fields that can be independently reconstructed.
+
+    The returned description remains OCR-derived. This function does not
+    spell-correct or normalize words.
+    """
+    working = text
+
+    working = re.sub(
+        rf"(?<!\d){re.escape(sku)}(?!\d)",
+        " ",
+        working,
+        count=1,
+    )
+
+    working = PRICE_PATTERN.sub(
+        " ",
+        working,
+    )
+
+    working = TAX_PATTERN.sub(
+        " ",
+        working,
+    )
+
+    working = re.sub(
+        r"\s+",
+        " ",
+        working,
+    ).strip()
+
+    working = working.strip(
+        " -:;,.|_~'\"()[]{}"
+    )
+
+    return working
+
+
+def _component_vote(
+    observations: list[dict],
+    value_getter,
+) -> tuple[str | None, dict]:
+    """
+    Vote on a component using one vote per OCR candidate.
+
+    Repeated observations from the same candidate do not increase support.
+    """
+    by_value: dict[str, dict] = {}
+
+    for observation in observations:
+        value = value_getter(observation)
+
+        if not value:
+            continue
+
+        candidate_id = observation["candidate_id"]
+
+        entry = by_value.setdefault(
+            value,
+            {
+                "candidate_ids": set(),
+                "confidence_sum": 0.0,
+                "confidence_count": 0,
+                "examples": [],
+            },
+        )
+
+        if candidate_id in entry["candidate_ids"]:
+            continue
+
+        entry["candidate_ids"].add(
+            candidate_id
+        )
+
+        confidence = observation.get(
+            "confidence"
+        )
+
+        if confidence is not None:
+            entry["confidence_sum"] += float(
+                confidence
+            )
+            entry["confidence_count"] += 1
+
+        entry["examples"].append(
+            {
+                "candidate_id": candidate_id,
+                "text": observation["text"],
+            }
+        )
+
+    if not by_value:
+        return None, {
+            "support_count": 0,
+            "average_confidence": None,
+            "examples": [],
+        }
+
+    ranked = []
+
+    for value, entry in by_value.items():
+        support_count = len(
+            entry["candidate_ids"]
+        )
+
+        average_confidence = (
+            entry["confidence_sum"]
+            / entry["confidence_count"]
+            if entry["confidence_count"]
+            else 0.0
+        )
+
+        ranked.append(
+            (
+                support_count,
+                average_confidence,
+                len(value),
+                value,
+                entry,
+            )
+        )
+
+    ranked.sort(
+        reverse=True
+    )
+
+    (
+        support_count,
+        average_confidence,
+        _,
+        selected_value,
+        entry,
+    ) = ranked[0]
+
+    return selected_value, {
+        "support_count": support_count,
+        "average_confidence": round(
+            average_confidence,
+            2,
+        ),
+        "examples": entry["examples"],
+    }
+
+
+def _best_description(
+    observations: list[dict],
+    sku: str,
+) -> tuple[str, dict]:
+    """
+    Pick a product description independently from price/tax.
+
+    The description must come verbatim from one OCR candidate after
+    removing the SKU, price, and tax components from that same OCR line.
+    """
+    candidates = []
+
+    for observation in observations:
+        description = _description_without_components(
+            observation["text"],
+            sku,
+        )
+
+        if not description:
+            continue
+
+        support = 1
+
+        for other in observations:
+            if (
+                other["candidate_id"]
+                == observation["candidate_id"]
+            ):
+                continue
+
+            other_description = (
+                _description_without_components(
+                    other["text"],
+                    sku,
+                )
+            )
+
+            if not other_description:
+                continue
+
+            similarity = SequenceMatcher(
+                None,
+                _normalize_line(description),
+                _normalize_line(other_description),
+            ).ratio()
+
+            if similarity >= 0.62:
+                support += 1
+
+        confidence = observation.get(
+            "confidence"
+        )
+
+        if confidence is None:
+            confidence = 0.0
+
+        score = (
+            support * 5.0
+            + float(confidence)
+            + min(
+                len(description.split()),
+                8,
+            ) * 1.5
+        )
+
+        candidates.append(
+            {
+                "description": description,
+                "source_candidate": observation[
+                    "candidate_id"
+                ],
+                "source_text": observation[
+                    "text"
+                ],
+                "confidence": confidence,
+                "support_count": support,
+                "score": score,
+            }
+        )
+
+    if not candidates:
+        return "", {
+            "source_candidate": None,
+            "support_count": 0,
+            "score": 0.0,
+        }
+
+    candidates.sort(
+        key=lambda item: (
+            item["score"],
+            len(item["description"]),
+        ),
+        reverse=True,
+    )
+
+    selected = candidates[0]
+
+    return selected["description"], {
+        "source_candidate": selected[
+            "source_candidate"
+        ],
+        "source_text": selected[
+            "source_text"
+        ],
+        "support_count": selected[
+            "support_count"
+        ],
+        "confidence": selected[
+            "confidence"
+        ],
+        "score": round(
+            selected["score"],
+            4,
+        ),
+    }
+
+
+def _component_observations_for_sku(
+    sku: str,
+    all_records: list[dict],
+) -> list[dict]:
+    return [
+        record
+        for record in all_records
+        if sku in record.get(
+            "skus",
+            []
+        )
+    ]
+
+
+def _reconstruct_product_line(
+    base_line: dict,
+    all_records: list[dict],
+) -> dict:
+    skus = sorted(
+        _extract_skus(
+            base_line["text"]
+        )
+    )
+
+    if len(skus) != 1:
+        return {
+            **base_line,
+            "reconstructed": False,
+            "reconstruction_reason": (
+                "line does not contain exactly one six-digit SKU"
+            ),
+        }
+
+    sku = skus[0]
+
+    observations = (
+        _component_observations_for_sku(
+            sku,
+            all_records,
+        )
+    )
+
+    if not observations:
+        return {
+            **base_line,
+            "reconstructed": False,
+            "reconstruction_reason": (
+                "no matching SKU observations"
+            ),
+        }
+
+    description, description_meta = (
+        _best_description(
+            observations,
+            sku,
+        )
+    )
+
+    price, price_meta = _component_vote(
+        observations,
+        lambda observation: (
+            _extract_prices(
+                observation["text"]
+            )[0]
+            if _extract_prices(
+                observation["text"]
+            )
+            else None
+        ),
+    )
+
+    tax_code, tax_meta = _component_vote(
+        observations,
+        lambda observation: (
+            _extract_tax_codes(
+                observation["text"]
+            )[0]
+            if _extract_tax_codes(
+                observation["text"]
+            )
+            else None
+        ),
+    )
+
+    parts = [sku]
+
+    if description:
+        parts.append(description)
+
+    if price:
+        parts.append(price)
+
+    if tax_code:
+        parts.append(tax_code)
+
+    reconstructed_text = " ".join(
+        parts
+    )
+
+    component_support = {
+        "sku": {
+            "value": sku,
+            "support_count": len(
+                {
+                    record["candidate_id"]
+                    for record in observations
+                }
+            ),
+        },
+        "description": {
+            "value": description or None,
+            **description_meta,
+        },
+        "price": {
+            "value": price,
+            **price_meta,
+        },
+        "tax_code": {
+            "value": tax_code,
+            **tax_meta,
+        },
+    }
+
+    return {
+        **base_line,
+        "text": reconstructed_text,
+        "reconstructed": (
+            reconstructed_text
+            != base_line["text"]
+        ),
+        "original_consensus_text": (
+            base_line["text"]
+        ),
+        "reconstruction_method": (
+            "component consensus by exact six-digit SKU"
+        ),
+        "component_support": (
+            component_support
+        ),
+    }
+
 
 def _choose_consensus_line(
     backbone_line: dict,
     all_records: list[dict],
     candidates: list[dict],
 ) -> dict:
-    """
-    Choose the best reading for one backbone line.
-
-    Product lines with matching SKUs compete directly even if their
-    ordinary fuzzy similarity would previously have fallen below the
-    threshold.
-    """
     alternatives = [
         {
             **backbone_line,
@@ -614,27 +814,18 @@ def _choose_consensus_line(
         if match is None:
             continue
 
-        accepted = (
-            method == "sku"
-            or similarity
-            >= MATCH_THRESHOLD
-        )
-
-        if not accepted:
+        if (
+            method != "sku"
+            and similarity < MATCH_THRESHOLD
+        ):
             continue
 
         matched = dict(match)
-
-        matched[
-            "match_to_backbone"
-        ] = round(
+        matched["match_to_backbone"] = round(
             similarity,
             4,
         )
-
-        matched[
-            "match_method"
-        ] = method
+        matched["match_method"] = method
 
         alternatives.append(
             matched
@@ -661,33 +852,6 @@ def _choose_consensus_line(
                 support_count - 1
             ) * 4.0
         )
-
-        # If this is a SKU product line and it contains a price, reward
-        # completeness. This helps:
-        #
-        #     356537 Cilantro
-        #
-        # lose to:
-        #
-        #     356537 Cilantro 0.89 FA
-        #
-        # while still requiring the winning text to come verbatim from
-        # an actual OCR candidate.
-        has_sku = bool(
-            _extract_skus(
-                alternative["text"]
-            )
-        )
-
-        has_price = bool(
-            re.search(
-                r"\b\d+[.,]\d{2}\b",
-                alternative["text"],
-            )
-        )
-
-        if has_sku and has_price:
-            consensus_score += 4.0
 
         scored.append(
             {
@@ -716,22 +880,10 @@ def _choose_consensus_line(
     return scored[0]
 
 
-# ---------------------------------------------------------------------------
-# EXTRA LINE HANDLING
-# ---------------------------------------------------------------------------
-
 def _record_matches_consensus(
     record: dict,
     consensus_lines: list[dict],
 ) -> bool:
-    """
-    Determine whether a candidate line is already represented by the
-    final consensus.
-
-    SKU identity is checked BEFORE fuzzy similarity. This prevents a
-    fuller product line from appearing as a false 'extra' merely because
-    its description/price differs from the backbone version.
-    """
     for consensus in consensus_lines:
         if _same_sku_line(
             record["text"],
@@ -755,13 +907,6 @@ def _collect_supported_extra_lines(
     all_records: list[dict],
     consensus_lines: list[dict],
 ) -> list[dict]:
-    """
-    Preserve independently supported OCR content that genuinely does not
-    correspond to an already-selected consensus line.
-
-    Unlike the previous version, this compares extras against the FINAL
-    consensus rather than only against the original backbone.
-    """
     extras = []
     seen_normalized = set()
 
@@ -772,8 +917,7 @@ def _collect_supported_extra_lines(
 
         if (
             not normalized
-            or normalized
-            in seen_normalized
+            or normalized in seen_normalized
         ):
             continue
 
@@ -812,10 +956,6 @@ def _collect_supported_extra_lines(
                 ),
             }
         )
-
-    # ---------------------------------------------------------------
-    # Deduplicate extras
-    # ---------------------------------------------------------------
 
     deduplicated = []
 
@@ -858,10 +998,6 @@ def _collect_supported_extra_lines(
     return deduplicated
 
 
-# ---------------------------------------------------------------------------
-# CANDIDATE RANKING
-# ---------------------------------------------------------------------------
-
 def _score_and_rank_candidates(
     candidates: list[dict],
 ) -> list[dict]:
@@ -895,10 +1031,6 @@ def _score_and_rank_candidates(
 
     return scored
 
-
-# ---------------------------------------------------------------------------
-# PIPELINE
-# ---------------------------------------------------------------------------
 
 def _get_or_create_candidates_file() -> Path | None:
     candidates_path = (
@@ -969,8 +1101,7 @@ def compare_and_build_raw_ocr() -> Path | None:
     )
 
     consensus_lines = []
-
-    sku_anchored_replacements = 0
+    component_reconstructions = 0
 
     for line_index, line in enumerate(
         backbone_candidate["result"]["text"],
@@ -1007,51 +1138,53 @@ def compare_and_build_raw_ocr() -> Path | None:
             candidates,
         )
 
-        if (
-            chosen["candidate_id"]
-            != backbone_record["candidate_id"]
-            and chosen.get(
-                "match_method"
-            ) == "sku"
-        ):
-            sku_anchored_replacements += 1
+        consensus_line = {
+            "line_number": (
+                len(consensus_lines)
+                + 1
+            ),
+            "text": chosen["text"],
+            "confidence": chosen[
+                "confidence"
+            ],
+            "source_candidate": chosen[
+                "candidate_id"
+            ],
+            "image_variant": chosen[
+                "image_variant"
+            ],
+            "psm": chosen["psm"],
+            "support_count": chosen[
+                "support_count"
+            ],
+            "match_method": chosen.get(
+                "match_method",
+                "unknown",
+            ),
+            "line_quality_score": chosen[
+                "line_quality_score"
+            ],
+            "consensus_score": chosen[
+                "consensus_score"
+            ],
+        }
 
-        consensus_lines.append(
-            {
-                "line_number": (
-                    len(consensus_lines)
-                    + 1
-                ),
-                "text": chosen["text"],
-                "confidence": chosen[
-                    "confidence"
-                ],
-                "source_candidate": chosen[
-                    "candidate_id"
-                ],
-                "image_variant": chosen[
-                    "image_variant"
-                ],
-                "psm": chosen["psm"],
-                "support_count": chosen[
-                    "support_count"
-                ],
-                "match_method": chosen.get(
-                    "match_method",
-                    "unknown",
-                ),
-                "line_quality_score": chosen[
-                    "line_quality_score"
-                ],
-                "consensus_score": chosen[
-                    "consensus_score"
-                ],
-            }
+        reconstructed = (
+            _reconstruct_product_line(
+                consensus_line,
+                all_records,
+            )
         )
 
-    # Compare candidate leftovers against the FINAL consensus rather than
-    # the original backbone. This should substantially reduce the previous
-    # 68 "supported extras" that were actually alternate product readings.
+        if reconstructed.get(
+            "reconstructed"
+        ):
+            component_reconstructions += 1
+
+        consensus_lines.append(
+            reconstructed
+        )
+
     extra_lines = (
         _collect_supported_extra_lines(
             candidates,
@@ -1085,12 +1218,12 @@ def compare_and_build_raw_ocr() -> Path | None:
         ),
 
         "selection_method": (
-            "multi-candidate SKU-anchored consensus: "
-            "highest-ranked OCR candidate supplies reading order; "
-            "exact six-digit product codes are used as hard alignment "
-            "anchors across candidates; the highest-quality supported "
-            "verbatim OCR reading is selected for each backbone line; "
-            "fuzzy matching is retained for non-product lines"
+            "multi-candidate component consensus: "
+            "best candidate provides reading order; "
+            "exact six-digit SKU aligns product observations; "
+            "description, price, and tax code are selected "
+            "independently from OCR evidence across all candidates; "
+            "non-product lines continue to use ordinary consensus"
         ),
 
         "backbone_candidate": {
@@ -1117,6 +1250,9 @@ def compare_and_build_raw_ocr() -> Path | None:
             "consensus_line_count": len(
                 consensus_lines
             ),
+            "component_reconstruction_count": (
+                component_reconstructions
+            ),
             "supported_extra_line_count": len(
                 extra_lines
             ),
@@ -1129,13 +1265,9 @@ def compare_and_build_raw_ocr() -> Path | None:
             "extra_line_min_support": (
                 EXTRA_LINE_MIN_SUPPORT
             ),
-            "sku_anchored_replacements": (
-                sku_anchored_replacements
-            ),
         },
 
         "raw_text": raw_text,
-
         "text": consensus_lines,
 
         "supported_extra_lines": [
@@ -1187,11 +1319,12 @@ def compare_and_build_raw_ocr() -> Path | None:
                 candidates_path.resolve()
             ),
             "rule": (
-                "Consensus output never edits OCR characters "
-                "inside a chosen line. Exact six-digit SKUs are "
-                "used only to align competing OCR observations. "
-                "Every emitted line is copied verbatim from one "
-                "Tesseract candidate, with its source recorded."
+                "Product lines may be reconstructed from multiple "
+                "Tesseract observations only when they share the same "
+                "exact six-digit SKU. Description text is OCR-derived, "
+                "and price/tax values must each appear in at least one "
+                "actual OCR candidate. No spelling correction or "
+                "external product lookup is performed."
             ),
         },
     }
@@ -1221,14 +1354,10 @@ def compare_and_build_raw_ocr() -> Path | None:
     return output_path.resolve()
 
 
-# ---------------------------------------------------------------------------
-# CLI ENTRY POINT
-# ---------------------------------------------------------------------------
-
 def run_compare_ocr() -> None:
     print(
         "\n=== Compare OCR Results / "
-        "Build SKU-Anchored Consensus ===\n"
+        "Build Component Consensus ===\n"
     )
 
     try:
@@ -1252,7 +1381,7 @@ def run_compare_ocr() -> None:
         ]
 
         print(
-            "[OK] SKU-anchored consensus OCR "
+            "[OK] Component consensus OCR "
             "built from all candidates."
         )
 
@@ -1269,8 +1398,8 @@ def run_compare_ocr() -> None:
             "\nConsensus:"
             f"\nLines: "
             f"{summary['consensus_line_count']}"
-            "\nSKU-anchored replacements: "
-            f"{summary['sku_anchored_replacements']}"
+            "\nProduct lines reconstructed: "
+            f"{summary['component_reconstruction_count']}"
             "\nSupported extra lines: "
             f"{summary['supported_extra_line_count']}"
         )
