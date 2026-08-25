@@ -7,13 +7,18 @@ shopping_analysis/
         codebase_bundler.py
         constants.py
         export_codebase.py
+        image_preprocessing.py
         main.py
+        receipt_picker.py
         run_ocr.py
+        session_state.py
     receipt/
     extractors/
         __init__.py
         tesseract.py
     data/
+        requirements.txt
+        preprocessed/
         prompts/
             creation_prompts/
             dev_prompts/
@@ -21,7 +26,7 @@ shopping_analysis/
 
 ================================================================================
 
-Generated: 2026-08-23 19:57:28.651158
+Generated: 2026-08-25 14:33:35.255535
 Root: /Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis
 Mode: LLM-clean export
 Excluded: receipt images, OCR JSON, datasets, databases, logs, caches
@@ -369,6 +374,9 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 DATA_DIR = PROJECT_ROOT / "data"
+CURRENT_PIC_DIR = DATA_DIR / "current_pic"
+PREPROCESSED_DIR = DATA_DIR / "preprocessed"
+RAW_OCR_DIR = DATA_DIR / "raw_ocr"
 
 EXPORT_DIR = DATA_DIR / "exports"
 
@@ -404,17 +412,420 @@ def run_codebase_export() -> None:
     )
 
 ================================================================================
+FILE: utils/image_preprocessing.py
+================================================================================
+
+from __future__ import annotations
+
+from pathlib import Path
+
+import cv2
+import numpy as np
+
+from utils.constants import PREPROCESSED_DIR
+from utils.receipt_picker import choose_receipt_image
+from utils.session_state import set_selected_receipt
+
+
+def _order_points(points: np.ndarray) -> np.ndarray:
+    rectangle = np.zeros(
+        (4, 2),
+        dtype="float32",
+    )
+
+    point_sum = points.sum(axis=1)
+    point_diff = np.diff(
+        points,
+        axis=1,
+    ).reshape(-1)
+
+    rectangle[0] = points[
+        np.argmin(point_sum)
+    ]
+    rectangle[2] = points[
+        np.argmax(point_sum)
+    ]
+    rectangle[1] = points[
+        np.argmin(point_diff)
+    ]
+    rectangle[3] = points[
+        np.argmax(point_diff)
+    ]
+
+    return rectangle
+
+
+def _four_point_transform(
+    image: np.ndarray,
+    points: np.ndarray,
+) -> np.ndarray:
+    rect = _order_points(points)
+
+    (
+        top_left,
+        top_right,
+        bottom_right,
+        bottom_left,
+    ) = rect
+
+    width_a = np.linalg.norm(
+        bottom_right - bottom_left
+    )
+    width_b = np.linalg.norm(
+        top_right - top_left
+    )
+    max_width = int(
+        max(width_a, width_b)
+    )
+
+    height_a = np.linalg.norm(
+        top_right - bottom_right
+    )
+    height_b = np.linalg.norm(
+        top_left - bottom_left
+    )
+    max_height = int(
+        max(height_a, height_b)
+    )
+
+    destination = np.array(
+        [
+            [0, 0],
+            [max_width - 1, 0],
+            [max_width - 1, max_height - 1],
+            [0, max_height - 1],
+        ],
+        dtype="float32",
+    )
+
+    transform_matrix = (
+        cv2.getPerspectiveTransform(
+            rect,
+            destination,
+        )
+    )
+
+    return cv2.warpPerspective(
+        image,
+        transform_matrix,
+        (max_width, max_height),
+    )
+
+
+def _detect_receipt(
+    image: np.ndarray,
+) -> np.ndarray | None:
+    height = image.shape[0]
+    target_height = 900
+
+    if height > target_height:
+        scale = (
+            target_height
+            / float(height)
+        )
+        resized = cv2.resize(
+            image,
+            None,
+            fx=scale,
+            fy=scale,
+            interpolation=cv2.INTER_AREA,
+        )
+    else:
+        scale = 1.0
+        resized = image.copy()
+
+    gray = cv2.cvtColor(
+        resized,
+        cv2.COLOR_BGR2GRAY,
+    )
+
+    blurred = cv2.GaussianBlur(
+        gray,
+        (5, 5),
+        0,
+    )
+
+    edges = cv2.Canny(
+        blurred,
+        50,
+        150,
+    )
+
+    kernel = cv2.getStructuringElement(
+        cv2.MORPH_RECT,
+        (5, 5),
+    )
+
+    edges = cv2.morphologyEx(
+        edges,
+        cv2.MORPH_CLOSE,
+        kernel,
+        iterations=2,
+    )
+
+    contours, _ = cv2.findContours(
+        edges,
+        cv2.RETR_LIST,
+        cv2.CHAIN_APPROX_SIMPLE,
+    )
+
+    contours = sorted(
+        contours,
+        key=cv2.contourArea,
+        reverse=True,
+    )[:20]
+
+    image_area = (
+        resized.shape[0]
+        * resized.shape[1]
+    )
+
+    for contour in contours:
+        area = cv2.contourArea(
+            contour
+        )
+
+        if area < image_area * 0.20:
+            continue
+
+        perimeter = cv2.arcLength(
+            contour,
+            True,
+        )
+
+        approximation = (
+            cv2.approxPolyDP(
+                contour,
+                0.02 * perimeter,
+                True,
+            )
+        )
+
+        if len(approximation) == 4:
+            points = (
+                approximation
+                .reshape(4, 2)
+                .astype("float32")
+            )
+
+            if scale != 1.0:
+                points /= scale
+
+            return points
+
+    return None
+
+
+def _enhance_for_ocr(
+    image: np.ndarray,
+) -> np.ndarray:
+    gray = cv2.cvtColor(
+        image,
+        cv2.COLOR_BGR2GRAY,
+    )
+
+    gray = cv2.normalize(
+        gray,
+        None,
+        alpha=0,
+        beta=255,
+        norm_type=cv2.NORM_MINMAX,
+    )
+
+    denoised = (
+        cv2.fastNlMeansDenoising(
+            gray,
+            None,
+            h=10,
+            templateWindowSize=7,
+            searchWindowSize=21,
+        )
+    )
+
+    thresholded = cv2.adaptiveThreshold(
+        denoised,
+        255,
+        cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+        cv2.THRESH_BINARY,
+        31,
+        15,
+    )
+
+    cleanup_kernel = (
+        cv2.getStructuringElement(
+            cv2.MORPH_RECT,
+            (2, 2),
+        )
+    )
+
+    return cv2.morphologyEx(
+        thresholded,
+        cv2.MORPH_OPEN,
+        cleanup_kernel,
+        iterations=1,
+    )
+
+
+def get_preprocessed_path(
+    source_path: str | Path,
+) -> Path:
+    source = Path(source_path)
+
+    return (
+        PREPROCESSED_DIR
+        / f"{source.stem}_preprocessed.png"
+    )
+
+
+def preprocess_receipt(
+    image_path: str | Path,
+) -> Path:
+    source_path = (
+        Path(image_path)
+        .expanduser()
+        .resolve()
+    )
+
+    if not source_path.exists():
+        raise FileNotFoundError(
+            f"Receipt image does not exist: "
+            f"{source_path}"
+        )
+
+    if not source_path.is_file():
+        raise ValueError(
+            f"Receipt image path is not a file: "
+            f"{source_path}"
+        )
+
+    image = cv2.imread(
+        str(source_path)
+    )
+
+    if image is None:
+        raise ValueError(
+            "OpenCV could not read image: "
+            f"{source_path}"
+        )
+
+    receipt_corners = _detect_receipt(
+        image
+    )
+
+    if receipt_corners is not None:
+        document = _four_point_transform(
+            image,
+            receipt_corners,
+        )
+        detection_status = (
+            "receipt boundary detected"
+        )
+    else:
+        document = image.copy()
+        detection_status = (
+            "receipt boundary not detected; "
+            "using original image dimensions"
+        )
+
+    processed = _enhance_for_ocr(
+        document
+    )
+
+    destination = get_preprocessed_path(
+        source_path
+    )
+
+    destination.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    # cv2.imwrite overwrites an existing file with the same path.
+    saved = cv2.imwrite(
+        str(destination),
+        processed,
+    )
+
+    if not saved:
+        raise RuntimeError(
+            "OpenCV could not save image: "
+            f"{destination}"
+        )
+
+    print(
+        "[INFO] Preprocessing result: "
+        f"{detection_status}"
+    )
+
+    return destination.resolve()
+
+
+def preprocess_selected_receipt(
+    source_path: Path,
+) -> Path:
+    preprocessed_path = preprocess_receipt(
+        source_path
+    )
+
+    set_selected_receipt(
+        source_image=source_path,
+        preprocessed_image=preprocessed_path,
+    )
+
+    return preprocessed_path
+
+
+def run_image_preprocessing() -> None:
+    print(
+        "\n=== Image Preprocessing ===\n"
+    )
+
+    source_path = choose_receipt_image()
+
+    if source_path is None:
+        return
+
+    try:
+        output_path = (
+            preprocess_selected_receipt(
+                source_path
+            )
+        )
+
+        print(
+            "\n[OK] Preprocessed receipt created:"
+            f"\n{output_path}"
+        )
+
+        print(
+            "\nThis receipt is now selected "
+            "for Run OCR."
+        )
+
+    except (
+        FileNotFoundError,
+        ValueError,
+        RuntimeError,
+    ) as error:
+        print(
+            f"\n[ERROR] {error}"
+        )
+
+
+================================================================================
 FILE: utils/main.py
 ================================================================================
 
+from utils.image_preprocessing import run_image_preprocessing
 from utils.run_ocr import run_ocr
 from utils.export_codebase import run_codebase_export
 
 
 def display_utils_menu() -> None:
     print("\n=== ShopGraph Utilities ===\n")
-    print("1. Run OCR")
-    print("2. Export Clean Codebase")
+    print("1. Image Preprocessing")
+    print("2. Run OCR")
+    print("3. Export Clean Codebase")
     print("0. Return to Main")
 
 
@@ -422,23 +833,116 @@ def run_utils_menu() -> None:
     while True:
         display_utils_menu()
 
-        option = input("\nSelect option: ").strip()
+        option = input(
+            "\nSelect option: "
+        ).strip()
 
         if option == "1":
-            run_ocr()
+            run_image_preprocessing()
 
         elif option == "2":
+            run_ocr()
+
+        elif option == "3":
             run_codebase_export()
 
         elif option == "0":
             return
 
         else:
-            print("\n[ERROR] Invalid option.")
+            print(
+                "\n[ERROR] Invalid option."
+            )
 
 
 if __name__ == "__main__":
     run_utils_menu()
+
+
+================================================================================
+FILE: utils/receipt_picker.py
+================================================================================
+
+from __future__ import annotations
+
+from pathlib import Path
+
+from utils.constants import CURRENT_PIC_DIR
+
+
+SUPPORTED_IMAGE_SUFFIXES = {
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".heic",
+    ".webp",
+    ".tif",
+    ".tiff",
+}
+
+
+def _get_available_receipts() -> list[Path]:
+    CURRENT_PIC_DIR.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    return sorted(
+        path
+        for path in CURRENT_PIC_DIR.iterdir()
+        if path.is_file()
+        and path.suffix.lower() in SUPPORTED_IMAGE_SUFFIXES
+    )
+
+
+def choose_receipt_image() -> Path | None:
+    receipts = _get_available_receipts()
+
+    if not receipts:
+        print(
+            "\n[ERROR] No receipt images were found in:"
+            f"\n{CURRENT_PIC_DIR}"
+        )
+        return None
+
+    print("\nAvailable receipt images:\n")
+
+    for index, receipt in enumerate(
+        receipts,
+        start=1,
+    ):
+        print(
+            f"{index}. {receipt.name}"
+        )
+
+    print("0. Cancel")
+
+    while True:
+        choice = input(
+            "\nSelect receipt: "
+        ).strip()
+
+        if choice == "0":
+            return None
+
+        try:
+            selected_index = int(choice)
+        except ValueError:
+            print(
+                "[ERROR] Enter a number from the list."
+            )
+            continue
+
+        if not 1 <= selected_index <= len(receipts):
+            print(
+                "[ERROR] Invalid selection."
+            )
+            continue
+
+        return receipts[
+            selected_index - 1
+        ].resolve()
+
 
 ================================================================================
 FILE: utils/run_ocr.py
@@ -450,76 +954,93 @@ import json
 from pathlib import Path
 
 from extractors.tesseract import extract_receipt
-
-
-DEFAULT_OUTPUT_DIR = Path("data/raw_ocr")
+from utils.constants import RAW_OCR_DIR
+from utils.image_preprocessing import preprocess_selected_receipt
+from utils.receipt_picker import choose_receipt_image
+from utils.session_state import get_selected_preprocessed_image
 
 
 def save_json(
     data: dict,
-    output_path: Path
+    output_path: Path,
 ) -> None:
-
     output_path.parent.mkdir(
         parents=True,
-        exist_ok=True
+        exist_ok=True,
     )
 
     with output_path.open(
         "w",
-        encoding="utf-8"
+        encoding="utf-8",
     ) as file:
-
         json.dump(
             data,
             file,
             ensure_ascii=False,
             indent=2,
         )
-
         file.write("\n")
 
 
-def run_ocr() -> None:
-
-    print("\n=== Run OCR ===\n")
-
-    raw_path = input(
-        "Receipt image path: "
-    ).strip()
-
-    if not raw_path:
-        print(
-            "[ERROR] No image path provided."
-        )
-        return
-
-    image_path = (
-        Path(raw_path)
-        .expanduser()
-        .resolve()
+def _get_ocr_input_image() -> Path | None:
+    selected_preprocessed = (
+        get_selected_preprocessed_image()
     )
 
-    if not image_path.exists():
-
+    if (
+        selected_preprocessed is not None
+        and selected_preprocessed.exists()
+    ):
         print(
-            f"[ERROR] Receipt image does not exist: "
-            f"{image_path}"
+            "[INFO] Using selected preprocessed image:"
+            f"\n{selected_preprocessed}"
         )
+        return selected_preprocessed
 
-        return
+    print(
+        "[INFO] No receipt has been preprocessed "
+        "in this session yet."
+    )
 
-    if not image_path.is_file():
+    source_path = choose_receipt_image()
 
+    if source_path is None:
+        return None
+
+    try:
+        preprocessed_path = (
+            preprocess_selected_receipt(
+                source_path
+            )
+        )
+    except (
+        FileNotFoundError,
+        ValueError,
+        RuntimeError,
+    ) as error:
         print(
-            f"[ERROR] Receipt image path is not a file: "
-            f"{image_path}"
+            f"\n[ERROR] {error}"
         )
+        return None
 
+    print(
+        "\n[OK] Preprocessed receipt created:"
+        f"\n{preprocessed_path}"
+    )
+
+    return preprocessed_path
+
+
+def run_ocr() -> None:
+    print("\n=== Run OCR ===\n")
+
+    image_path = _get_ocr_input_image()
+
+    if image_path is None:
         return
 
     output_path = (
-        DEFAULT_OUTPUT_DIR
+        RAW_OCR_DIR
         / f"{image_path.stem}_raw_ocr.json"
     )
 
@@ -533,9 +1054,50 @@ def run_ocr() -> None:
     )
 
     print(
-        f"\n[OK] OCR JSON created:\n"
-        f"{output_path.resolve()}"
+        "\n[OK] OCR JSON created:"
+        f"\n{output_path.resolve()}"
     )
+
+
+================================================================================
+FILE: utils/session_state.py
+================================================================================
+
+from __future__ import annotations
+
+from pathlib import Path
+
+
+_selected_source_image: Path | None = None
+_selected_preprocessed_image: Path | None = None
+
+
+def set_selected_receipt(
+    source_image: Path,
+    preprocessed_image: Path,
+) -> None:
+    global _selected_source_image
+    global _selected_preprocessed_image
+
+    _selected_source_image = source_image.resolve()
+    _selected_preprocessed_image = preprocessed_image.resolve()
+
+
+def get_selected_source_image() -> Path | None:
+    return _selected_source_image
+
+
+def get_selected_preprocessed_image() -> Path | None:
+    return _selected_preprocessed_image
+
+
+def clear_selected_receipt() -> None:
+    global _selected_source_image
+    global _selected_preprocessed_image
+
+    _selected_source_image = None
+    _selected_preprocessed_image = None
+
 
 ================================================================================
 FILE: extractors/__init__.py
@@ -673,3 +1235,13 @@ def extract_receipt(image_path: str | Path) -> dict:
         "raw_text": raw_text,
         "text": text_lines,
     }
+
+
+================================================================================
+FILE: data/requirements.txt
+================================================================================
+
+Pillow
+pytesseract
+opencv-python
+numpy

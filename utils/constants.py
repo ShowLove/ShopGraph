@@ -4,6 +4,9 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 DATA_DIR = PROJECT_ROOT / "data"
+CURRENT_PIC_DIR = DATA_DIR / "current_pic"
+PREPROCESSED_DIR = DATA_DIR / "preprocessed"
+RAW_OCR_DIR = DATA_DIR / "raw_ocr"
 
 EXPORT_DIR = DATA_DIR / "exports"
 

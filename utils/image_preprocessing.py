@@ -5,47 +5,71 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-
-DEFAULT_OUTPUT_DIR = Path("data/preprocessed")
+from utils.constants import PREPROCESSED_DIR
+from utils.receipt_picker import choose_receipt_image
+from utils.session_state import set_selected_receipt
 
 
 def _order_points(points: np.ndarray) -> np.ndarray:
-    """
-    Return four corner points in this order:
-    top-left, top-right, bottom-right, bottom-left.
-    """
-    rectangle = np.zeros((4, 2), dtype="float32")
+    rectangle = np.zeros(
+        (4, 2),
+        dtype="float32",
+    )
 
     point_sum = points.sum(axis=1)
-    point_diff = np.diff(points, axis=1).reshape(-1)
+    point_diff = np.diff(
+        points,
+        axis=1,
+    ).reshape(-1)
 
-    rectangle[0] = points[np.argmin(point_sum)]
-    rectangle[2] = points[np.argmax(point_sum)]
-    rectangle[1] = points[np.argmin(point_diff)]
-    rectangle[3] = points[np.argmax(point_diff)]
+    rectangle[0] = points[
+        np.argmin(point_sum)
+    ]
+    rectangle[2] = points[
+        np.argmax(point_sum)
+    ]
+    rectangle[1] = points[
+        np.argmin(point_diff)
+    ]
+    rectangle[3] = points[
+        np.argmax(point_diff)
+    ]
 
     return rectangle
 
 
 def _four_point_transform(
     image: np.ndarray,
-    points: np.ndarray
+    points: np.ndarray,
 ) -> np.ndarray:
-    """
-    Apply a perspective transform so the detected receipt becomes
-    a flat rectangular document.
-    """
     rect = _order_points(points)
 
-    top_left, top_right, bottom_right, bottom_left = rect
+    (
+        top_left,
+        top_right,
+        bottom_right,
+        bottom_left,
+    ) = rect
 
-    width_a = np.linalg.norm(bottom_right - bottom_left)
-    width_b = np.linalg.norm(top_right - top_left)
-    max_width = int(max(width_a, width_b))
+    width_a = np.linalg.norm(
+        bottom_right - bottom_left
+    )
+    width_b = np.linalg.norm(
+        top_right - top_left
+    )
+    max_width = int(
+        max(width_a, width_b)
+    )
 
-    height_a = np.linalg.norm(top_right - bottom_right)
-    height_b = np.linalg.norm(top_left - bottom_left)
-    max_height = int(max(height_a, height_b))
+    height_a = np.linalg.norm(
+        top_right - bottom_right
+    )
+    height_b = np.linalg.norm(
+        top_left - bottom_left
+    )
+    max_height = int(
+        max(height_a, height_b)
+    )
 
     destination = np.array(
         [
@@ -57,9 +81,11 @@ def _four_point_transform(
         dtype="float32",
     )
 
-    transform_matrix = cv2.getPerspectiveTransform(
-        rect,
-        destination,
+    transform_matrix = (
+        cv2.getPerspectiveTransform(
+            rect,
+            destination,
+        )
     )
 
     return cv2.warpPerspective(
@@ -70,19 +96,16 @@ def _four_point_transform(
 
 
 def _detect_receipt(
-    image: np.ndarray
+    image: np.ndarray,
 ) -> np.ndarray | None:
-    """
-    Attempt to find the outer receipt boundary.
-
-    Returns the four receipt corners when detected.
-    Returns None when no reliable four-corner contour is found.
-    """
     height = image.shape[0]
     target_height = 900
 
     if height > target_height:
-        scale = target_height / float(height)
+        scale = (
+            target_height
+            / float(height)
+        )
         resized = cv2.resize(
             image,
             None,
@@ -135,10 +158,15 @@ def _detect_receipt(
         reverse=True,
     )[:20]
 
-    image_area = resized.shape[0] * resized.shape[1]
+    image_area = (
+        resized.shape[0]
+        * resized.shape[1]
+    )
 
     for contour in contours:
-        area = cv2.contourArea(contour)
+        area = cv2.contourArea(
+            contour
+        )
 
         if area < image_area * 0.20:
             continue
@@ -148,14 +176,20 @@ def _detect_receipt(
             True,
         )
 
-        approximation = cv2.approxPolyDP(
-            contour,
-            0.02 * perimeter,
-            True,
+        approximation = (
+            cv2.approxPolyDP(
+                contour,
+                0.02 * perimeter,
+                True,
+            )
         )
 
         if len(approximation) == 4:
-            points = approximation.reshape(4, 2).astype("float32")
+            points = (
+                approximation
+                .reshape(4, 2)
+                .astype("float32")
+            )
 
             if scale != 1.0:
                 points /= scale
@@ -166,18 +200,8 @@ def _detect_receipt(
 
 
 def _enhance_for_ocr(
-    image: np.ndarray
+    image: np.ndarray,
 ) -> np.ndarray:
-    """
-    Convert the receipt to a high-contrast OCR-friendly image.
-
-    Steps:
-    - grayscale
-    - contrast normalization
-    - mild denoising
-    - adaptive thresholding
-    - light morphological cleanup
-    """
     gray = cv2.cvtColor(
         image,
         cv2.COLOR_BGR2GRAY,
@@ -191,12 +215,14 @@ def _enhance_for_ocr(
         norm_type=cv2.NORM_MINMAX,
     )
 
-    denoised = cv2.fastNlMeansDenoising(
-        gray,
-        None,
-        h=10,
-        templateWindowSize=7,
-        searchWindowSize=21,
+    denoised = (
+        cv2.fastNlMeansDenoising(
+            gray,
+            None,
+            h=10,
+            templateWindowSize=7,
+            searchWindowSize=21,
+        )
     )
 
     thresholded = cv2.adaptiveThreshold(
@@ -208,48 +234,51 @@ def _enhance_for_ocr(
         15,
     )
 
-    cleanup_kernel = cv2.getStructuringElement(
-        cv2.MORPH_RECT,
-        (2, 2),
+    cleanup_kernel = (
+        cv2.getStructuringElement(
+            cv2.MORPH_RECT,
+            (2, 2),
+        )
     )
 
-    cleaned = cv2.morphologyEx(
+    return cv2.morphologyEx(
         thresholded,
         cv2.MORPH_OPEN,
         cleanup_kernel,
         iterations=1,
     )
 
-    return cleaned
+
+def get_preprocessed_path(
+    source_path: str | Path,
+) -> Path:
+    source = Path(source_path)
+
+    return (
+        PREPROCESSED_DIR
+        / f"{source.stem}_preprocessed.png"
+    )
 
 
 def preprocess_receipt(
     image_path: str | Path,
-    output_path: str | Path | None = None,
 ) -> Path:
-    """
-    Preprocess a receipt image for OCR.
-
-    The original image is never modified.
-
-    Input:
-        Path to the original receipt image.
-
-    Output:
-        Path to a newly generated OCR-friendly PNG image.
-    """
-    source_path = Path(
-        image_path
-    ).expanduser().resolve()
+    source_path = (
+        Path(image_path)
+        .expanduser()
+        .resolve()
+    )
 
     if not source_path.exists():
         raise FileNotFoundError(
-            f"Receipt image does not exist: {source_path}"
+            f"Receipt image does not exist: "
+            f"{source_path}"
         )
 
     if not source_path.is_file():
         raise ValueError(
-            f"Receipt image path is not a file: {source_path}"
+            f"Receipt image path is not a file: "
+            f"{source_path}"
         )
 
     image = cv2.imread(
@@ -258,7 +287,8 @@ def preprocess_receipt(
 
     if image is None:
         raise ValueError(
-            f"OpenCV could not read image: {source_path}"
+            "OpenCV could not read image: "
+            f"{source_path}"
         )
 
     receipt_corners = _detect_receipt(
@@ -270,11 +300,11 @@ def preprocess_receipt(
             image,
             receipt_corners,
         )
-
-        detection_status = "receipt boundary detected"
+        detection_status = (
+            "receipt boundary detected"
+        )
     else:
         document = image.copy()
-
         detection_status = (
             "receipt boundary not detected; "
             "using original image dimensions"
@@ -284,21 +314,16 @@ def preprocess_receipt(
         document
     )
 
-    if output_path is None:
-        destination = (
-            DEFAULT_OUTPUT_DIR
-            / f"{source_path.stem}_preprocessed.png"
-        )
-    else:
-        destination = Path(
-            output_path
-        ).expanduser()
+    destination = get_preprocessed_path(
+        source_path
+    )
 
     destination.parent.mkdir(
         parents=True,
         exist_ok=True,
     )
 
+    # cv2.imwrite overwrites an existing file with the same path.
     saved = cv2.imwrite(
         str(destination),
         processed,
@@ -306,48 +331,58 @@ def preprocess_receipt(
 
     if not saved:
         raise RuntimeError(
-            f"OpenCV could not save image: {destination}"
+            "OpenCV could not save image: "
+            f"{destination}"
         )
 
     print(
-        f"[INFO] Preprocessing result: "
+        "[INFO] Preprocessing result: "
         f"{detection_status}"
     )
 
     return destination.resolve()
 
 
+def preprocess_selected_receipt(
+    source_path: Path,
+) -> Path:
+    preprocessed_path = preprocess_receipt(
+        source_path
+    )
+
+    set_selected_receipt(
+        source_image=source_path,
+        preprocessed_image=preprocessed_path,
+    )
+
+    return preprocessed_path
+
+
 def run_image_preprocessing() -> None:
-    """
-    Interactive utility entry point used by utils/main.py.
-    """
     print(
         "\n=== Image Preprocessing ===\n"
     )
 
-    raw_path = input(
-        "Receipt image path: "
-    ).strip()
+    source_path = choose_receipt_image()
 
-    if not raw_path:
-        print(
-            "[ERROR] No image path provided."
-        )
+    if source_path is None:
         return
 
     try:
-        output_path = preprocess_receipt(
-            raw_path
+        output_path = (
+            preprocess_selected_receipt(
+                source_path
+            )
         )
 
         print(
-            "\n[OK] Preprocessed receipt created:\n"
-            f"{output_path}"
+            "\n[OK] Preprocessed receipt created:"
+            f"\n{output_path}"
         )
 
         print(
-            "\nNext step:"
-            "\nRun OCR and use this preprocessed image path."
+            "\nThis receipt is now selected "
+            "for Run OCR."
         )
 
     except (

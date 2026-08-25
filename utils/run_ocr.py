@@ -4,76 +4,93 @@ import json
 from pathlib import Path
 
 from extractors.tesseract import extract_receipt
-
-
-DEFAULT_OUTPUT_DIR = Path("data/raw_ocr")
+from utils.constants import RAW_OCR_DIR
+from utils.image_preprocessing import preprocess_selected_receipt
+from utils.receipt_picker import choose_receipt_image
+from utils.session_state import get_selected_preprocessed_image
 
 
 def save_json(
     data: dict,
-    output_path: Path
+    output_path: Path,
 ) -> None:
-
     output_path.parent.mkdir(
         parents=True,
-        exist_ok=True
+        exist_ok=True,
     )
 
     with output_path.open(
         "w",
-        encoding="utf-8"
+        encoding="utf-8",
     ) as file:
-
         json.dump(
             data,
             file,
             ensure_ascii=False,
             indent=2,
         )
-
         file.write("\n")
 
 
-def run_ocr() -> None:
-
-    print("\n=== Run OCR ===\n")
-
-    raw_path = input(
-        "Receipt image path: "
-    ).strip()
-
-    if not raw_path:
-        print(
-            "[ERROR] No image path provided."
-        )
-        return
-
-    image_path = (
-        Path(raw_path)
-        .expanduser()
-        .resolve()
+def _get_ocr_input_image() -> Path | None:
+    selected_preprocessed = (
+        get_selected_preprocessed_image()
     )
 
-    if not image_path.exists():
-
+    if (
+        selected_preprocessed is not None
+        and selected_preprocessed.exists()
+    ):
         print(
-            f"[ERROR] Receipt image does not exist: "
-            f"{image_path}"
+            "[INFO] Using selected preprocessed image:"
+            f"\n{selected_preprocessed}"
         )
+        return selected_preprocessed
 
-        return
+    print(
+        "[INFO] No receipt has been preprocessed "
+        "in this session yet."
+    )
 
-    if not image_path.is_file():
+    source_path = choose_receipt_image()
 
+    if source_path is None:
+        return None
+
+    try:
+        preprocessed_path = (
+            preprocess_selected_receipt(
+                source_path
+            )
+        )
+    except (
+        FileNotFoundError,
+        ValueError,
+        RuntimeError,
+    ) as error:
         print(
-            f"[ERROR] Receipt image path is not a file: "
-            f"{image_path}"
+            f"\n[ERROR] {error}"
         )
+        return None
 
+    print(
+        "\n[OK] Preprocessed receipt created:"
+        f"\n{preprocessed_path}"
+    )
+
+    return preprocessed_path
+
+
+def run_ocr() -> None:
+    print("\n=== Run OCR ===\n")
+
+    image_path = _get_ocr_input_image()
+
+    if image_path is None:
         return
 
     output_path = (
-        DEFAULT_OUTPUT_DIR
+        RAW_OCR_DIR
         / f"{image_path.stem}_raw_ocr.json"
     )
 
@@ -87,6 +104,6 @@ def run_ocr() -> None:
     )
 
     print(
-        f"\n[OK] OCR JSON created:\n"
-        f"{output_path.resolve()}"
+        "\n[OK] OCR JSON created:"
+        f"\n{output_path.resolve()}"
     )
