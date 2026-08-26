@@ -1,0 +1,678 @@
+{
+  "source_receipt": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/current_pic/IMG_0253.JPG",
+  "selection_method": "multi-candidate component consensus: best candidate provides reading order; exact six-digit SKU aligns product observations; description, price, and tax code are selected independently from OCR evidence across all candidates; non-product lines continue to use ordinary consensus",
+  "backbone_candidate": {
+    "candidate_id": "grayscale_psm6",
+    "image_variant": "grayscale",
+    "psm": 6,
+    "comparison_metrics": {
+      "score": 68.2285,
+      "mean_word_confidence": 67.4,
+      "recognized_word_count": 129,
+      "low_confidence_rate": 0.3101,
+      "digit_count": 89,
+      "price_like_count": 9
+    }
+  },
+  "consensus_summary": {
+    "backbone_line_count": 25,
+    "consensus_line_count": 25,
+    "component_reconstruction_count": 1,
+    "supported_extra_line_count": 20,
+    "candidate_count": 6,
+    "match_threshold": 0.58,
+    "extra_line_min_support": 2
+  },
+  "raw_text": "Indian Harbour Plaes —\n270 E Eau Gallié Pitt. ng7q\nIndian Harbour Beach,\n(321) 773-2915 a\nStore Manager: William Morse\nStony Yobaby Pouch Peach F 7.89\nStony Yobaby Pouch Banana F 7.89\nSweet Loren's Gf Brownie\nVans Waffle Blueberry Gf F 3.89\nVans Waffle Blueberry Gf\nChobani 4Pk Hero Batch\n511k Soy Organic Nsa Hg F 6.19\nSilk Soy Organic Nsa Hg F 6.19\nSilk Soy Organic Nsa Hg F 6.19\nPublix Hal f&Half Ho F 5 89\nSubtotal 60.58\nTotal Tax 0.00\nie jota! 60.58\n| Credit 60.58\na ae : $60 59\nCredit Car Purch\n712697 Auth/Trace: 00549D/\nReference: 001836758884 — PIN veri; ed\nAODOUD00OSIOI GF ee a\n- VISA CREDIT (\"ee Wee",
+  "text": [
+    {
+      "line_number": 1,
+      "text": "Indian Harbour Plaes —",
+      "confidence": 44.75,
+      "source_candidate": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "support_count": 2,
+      "match_method": "backbone",
+      "line_quality_score": 46.95,
+      "consensus_score": 50.95,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 2,
+      "text": "270 E Eau Gallié Pitt. ng7q",
+      "confidence": 49.5,
+      "source_candidate": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "support_count": 1,
+      "match_method": "backbone",
+      "line_quality_score": 53.68,
+      "consensus_score": 53.68,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 3,
+      "text": "Indian Harbour Beach,",
+      "confidence": 95.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "match_method": "fuzzy",
+      "line_quality_score": 96.65,
+      "consensus_score": 100.65,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 4,
+      "text": "(321) 773-2915 a",
+      "confidence": 68.33,
+      "source_candidate": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "support_count": 3,
+      "match_method": "backbone",
+      "line_quality_score": 72.18,
+      "consensus_score": 80.18,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 5,
+      "text": "Store Manager: William Morse",
+      "confidence": 95.0,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 3,
+      "match_method": "fuzzy",
+      "line_quality_score": 97.2,
+      "consensus_score": 105.2,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 6,
+      "text": "Stony Yobaby Pouch Peach F 7.89",
+      "confidence": 89.67,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 3,
+      "match_method": "fuzzy",
+      "line_quality_score": 96.63,
+      "consensus_score": 104.63,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 7,
+      "text": "Stony Yobaby Pouch Banana F 7.89",
+      "confidence": 93.0,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 3,
+      "match_method": "fuzzy",
+      "line_quality_score": 99.96,
+      "consensus_score": 107.96,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 8,
+      "text": "Sweet Loren's Gf Brownie",
+      "confidence": 93.25,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 3,
+      "match_method": "fuzzy",
+      "line_quality_score": 95.45,
+      "consensus_score": 103.45,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 9,
+      "text": "Vans Waffle Blueberry Gf F 3.89",
+      "confidence": 91.0,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 3,
+      "match_method": "fuzzy",
+      "line_quality_score": 97.96,
+      "consensus_score": 105.96,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 10,
+      "text": "Vans Waffle Blueberry Gf",
+      "confidence": 93.75,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 3,
+      "match_method": "fuzzy",
+      "line_quality_score": 95.95,
+      "consensus_score": 103.95,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 11,
+      "text": "Chobani 4Pk Hero Batch",
+      "confidence": 93.25,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 3,
+      "match_method": "fuzzy",
+      "line_quality_score": 95.67,
+      "consensus_score": 103.67,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 12,
+      "text": "511k Soy Organic Nsa Hg F 6.19",
+      "confidence": 76.43,
+      "source_candidate": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "support_count": 3,
+      "match_method": "backbone",
+      "line_quality_score": 84.6,
+      "consensus_score": 92.6,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 13,
+      "text": "Silk Soy Organic Nsa Hg F 6.19",
+      "confidence": 90.43,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 3,
+      "match_method": "fuzzy",
+      "line_quality_score": 97.94,
+      "consensus_score": 105.94,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 14,
+      "text": "Silk Soy Organic Nsa Hg F 6.19",
+      "confidence": 90.43,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 3,
+      "match_method": "fuzzy",
+      "line_quality_score": 97.94,
+      "consensus_score": 105.94,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 15,
+      "text": "Publix Hal f&Half Ho F 5 89",
+      "confidence": 76.29,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 3,
+      "match_method": "fuzzy",
+      "line_quality_score": 80.8,
+      "consensus_score": 88.8,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 16,
+      "text": "Subtotal 60.58",
+      "confidence": 83.5,
+      "source_candidate": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "support_count": 1,
+      "match_method": "backbone",
+      "line_quality_score": 88.48,
+      "consensus_score": 88.48,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 17,
+      "text": "Total Tax 0.00",
+      "confidence": 95.33,
+      "source_candidate": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "support_count": 2,
+      "match_method": "backbone",
+      "line_quality_score": 100.64,
+      "consensus_score": 104.64,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 18,
+      "text": "ie jota! 60.58",
+      "confidence": 34.67,
+      "source_candidate": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "support_count": 1,
+      "match_method": "backbone",
+      "line_quality_score": 40.2,
+      "consensus_score": 40.2,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 19,
+      "text": "| Credit 60.58",
+      "confidence": 77.67,
+      "source_candidate": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "support_count": 1,
+      "match_method": "backbone",
+      "line_quality_score": 83.2,
+      "consensus_score": 83.2,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 20,
+      "text": "a ae : $60 59",
+      "confidence": 36.6,
+      "source_candidate": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "support_count": 1,
+      "match_method": "backbone",
+      "line_quality_score": 40.23,
+      "consensus_score": 40.23,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 21,
+      "text": "Credit Car Purch",
+      "confidence": 78.33,
+      "source_candidate": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "support_count": 1,
+      "match_method": "backbone",
+      "line_quality_score": 79.98,
+      "consensus_score": 79.98,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 22,
+      "text": "712697 Auth/Trace: 00549D/",
+      "confidence": 85.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 3,
+      "match_method": "sku",
+      "line_quality_score": 90.52,
+      "consensus_score": 98.52,
+      "reconstructed": true,
+      "original_consensus_text": "Auth/Trace: 00549D/712697",
+      "reconstruction_method": "component consensus by exact six-digit SKU",
+      "component_support": {
+        "sku": {
+          "value": "712697",
+          "support_count": 3
+        },
+        "description": {
+          "value": "Auth/Trace: 00549D/",
+          "source_candidate": "grayscale_psm11",
+          "source_text": "Auth/Trace: 00549D/712697",
+          "support_count": 3,
+          "confidence": 85.0,
+          "score": 103.0
+        },
+        "price": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
+    },
+    {
+      "line_number": 23,
+      "text": "Reference: 001836758884 — PIN veri; ed",
+      "confidence": 58.67,
+      "source_candidate": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "support_count": 1,
+      "match_method": "backbone",
+      "line_quality_score": 64.61,
+      "consensus_score": 64.61,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 24,
+      "text": "AODOUD00OSIOI GF ee a",
+      "confidence": 18.0,
+      "source_candidate": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "support_count": 1,
+      "match_method": "backbone",
+      "line_quality_score": 20.64,
+      "consensus_score": 20.64,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 25,
+      "text": "- VISA CREDIT (\"ee Wee",
+      "confidence": 42.2,
+      "source_candidate": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "support_count": 1,
+      "match_method": "backbone",
+      "line_quality_score": 44.95,
+      "consensus_score": 44.95,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    }
+  ],
+  "supported_extra_lines": [
+    {
+      "text": "i",
+      "confidence": 25.0,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 3,
+      "line_quality_score": 25.55
+    },
+    {
+      "text": "- ° - a",
+      "confidence": 10.75,
+      "source_candidate": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "support_count": 3,
+      "line_quality_score": 12.95
+    },
+    {
+      "text": "60",
+      "confidence": 93.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 93.99
+    },
+    {
+      "text": "270 E Eau Gallie",
+      "confidence": 79.25,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 82.11
+    },
+    {
+      "text": "Ik Soy Or",
+      "confidence": 58.0,
+      "source_candidate": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "support_count": 2,
+      "line_quality_score": 59.65
+    },
+    {
+      "text": "a el ie",
+      "confidence": 50.0,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 51.65
+    },
+    {
+      "text": "| { ‘ F . ae | x \\",
+      "confidence": 45.44,
+      "source_candidate": "threshold_psm6",
+      "image_variant": "threshold",
+      "psm": 6,
+      "support_count": 2,
+      "line_quality_score": 50.39
+    },
+    {
+      "text": "Total Tax 7. -",
+      "confidence": 47.75,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 2,
+      "line_quality_score": 50.17
+    },
+    {
+      "text": "1%",
+      "confidence": 45.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 45.77
+    },
+    {
+      "text": ": ~~ - 4 |",
+      "confidence": 41.4,
+      "source_candidate": "threshold_psm6",
+      "image_variant": "threshold",
+      "psm": 6,
+      "support_count": 2,
+      "line_quality_score": 44.37
+    },
+    {
+      "text": "4 ee",
+      "confidence": 40.0,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 41.32
+    },
+    {
+      "text": ". . . m’ _ |",
+      "confidence": 33.83,
+      "source_candidate": "threshold_psm6",
+      "image_variant": "threshold",
+      "psm": 6,
+      "support_count": 2,
+      "line_quality_score": 37.13
+    },
+    {
+      "text": "te",
+      "confidence": 34.0,
+      "source_candidate": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "support_count": 2,
+      "line_quality_score": 34.55
+    },
+    {
+      "text": "ee Ee |",
+      "confidence": 30.67,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 32.32
+    },
+    {
+      "text": "—— . ' . r | ) . ,",
+      "confidence": 26.56,
+      "source_candidate": "threshold_psm6",
+      "image_variant": "threshold",
+      "psm": 6,
+      "support_count": 2,
+      "line_quality_score": 31.51
+    },
+    {
+      "text": "OO",
+      "confidence": 28.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 28.55
+    },
+    {
+      "text": "Og",
+      "confidence": 22.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 22.55
+    },
+    {
+      "text": "Subtotal]",
+      "confidence": 19.0,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 2,
+      "line_quality_score": 19.55
+    },
+    {
+      "text": "he",
+      "confidence": 1.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 1.55
+    },
+    {
+      "text": "cae",
+      "confidence": 0.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 0.55
+    }
+  ],
+  "candidate_ranking": [
+    {
+      "rank": 1,
+      "candidate_id": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": 68.2285,
+        "mean_word_confidence": 67.4,
+        "recognized_word_count": 129,
+        "low_confidence_rate": 0.3101,
+        "digit_count": 89,
+        "price_like_count": 9
+      }
+    },
+    {
+      "rank": 2,
+      "candidate_id": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 67.583,
+        "mean_word_confidence": 67.52,
+        "recognized_word_count": 134,
+        "low_confidence_rate": 0.3358,
+        "digit_count": 84,
+        "price_like_count": 3
+      }
+    },
+    {
+      "rank": 3,
+      "candidate_id": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 30.1525,
+        "mean_word_confidence": 32.41,
+        "recognized_word_count": 978,
+        "low_confidence_rate": 0.7965,
+        "digit_count": 147,
+        "price_like_count": 9
+      }
+    },
+    {
+      "rank": 4,
+      "candidate_id": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 29.392,
+        "mean_word_confidence": 31.64,
+        "recognized_word_count": 2140,
+        "low_confidence_rate": 0.7832,
+        "digit_count": 200,
+        "price_like_count": 0
+      }
+    },
+    {
+      "rank": 5,
+      "candidate_id": "threshold_psm6",
+      "image_variant": "threshold",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": 22.6775,
+        "mean_word_confidence": 26.25,
+        "recognized_word_count": 3406,
+        "low_confidence_rate": 0.8415,
+        "digit_count": 155,
+        "price_like_count": 0
+      }
+    },
+    {
+      "rank": 6,
+      "candidate_id": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 17.287,
+        "mean_word_confidence": 22.8,
+        "recognized_word_count": 768,
+        "low_confidence_rate": 0.9102,
+        "digit_count": 64,
+        "price_like_count": 0
+      }
+    }
+  ],
+  "provenance": {
+    "candidates_file": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_candidates/IMG_0253_ocr_candidates.json",
+    "rule": "Product lines may be reconstructed from multiple Tesseract observations only when they share the same exact six-digit SKU. Description text is OCR-derived, and price/tax values must each appear in at least one actual OCR candidate. No spelling correction or external product lookup is performed."
+  }
+}

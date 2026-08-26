@@ -477,15 +477,33 @@ def crop_receipt(
         )
 
     if corners is None:
-        raise RuntimeError(
-            "Receipt boundary could not be detected reliably. "
-            "No cropped image was written."
+        print(
+            "\n[WARNING] A distinct receipt boundary could not be "
+            "detected with sufficient confidence."
         )
 
-    cropped = _four_point_transform(
-        image,
-        corners,
-    )
+        print(
+            "\nThis does not necessarily indicate a problem with "
+            "the image. The receipt may already extend to, or "
+            "closely align with, the boundaries of the photograph."
+        )
+
+        print(
+            "\nThe original image will be used as the receipt "
+            "region so processing can continue."
+        )
+
+        detection_method = (
+            "full-image fallback"
+        )
+
+        cropped = image.copy()
+
+    else:
+        cropped = _four_point_transform(
+            image,
+            corners,
+        )
 
     cropped = _add_small_margin(
         cropped
