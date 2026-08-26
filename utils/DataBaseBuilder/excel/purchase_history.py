@@ -438,23 +438,73 @@ def _next_history_pair(
 # TOTAL FORMULA
 # ---------------------------------------------------------------------------
 
+def _price_columns(
+    sheet,
+) -> list[int]:
+    """
+    Return the worksheet columns that are explicitly labeled Price N.
+
+    In the current Purchase History layout these are:
+
+        K, M, O, Q, S, ...
+
+    Reading the headers keeps the Total formula correct as additional
+    Date N / Price N history pairs are added.
+    """
+    columns = []
+
+    for column in range(
+        HISTORY_START_COLUMN + 1,
+        sheet.max_column + 1,
+        2,
+    ):
+        header = str(
+            sheet.cell(
+                row=1,
+                column=column,
+            ).value
+            or ""
+        ).strip()
+
+        if header.startswith(
+            "Price "
+        ):
+            columns.append(
+                column
+            )
+
+    return columns
+
+
 def _total_formula(
+    sheet,
     row: int,
 ) -> str:
     """
-    Sum every Price N column for this row.
+    Sum Price 1, Price 2, Price 3, etc. for one product-history row.
 
-    K is Price 1 and every second column after K is another Price N.
-    The formula intentionally reaches Excel's final column so it continues
-    to include future history pairs without needing to be rewritten.
+    Example:
 
-    N(...) converts text such as "NA" to zero while preserving numeric prices.
+        =SUM(K2,M2,O2,Q2,S2)
+
+    Blank future price cells are ignored naturally by Excel.
     """
+    price_references = [
+        f"{get_column_letter(column)}{row}"
+        for column in _price_columns(
+            sheet
+        )
+    ]
+
+    if not price_references:
+        return "=0"
+
     return (
-        "=SUMPRODUCT("
-        f"(MOD(COLUMN(K{row}:XFD{row})-COLUMN(K{row}),2)=0)"
-        f"*N(K{row}:XFD{row})"
-        ")"
+        "=SUM("
+        + ",".join(
+            price_references
+        )
+        + ")"
     )
 
 
@@ -467,27 +517,25 @@ def _ensure_total_formula(
         column=TOTAL_COLUMN,
     )
 
-    existing = total_cell.value
-
-    # User-requested behavior:
-    # if a Total equation is already present, leave it alone.
-    if (
-        isinstance(
-            existing,
-            str,
-        )
-        and existing.startswith(
-            "="
-        )
-    ):
-        total_cell.number_format = "$0.00"
-        return
-
-    total_cell.value = _total_formula(
-        row
+    expected_formula = _total_formula(
+        sheet,
+        row,
     )
 
-    total_cell.number_format = "$0.00"
+    # If the correct equation is already present, leave it unchanged.
+    # If an older/incorrect equation is present, replace it.
+    if (
+        total_cell.value
+        == expected_formula
+    ):
+        total_cell.number_format = "0.00"
+        return
+
+    total_cell.value = (
+        expected_formula
+    )
+
+    total_cell.number_format = "0.00"
 
 
 # ---------------------------------------------------------------------------
@@ -883,7 +931,7 @@ def _append_purchase(
 
     if record.price != NA:
         price_cell.number_format = (
-            "$0.00"
+            "0.00"
         )
 
     _ensure_total_formula(
