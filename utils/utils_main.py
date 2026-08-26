@@ -19,7 +19,13 @@ from capabilities.OCRAcquisitionPipeline.run_ocr import (
 from capabilities.OCRAcquisitionPipeline.compare_ocr import (
     run_compare_ocr,
 )
-from utils.export_codebase import run_codebase_export
+
+from utils.export_codebase import (
+    run_codebase_export,
+)
+from utils.clean_ocr_acquisition_pipeline import (
+    run_ocr_acquisition_pipeline_cleanup,
+)
 
 
 def display_capabilities_menu() -> None:
@@ -169,6 +175,10 @@ def display_standalone_utilities_menu() -> None:
     )
 
     print(
+        "2. Clean OCR Acquisition Pipeline Data"
+    )
+
+    print(
         "0. Return to Utilities Menu"
     )
 
@@ -183,6 +193,9 @@ def run_standalone_utilities_menu() -> None:
 
         if option == "1":
             run_codebase_export()
+
+        elif option == "2":
+            run_ocr_acquisition_pipeline_cleanup()
 
         elif option == "0":
             return

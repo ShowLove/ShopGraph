@@ -1,66 +1,25 @@
-ShopGraph - Portable Capability Package Update
+ShopGraph - OCR Acquisition Pipeline Cleanup Utility
 
-GOAL
+FILES
 
-Move all Python code required for the OCR Acquisition Pipeline into:
+Add:
+    utils/clean_ocr_acquisition_pipeline.py
 
-    capabilities/OCRAcquisitionPipeline/
+Replace:
+    utils/utils_main.py
 
-The user-facing menus and workflow remain the same.
+NEW UTILITY MENU
 
-NEW PROJECT STRUCTURE
+=== ShopGraph Utilities ===
 
-shopping_analysis/
-    main.py
+1. Export Clean Codebase
+2. Clean OCR Acquisition Pipeline Data
+0. Return to Utilities Menu
 
-    capabilities/
-        __init__.py
+WHAT THE CLEANUP REMOVES
 
-        OCRAcquisitionPipeline/
-            __init__.py
-            main_OCRAcquisitionPipeline.py
-            constants.py
-            session_state.py
-            receipt_picker.py
-            reliable_receipt_crop.py
-            perspective_correction.py
-            image_enlargement.py
-            ocr_image_variants.py
-            run_ocr.py
-            compare_ocr.py
-            tesseract.py
+All contents inside:
 
-    utils/
-        __init__.py
-        utils_main.py
-        export_codebase.py
-        codebase_bundler.py
-
-    data/
-        ...
-
-
-WHY THIS STRUCTURE
-
-- capabilities/OCRAcquisitionPipeline contains the complete Python
-  implementation of the capability.
-- utils now contains only application-level utilities and menus.
-- main_OCRAcquisitionPipeline.py exposes the top-level reusable function:
-
-      run_ocr_acquisition_pipeline()
-
-- Another Python project can import the capability entrypoint as:
-
-      from capabilities.OCRAcquisitionPipeline import (
-          run_ocr_acquisition_pipeline,
-      )
-
-IMPORTANT
-
-The capability still expects the host project to provide the same data
-layout beneath PROJECT_ROOT:
-
-    data/current_pic/
     data/cropped/
     data/perspective_corrected/
     data/enlarged/
@@ -68,70 +27,26 @@ layout beneath PROJECT_ROOT:
     data/ocr_candidates/
     data/raw_ocr/
 
-The capability-local constants.py determines PROJECT_ROOT from the folder
-location, so when this capability folder is copied into another project at:
+WHAT IT DOES NOT TOUCH
 
-    <project>/capabilities/OCRAcquisitionPipeline/
+    data/current_pic/
 
-it resolves the new project's root automatically.
+The folder and all receipt images inside current_pic remain unchanged.
 
-USER EXPERIENCE
+The generated output folders themselves are also preserved. Only their
+contents are removed.
 
-Nothing changes in the menus:
+SESSION STATE
 
-=== ShopGraph Utilities ===
+After cleanup, OCR Acquisition Pipeline session state is cleared so later
+pipeline stages cannot accidentally reference deleted files.
 
-1. Capabilities
-2. Capability Sub Tasks
-3. Utilities
-0. Return to Main
+RUN
 
-Capabilities:
-    1. OCR Acquisition Pipeline
+    python3 main.py
 
-Capability Sub Tasks:
-    1. Reliable Receipt Detection / Crop
-    2. Perspective Correction
-    3. 2x Enlargement
-    4. Generate OCR Image Variants
-    5. Run OCR - PSM 4 / 6 / 11
-    6. Compare OCR Results / Build Raw OCR JSON
+Then:
 
-Utilities:
-    1. Export Clean Codebase
-
-INSTALL / MIGRATION
-
-COPY/REPLACE:
-- main.py
-- utils/utils_main.py
-- capabilities/__init__.py
-- capabilities/OCRAcquisitionPipeline/*
-
-KEEP:
-- utils/export_codebase.py
-- utils/codebase_bundler.py
-- utils/__init__.py
-
-DELETE THESE OLD OCR-CAPABILITY FILES FROM utils/:
-- utils/compare_ocr.py
-- utils/image_enlargement.py
-- utils/ocr_image_variants.py
-- utils/perspective_correction.py
-- utils/receipt_picker.py
-- utils/reliable_receipt_crop.py
-- utils/run_ocr.py
-- utils/session_state.py
-- utils/constants.py
-
-DELETE/MOVE THIS OLD OCR ENGINE FILE:
-- extractors/tesseract.py
-
-The new copy is:
-- capabilities/OCRAcquisitionPipeline/tesseract.py
-
-NOTE
-
-utils/image_preprocessing.py is not part of the current six-stage
-OCR Acquisition Pipeline menu and is therefore not moved into the
-capability package by this update.
+    1. Utilities
+    3. Utilities
+    2. Clean OCR Acquisition Pipeline Data
