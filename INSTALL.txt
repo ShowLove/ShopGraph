@@ -1,14 +1,83 @@
-ShopGraph - Capability Menu Update
+ShopGraph - Portable Capability Package Update
 
-PURPOSE
+GOAL
 
-This update reorganizes utils/utils_main.py into three top-level sections:
+Move all Python code required for the OCR Acquisition Pipeline into:
 
-1. Capabilities
-2. Capability Sub Tasks
-3. Utilities
+    capabilities/OCRAcquisitionPipeline/
 
-TOP-LEVEL UTILS MENU
+The user-facing menus and workflow remain the same.
+
+NEW PROJECT STRUCTURE
+
+shopping_analysis/
+    main.py
+
+    capabilities/
+        __init__.py
+
+        OCRAcquisitionPipeline/
+            __init__.py
+            main_OCRAcquisitionPipeline.py
+            constants.py
+            session_state.py
+            receipt_picker.py
+            reliable_receipt_crop.py
+            perspective_correction.py
+            image_enlargement.py
+            ocr_image_variants.py
+            run_ocr.py
+            compare_ocr.py
+            tesseract.py
+
+    utils/
+        __init__.py
+        utils_main.py
+        export_codebase.py
+        codebase_bundler.py
+
+    data/
+        ...
+
+
+WHY THIS STRUCTURE
+
+- capabilities/OCRAcquisitionPipeline contains the complete Python
+  implementation of the capability.
+- utils now contains only application-level utilities and menus.
+- main_OCRAcquisitionPipeline.py exposes the top-level reusable function:
+
+      run_ocr_acquisition_pipeline()
+
+- Another Python project can import the capability entrypoint as:
+
+      from capabilities.OCRAcquisitionPipeline import (
+          run_ocr_acquisition_pipeline,
+      )
+
+IMPORTANT
+
+The capability still expects the host project to provide the same data
+layout beneath PROJECT_ROOT:
+
+    data/current_pic/
+    data/cropped/
+    data/perspective_corrected/
+    data/enlarged/
+    data/ocr_variants/
+    data/ocr_candidates/
+    data/raw_ocr/
+
+The capability-local constants.py determines PROJECT_ROOT from the folder
+location, so when this capability folder is copied into another project at:
+
+    <project>/capabilities/OCRAcquisitionPipeline/
+
+it resolves the new project's root automatically.
+
+USER EXPERIENCE
+
+Nothing changes in the menus:
 
 === ShopGraph Utilities ===
 
@@ -17,64 +86,52 @@ TOP-LEVEL UTILS MENU
 3. Utilities
 0. Return to Main
 
+Capabilities:
+    1. OCR Acquisition Pipeline
 
-1. CAPABILITIES
+Capability Sub Tasks:
+    1. Reliable Receipt Detection / Crop
+    2. Perspective Correction
+    3. 2x Enlargement
+    4. Generate OCR Image Variants
+    5. Run OCR - PSM 4 / 6 / 11
+    6. Compare OCR Results / Build Raw OCR JSON
 
-Currently contains:
+Utilities:
+    1. Export Clean Codebase
 
-1. OCR Acquisition Pipeline
+INSTALL / MIGRATION
 
-Selecting OCR Acquisition Pipeline runs the complete capability in order:
+COPY/REPLACE:
+- main.py
+- utils/utils_main.py
+- capabilities/__init__.py
+- capabilities/OCRAcquisitionPipeline/*
 
-1. Reliable Receipt Detection / Crop
-2. Perspective Correction
-3. 2x Enlargement
-4. Generate OCR Image Variants
-5. Run OCR - PSM 4 / 6 / 11
-6. Compare OCR Results / Build Raw OCR JSON
+KEEP:
+- utils/export_codebase.py
+- utils/codebase_bundler.py
+- utils/__init__.py
 
-The existing smart workflow is preserved. The receipt is selected at the
-first stage and the later stages reuse the same session state and generated
-artifacts.
+DELETE THESE OLD OCR-CAPABILITY FILES FROM utils/:
+- utils/compare_ocr.py
+- utils/image_enlargement.py
+- utils/ocr_image_variants.py
+- utils/perspective_correction.py
+- utils/receipt_picker.py
+- utils/reliable_receipt_crop.py
+- utils/run_ocr.py
+- utils/session_state.py
+- utils/constants.py
 
+DELETE/MOVE THIS OLD OCR ENGINE FILE:
+- extractors/tesseract.py
 
-2. CAPABILITY SUB TASKS
+The new copy is:
+- capabilities/OCRAcquisitionPipeline/tesseract.py
 
-First choose a capability:
+NOTE
 
-1. OCR Acquisition Pipeline
-
-Then the existing individual stage menu appears:
-
-1. Reliable Receipt Detection / Crop
-2. Perspective Correction
-3. 2x Enlargement
-4. Generate OCR Image Variants
-5. Run OCR - PSM 4 / 6 / 11
-6. Compare OCR Results / Build Raw OCR JSON
-0. Return to Capability Sub Tasks
-
-Each stage can still be executed individually exactly as before.
-
-
-3. UTILITIES
-
-Currently contains:
-
-1. Export Clean Codebase
-0. Return to Utilities Menu
-
-
-INSTALL
-
-Replace only:
-
-    utils/utils_main.py
-
-No other files need to change.
-
-Your existing top-level main.py already imports:
-
-    from utils.utils_main import run_utils_menu
-
-so it remains unchanged.
+utils/image_preprocessing.py is not part of the current six-stage
+OCR Acquisition Pipeline menu and is therefore not moved into the
+capability package by this update.

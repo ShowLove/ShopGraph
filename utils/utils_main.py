@@ -1,74 +1,26 @@
-from utils.reliable_receipt_crop import run_reliable_receipt_crop
-from utils.perspective_correction import run_perspective_correction
-from utils.image_enlargement import run_image_enlargement
-from utils.ocr_image_variants import run_ocr_image_variants
-from utils.run_ocr import run_ocr
-from utils.compare_ocr import run_compare_ocr
+from capabilities.OCRAcquisitionPipeline.main_OCRAcquisitionPipeline import (
+    run_ocr_acquisition_pipeline,
+)
+from capabilities.OCRAcquisitionPipeline.reliable_receipt_crop import (
+    run_reliable_receipt_crop,
+)
+from capabilities.OCRAcquisitionPipeline.perspective_correction import (
+    run_perspective_correction,
+)
+from capabilities.OCRAcquisitionPipeline.image_enlargement import (
+    run_image_enlargement,
+)
+from capabilities.OCRAcquisitionPipeline.ocr_image_variants import (
+    run_ocr_image_variants,
+)
+from capabilities.OCRAcquisitionPipeline.run_ocr import (
+    run_ocr,
+)
+from capabilities.OCRAcquisitionPipeline.compare_ocr import (
+    run_compare_ocr,
+)
 from utils.export_codebase import run_codebase_export
 
-
-# ---------------------------------------------------------------------------
-# OCR ACQUISITION PIPELINE
-# ---------------------------------------------------------------------------
-
-def run_ocr_acquisition_pipeline() -> None:
-    """
-    Run the complete OCR Acquisition Pipeline in order.
-
-    The existing smart workflow is preserved. The first stage prompts
-    for the receipt image. Each later stage automatically uses the
-    receipt and artifacts already selected/generated in this session.
-
-    Pipeline:
-        1. Reliable Receipt Detection / Crop
-        2. Perspective Correction
-        3. 2x Enlargement
-        4. Generate OCR Image Variants
-        5. Run OCR - PSM 4 / 6 / 11
-        6. Compare OCR Results / Build Raw OCR JSON
-    """
-    print(
-        "\n=== OCR Acquisition Pipeline ===\n"
-    )
-
-    print(
-        "[1/6] Reliable Receipt Detection / Crop"
-    )
-    run_reliable_receipt_crop()
-
-    print(
-        "\n[2/6] Perspective Correction"
-    )
-    run_perspective_correction()
-
-    print(
-        "\n[3/6] 2x Enlargement"
-    )
-    run_image_enlargement()
-
-    print(
-        "\n[4/6] Generate OCR Image Variants"
-    )
-    run_ocr_image_variants()
-
-    print(
-        "\n[5/6] Run OCR - PSM 4 / 6 / 11"
-    )
-    run_ocr()
-
-    print(
-        "\n[6/6] Compare OCR Results / Build Raw OCR JSON"
-    )
-    run_compare_ocr()
-
-    print(
-        "\n[OK] OCR Acquisition Pipeline complete."
-    )
-
-
-# ---------------------------------------------------------------------------
-# CAPABILITIES
-# ---------------------------------------------------------------------------
 
 def display_capabilities_menu() -> None:
     print(
@@ -103,10 +55,6 @@ def run_capabilities_menu() -> None:
                 "\n[ERROR] Invalid option."
             )
 
-
-# ---------------------------------------------------------------------------
-# CAPABILITY SUB TASKS
-# ---------------------------------------------------------------------------
 
 def display_capability_sub_tasks_menu() -> None:
     print(
@@ -211,10 +159,6 @@ def run_capability_sub_tasks_menu() -> None:
             )
 
 
-# ---------------------------------------------------------------------------
-# UTILITIES
-# ---------------------------------------------------------------------------
-
 def display_standalone_utilities_menu() -> None:
     print(
         "\n=== ShopGraph Utilities ===\n"
@@ -248,10 +192,6 @@ def run_standalone_utilities_menu() -> None:
                 "\n[ERROR] Invalid option."
             )
 
-
-# ---------------------------------------------------------------------------
-# TOP-LEVEL UTILS MENU
-# ---------------------------------------------------------------------------
 
 def display_utils_menu() -> None:
     print(

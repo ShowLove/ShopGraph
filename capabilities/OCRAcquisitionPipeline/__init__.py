@@ -1,0 +1,1 @@
+from capabilities.OCRAcquisitionPipeline.main_OCRAcquisitionPipeline import run_ocr_acquisition_pipeline

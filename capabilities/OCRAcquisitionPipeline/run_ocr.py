@@ -3,10 +3,10 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from extractors.tesseract import extract_receipt
-from utils.constants import OCR_CANDIDATES_DIR
-from utils.ocr_image_variants import ensure_ocr_variants
-from utils.session_state import set_selected_ocr_candidates_file
+from capabilities.OCRAcquisitionPipeline.tesseract import extract_receipt
+from capabilities.OCRAcquisitionPipeline.constants import OCR_CANDIDATES_DIR
+from capabilities.OCRAcquisitionPipeline.ocr_image_variants import ensure_ocr_variants
+from capabilities.OCRAcquisitionPipeline.session_state import set_selected_ocr_candidates_file
 
 
 PSM_MODES = (

@@ -3,26 +3,32 @@
 shopping_analysis/
     INSTALL.txt
     main.py
+    capabilities/
+        __init__.py
+        OCRAcquisitionPipeline/
+            __init__.py
+            compare_ocr.py
+            constants.py
+            image_enlargement.py
+            main_OCRAcquisitionPipeline.py
+            ocr_image_variants.py
+            perspective_correction.py
+            receipt_picker.py
+            reliable_receipt_crop.py
+            run_ocr.py
+            session_state.py
+            tesseract.py
     utils/
         __init__.py
         codebase_bundler.py
-        compare_ocr.py
         constants.py
         export_codebase.py
-        image_enlargement.py
         image_preprocessing.py
         main.py
-        ocr_image_variants.py
-        perspective_correction.py
-        receipt_picker.py
-        reliable_receipt_crop.py
-        run_ocr.py
-        session_state.py
         utils_main.py
     receipt/
     extractors/
         __init__.py
-        tesseract.py
     data/
         requirements.txt
         preprocessed/
@@ -33,7 +39,7 @@ shopping_analysis/
 
 ================================================================================
 
-Generated: 2026-08-26 10:52:57.857601
+Generated: 2026-08-26 11:19:15.039266
 Root: /Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis
 Mode: LLM-clean export
 Excluded: receipt images, OCR JSON, datasets, databases, logs, caches
@@ -46,17 +52,86 @@ Excluded: receipt images, OCR JSON, datasets, databases, logs, caches
 FILE: INSTALL.txt
 ================================================================================
 
-ShopGraph - Capability Menu Update
+ShopGraph - Portable Capability Package Update
 
-PURPOSE
+GOAL
 
-This update reorganizes utils/utils_main.py into three top-level sections:
+Move all Python code required for the OCR Acquisition Pipeline into:
 
-1. Capabilities
-2. Capability Sub Tasks
-3. Utilities
+    capabilities/OCRAcquisitionPipeline/
 
-TOP-LEVEL UTILS MENU
+The user-facing menus and workflow remain the same.
+
+NEW PROJECT STRUCTURE
+
+shopping_analysis/
+    main.py
+
+    capabilities/
+        __init__.py
+
+        OCRAcquisitionPipeline/
+            __init__.py
+            main_OCRAcquisitionPipeline.py
+            constants.py
+            session_state.py
+            receipt_picker.py
+            reliable_receipt_crop.py
+            perspective_correction.py
+            image_enlargement.py
+            ocr_image_variants.py
+            run_ocr.py
+            compare_ocr.py
+            tesseract.py
+
+    utils/
+        __init__.py
+        utils_main.py
+        export_codebase.py
+        codebase_bundler.py
+
+    data/
+        ...
+
+
+WHY THIS STRUCTURE
+
+- capabilities/OCRAcquisitionPipeline contains the complete Python
+  implementation of the capability.
+- utils now contains only application-level utilities and menus.
+- main_OCRAcquisitionPipeline.py exposes the top-level reusable function:
+
+      run_ocr_acquisition_pipeline()
+
+- Another Python project can import the capability entrypoint as:
+
+      from capabilities.OCRAcquisitionPipeline import (
+          run_ocr_acquisition_pipeline,
+      )
+
+IMPORTANT
+
+The capability still expects the host project to provide the same data
+layout beneath PROJECT_ROOT:
+
+    data/current_pic/
+    data/cropped/
+    data/perspective_corrected/
+    data/enlarged/
+    data/ocr_variants/
+    data/ocr_candidates/
+    data/raw_ocr/
+
+The capability-local constants.py determines PROJECT_ROOT from the folder
+location, so when this capability folder is copied into another project at:
+
+    <project>/capabilities/OCRAcquisitionPipeline/
+
+it resolves the new project's root automatically.
+
+USER EXPERIENCE
+
+Nothing changes in the menus:
 
 === ShopGraph Utilities ===
 
@@ -65,67 +140,55 @@ TOP-LEVEL UTILS MENU
 3. Utilities
 0. Return to Main
 
+Capabilities:
+    1. OCR Acquisition Pipeline
 
-1. CAPABILITIES
+Capability Sub Tasks:
+    1. Reliable Receipt Detection / Crop
+    2. Perspective Correction
+    3. 2x Enlargement
+    4. Generate OCR Image Variants
+    5. Run OCR - PSM 4 / 6 / 11
+    6. Compare OCR Results / Build Raw OCR JSON
 
-Currently contains:
+Utilities:
+    1. Export Clean Codebase
 
-1. OCR Acquisition Pipeline
+INSTALL / MIGRATION
 
-Selecting OCR Acquisition Pipeline runs the complete capability in order:
+COPY/REPLACE:
+- main.py
+- utils/utils_main.py
+- capabilities/__init__.py
+- capabilities/OCRAcquisitionPipeline/*
 
-1. Reliable Receipt Detection / Crop
-2. Perspective Correction
-3. 2x Enlargement
-4. Generate OCR Image Variants
-5. Run OCR - PSM 4 / 6 / 11
-6. Compare OCR Results / Build Raw OCR JSON
+KEEP:
+- utils/export_codebase.py
+- utils/codebase_bundler.py
+- utils/__init__.py
 
-The existing smart workflow is preserved. The receipt is selected at the
-first stage and the later stages reuse the same session state and generated
-artifacts.
+DELETE THESE OLD OCR-CAPABILITY FILES FROM utils/:
+- utils/compare_ocr.py
+- utils/image_enlargement.py
+- utils/ocr_image_variants.py
+- utils/perspective_correction.py
+- utils/receipt_picker.py
+- utils/reliable_receipt_crop.py
+- utils/run_ocr.py
+- utils/session_state.py
+- utils/constants.py
 
+DELETE/MOVE THIS OLD OCR ENGINE FILE:
+- extractors/tesseract.py
 
-2. CAPABILITY SUB TASKS
+The new copy is:
+- capabilities/OCRAcquisitionPipeline/tesseract.py
 
-First choose a capability:
+NOTE
 
-1. OCR Acquisition Pipeline
-
-Then the existing individual stage menu appears:
-
-1. Reliable Receipt Detection / Crop
-2. Perspective Correction
-3. 2x Enlargement
-4. Generate OCR Image Variants
-5. Run OCR - PSM 4 / 6 / 11
-6. Compare OCR Results / Build Raw OCR JSON
-0. Return to Capability Sub Tasks
-
-Each stage can still be executed individually exactly as before.
-
-
-3. UTILITIES
-
-Currently contains:
-
-1. Export Clean Codebase
-0. Return to Utilities Menu
-
-
-INSTALL
-
-Replace only:
-
-    utils/utils_main.py
-
-No other files need to change.
-
-Your existing top-level main.py already imports:
-
-    from utils.utils_main import run_utils_menu
-
-so it remains unchanged.
+utils/image_preprocessing.py is not part of the current six-stage
+OCR Acquisition Pipeline menu and is therefore not moved into the
+capability package by this update.
 
 
 ================================================================================
@@ -163,237 +226,20 @@ if __name__ == "__main__":
 
 
 ================================================================================
-FILE: utils/__init__.py
+FILE: capabilities/__init__.py
 ================================================================================
 
 
 
 ================================================================================
-FILE: utils/codebase_bundler.py
+FILE: capabilities/OCRAcquisitionPipeline/__init__.py
 ================================================================================
 
-import os
-from pathlib import Path
-from datetime import datetime
-
-from utils.constants import PROJECT_ROOT, CODEBASE_OUTPUT_FILE
-
-
-ALLOWED_SUFFIXES = {
-    ".py",
-    ".md",
-    ".txt"
-}
-
-IGNORE_DIRS = {
-    "__pycache__",
-    ".git",
-    ".idea",
-    ".vscode",
-    "venv",
-    ".venv",
-    "node_modules",
-
-    "raw_receipts",
-    "cropped",
-    "perspective_corrected",
-    "enlarged",
-    "ocr_variants",
-    "ocr_candidates",
-    "raw_ocr",
-    "extracted",
-    "normalized",
-
-    "logs",
-    "exports"
-}
-
-IGNORE_FILES = {
-    "shopgraph_codebase.txt",
-    ".DS_Store"
-}
-
-IGNORE_SUFFIXES = {
-    ".pyc",
-    ".json",
-    ".log",
-    ".sqlite",
-    ".sqlite3",
-    ".db",
-    ".jpg",
-    ".jpeg",
-    ".png",
-    ".heic",
-    ".webp",
-    ".tif",
-    ".tiff",
-    ".pdf"
-}
-
-
-def _should_ignore(path: Path) -> bool:
-    if any(
-        part in IGNORE_DIRS
-        for part in path.parts
-    ):
-        return True
-
-    if path.name in IGNORE_FILES:
-        return True
-
-    if path.suffix.lower() in IGNORE_SUFFIXES:
-        return True
-
-    if path.suffix.lower() not in ALLOWED_SUFFIXES:
-        return True
-
-    return False
-
-
-def _build_tree(root: Path) -> str:
-    lines = []
-
-    for dirpath, dirnames, filenames in os.walk(root):
-        dirpath = Path(dirpath)
-
-        dirnames[:] = [
-            directory
-            for directory in dirnames
-            if directory not in IGNORE_DIRS
-        ]
-
-        level = len(
-            dirpath.relative_to(root).parts
-        )
-
-        indent = "    " * level
-
-        lines.append(
-            f"{indent}{dirpath.name}/"
-        )
-
-        for filename in sorted(filenames):
-            file_path = (
-                dirpath
-                / filename
-            )
-
-            if not _should_ignore(file_path):
-                lines.append(
-                    f"{indent}    {filename}"
-                )
-
-    return "\n".join(lines)
-
-
-def _collect_files(root: Path):
-    for dirpath, dirnames, filenames in os.walk(root):
-        dirpath = Path(dirpath)
-
-        dirnames[:] = [
-            directory
-            for directory in dirnames
-            if directory not in IGNORE_DIRS
-        ]
-
-        for filename in sorted(filenames):
-            file_path = (
-                dirpath
-                / filename
-            )
-
-            if not _should_ignore(file_path):
-                yield file_path
-
-
-def export_codebase_bundle(
-    root_path: str | None = None
-) -> str:
-    root = (
-        PROJECT_ROOT
-        if root_path is None
-        else Path(root_path).resolve()
-    )
-
-    output_path = CODEBASE_OUTPUT_FILE
-
-    output_path.parent.mkdir(
-        parents=True,
-        exist_ok=True
-    )
-
-    print(
-        f"\n[INFO] Exporting CLEAN ShopGraph codebase from: {root}"
-    )
-
-    tree = _build_tree(root)
-    files = list(
-        _collect_files(root)
-    )
-
-    with open(
-        output_path,
-        "w",
-        encoding="utf-8"
-    ) as out:
-        out.write(
-            "=== SHOPGRAPH CLEAN CODEBASE FOR LLM ===\n\n"
-        )
-        out.write(tree)
-        out.write("\n\n")
-        out.write("=" * 80 + "\n\n")
-        out.write(
-            f"Generated: {datetime.now()}\n"
-        )
-        out.write(
-            f"Root: {root}\n"
-        )
-        out.write(
-            "Mode: LLM-clean export\n"
-        )
-        out.write(
-            "Excluded: receipt images, OCR JSON, datasets, databases, logs, caches\n\n"
-        )
-        out.write("=" * 80 + "\n\n")
-
-        for file_path in files:
-            try:
-                relative = (
-                    file_path.relative_to(root)
-                )
-
-                out.write("\n\n")
-                out.write("=" * 80 + "\n")
-                out.write(
-                    f"FILE: {relative}\n"
-                )
-                out.write("=" * 80 + "\n\n")
-
-                content = (
-                    file_path.read_text(
-                        encoding="utf-8",
-                        errors="ignore"
-                    )
-                )
-
-                out.write(content)
-
-            except Exception as error:
-                out.write(
-                    f"\n[ERROR READING FILE: {file_path}] "
-                    f"{error}\n"
-                )
-
-    print(
-        f"[OK] Clean ShopGraph codebase exported to: "
-        f"{output_path}"
-    )
-
-    return str(output_path)
+from capabilities.OCRAcquisitionPipeline.main_OCRAcquisitionPipeline import run_ocr_acquisition_pipeline
 
 
 ================================================================================
-FILE: utils/compare_ocr.py
+FILE: capabilities/OCRAcquisitionPipeline/compare_ocr.py
 ================================================================================
 
 from __future__ import annotations
@@ -403,9 +249,9 @@ import re
 from difflib import SequenceMatcher
 from pathlib import Path
 
-from utils.constants import RAW_OCR_DIR
-from utils.run_ocr import run_all_ocr_candidates
-from utils.session_state import (
+from capabilities.OCRAcquisitionPipeline.constants import RAW_OCR_DIR
+from capabilities.OCRAcquisitionPipeline.run_ocr import run_all_ocr_candidates
+from capabilities.OCRAcquisitionPipeline.session_state import (
     get_selected_ocr_candidates_file,
     set_selected_raw_ocr_file,
 )
@@ -1820,13 +1666,13 @@ def run_compare_ocr() -> None:
 
 
 ================================================================================
-FILE: utils/constants.py
+FILE: capabilities/OCRAcquisitionPipeline/constants.py
 ================================================================================
 
 from pathlib import Path
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 DATA_DIR = PROJECT_ROOT / "data"
 
@@ -1848,31 +1694,7 @@ CODEBASE_OUTPUT_FILE = (
 
 
 ================================================================================
-FILE: utils/export_codebase.py
-================================================================================
-
-from utils.codebase_bundler import (
-    export_codebase_bundle
-)
-
-
-def run_codebase_export() -> None:
-
-    print(
-        "\n=== Export Clean Codebase ===\n"
-    )
-
-    output_path = (
-        export_codebase_bundle()
-    )
-
-    print(
-        f"\n[OK] Codebase bundle created:\n"
-        f"{output_path}"
-    )
-
-================================================================================
-FILE: utils/image_enlargement.py
+FILE: capabilities/OCRAcquisitionPipeline/image_enlargement.py
 ================================================================================
 
 from __future__ import annotations
@@ -1881,11 +1703,11 @@ from pathlib import Path
 
 import cv2
 
-from utils.constants import ENLARGED_DIR
-from utils.perspective_correction import correct_selected_receipt
-from utils.receipt_picker import choose_receipt_image
-from utils.reliable_receipt_crop import crop_selected_receipt
-from utils.session_state import (
+from capabilities.OCRAcquisitionPipeline.constants import ENLARGED_DIR
+from capabilities.OCRAcquisitionPipeline.perspective_correction import correct_selected_receipt
+from capabilities.OCRAcquisitionPipeline.receipt_picker import choose_receipt_image
+from capabilities.OCRAcquisitionPipeline.reliable_receipt_crop import crop_selected_receipt
+from capabilities.OCRAcquisitionPipeline.session_state import (
     get_selected_cropped_image,
     get_selected_enlarged_image,
     get_selected_perspective_image,
@@ -2082,368 +1904,78 @@ def run_image_enlargement() -> None:
 
 
 ================================================================================
-FILE: utils/image_preprocessing.py
+FILE: capabilities/OCRAcquisitionPipeline/main_OCRAcquisitionPipeline.py
 ================================================================================
 
-from __future__ import annotations
-
-from pathlib import Path
-
-import cv2
-import numpy as np
-
-from utils.constants import PREPROCESSED_DIR
-from utils.perspective_correction import correct_selected_receipt
-from utils.receipt_picker import choose_receipt_image
-from utils.reliable_receipt_crop import crop_selected_receipt
-from utils.session_state import (
-    get_selected_cropped_image,
-    get_selected_perspective_image,
-    get_selected_source_image,
-    set_selected_preprocessed_image,
+from capabilities.OCRAcquisitionPipeline.reliable_receipt_crop import (
+    run_reliable_receipt_crop,
+)
+from capabilities.OCRAcquisitionPipeline.perspective_correction import (
+    run_perspective_correction,
+)
+from capabilities.OCRAcquisitionPipeline.image_enlargement import (
+    run_image_enlargement,
+)
+from capabilities.OCRAcquisitionPipeline.ocr_image_variants import (
+    run_ocr_image_variants,
+)
+from capabilities.OCRAcquisitionPipeline.run_ocr import (
+    run_ocr,
+)
+from capabilities.OCRAcquisitionPipeline.compare_ocr import (
+    run_compare_ocr,
 )
 
 
-def _enhance_for_ocr(
-    image: np.ndarray,
-) -> np.ndarray:
+def run_ocr_acquisition_pipeline() -> None:
     """
-    Current preprocessing stage:
+    Run the complete OCR Acquisition Pipeline in order.
 
-    Perspective-corrected receipt
-        -> 2x enlargement
-        -> grayscale
-        -> CLAHE contrast enhancement
-        -> light denoising
-
-    Thresholded variants will be added as a later pipeline stage.
+    From the user's point of view, this behaves exactly like the current
+    capability option: the receipt is selected once and downstream stages
+    reuse the same session state and generated artifacts.
     """
-    gray = cv2.cvtColor(
-        image,
-        cv2.COLOR_BGR2GRAY,
+    print(
+        "\n=== OCR Acquisition Pipeline ===\n"
     )
-
-    gray = cv2.resize(
-        gray,
-        None,
-        fx=2.0,
-        fy=2.0,
-        interpolation=cv2.INTER_CUBIC,
-    )
-
-    clahe = cv2.createCLAHE(
-        clipLimit=2.0,
-        tileGridSize=(8, 8),
-    )
-
-    enhanced = clahe.apply(
-        gray
-    )
-
-    enhanced = cv2.fastNlMeansDenoising(
-        enhanced,
-        None,
-        h=5,
-        templateWindowSize=7,
-        searchWindowSize=21,
-    )
-
-    return enhanced
-
-
-def get_preprocessed_path(
-    source_path: str | Path,
-) -> Path:
-    source = Path(
-        source_path
-    )
-
-    return (
-        PREPROCESSED_DIR
-        / f"{source.stem}_preprocessed.png"
-    )
-
-
-def preprocess_receipt(
-    perspective_image_path: str | Path,
-    source_image_path: str | Path,
-) -> Path:
-    perspective_path = (
-        Path(perspective_image_path)
-        .expanduser()
-        .resolve()
-    )
-
-    source_path = (
-        Path(source_image_path)
-        .expanduser()
-        .resolve()
-    )
-
-    if not perspective_path.exists():
-        raise FileNotFoundError(
-            "Perspective-corrected receipt does not exist: "
-            f"{perspective_path}"
-        )
-
-    image = cv2.imread(
-        str(perspective_path)
-    )
-
-    if image is None:
-        raise ValueError(
-            "OpenCV could not read perspective-corrected image: "
-            f"{perspective_path}"
-        )
-
-    processed = _enhance_for_ocr(
-        image
-    )
-
-    destination = (
-        get_preprocessed_path(
-            source_path
-        )
-    )
-
-    destination.parent.mkdir(
-        parents=True,
-        exist_ok=True,
-    )
-
-    saved = cv2.imwrite(
-        str(destination),
-        processed,
-    )
-
-    if not saved:
-        raise RuntimeError(
-            "OpenCV could not save preprocessed image: "
-            f"{destination}"
-        )
-
-    return destination.resolve()
-
-
-def _get_or_create_perspective_image() -> tuple[Path, Path, Path] | None:
-    source_path = (
-        get_selected_source_image()
-    )
-
-    cropped_path = (
-        get_selected_cropped_image()
-    )
-
-    perspective_path = (
-        get_selected_perspective_image()
-    )
-
-    if (
-        source_path is not None
-        and source_path.exists()
-        and cropped_path is not None
-        and cropped_path.exists()
-        and perspective_path is not None
-        and perspective_path.exists()
-    ):
-        print(
-            "[INFO] Using selected perspective-corrected receipt:"
-            f"\n{perspective_path}"
-        )
-
-        return (
-            source_path,
-            cropped_path,
-            perspective_path,
-        )
-
-    if (
-        source_path is not None
-        and source_path.exists()
-        and cropped_path is not None
-        and cropped_path.exists()
-    ):
-        print(
-            "[INFO] Perspective correction has not been run yet. "
-            "Running it automatically."
-        )
-
-        try:
-            perspective_path = (
-                correct_selected_receipt(
-                    source_path=source_path,
-                    cropped_path=cropped_path,
-                )
-            )
-        except (
-            FileNotFoundError,
-            ValueError,
-            RuntimeError,
-        ) as error:
-            print(
-                f"\n[ERROR] {error}"
-            )
-            return None
-
-        print(
-            "\n[OK] Perspective-corrected receipt created:"
-            f"\n{perspective_path}"
-        )
-
-        return (
-            source_path,
-            cropped_path,
-            perspective_path,
-        )
 
     print(
-        "[INFO] No receipt has been selected "
-        "in this session yet."
+        "[1/6] Reliable Receipt Detection / Crop"
     )
+    run_reliable_receipt_crop()
 
-    source_path = choose_receipt_image()
-
-    if source_path is None:
-        return None
-
-    try:
-        cropped_path = (
-            crop_selected_receipt(
-                source_path
-            )
-        )
-
-        print(
-            "\n[OK] Cropped receipt created:"
-            f"\n{cropped_path}"
-        )
-
-        perspective_path = (
-            correct_selected_receipt(
-                source_path=source_path,
-                cropped_path=cropped_path,
-            )
-        )
-
-        print(
-            "\n[OK] Perspective-corrected receipt created:"
-            f"\n{perspective_path}"
-        )
-
-    except (
-        FileNotFoundError,
-        ValueError,
-        RuntimeError,
-    ) as error:
-        print(
-            f"\n[ERROR] {error}"
-        )
-        return None
-
-    return (
-        source_path,
-        cropped_path,
-        perspective_path,
-    )
-
-
-def preprocess_selected_receipt(
-    source_path: Path,
-    cropped_path: Path,
-    perspective_path: Path,
-) -> Path:
-    preprocessed_path = (
-        preprocess_receipt(
-            perspective_image_path=perspective_path,
-            source_image_path=source_path,
-        )
-    )
-
-    set_selected_preprocessed_image(
-        source_image=source_path,
-        cropped_image=cropped_path,
-        perspective_image=perspective_path,
-        preprocessed_image=preprocessed_path,
-    )
-
-    return preprocessed_path
-
-
-def run_image_preprocessing() -> None:
     print(
-        "\n=== Image Preprocessing ===\n"
+        "\n[2/6] Perspective Correction"
     )
+    run_perspective_correction()
 
-    selected = (
-        _get_or_create_perspective_image()
+    print(
+        "\n[3/6] 2x Enlargement"
     )
+    run_image_enlargement()
 
-    if selected is None:
-        return
+    print(
+        "\n[4/6] Generate OCR Image Variants"
+    )
+    run_ocr_image_variants()
 
-    (
-        source_path,
-        cropped_path,
-        perspective_path,
-    ) = selected
+    print(
+        "\n[5/6] Run OCR - PSM 4 / 6 / 11"
+    )
+    run_ocr()
 
-    try:
-        output_path = (
-            preprocess_selected_receipt(
-                source_path=source_path,
-                cropped_path=cropped_path,
-                perspective_path=perspective_path,
-            )
-        )
+    print(
+        "\n[6/6] Compare OCR Results / Build Raw OCR JSON"
+    )
+    run_compare_ocr()
 
-        print(
-            "\n[OK] Preprocessed receipt created:"
-            f"\n{output_path}"
-        )
-
-        print(
-            "\nThis receipt is now selected "
-            "for Run OCR."
-        )
-
-    except (
-        FileNotFoundError,
-        ValueError,
-        RuntimeError,
-    ) as error:
-        print(
-            f"\n[ERROR] {error}"
-        )
-
-
-================================================================================
-FILE: utils/main.py
-================================================================================
-
-from utils.utils_main import run_utils_menu
-
-
-def display_menu() -> None:
-    print("\n=== ShopGraph ===\n")
-    print("1. Utilities")
-    print("0. Exit")
+    print(
+        "\n[OK] OCR Acquisition Pipeline complete."
+    )
 
 
 def main() -> None:
-    while True:
-        display_menu()
-
-        option = input("\nSelect option: ").strip()
-
-        if option == "1":
-            run_utils_menu()
-
-        elif option == "0":
-            print("\nGoodbye.")
-            break
-
-        else:
-            print("\n[ERROR] Invalid option.")
+    run_ocr_acquisition_pipeline()
 
 
 if __name__ == "__main__":
@@ -2451,7 +1983,7 @@ if __name__ == "__main__":
 
 
 ================================================================================
-FILE: utils/ocr_image_variants.py
+FILE: capabilities/OCRAcquisitionPipeline/ocr_image_variants.py
 ================================================================================
 
 from __future__ import annotations
@@ -2460,9 +1992,9 @@ from pathlib import Path
 
 import cv2
 
-from utils.constants import OCR_VARIANTS_DIR
-from utils.image_enlargement import ensure_enlarged_receipt
-from utils.session_state import (
+from capabilities.OCRAcquisitionPipeline.constants import OCR_VARIANTS_DIR
+from capabilities.OCRAcquisitionPipeline.image_enlargement import ensure_enlarged_receipt
+from capabilities.OCRAcquisitionPipeline.session_state import (
     get_selected_grayscale_image,
     get_selected_threshold_image,
     set_selected_ocr_variants,
@@ -2681,7 +2213,7 @@ def run_ocr_image_variants() -> None:
 
 
 ================================================================================
-FILE: utils/perspective_correction.py
+FILE: capabilities/OCRAcquisitionPipeline/perspective_correction.py
 ================================================================================
 
 from __future__ import annotations
@@ -2691,10 +2223,10 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-from utils.constants import PERSPECTIVE_DIR
-from utils.receipt_picker import choose_receipt_image
-from utils.reliable_receipt_crop import crop_selected_receipt
-from utils.session_state import (
+from capabilities.OCRAcquisitionPipeline.constants import PERSPECTIVE_DIR
+from capabilities.OCRAcquisitionPipeline.receipt_picker import choose_receipt_image
+from capabilities.OCRAcquisitionPipeline.reliable_receipt_crop import crop_selected_receipt
+from capabilities.OCRAcquisitionPipeline.session_state import (
     get_selected_cropped_image,
     get_selected_source_image,
     set_selected_perspective_image,
@@ -3203,14 +2735,14 @@ def run_perspective_correction() -> None:
 
 
 ================================================================================
-FILE: utils/receipt_picker.py
+FILE: capabilities/OCRAcquisitionPipeline/receipt_picker.py
 ================================================================================
 
 from __future__ import annotations
 
 from pathlib import Path
 
-from utils.constants import CURRENT_PIC_DIR
+from capabilities.OCRAcquisitionPipeline.constants import CURRENT_PIC_DIR
 
 
 SUPPORTED_IMAGE_SUFFIXES = {
@@ -3288,7 +2820,7 @@ def choose_receipt_image() -> Path | None:
 
 
 ================================================================================
-FILE: utils/reliable_receipt_crop.py
+FILE: capabilities/OCRAcquisitionPipeline/reliable_receipt_crop.py
 ================================================================================
 
 from __future__ import annotations
@@ -3298,9 +2830,9 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-from utils.constants import CROPPED_DIR
-from utils.receipt_picker import choose_receipt_image
-from utils.session_state import set_selected_cropped_image
+from capabilities.OCRAcquisitionPipeline.constants import CROPPED_DIR
+from capabilities.OCRAcquisitionPipeline.receipt_picker import choose_receipt_image
+from capabilities.OCRAcquisitionPipeline.session_state import set_selected_cropped_image
 
 
 def _order_points(
@@ -3869,7 +3401,7 @@ def run_reliable_receipt_crop() -> None:
 
 
 ================================================================================
-FILE: utils/run_ocr.py
+FILE: capabilities/OCRAcquisitionPipeline/run_ocr.py
 ================================================================================
 
 from __future__ import annotations
@@ -3877,10 +3409,10 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from extractors.tesseract import extract_receipt
-from utils.constants import OCR_CANDIDATES_DIR
-from utils.ocr_image_variants import ensure_ocr_variants
-from utils.session_state import set_selected_ocr_candidates_file
+from capabilities.OCRAcquisitionPipeline.tesseract import extract_receipt
+from capabilities.OCRAcquisitionPipeline.constants import OCR_CANDIDATES_DIR
+from capabilities.OCRAcquisitionPipeline.ocr_image_variants import ensure_ocr_variants
+from capabilities.OCRAcquisitionPipeline.session_state import set_selected_ocr_candidates_file
 
 
 PSM_MODES = (
@@ -4035,7 +3567,7 @@ def run_ocr() -> None:
 
 
 ================================================================================
-FILE: utils/session_state.py
+FILE: capabilities/OCRAcquisitionPipeline/session_state.py
 ================================================================================
 
 from __future__ import annotations
@@ -4223,324 +3755,7 @@ def clear_selected_receipt() -> None:
 
 
 ================================================================================
-FILE: utils/utils_main.py
-================================================================================
-
-from utils.reliable_receipt_crop import run_reliable_receipt_crop
-from utils.perspective_correction import run_perspective_correction
-from utils.image_enlargement import run_image_enlargement
-from utils.ocr_image_variants import run_ocr_image_variants
-from utils.run_ocr import run_ocr
-from utils.compare_ocr import run_compare_ocr
-from utils.export_codebase import run_codebase_export
-
-
-# ---------------------------------------------------------------------------
-# OCR ACQUISITION PIPELINE
-# ---------------------------------------------------------------------------
-
-def run_ocr_acquisition_pipeline() -> None:
-    """
-    Run the complete OCR Acquisition Pipeline in order.
-
-    The existing smart workflow is preserved. The first stage prompts
-    for the receipt image. Each later stage automatically uses the
-    receipt and artifacts already selected/generated in this session.
-
-    Pipeline:
-        1. Reliable Receipt Detection / Crop
-        2. Perspective Correction
-        3. 2x Enlargement
-        4. Generate OCR Image Variants
-        5. Run OCR - PSM 4 / 6 / 11
-        6. Compare OCR Results / Build Raw OCR JSON
-    """
-    print(
-        "\n=== OCR Acquisition Pipeline ===\n"
-    )
-
-    print(
-        "[1/6] Reliable Receipt Detection / Crop"
-    )
-    run_reliable_receipt_crop()
-
-    print(
-        "\n[2/6] Perspective Correction"
-    )
-    run_perspective_correction()
-
-    print(
-        "\n[3/6] 2x Enlargement"
-    )
-    run_image_enlargement()
-
-    print(
-        "\n[4/6] Generate OCR Image Variants"
-    )
-    run_ocr_image_variants()
-
-    print(
-        "\n[5/6] Run OCR - PSM 4 / 6 / 11"
-    )
-    run_ocr()
-
-    print(
-        "\n[6/6] Compare OCR Results / Build Raw OCR JSON"
-    )
-    run_compare_ocr()
-
-    print(
-        "\n[OK] OCR Acquisition Pipeline complete."
-    )
-
-
-# ---------------------------------------------------------------------------
-# CAPABILITIES
-# ---------------------------------------------------------------------------
-
-def display_capabilities_menu() -> None:
-    print(
-        "\n=== ShopGraph Capabilities ===\n"
-    )
-
-    print(
-        "1. OCR Acquisition Pipeline"
-    )
-
-    print(
-        "0. Return to Utilities Menu"
-    )
-
-
-def run_capabilities_menu() -> None:
-    while True:
-        display_capabilities_menu()
-
-        option = input(
-            "\nSelect option: "
-        ).strip()
-
-        if option == "1":
-            run_ocr_acquisition_pipeline()
-
-        elif option == "0":
-            return
-
-        else:
-            print(
-                "\n[ERROR] Invalid option."
-            )
-
-
-# ---------------------------------------------------------------------------
-# CAPABILITY SUB TASKS
-# ---------------------------------------------------------------------------
-
-def display_capability_sub_tasks_menu() -> None:
-    print(
-        "\n=== ShopGraph Capability Sub Tasks ===\n"
-    )
-
-    print(
-        "1. OCR Acquisition Pipeline"
-    )
-
-    print(
-        "0. Return to Utilities Menu"
-    )
-
-
-def display_ocr_acquisition_sub_tasks_menu() -> None:
-    print(
-        "\n=== OCR Acquisition Pipeline - Sub Tasks ===\n"
-    )
-
-    print(
-        "1. Reliable Receipt Detection / Crop"
-    )
-
-    print(
-        "2. Perspective Correction"
-    )
-
-    print(
-        "3. 2x Enlargement"
-    )
-
-    print(
-        "4. Generate OCR Image Variants"
-    )
-
-    print(
-        "5. Run OCR - PSM 4 / 6 / 11"
-    )
-
-    print(
-        "6. Compare OCR Results / Build Raw OCR JSON"
-    )
-
-    print(
-        "0. Return to Capability Sub Tasks"
-    )
-
-
-def run_ocr_acquisition_sub_tasks_menu() -> None:
-    while True:
-        display_ocr_acquisition_sub_tasks_menu()
-
-        option = input(
-            "\nSelect option: "
-        ).strip()
-
-        if option == "1":
-            run_reliable_receipt_crop()
-
-        elif option == "2":
-            run_perspective_correction()
-
-        elif option == "3":
-            run_image_enlargement()
-
-        elif option == "4":
-            run_ocr_image_variants()
-
-        elif option == "5":
-            run_ocr()
-
-        elif option == "6":
-            run_compare_ocr()
-
-        elif option == "0":
-            return
-
-        else:
-            print(
-                "\n[ERROR] Invalid option."
-            )
-
-
-def run_capability_sub_tasks_menu() -> None:
-    while True:
-        display_capability_sub_tasks_menu()
-
-        option = input(
-            "\nSelect option: "
-        ).strip()
-
-        if option == "1":
-            run_ocr_acquisition_sub_tasks_menu()
-
-        elif option == "0":
-            return
-
-        else:
-            print(
-                "\n[ERROR] Invalid option."
-            )
-
-
-# ---------------------------------------------------------------------------
-# UTILITIES
-# ---------------------------------------------------------------------------
-
-def display_standalone_utilities_menu() -> None:
-    print(
-        "\n=== ShopGraph Utilities ===\n"
-    )
-
-    print(
-        "1. Export Clean Codebase"
-    )
-
-    print(
-        "0. Return to Utilities Menu"
-    )
-
-
-def run_standalone_utilities_menu() -> None:
-    while True:
-        display_standalone_utilities_menu()
-
-        option = input(
-            "\nSelect option: "
-        ).strip()
-
-        if option == "1":
-            run_codebase_export()
-
-        elif option == "0":
-            return
-
-        else:
-            print(
-                "\n[ERROR] Invalid option."
-            )
-
-
-# ---------------------------------------------------------------------------
-# TOP-LEVEL UTILS MENU
-# ---------------------------------------------------------------------------
-
-def display_utils_menu() -> None:
-    print(
-        "\n=== ShopGraph Utilities ===\n"
-    )
-
-    print(
-        "1. Capabilities"
-    )
-
-    print(
-        "2. Capability Sub Tasks"
-    )
-
-    print(
-        "3. Utilities"
-    )
-
-    print(
-        "0. Return to Main"
-    )
-
-
-def run_utils_menu() -> None:
-    while True:
-        display_utils_menu()
-
-        option = input(
-            "\nSelect option: "
-        ).strip()
-
-        if option == "1":
-            run_capabilities_menu()
-
-        elif option == "2":
-            run_capability_sub_tasks_menu()
-
-        elif option == "3":
-            run_standalone_utilities_menu()
-
-        elif option == "0":
-            return
-
-        else:
-            print(
-                "\n[ERROR] Invalid option."
-            )
-
-
-if __name__ == "__main__":
-    run_utils_menu()
-
-
-================================================================================
-FILE: extractors/__init__.py
-================================================================================
-
-
-
-================================================================================
-FILE: extractors/tesseract.py
+FILE: capabilities/OCRAcquisitionPipeline/tesseract.py
 ================================================================================
 
 from __future__ import annotations
@@ -4743,6 +3958,915 @@ def extract_receipt(
         "raw_text": raw_text,
         "text": text_lines,
     }
+
+
+================================================================================
+FILE: utils/__init__.py
+================================================================================
+
+
+
+================================================================================
+FILE: utils/codebase_bundler.py
+================================================================================
+
+import os
+from pathlib import Path
+from datetime import datetime
+
+from utils.constants import PROJECT_ROOT, CODEBASE_OUTPUT_FILE
+
+
+ALLOWED_SUFFIXES = {
+    ".py",
+    ".md",
+    ".txt"
+}
+
+IGNORE_DIRS = {
+    "__pycache__",
+    ".git",
+    ".idea",
+    ".vscode",
+    "venv",
+    ".venv",
+    "node_modules",
+
+    "raw_receipts",
+    "cropped",
+    "perspective_corrected",
+    "enlarged",
+    "ocr_variants",
+    "ocr_candidates",
+    "raw_ocr",
+    "extracted",
+    "normalized",
+
+    "logs",
+    "exports"
+}
+
+IGNORE_FILES = {
+    "shopgraph_codebase.txt",
+    ".DS_Store"
+}
+
+IGNORE_SUFFIXES = {
+    ".pyc",
+    ".json",
+    ".log",
+    ".sqlite",
+    ".sqlite3",
+    ".db",
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".heic",
+    ".webp",
+    ".tif",
+    ".tiff",
+    ".pdf"
+}
+
+
+def _should_ignore(path: Path) -> bool:
+    if any(
+        part in IGNORE_DIRS
+        for part in path.parts
+    ):
+        return True
+
+    if path.name in IGNORE_FILES:
+        return True
+
+    if path.suffix.lower() in IGNORE_SUFFIXES:
+        return True
+
+    if path.suffix.lower() not in ALLOWED_SUFFIXES:
+        return True
+
+    return False
+
+
+def _build_tree(root: Path) -> str:
+    lines = []
+
+    for dirpath, dirnames, filenames in os.walk(root):
+        dirpath = Path(dirpath)
+
+        dirnames[:] = [
+            directory
+            for directory in dirnames
+            if directory not in IGNORE_DIRS
+        ]
+
+        level = len(
+            dirpath.relative_to(root).parts
+        )
+
+        indent = "    " * level
+
+        lines.append(
+            f"{indent}{dirpath.name}/"
+        )
+
+        for filename in sorted(filenames):
+            file_path = (
+                dirpath
+                / filename
+            )
+
+            if not _should_ignore(file_path):
+                lines.append(
+                    f"{indent}    {filename}"
+                )
+
+    return "\n".join(lines)
+
+
+def _collect_files(root: Path):
+    for dirpath, dirnames, filenames in os.walk(root):
+        dirpath = Path(dirpath)
+
+        dirnames[:] = [
+            directory
+            for directory in dirnames
+            if directory not in IGNORE_DIRS
+        ]
+
+        for filename in sorted(filenames):
+            file_path = (
+                dirpath
+                / filename
+            )
+
+            if not _should_ignore(file_path):
+                yield file_path
+
+
+def export_codebase_bundle(
+    root_path: str | None = None
+) -> str:
+    root = (
+        PROJECT_ROOT
+        if root_path is None
+        else Path(root_path).resolve()
+    )
+
+    output_path = CODEBASE_OUTPUT_FILE
+
+    output_path.parent.mkdir(
+        parents=True,
+        exist_ok=True
+    )
+
+    print(
+        f"\n[INFO] Exporting CLEAN ShopGraph codebase from: {root}"
+    )
+
+    tree = _build_tree(root)
+    files = list(
+        _collect_files(root)
+    )
+
+    with open(
+        output_path,
+        "w",
+        encoding="utf-8"
+    ) as out:
+        out.write(
+            "=== SHOPGRAPH CLEAN CODEBASE FOR LLM ===\n\n"
+        )
+        out.write(tree)
+        out.write("\n\n")
+        out.write("=" * 80 + "\n\n")
+        out.write(
+            f"Generated: {datetime.now()}\n"
+        )
+        out.write(
+            f"Root: {root}\n"
+        )
+        out.write(
+            "Mode: LLM-clean export\n"
+        )
+        out.write(
+            "Excluded: receipt images, OCR JSON, datasets, databases, logs, caches\n\n"
+        )
+        out.write("=" * 80 + "\n\n")
+
+        for file_path in files:
+            try:
+                relative = (
+                    file_path.relative_to(root)
+                )
+
+                out.write("\n\n")
+                out.write("=" * 80 + "\n")
+                out.write(
+                    f"FILE: {relative}\n"
+                )
+                out.write("=" * 80 + "\n\n")
+
+                content = (
+                    file_path.read_text(
+                        encoding="utf-8",
+                        errors="ignore"
+                    )
+                )
+
+                out.write(content)
+
+            except Exception as error:
+                out.write(
+                    f"\n[ERROR READING FILE: {file_path}] "
+                    f"{error}\n"
+                )
+
+    print(
+        f"[OK] Clean ShopGraph codebase exported to: "
+        f"{output_path}"
+    )
+
+    return str(output_path)
+
+
+================================================================================
+FILE: utils/constants.py
+================================================================================
+
+from pathlib import Path
+
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
+DATA_DIR = PROJECT_ROOT / "data"
+
+CURRENT_PIC_DIR = DATA_DIR / "current_pic"
+CROPPED_DIR = DATA_DIR / "cropped"
+PERSPECTIVE_DIR = DATA_DIR / "perspective_corrected"
+ENLARGED_DIR = DATA_DIR / "enlarged"
+OCR_VARIANTS_DIR = DATA_DIR / "ocr_variants"
+OCR_CANDIDATES_DIR = DATA_DIR / "ocr_candidates"
+RAW_OCR_DIR = DATA_DIR / "raw_ocr"
+
+EXPORT_DIR = DATA_DIR / "exports"
+
+CODEBASE_OUTPUT_FILE = (
+    EXPORT_DIR
+    / "codebase"
+    / "shopgraph_codebase.txt"
+)
+
+
+================================================================================
+FILE: utils/export_codebase.py
+================================================================================
+
+from utils.codebase_bundler import (
+    export_codebase_bundle
+)
+
+
+def run_codebase_export() -> None:
+
+    print(
+        "\n=== Export Clean Codebase ===\n"
+    )
+
+    output_path = (
+        export_codebase_bundle()
+    )
+
+    print(
+        f"\n[OK] Codebase bundle created:\n"
+        f"{output_path}"
+    )
+
+
+================================================================================
+FILE: utils/image_preprocessing.py
+================================================================================
+
+from __future__ import annotations
+
+from pathlib import Path
+
+import cv2
+import numpy as np
+
+from utils.constants import PREPROCESSED_DIR
+from utils.perspective_correction import correct_selected_receipt
+from utils.receipt_picker import choose_receipt_image
+from utils.reliable_receipt_crop import crop_selected_receipt
+from utils.session_state import (
+    get_selected_cropped_image,
+    get_selected_perspective_image,
+    get_selected_source_image,
+    set_selected_preprocessed_image,
+)
+
+
+def _enhance_for_ocr(
+    image: np.ndarray,
+) -> np.ndarray:
+    """
+    Current preprocessing stage:
+
+    Perspective-corrected receipt
+        -> 2x enlargement
+        -> grayscale
+        -> CLAHE contrast enhancement
+        -> light denoising
+
+    Thresholded variants will be added as a later pipeline stage.
+    """
+    gray = cv2.cvtColor(
+        image,
+        cv2.COLOR_BGR2GRAY,
+    )
+
+    gray = cv2.resize(
+        gray,
+        None,
+        fx=2.0,
+        fy=2.0,
+        interpolation=cv2.INTER_CUBIC,
+    )
+
+    clahe = cv2.createCLAHE(
+        clipLimit=2.0,
+        tileGridSize=(8, 8),
+    )
+
+    enhanced = clahe.apply(
+        gray
+    )
+
+    enhanced = cv2.fastNlMeansDenoising(
+        enhanced,
+        None,
+        h=5,
+        templateWindowSize=7,
+        searchWindowSize=21,
+    )
+
+    return enhanced
+
+
+def get_preprocessed_path(
+    source_path: str | Path,
+) -> Path:
+    source = Path(
+        source_path
+    )
+
+    return (
+        PREPROCESSED_DIR
+        / f"{source.stem}_preprocessed.png"
+    )
+
+
+def preprocess_receipt(
+    perspective_image_path: str | Path,
+    source_image_path: str | Path,
+) -> Path:
+    perspective_path = (
+        Path(perspective_image_path)
+        .expanduser()
+        .resolve()
+    )
+
+    source_path = (
+        Path(source_image_path)
+        .expanduser()
+        .resolve()
+    )
+
+    if not perspective_path.exists():
+        raise FileNotFoundError(
+            "Perspective-corrected receipt does not exist: "
+            f"{perspective_path}"
+        )
+
+    image = cv2.imread(
+        str(perspective_path)
+    )
+
+    if image is None:
+        raise ValueError(
+            "OpenCV could not read perspective-corrected image: "
+            f"{perspective_path}"
+        )
+
+    processed = _enhance_for_ocr(
+        image
+    )
+
+    destination = (
+        get_preprocessed_path(
+            source_path
+        )
+    )
+
+    destination.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    saved = cv2.imwrite(
+        str(destination),
+        processed,
+    )
+
+    if not saved:
+        raise RuntimeError(
+            "OpenCV could not save preprocessed image: "
+            f"{destination}"
+        )
+
+    return destination.resolve()
+
+
+def _get_or_create_perspective_image() -> tuple[Path, Path, Path] | None:
+    source_path = (
+        get_selected_source_image()
+    )
+
+    cropped_path = (
+        get_selected_cropped_image()
+    )
+
+    perspective_path = (
+        get_selected_perspective_image()
+    )
+
+    if (
+        source_path is not None
+        and source_path.exists()
+        and cropped_path is not None
+        and cropped_path.exists()
+        and perspective_path is not None
+        and perspective_path.exists()
+    ):
+        print(
+            "[INFO] Using selected perspective-corrected receipt:"
+            f"\n{perspective_path}"
+        )
+
+        return (
+            source_path,
+            cropped_path,
+            perspective_path,
+        )
+
+    if (
+        source_path is not None
+        and source_path.exists()
+        and cropped_path is not None
+        and cropped_path.exists()
+    ):
+        print(
+            "[INFO] Perspective correction has not been run yet. "
+            "Running it automatically."
+        )
+
+        try:
+            perspective_path = (
+                correct_selected_receipt(
+                    source_path=source_path,
+                    cropped_path=cropped_path,
+                )
+            )
+        except (
+            FileNotFoundError,
+            ValueError,
+            RuntimeError,
+        ) as error:
+            print(
+                f"\n[ERROR] {error}"
+            )
+            return None
+
+        print(
+            "\n[OK] Perspective-corrected receipt created:"
+            f"\n{perspective_path}"
+        )
+
+        return (
+            source_path,
+            cropped_path,
+            perspective_path,
+        )
+
+    print(
+        "[INFO] No receipt has been selected "
+        "in this session yet."
+    )
+
+    source_path = choose_receipt_image()
+
+    if source_path is None:
+        return None
+
+    try:
+        cropped_path = (
+            crop_selected_receipt(
+                source_path
+            )
+        )
+
+        print(
+            "\n[OK] Cropped receipt created:"
+            f"\n{cropped_path}"
+        )
+
+        perspective_path = (
+            correct_selected_receipt(
+                source_path=source_path,
+                cropped_path=cropped_path,
+            )
+        )
+
+        print(
+            "\n[OK] Perspective-corrected receipt created:"
+            f"\n{perspective_path}"
+        )
+
+    except (
+        FileNotFoundError,
+        ValueError,
+        RuntimeError,
+    ) as error:
+        print(
+            f"\n[ERROR] {error}"
+        )
+        return None
+
+    return (
+        source_path,
+        cropped_path,
+        perspective_path,
+    )
+
+
+def preprocess_selected_receipt(
+    source_path: Path,
+    cropped_path: Path,
+    perspective_path: Path,
+) -> Path:
+    preprocessed_path = (
+        preprocess_receipt(
+            perspective_image_path=perspective_path,
+            source_image_path=source_path,
+        )
+    )
+
+    set_selected_preprocessed_image(
+        source_image=source_path,
+        cropped_image=cropped_path,
+        perspective_image=perspective_path,
+        preprocessed_image=preprocessed_path,
+    )
+
+    return preprocessed_path
+
+
+def run_image_preprocessing() -> None:
+    print(
+        "\n=== Image Preprocessing ===\n"
+    )
+
+    selected = (
+        _get_or_create_perspective_image()
+    )
+
+    if selected is None:
+        return
+
+    (
+        source_path,
+        cropped_path,
+        perspective_path,
+    ) = selected
+
+    try:
+        output_path = (
+            preprocess_selected_receipt(
+                source_path=source_path,
+                cropped_path=cropped_path,
+                perspective_path=perspective_path,
+            )
+        )
+
+        print(
+            "\n[OK] Preprocessed receipt created:"
+            f"\n{output_path}"
+        )
+
+        print(
+            "\nThis receipt is now selected "
+            "for Run OCR."
+        )
+
+    except (
+        FileNotFoundError,
+        ValueError,
+        RuntimeError,
+    ) as error:
+        print(
+            f"\n[ERROR] {error}"
+        )
+
+
+================================================================================
+FILE: utils/main.py
+================================================================================
+
+from utils.utils_main import run_utils_menu
+
+
+def display_menu() -> None:
+    print("\n=== ShopGraph ===\n")
+    print("1. Utilities")
+    print("0. Exit")
+
+
+def main() -> None:
+    while True:
+        display_menu()
+
+        option = input("\nSelect option: ").strip()
+
+        if option == "1":
+            run_utils_menu()
+
+        elif option == "0":
+            print("\nGoodbye.")
+            break
+
+        else:
+            print("\n[ERROR] Invalid option.")
+
+
+if __name__ == "__main__":
+    main()
+
+
+================================================================================
+FILE: utils/utils_main.py
+================================================================================
+
+from capabilities.OCRAcquisitionPipeline.main_OCRAcquisitionPipeline import (
+    run_ocr_acquisition_pipeline,
+)
+from capabilities.OCRAcquisitionPipeline.reliable_receipt_crop import (
+    run_reliable_receipt_crop,
+)
+from capabilities.OCRAcquisitionPipeline.perspective_correction import (
+    run_perspective_correction,
+)
+from capabilities.OCRAcquisitionPipeline.image_enlargement import (
+    run_image_enlargement,
+)
+from capabilities.OCRAcquisitionPipeline.ocr_image_variants import (
+    run_ocr_image_variants,
+)
+from capabilities.OCRAcquisitionPipeline.run_ocr import (
+    run_ocr,
+)
+from capabilities.OCRAcquisitionPipeline.compare_ocr import (
+    run_compare_ocr,
+)
+from utils.export_codebase import run_codebase_export
+
+
+def display_capabilities_menu() -> None:
+    print(
+        "\n=== ShopGraph Capabilities ===\n"
+    )
+
+    print(
+        "1. OCR Acquisition Pipeline"
+    )
+
+    print(
+        "0. Return to Utilities Menu"
+    )
+
+
+def run_capabilities_menu() -> None:
+    while True:
+        display_capabilities_menu()
+
+        option = input(
+            "\nSelect option: "
+        ).strip()
+
+        if option == "1":
+            run_ocr_acquisition_pipeline()
+
+        elif option == "0":
+            return
+
+        else:
+            print(
+                "\n[ERROR] Invalid option."
+            )
+
+
+def display_capability_sub_tasks_menu() -> None:
+    print(
+        "\n=== ShopGraph Capability Sub Tasks ===\n"
+    )
+
+    print(
+        "1. OCR Acquisition Pipeline"
+    )
+
+    print(
+        "0. Return to Utilities Menu"
+    )
+
+
+def display_ocr_acquisition_sub_tasks_menu() -> None:
+    print(
+        "\n=== OCR Acquisition Pipeline - Sub Tasks ===\n"
+    )
+
+    print(
+        "1. Reliable Receipt Detection / Crop"
+    )
+
+    print(
+        "2. Perspective Correction"
+    )
+
+    print(
+        "3. 2x Enlargement"
+    )
+
+    print(
+        "4. Generate OCR Image Variants"
+    )
+
+    print(
+        "5. Run OCR - PSM 4 / 6 / 11"
+    )
+
+    print(
+        "6. Compare OCR Results / Build Raw OCR JSON"
+    )
+
+    print(
+        "0. Return to Capability Sub Tasks"
+    )
+
+
+def run_ocr_acquisition_sub_tasks_menu() -> None:
+    while True:
+        display_ocr_acquisition_sub_tasks_menu()
+
+        option = input(
+            "\nSelect option: "
+        ).strip()
+
+        if option == "1":
+            run_reliable_receipt_crop()
+
+        elif option == "2":
+            run_perspective_correction()
+
+        elif option == "3":
+            run_image_enlargement()
+
+        elif option == "4":
+            run_ocr_image_variants()
+
+        elif option == "5":
+            run_ocr()
+
+        elif option == "6":
+            run_compare_ocr()
+
+        elif option == "0":
+            return
+
+        else:
+            print(
+                "\n[ERROR] Invalid option."
+            )
+
+
+def run_capability_sub_tasks_menu() -> None:
+    while True:
+        display_capability_sub_tasks_menu()
+
+        option = input(
+            "\nSelect option: "
+        ).strip()
+
+        if option == "1":
+            run_ocr_acquisition_sub_tasks_menu()
+
+        elif option == "0":
+            return
+
+        else:
+            print(
+                "\n[ERROR] Invalid option."
+            )
+
+
+def display_standalone_utilities_menu() -> None:
+    print(
+        "\n=== ShopGraph Utilities ===\n"
+    )
+
+    print(
+        "1. Export Clean Codebase"
+    )
+
+    print(
+        "0. Return to Utilities Menu"
+    )
+
+
+def run_standalone_utilities_menu() -> None:
+    while True:
+        display_standalone_utilities_menu()
+
+        option = input(
+            "\nSelect option: "
+        ).strip()
+
+        if option == "1":
+            run_codebase_export()
+
+        elif option == "0":
+            return
+
+        else:
+            print(
+                "\n[ERROR] Invalid option."
+            )
+
+
+def display_utils_menu() -> None:
+    print(
+        "\n=== ShopGraph Utilities ===\n"
+    )
+
+    print(
+        "1. Capabilities"
+    )
+
+    print(
+        "2. Capability Sub Tasks"
+    )
+
+    print(
+        "3. Utilities"
+    )
+
+    print(
+        "0. Return to Main"
+    )
+
+
+def run_utils_menu() -> None:
+    while True:
+        display_utils_menu()
+
+        option = input(
+            "\nSelect option: "
+        ).strip()
+
+        if option == "1":
+            run_capabilities_menu()
+
+        elif option == "2":
+            run_capability_sub_tasks_menu()
+
+        elif option == "3":
+            run_standalone_utilities_menu()
+
+        elif option == "0":
+            return
+
+        else:
+            print(
+                "\n[ERROR] Invalid option."
+            )
+
+
+if __name__ == "__main__":
+    run_utils_menu()
+
+
+================================================================================
+FILE: extractors/__init__.py
+================================================================================
+
 
 
 ================================================================================

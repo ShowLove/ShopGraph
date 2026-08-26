@@ -4,9 +4,9 @@ from pathlib import Path
 
 import cv2
 
-from utils.constants import OCR_VARIANTS_DIR
-from utils.image_enlargement import ensure_enlarged_receipt
-from utils.session_state import (
+from capabilities.OCRAcquisitionPipeline.constants import OCR_VARIANTS_DIR
+from capabilities.OCRAcquisitionPipeline.image_enlargement import ensure_enlarged_receipt
+from capabilities.OCRAcquisitionPipeline.session_state import (
     get_selected_grayscale_image,
     get_selected_threshold_image,
     set_selected_ocr_variants,

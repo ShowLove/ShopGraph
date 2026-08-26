@@ -5,9 +5,9 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-from utils.constants import CROPPED_DIR
-from utils.receipt_picker import choose_receipt_image
-from utils.session_state import set_selected_cropped_image
+from capabilities.OCRAcquisitionPipeline.constants import CROPPED_DIR
+from capabilities.OCRAcquisitionPipeline.receipt_picker import choose_receipt_image
+from capabilities.OCRAcquisitionPipeline.session_state import set_selected_cropped_image
 
 
 def _order_points(

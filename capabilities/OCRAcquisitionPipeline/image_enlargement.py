@@ -4,11 +4,11 @@ from pathlib import Path
 
 import cv2
 
-from utils.constants import ENLARGED_DIR
-from utils.perspective_correction import correct_selected_receipt
-from utils.receipt_picker import choose_receipt_image
-from utils.reliable_receipt_crop import crop_selected_receipt
-from utils.session_state import (
+from capabilities.OCRAcquisitionPipeline.constants import ENLARGED_DIR
+from capabilities.OCRAcquisitionPipeline.perspective_correction import correct_selected_receipt
+from capabilities.OCRAcquisitionPipeline.receipt_picker import choose_receipt_image
+from capabilities.OCRAcquisitionPipeline.reliable_receipt_crop import crop_selected_receipt
+from capabilities.OCRAcquisitionPipeline.session_state import (
     get_selected_cropped_image,
     get_selected_enlarged_image,
     get_selected_perspective_image,

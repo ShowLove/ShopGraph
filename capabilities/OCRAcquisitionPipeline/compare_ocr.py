@@ -5,9 +5,9 @@ import re
 from difflib import SequenceMatcher
 from pathlib import Path
 
-from utils.constants import RAW_OCR_DIR
-from utils.run_ocr import run_all_ocr_candidates
-from utils.session_state import (
+from capabilities.OCRAcquisitionPipeline.constants import RAW_OCR_DIR
+from capabilities.OCRAcquisitionPipeline.run_ocr import run_all_ocr_candidates
+from capabilities.OCRAcquisitionPipeline.session_state import (
     get_selected_ocr_candidates_file,
     set_selected_raw_ocr_file,
 )

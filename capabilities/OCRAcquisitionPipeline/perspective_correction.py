@@ -5,10 +5,10 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-from utils.constants import PERSPECTIVE_DIR
-from utils.receipt_picker import choose_receipt_image
-from utils.reliable_receipt_crop import crop_selected_receipt
-from utils.session_state import (
+from capabilities.OCRAcquisitionPipeline.constants import PERSPECTIVE_DIR
+from capabilities.OCRAcquisitionPipeline.receipt_picker import choose_receipt_image
+from capabilities.OCRAcquisitionPipeline.reliable_receipt_crop import crop_selected_receipt
+from capabilities.OCRAcquisitionPipeline.session_state import (
     get_selected_cropped_image,
     get_selected_source_image,
     set_selected_perspective_image,

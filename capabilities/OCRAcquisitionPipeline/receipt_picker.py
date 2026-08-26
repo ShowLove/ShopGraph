@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from utils.constants import CURRENT_PIC_DIR
+from capabilities.OCRAcquisitionPipeline.constants import CURRENT_PIC_DIR
 
 
 SUPPORTED_IMAGE_SUFFIXES = {
