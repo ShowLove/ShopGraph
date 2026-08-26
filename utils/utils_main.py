@@ -26,6 +26,9 @@ from utils.export_codebase import (
 from utils.clean_ocr_acquisition_pipeline import (
     run_ocr_acquisition_pipeline_cleanup,
 )
+from utils.DataBaseBuilder.data_base_builder_main import (
+    run_data_base_builder_menu,
+)
 
 
 def display_capabilities_menu() -> None:
@@ -224,6 +227,10 @@ def display_utils_menu() -> None:
     )
 
     print(
+        "4. Data Base Builder"
+    )
+
+    print(
         "0. Return to Main"
     )
 
@@ -244,6 +251,9 @@ def run_utils_menu() -> None:
 
         elif option == "3":
             run_standalone_utilities_menu()
+
+        elif option == "4":
+            run_data_base_builder_menu()
 
         elif option == "0":
             return

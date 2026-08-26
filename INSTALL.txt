@@ -1,52 +1,25 @@
-ShopGraph - OCR Acquisition Pipeline Cleanup Utility
-
-FILES
+ShopGraph - Data Base Builder Menu Foundation
 
 Add:
-    utils/clean_ocr_acquisition_pipeline.py
+    utils/DataBaseBuilder/__init__.py
+    utils/DataBaseBuilder/data_base_builder_main.py
 
 Replace:
     utils/utils_main.py
 
-NEW UTILITY MENU
+The top-level Utilities menu becomes:
 
-=== ShopGraph Utilities ===
-
-1. Export Clean Codebase
-2. Clean OCR Acquisition Pipeline Data
-0. Return to Utilities Menu
-
-WHAT THE CLEANUP REMOVES
-
-All contents inside:
-
-    data/cropped/
-    data/perspective_corrected/
-    data/enlarged/
-    data/ocr_variants/
-    data/ocr_candidates/
-    data/raw_ocr/
-
-WHAT IT DOES NOT TOUCH
-
-    data/current_pic/
-
-The folder and all receipt images inside current_pic remain unchanged.
-
-The generated output folders themselves are also preserved. Only their
-contents are removed.
-
-SESSION STATE
-
-After cleanup, OCR Acquisition Pipeline session state is cleared so later
-pipeline stages cannot accidentally reference deleted files.
-
-RUN
-
-    python3 main.py
-
-Then:
-
-    1. Utilities
+    1. Capabilities
+    2. Capability Sub Tasks
     3. Utilities
-    2. Clean OCR Acquisition Pipeline Data
+    4. Data Base Builder
+    0. Return to Main
+
+Selecting 4 opens:
+
+    === ShopGraph Data Base Builder ===
+
+    0. Return to Main
+
+At this stage, no database functionality is implemented.
+This update only creates the DataBaseBuilder package and its menu entry point.
