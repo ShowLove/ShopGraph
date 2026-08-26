@@ -33,7 +33,7 @@ shopping_analysis/
 
 ================================================================================
 
-Generated: 2026-08-25 16:24:38.369115
+Generated: 2026-08-26 10:52:57.857601
 Root: /Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis
 Mode: LLM-clean export
 Excluded: receipt images, OCR JSON, datasets, databases, logs, caches
@@ -46,98 +46,86 @@ Excluded: receipt images, OCR JSON, datasets, databases, logs, caches
 FILE: INSTALL.txt
 ================================================================================
 
-ShopGraph - Component Consensus OCR Update
+ShopGraph - Capability Menu Update
 
 PURPOSE
 
-This update changes only:
+This update reorganizes utils/utils_main.py into three top-level sections:
 
-    utils/compare_ocr.py
+1. Capabilities
+2. Capability Sub Tasks
+3. Utilities
 
-The previous version chose one complete OCR line for each consensus line.
+TOP-LEVEL UTILS MENU
 
-This version keeps the same six-candidate pipeline but changes product-line
-assembly.
+=== ShopGraph Utilities ===
 
-For a line containing exactly one six-digit SKU, the program now treats these
-as independent components:
+1. Capabilities
+2. Capability Sub Tasks
+3. Utilities
+0. Return to Main
 
-    SKU
-    description
-    price
-    tax code
 
-Example OCR evidence:
+1. CAPABILITIES
 
-    356537 Cilantro
-    356537 Cilantro
-    356537 Cilantro 0.89 FA
-    356537 Cilantro 0.89 FA
+Currently contains:
 
-The program can reconstruct:
+1. OCR Acquisition Pipeline
 
-    356537 Cilantro 0.89 FA
+Selecting OCR Acquisition Pipeline runs the complete capability in order:
 
-without inventing a product name or price.
+1. Reliable Receipt Detection / Crop
+2. Perspective Correction
+3. 2x Enlargement
+4. Generate OCR Image Variants
+5. Run OCR - PSM 4 / 6 / 11
+6. Compare OCR Results / Build Raw OCR JSON
 
-RULES
+The existing smart workflow is preserved. The receipt is selected at the
+first stage and the later stages reuse the same session state and generated
+artifacts.
 
-- Exact six-digit SKU is the alignment key.
-- Description remains OCR-derived.
-- Price must appear in an OCR candidate.
-- Tax code must appear in an OCR candidate.
-- No product dictionary is used.
-- No spelling correction is performed.
-- Near-SKU values such as 256578 vs 356578 are NOT merged yet.
+
+2. CAPABILITY SUB TASKS
+
+First choose a capability:
+
+1. OCR Acquisition Pipeline
+
+Then the existing individual stage menu appears:
+
+1. Reliable Receipt Detection / Crop
+2. Perspective Correction
+3. 2x Enlargement
+4. Generate OCR Image Variants
+5. Run OCR - PSM 4 / 6 / 11
+6. Compare OCR Results / Build Raw OCR JSON
+0. Return to Capability Sub Tasks
+
+Each stage can still be executed individually exactly as before.
+
+
+3. UTILITIES
+
+Currently contains:
+
+1. Export Clean Codebase
+0. Return to Utilities Menu
+
 
 INSTALL
 
-Replace:
+Replace only:
 
-    utils/compare_ocr.py
+    utils/utils_main.py
 
-No other file needs to change.
+No other files need to change.
 
-RUN
+Your existing top-level main.py already imports:
 
-    python3 main.py
+    from utils.utils_main import run_utils_menu
 
-Then:
-
-    1. Utilities
-    6. Compare OCR Results / Build Raw OCR JSON
-
-The smart pipeline still runs all missing earlier stages automatically.
-
-EXPECTED TERMINAL OUTPUT
-
-    === Compare OCR Results / Build Component Consensus ===
-
-    [OK] Component consensus OCR built from all candidates.
-
-    Backbone candidate:
-    Variant: grayscale
-    PSM: 4
-    Score: ...
-
-    Consensus:
-    Lines: ...
-    Product lines reconstructed: ...
-    Supported extra lines: ...
-
-OUTPUT
-
-    data/raw_ocr/<receipt>_raw_ocr.json
-
-New useful fields on reconstructed product lines:
-
-    reconstructed
-    original_consensus_text
-    reconstruction_method
-    component_support
-
-This makes it possible to inspect exactly which OCR evidence supplied the
-description, price, and tax code.
+so it remains unchanged.
 
 
 ================================================================================
@@ -4247,9 +4235,124 @@ from utils.compare_ocr import run_compare_ocr
 from utils.export_codebase import run_codebase_export
 
 
-def display_utils_menu() -> None:
+# ---------------------------------------------------------------------------
+# OCR ACQUISITION PIPELINE
+# ---------------------------------------------------------------------------
+
+def run_ocr_acquisition_pipeline() -> None:
+    """
+    Run the complete OCR Acquisition Pipeline in order.
+
+    The existing smart workflow is preserved. The first stage prompts
+    for the receipt image. Each later stage automatically uses the
+    receipt and artifacts already selected/generated in this session.
+
+    Pipeline:
+        1. Reliable Receipt Detection / Crop
+        2. Perspective Correction
+        3. 2x Enlargement
+        4. Generate OCR Image Variants
+        5. Run OCR - PSM 4 / 6 / 11
+        6. Compare OCR Results / Build Raw OCR JSON
+    """
     print(
-        "\n=== ShopGraph Utilities ===\n"
+        "\n=== OCR Acquisition Pipeline ===\n"
+    )
+
+    print(
+        "[1/6] Reliable Receipt Detection / Crop"
+    )
+    run_reliable_receipt_crop()
+
+    print(
+        "\n[2/6] Perspective Correction"
+    )
+    run_perspective_correction()
+
+    print(
+        "\n[3/6] 2x Enlargement"
+    )
+    run_image_enlargement()
+
+    print(
+        "\n[4/6] Generate OCR Image Variants"
+    )
+    run_ocr_image_variants()
+
+    print(
+        "\n[5/6] Run OCR - PSM 4 / 6 / 11"
+    )
+    run_ocr()
+
+    print(
+        "\n[6/6] Compare OCR Results / Build Raw OCR JSON"
+    )
+    run_compare_ocr()
+
+    print(
+        "\n[OK] OCR Acquisition Pipeline complete."
+    )
+
+
+# ---------------------------------------------------------------------------
+# CAPABILITIES
+# ---------------------------------------------------------------------------
+
+def display_capabilities_menu() -> None:
+    print(
+        "\n=== ShopGraph Capabilities ===\n"
+    )
+
+    print(
+        "1. OCR Acquisition Pipeline"
+    )
+
+    print(
+        "0. Return to Utilities Menu"
+    )
+
+
+def run_capabilities_menu() -> None:
+    while True:
+        display_capabilities_menu()
+
+        option = input(
+            "\nSelect option: "
+        ).strip()
+
+        if option == "1":
+            run_ocr_acquisition_pipeline()
+
+        elif option == "0":
+            return
+
+        else:
+            print(
+                "\n[ERROR] Invalid option."
+            )
+
+
+# ---------------------------------------------------------------------------
+# CAPABILITY SUB TASKS
+# ---------------------------------------------------------------------------
+
+def display_capability_sub_tasks_menu() -> None:
+    print(
+        "\n=== ShopGraph Capability Sub Tasks ===\n"
+    )
+
+    print(
+        "1. OCR Acquisition Pipeline"
+    )
+
+    print(
+        "0. Return to Utilities Menu"
+    )
+
+
+def display_ocr_acquisition_sub_tasks_menu() -> None:
+    print(
+        "\n=== OCR Acquisition Pipeline - Sub Tasks ===\n"
     )
 
     print(
@@ -4277,17 +4380,13 @@ def display_utils_menu() -> None:
     )
 
     print(
-        "7. Export Clean Codebase"
-    )
-
-    print(
-        "0. Return to Main"
+        "0. Return to Capability Sub Tasks"
     )
 
 
-def run_utils_menu() -> None:
+def run_ocr_acquisition_sub_tasks_menu() -> None:
     while True:
-        display_utils_menu()
+        display_ocr_acquisition_sub_tasks_menu()
 
         option = input(
             "\nSelect option: "
@@ -4311,8 +4410,115 @@ def run_utils_menu() -> None:
         elif option == "6":
             run_compare_ocr()
 
-        elif option == "7":
+        elif option == "0":
+            return
+
+        else:
+            print(
+                "\n[ERROR] Invalid option."
+            )
+
+
+def run_capability_sub_tasks_menu() -> None:
+    while True:
+        display_capability_sub_tasks_menu()
+
+        option = input(
+            "\nSelect option: "
+        ).strip()
+
+        if option == "1":
+            run_ocr_acquisition_sub_tasks_menu()
+
+        elif option == "0":
+            return
+
+        else:
+            print(
+                "\n[ERROR] Invalid option."
+            )
+
+
+# ---------------------------------------------------------------------------
+# UTILITIES
+# ---------------------------------------------------------------------------
+
+def display_standalone_utilities_menu() -> None:
+    print(
+        "\n=== ShopGraph Utilities ===\n"
+    )
+
+    print(
+        "1. Export Clean Codebase"
+    )
+
+    print(
+        "0. Return to Utilities Menu"
+    )
+
+
+def run_standalone_utilities_menu() -> None:
+    while True:
+        display_standalone_utilities_menu()
+
+        option = input(
+            "\nSelect option: "
+        ).strip()
+
+        if option == "1":
             run_codebase_export()
+
+        elif option == "0":
+            return
+
+        else:
+            print(
+                "\n[ERROR] Invalid option."
+            )
+
+
+# ---------------------------------------------------------------------------
+# TOP-LEVEL UTILS MENU
+# ---------------------------------------------------------------------------
+
+def display_utils_menu() -> None:
+    print(
+        "\n=== ShopGraph Utilities ===\n"
+    )
+
+    print(
+        "1. Capabilities"
+    )
+
+    print(
+        "2. Capability Sub Tasks"
+    )
+
+    print(
+        "3. Utilities"
+    )
+
+    print(
+        "0. Return to Main"
+    )
+
+
+def run_utils_menu() -> None:
+    while True:
+        display_utils_menu()
+
+        option = input(
+            "\nSelect option: "
+        ).strip()
+
+        if option == "1":
+            run_capabilities_menu()
+
+        elif option == "2":
+            run_capability_sub_tasks_menu()
+
+        elif option == "3":
+            run_standalone_utilities_menu()
 
         elif option == "0":
             return

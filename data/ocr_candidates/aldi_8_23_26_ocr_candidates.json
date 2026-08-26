@@ -11,7 +11,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 4",
-        "generated_at": "2026-08-25T20:23:46.942269+00:00",
+        "generated_at": "2026-08-26T14:52:00.799774+00:00",
         "image": {
           "width": 1504,
           "height": 3066
@@ -356,7 +356,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 6",
-        "generated_at": "2026-08-25T20:23:48.570328+00:00",
+        "generated_at": "2026-08-26T14:52:02.426855+00:00",
         "image": {
           "width": 1504,
           "height": 3066
@@ -716,7 +716,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 11",
-        "generated_at": "2026-08-25T20:23:49.910798+00:00",
+        "generated_at": "2026-08-26T14:52:03.771929+00:00",
         "image": {
           "width": 1504,
           "height": 3066
@@ -1586,7 +1586,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 4",
-        "generated_at": "2026-08-25T20:23:51.127667+00:00",
+        "generated_at": "2026-08-26T14:52:04.990699+00:00",
         "image": {
           "width": 1504,
           "height": 3066
@@ -1966,7 +1966,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 6",
-        "generated_at": "2026-08-25T20:23:53.164048+00:00",
+        "generated_at": "2026-08-26T14:52:07.025042+00:00",
         "image": {
           "width": 1504,
           "height": 3066
@@ -2351,7 +2351,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 11",
-        "generated_at": "2026-08-25T20:23:55.078301+00:00",
+        "generated_at": "2026-08-26T14:52:08.940583+00:00",
         "image": {
           "width": 1504,
           "height": 3066
