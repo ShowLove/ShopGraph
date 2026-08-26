@@ -1,20 +1,104 @@
-ShopGraph - Corrected OCR Benchmark Update
+ShopGraph - Purchase History Excel Schema Update
 
-ADD:
-    utils/DataBaseBuilder/benchmark_writer.py
+PURPOSE
 
-REPLACE:
-    utils/DataBaseBuilder/data_base_builder_main.py
-    utils/DataBaseBuilder/receipt_session.py
+This update changes the Purchase History worksheet from:
 
-Behavior added:
-- Review menu option 6: Accept Remaining Lines.
-- Raw OCR JSON remains immutable.
-- After a successful Excel commit, a corrected human-reviewed counterpart is written to data/benchmarks/ using the exact same filename as the raw OCR JSON.
-- Reviewed OCR lines preserve original OCR text in original_ocr_text and expose corrected text plus human_review metadata.
-- Skipped lines remain in the benchmark and are marked review_status=skipped.
-- If a benchmark already exists, the user chooses whether to replace it or keep it.
-- Cancelling before commit creates no benchmark.
+    Six-Digit SKU
+    Product
+    Tax Code
+    Store Number
+    Date 1
+    Price 1
+    Date 2
+    Price 2
+    ...
 
-Run normally:
+to:
+
+    Total
+    <blank spacer>
+    Store
+    Six-Digit SKU
+    Product
+    Tax Code
+    Store Number
+    Common Name
+    Category
+    Date 1
+    Price 1
+    Date 2
+    Price 2
+    ...
+
+ONLY THESE NEW FIELDS ARE POPULATED NOW
+
+Total
+    Added as an Excel equation that sums all Price N cells in that row.
+
+Store
+    Automatically populated from the selected receipt type:
+        Publix
+        Trader Joe's
+        Aldi
+        Other
+
+Common Name
+    Initialized to NA.
+    No current parsing or correction behavior attempts to fill it.
+
+Category
+    Initialized to NA.
+    No current parsing or correction behavior attempts to fill it.
+
+TOTAL EQUATION
+
+Each row receives a future-safe Excel formula beginning in column A.
+
+If column A already contains an Excel formula, the code leaves that formula
+unchanged.
+
+The formula sums Price 1, Price 2, Price 3, etc. while ignoring Date columns
+and text values such as NA.
+
+EXISTING WORKBOOKS
+
+You do NOT need to delete shopgraph_purchase_history.xlsx.
+
+The first time this updated code opens the existing old-format workbook,
+it automatically migrates the Purchase History sheet.
+
+Existing:
+    SKU / Product / Tax Code / Store Number / Date N / Price N
+
+is moved safely into the new layout.
+
+Existing purchase history is preserved.
+
+Because the old workbook did not store the store company name, migrated rows
+initially receive:
+
+    Store = NA
+
+When a later receipt matches an existing product-history row, the selected
+receipt type fills that Store value automatically.
+
+Common Name and Category are initialized to NA.
+
+INSTALL
+
+Replace only:
+
+    utils/DataBaseBuilder/excel/purchase_history.py
+
+No other Python file needs to change.
+
+RUN
+
     python3 main.py
+
+Use the Data Base Builder normally.
+
+The workbook remains:
+
+    data/database/shopgraph_purchase_history.xlsx

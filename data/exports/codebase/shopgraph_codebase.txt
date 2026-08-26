@@ -29,13 +29,29 @@ shopping_analysis/
         utils_main.py
         DataBaseBuilder/
             __init__.py
+            benchmark_writer.py
             data_base_builder_main.py
+            purchase_record.py
+            receipt_loader.py
+            receipt_session.py
+            parsers/
+                __init__.py
+                aldi_parser.py
+                base_parser.py
+                other_parser.py
+                publix_parser.py
+                trader_joes_parser.py
+            excel/
+                __init__.py
+                purchase_history.py
     receipt/
     extractors/
         __init__.py
     data/
         requirements.txt
+        database/
         preprocessed/
+        benchmarks/
         prompts/
             creation_prompts/
             dev_prompts/
@@ -43,7 +59,7 @@ shopping_analysis/
 
 ================================================================================
 
-Generated: 2026-08-26 14:06:47.674105
+Generated: 2026-08-26 17:17:21.103944
 Root: /Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis
 Mode: LLM-clean export
 Excluded: receipt images, OCR JSON, datasets, databases, logs, caches
@@ -56,31 +72,26 @@ Excluded: receipt images, OCR JSON, datasets, databases, logs, caches
 FILE: INSTALL.txt
 ================================================================================
 
-ShopGraph - Data Base Builder Menu Foundation
+ShopGraph - Corrected OCR Benchmark Update
 
-Add:
-    utils/DataBaseBuilder/__init__.py
+ADD:
+    utils/DataBaseBuilder/benchmark_writer.py
+
+REPLACE:
     utils/DataBaseBuilder/data_base_builder_main.py
+    utils/DataBaseBuilder/receipt_session.py
 
-Replace:
-    utils/utils_main.py
+Behavior added:
+- Review menu option 6: Accept Remaining Lines.
+- Raw OCR JSON remains immutable.
+- After a successful Excel commit, a corrected human-reviewed counterpart is written to data/benchmarks/ using the exact same filename as the raw OCR JSON.
+- Reviewed OCR lines preserve original OCR text in original_ocr_text and expose corrected text plus human_review metadata.
+- Skipped lines remain in the benchmark and are marked review_status=skipped.
+- If a benchmark already exists, the user chooses whether to replace it or keep it.
+- Cancelling before commit creates no benchmark.
 
-The top-level Utilities menu becomes:
-
-    1. Capabilities
-    2. Capability Sub Tasks
-    3. Utilities
-    4. Data Base Builder
-    0. Return to Main
-
-Selecting 4 opens:
-
-    === ShopGraph Data Base Builder ===
-
-    0. Return to Main
-
-At this stage, no database functionality is implemented.
-This update only creates the DataBaseBuilder package and its menu entry point.
+Run normally:
+    python3 main.py
 
 
 ================================================================================
@@ -4968,34 +4979,642 @@ from utils.DataBaseBuilder.data_base_builder_main import (
 
 
 ================================================================================
+FILE: utils/DataBaseBuilder/benchmark_writer.py
+================================================================================
+
+from __future__ import annotations
+
+import json
+import os
+import tempfile
+from pathlib import Path
+
+from utils.constants import DATA_DIR
+from utils.DataBaseBuilder.purchase_record import NA, PurchaseRecord
+from utils.DataBaseBuilder.receipt_session import ReceiptSession
+
+
+BENCHMARK_DIR = DATA_DIR / "benchmarks"
+
+
+def _record_fields(record: PurchaseRecord) -> dict[str, str]:
+    return {
+        "six_digit_sku": record.six_digit_sku,
+        "product": record.product,
+        "tax_code": record.tax_code,
+        "price": record.price,
+        "store_number": record.store_number,
+        "date": record.date,
+    }
+
+
+def _corrected_text(record: PurchaseRecord, receipt_type: str) -> str:
+    if receipt_type == "Publix":
+        values = [record.product, record.tax_code, record.price]
+    elif receipt_type == "Trader Joe's":
+        values = [record.product, record.price]
+    elif receipt_type == "Aldi":
+        values = [record.six_digit_sku, record.product, record.price]
+    else:
+        values = [
+            record.six_digit_sku,
+            record.product,
+            record.tax_code,
+            record.price,
+        ]
+
+    meaningful = [value for value in values if value != NA]
+    return " ".join(meaningful) if meaningful else NA
+
+
+def _prompt_existing_benchmark(path: Path) -> bool:
+    if not path.exists():
+        return True
+
+    print(
+        "\nA benchmark already exists for this receipt:"
+        f"\n\n{path.name}"
+        "\n\n1. Replace benchmark with this newly reviewed version"
+        "\n0. Keep existing benchmark"
+    )
+
+    while True:
+        option = input("\nSelect option: ").strip()
+
+        if option == "1":
+            return True
+
+        if option == "0":
+            return False
+
+        print("\n[ERROR] Invalid option.")
+
+
+def _atomic_json_write(path: Path, data: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+
+    descriptor, temporary_name = tempfile.mkstemp(
+        suffix=".json",
+        dir=path.parent,
+    )
+    os.close(descriptor)
+    temporary_path = Path(temporary_name)
+
+    try:
+        with temporary_path.open("w", encoding="utf-8") as file:
+            json.dump(data, file, ensure_ascii=False, indent=2)
+            file.write("\n")
+
+        os.replace(temporary_path, path)
+    finally:
+        if temporary_path.exists():
+            temporary_path.unlink()
+
+
+def write_corrected_benchmark(session: ReceiptSession) -> Path | None:
+    """
+    Create a corrected counterpart of the immutable raw OCR JSON.
+
+    The benchmark keeps the original top-level structure and line metadata.
+    Reviewed lines retain their OCR text in ``original_ocr_text`` while the
+    ordinary ``text`` field becomes the final human-reviewed interpretation.
+    """
+    destination = BENCHMARK_DIR / session.source_path.name
+
+    if not _prompt_existing_benchmark(destination):
+        return None
+
+    with session.source_path.open("r", encoding="utf-8") as file:
+        data = json.load(file)
+
+    lines = data.get("text")
+    if not isinstance(lines, list):
+        raise ValueError("Raw OCR JSON must contain a top-level 'text' list.")
+
+    reviews = {
+        review.line_number: review
+        for review in session.reviewed_lines
+    }
+
+    for line in lines:
+        if not isinstance(line, dict):
+            continue
+
+        line_number = line.get("line_number")
+        review = reviews.get(line_number)
+
+        if review is None:
+            continue
+
+        line["review_status"] = review.status
+
+        if review.purchase is None:
+            continue
+
+        original_text = line.get("text", "")
+        corrected_text = _corrected_text(
+            review.purchase,
+            session.receipt_type,
+        )
+
+        line["original_ocr_text"] = original_text
+        line["text"] = corrected_text
+        line["human_review"] = _record_fields(review.purchase)
+
+    data["benchmark"] = {
+        "source_raw_ocr": session.source_path.name,
+        "receipt_type": session.receipt_type,
+        "store_number": session.store_number,
+        "receipt_date": session.receipt_date,
+        "starting_line_number": session.starting_line_number,
+        "reviewed_line_count": len(session.reviewed_lines),
+        "accepted_purchase_count": len(session.accepted_purchases),
+        "skipped_line_count": len(session.skipped_line_numbers),
+        "ground_truth": True,
+    }
+
+    _atomic_json_write(destination, data)
+    return destination.resolve()
+
+
+================================================================================
 FILE: utils/DataBaseBuilder/data_base_builder_main.py
 ================================================================================
 
+from __future__ import annotations
+
+from datetime import datetime
+import json
+
+from utils.DataBaseBuilder.benchmark_writer import write_corrected_benchmark
+from utils.DataBaseBuilder.excel.purchase_history import (
+    commit_receipt,
+    source_already_imported,
+)
+from utils.DataBaseBuilder.parsers import build_parser
+from utils.DataBaseBuilder.parsers.publix_parser import PUBLIX_TAX_PATTERN
+from utils.DataBaseBuilder.purchase_record import NA, PurchaseRecord
+from utils.DataBaseBuilder.receipt_loader import (
+    choose_raw_ocr_file,
+    load_ocr_lines,
+)
+from utils.DataBaseBuilder.receipt_session import ReceiptSession
+
+
+PUBLIX_TAX_OPTIONS = {
+    "1": ("F", "Food item. Basic grocery/raw food category; generally non-taxable in Florida and commonly SNAP/EBT eligible."),
+    "2": ("T", "Taxable item. Commonly taxable non-food or applicable prepared item."),
+    "3": ("TF", "Taxable Food."),
+    "4": ("LF", "Local Tax Food."),
+    "5": ("TLF", "Taxable / Local Tax Food."),
+    "6": (NA, "Unknown / not available."),
+}
+
+
 def display_data_base_builder_menu() -> None:
-    print(
-        "\n=== ShopGraph Data Base Builder ===\n"
-    )
+    print("\n=== ShopGraph Data Base Builder ===\n")
+    print("1. Add Receipt to Purchase History")
+    print("0. Return to Main")
+
+
+def _choose_receipt_parser():
+    print("\nSelect receipt type:\n")
+    print("1. Publix")
+    print("2. Trader Joe's")
+    print("3. Aldi")
+    print("4. Other")
+    print("0. Cancel")
+
+    while True:
+        option = input("\nSelect option: ").strip()
+
+        if option == "0":
+            return None
+
+        parser = build_parser(option)
+
+        if parser is not None:
+            return parser
+
+        print("\n[ERROR] Invalid option.")
+
+
+def _prompt_store_number(receipt_type: str) -> str | None:
+    if receipt_type == "Publix":
+        print("\nSelect store:\n")
+        print("1. 1058 - Indian Harbour Place")
+        print("2. Other")
+        print("0. Cancel")
+
+        while True:
+            option = input("\nSelect option: ").strip()
+
+            if option == "1":
+                return "1058"
+
+            if option == "2":
+                break
+
+            if option == "0":
+                return None
+
+            print("\n[ERROR] Invalid option.")
+
+    while True:
+        store_number = input("\nStore Number: ").strip()
+
+        if store_number:
+            return store_number
+
+        print("\n[ERROR] Store Number cannot be blank.")
+
+
+def _prompt_receipt_date() -> str | None:
+    while True:
+        value = input(
+            "\nReceipt date (MM/DD/YYYY, or 0 to cancel): "
+        ).strip()
+
+        if value == "0":
+            return None
+
+        try:
+            datetime.strptime(value, "%m/%d/%Y")
+            return value
+        except ValueError:
+            print("\n[ERROR] Enter the date as MM/DD/YYYY.")
+
+
+def _prompt_starting_line(lines: list[dict]) -> int | None:
+    available = {line["line_number"] for line in lines}
+    minimum = min(available)
+    maximum = max(available)
+
+    while True:
+        value = input(
+            f"\nStarting OCR line number ({minimum}-{maximum}, or 0 to cancel): "
+        ).strip()
+
+        if value == "0":
+            return None
+
+        if not value.isdigit():
+            print("\n[ERROR] Enter a numeric line number.")
+            continue
+
+        line_number = int(value)
+
+        if line_number not in available:
+            print(
+                "\n[ERROR] That line_number does not exist in the selected JSON."
+            )
+            continue
+
+        return line_number
+
+
+def _confirm_duplicate_import(source_path) -> bool:
+    if not source_already_imported(source_path):
+        return True
 
     print(
-        "0. Return to Main"
+        "\n[WARNING] This OCR JSON has already been imported:"
+        f"\n{source_path.name}"
+        "\n\n1. Cancel duplicate import"
+        "\n2. Continue anyway"
+    )
+
+    while True:
+        option = input("\nSelect option: ").strip()
+
+        if option == "1":
+            return False
+
+        if option == "2":
+            return True
+
+        print("\n[ERROR] Invalid option.")
+
+
+def _display_line(parser, line: dict, record: PurchaseRecord) -> None:
+    print("\n" + "-" * 50)
+    print(f"\nOCR Line {line['line_number']}")
+    print(line["text"])
+    print("\nProposed interpretation:\n")
+    print(parser.format_record(record))
+
+
+def _prompt_tax_code(current_value: str) -> str:
+    print(f"\nCurrent Tax Code: {current_value}")
+    print("\nSelect Tax Code:\n")
+
+    for option, (code, description) in PUBLIX_TAX_OPTIONS.items():
+        print(f"{option}. {code}")
+        print(f"   {description}")
+
+    print("7. Enter custom value")
+
+    while True:
+        option = input("\nSelect option: ").strip()
+
+        if option in PUBLIX_TAX_OPTIONS:
+            return PUBLIX_TAX_OPTIONS[option][0]
+
+        if option == "7":
+            return input("\nEnter Tax Code: ").strip() or NA
+
+        print("\n[ERROR] Invalid option.")
+
+
+def _valid_price(value: str) -> bool:
+    if value == NA:
+        return True
+
+    try:
+        amount = float(value)
+    except ValueError:
+        return False
+
+    return amount >= 0
+
+
+def _correct_field(
+    parser,
+    record: PurchaseRecord,
+    field_name: str,
+) -> PurchaseRecord:
+    label = parser.field_labels[field_name]
+    current = getattr(record, field_name)
+
+    if field_name == "tax_code" and parser.receipt_type == "Publix":
+        value = _prompt_tax_code(current)
+        return record.with_value(field_name, value)
+
+    while True:
+        print(f"\nCurrent {label}: {current}")
+        value = input(f"Enter corrected {label}: ").strip()
+        value = value or NA
+
+        if field_name == "six_digit_sku":
+            if value != NA and (not value.isdigit() or len(value) != 6):
+                print("\n[ERROR] SKU must be exactly six digits or NA.")
+                continue
+
+        if field_name == "price" and not _valid_price(value):
+            print("\n[ERROR] Price must be a non-negative number or NA.")
+            continue
+
+        if field_name == "date" and value != NA:
+            try:
+                datetime.strptime(value, "%m/%d/%Y")
+            except ValueError:
+                print("\n[ERROR] Date must use MM/DD/YYYY or NA.")
+                continue
+
+        return record.with_value(field_name, value)
+
+
+def _correct_columns(parser, record: PurchaseRecord) -> PurchaseRecord:
+    valid_numbers = {
+        str(index): field_name
+        for index, field_name in enumerate(
+            parser.display_fields,
+            start=1,
+        )
+    }
+
+    while True:
+        raw = input(
+            "\nCorrect the following column numbers "
+            "(separate with spaces): "
+        ).strip()
+        selections = raw.split()
+
+        if selections and all(
+            selection in valid_numbers
+            for selection in selections
+        ):
+            break
+
+        print("\n[ERROR] Enter valid displayed column numbers.")
+
+    corrected = record
+
+    for selection in selections:
+        corrected = _correct_field(
+            parser,
+            corrected,
+            valid_numbers[selection],
+        )
+
+    return corrected
+
+
+def _review_line(parser, line: dict, record: PurchaseRecord) -> tuple[str, PurchaseRecord]:
+    current = record
+
+    while True:
+        _display_line(parser, line, current)
+        print("\n1. Accept Line")
+        print("2. Correct Columns")
+        print("3. Accept With NAs / Skip Corrections")
+        print("4. Skip Line")
+        print("5. Finish Receipt")
+        print("6. Accept Remaining Lines")
+        print("0. Cancel Receipt Import")
+
+        option = input("\nSelect option: ").strip()
+
+        if option in {"1", "3"}:
+            return "accept", current
+
+        if option == "2":
+            current = _correct_columns(parser, current)
+            continue
+
+        if option == "4":
+            return "skip", current
+
+        if option == "5":
+            return "finish", current
+
+        if option == "6":
+            return "accept_remaining", current
+
+        if option == "0":
+            return "cancel", current
+
+        print("\n[ERROR] Invalid option.")
+
+
+def _run_receipt_import() -> None:
+    source_path = choose_raw_ocr_file()
+
+    if source_path is None:
+        return
+
+    try:
+        lines = load_ocr_lines(source_path)
+    except (OSError, ValueError) as error:
+        print(f"\n[ERROR] {error}")
+        return
+
+    parser = _choose_receipt_parser()
+
+    if parser is None:
+        return
+
+    store_number = _prompt_store_number(parser.receipt_type)
+
+    if store_number is None:
+        return
+
+    receipt_date = _prompt_receipt_date()
+
+    if receipt_date is None:
+        return
+
+    starting_line = _prompt_starting_line(lines)
+
+    if starting_line is None:
+        return
+
+    if not _confirm_duplicate_import(source_path):
+        return
+
+    session = ReceiptSession(
+        source_path=source_path,
+        receipt_type=parser.receipt_type,
+        store_number=store_number,
+        receipt_date=receipt_date,
+        starting_line_number=starting_line,
+    )
+
+    eligible_lines = [
+        line
+        for line in lines
+        if line["line_number"] >= starting_line
+    ]
+
+    should_commit = False
+
+    for line in eligible_lines:
+        record = parser.parse_line(
+            text=line["text"],
+            store_number=store_number,
+            receipt_date=receipt_date,
+        )
+
+        action, reviewed_record = _review_line(
+            parser,
+            line,
+            record,
+        )
+
+        if action == "accept":
+            session.accept(
+                line_number=line["line_number"],
+                purchase=reviewed_record,
+            )
+            continue
+
+        if action == "skip":
+            session.skip(line["line_number"])
+            continue
+
+        if action == "accept_remaining":
+            session.accept(
+                line_number=line["line_number"],
+                purchase=reviewed_record,
+                status="bulk_accepted",
+            )
+
+            current_index = eligible_lines.index(line)
+
+            for remaining_line in eligible_lines[current_index + 1:]:
+                remaining_record = parser.parse_line(
+                    text=remaining_line["text"],
+                    store_number=store_number,
+                    receipt_date=receipt_date,
+                )
+                session.accept(
+                    line_number=remaining_line["line_number"],
+                    purchase=remaining_record,
+                    status="bulk_accepted",
+                )
+
+            should_commit = True
+            break
+
+        if action == "finish":
+            should_commit = True
+            break
+
+        if action == "cancel":
+            print(
+                "\n[INFO] Receipt import cancelled. "
+                "No workbook changes were made."
+            )
+            return
+    else:
+        should_commit = True
+
+    if not should_commit:
+        return
+
+    if not session.accepted_purchases:
+        print(
+            "\n[INFO] No purchase lines were accepted. "
+            "Nothing was written."
+        )
+        return
+
+    try:
+        summary = commit_receipt(session)
+    except (OSError, ValueError) as error:
+        print(f"\n[ERROR] Could not commit receipt: {error}")
+        return
+
+    benchmark_path = None
+
+    try:
+        benchmark_path = write_corrected_benchmark(session)
+    except (OSError, ValueError, json.JSONDecodeError) as error:
+        print(
+            "\n[WARNING] Purchase History was committed successfully, "
+            "but the corrected benchmark could not be written:"
+            f"\n{error}"
+        )
+
+    print("\n[OK] Receipt committed to Purchase History.")
+    print(f"\nWorkbook:\n{summary['workbook_path']}")
+
+    if benchmark_path is not None:
+        print(f"\nCorrected Benchmark:\n{benchmark_path}")
+    else:
+        print("\nCorrected Benchmark:\nExisting benchmark kept unchanged.")
+
+    print(
+        f"\nPurchases added: {summary['purchases_added']}"
+        f"\nExisting product histories updated: "
+        f"{summary['existing_histories_updated']}"
+        f"\nNew product rows created: {summary['new_product_rows']}"
     )
 
 
 def run_data_base_builder_menu() -> None:
     while True:
         display_data_base_builder_menu()
+        option = input("\nSelect option: ").strip()
 
-        option = input(
-            "\nSelect option: "
-        ).strip()
+        if option == "1":
+            _run_receipt_import()
 
-        if option == "0":
+        elif option == "0":
             return
 
         else:
-            print(
-                "\n[ERROR] Invalid option."
-            )
+            print("\n[ERROR] Invalid option.")
 
 
 def main() -> None:
@@ -5004,6 +5623,829 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
+================================================================================
+FILE: utils/DataBaseBuilder/purchase_record.py
+================================================================================
+
+from __future__ import annotations
+
+from dataclasses import dataclass, replace
+
+
+NA = "NA"
+
+
+@dataclass(frozen=True)
+class PurchaseRecord:
+    six_digit_sku: str = NA
+    product: str = NA
+    tax_code: str = NA
+    price: str = NA
+    store_number: str = NA
+    date: str = NA
+
+    def with_value(self, field_name: str, value: str) -> "PurchaseRecord":
+        cleaned = value.strip() or NA
+        return replace(self, **{field_name: cleaned})
+
+
+================================================================================
+FILE: utils/DataBaseBuilder/receipt_loader.py
+================================================================================
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+from utils.constants import RAW_OCR_DIR
+
+
+def list_raw_ocr_files() -> list[Path]:
+    if not RAW_OCR_DIR.exists():
+        return []
+
+    return sorted(
+        RAW_OCR_DIR.glob("*_raw_ocr.json"),
+        key=lambda path: path.name.lower(),
+    )
+
+
+def choose_raw_ocr_file() -> Path | None:
+    files = list_raw_ocr_files()
+
+    if not files:
+        print(
+            "\n[INFO] No raw OCR JSON files were found in:"
+            f"\n{RAW_OCR_DIR}"
+        )
+        return None
+
+    print("\nSelect raw OCR file:\n")
+
+    for index, path in enumerate(files, start=1):
+        print(f"{index}. {path.name}")
+
+    print("0. Cancel")
+
+    while True:
+        choice = input("\nSelect option: ").strip()
+
+        if choice == "0":
+            return None
+
+        if choice.isdigit():
+            index = int(choice)
+
+            if 1 <= index <= len(files):
+                return files[index - 1]
+
+        print("\n[ERROR] Invalid option.")
+
+
+def load_ocr_lines(path: Path) -> list[dict]:
+    with path.open("r", encoding="utf-8") as file:
+        data = json.load(file)
+
+    lines = data.get("text")
+
+    if not isinstance(lines, list):
+        raise ValueError(
+            "Raw OCR JSON must contain a top-level 'text' list."
+        )
+
+    validated = []
+
+    for line in lines:
+        if not isinstance(line, dict):
+            continue
+
+        line_number = line.get("line_number")
+        text = line.get("text")
+
+        if not isinstance(line_number, int):
+            continue
+
+        if not isinstance(text, str):
+            continue
+
+        if not text.strip():
+            continue
+
+        validated.append(line)
+
+    validated.sort(key=lambda item: item["line_number"])
+
+    if not validated:
+        raise ValueError(
+            "Raw OCR JSON contains no usable line_number/text records."
+        )
+
+    return validated
+
+
+================================================================================
+FILE: utils/DataBaseBuilder/receipt_session.py
+================================================================================
+
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+from pathlib import Path
+
+from utils.DataBaseBuilder.purchase_record import PurchaseRecord
+
+
+@dataclass(frozen=True)
+class ReviewedLine:
+    line_number: int
+    status: str
+    purchase: PurchaseRecord | None = None
+
+
+@dataclass
+class ReceiptSession:
+    source_path: Path
+    receipt_type: str
+    store_number: str
+    receipt_date: str
+    starting_line_number: int
+    accepted_purchases: list[PurchaseRecord] = field(default_factory=list)
+    skipped_line_numbers: list[int] = field(default_factory=list)
+    reviewed_lines: list[ReviewedLine] = field(default_factory=list)
+
+    def accept(
+        self,
+        line_number: int,
+        purchase: PurchaseRecord,
+        status: str = "accepted",
+    ) -> None:
+        self.accepted_purchases.append(purchase)
+        self.reviewed_lines.append(
+            ReviewedLine(
+                line_number=line_number,
+                status=status,
+                purchase=purchase,
+            )
+        )
+
+    def skip(self, line_number: int) -> None:
+        self.skipped_line_numbers.append(line_number)
+        self.reviewed_lines.append(
+            ReviewedLine(
+                line_number=line_number,
+                status="skipped",
+            )
+        )
+
+
+================================================================================
+FILE: utils/DataBaseBuilder/parsers/__init__.py
+================================================================================
+
+from utils.DataBaseBuilder.parsers.aldi_parser import AldiParser
+from utils.DataBaseBuilder.parsers.other_parser import OtherParser
+from utils.DataBaseBuilder.parsers.publix_parser import PublixParser
+from utils.DataBaseBuilder.parsers.trader_joes_parser import TraderJoesParser
+
+
+PARSERS = {
+    "1": PublixParser,
+    "2": TraderJoesParser,
+    "3": AldiParser,
+    "4": OtherParser,
+}
+
+
+def build_parser(option: str):
+    parser_class = PARSERS.get(option)
+
+    if parser_class is None:
+        return None
+
+    return parser_class()
+
+
+================================================================================
+FILE: utils/DataBaseBuilder/parsers/aldi_parser.py
+================================================================================
+
+from __future__ import annotations
+
+from utils.DataBaseBuilder.parsers.base_parser import BaseReceiptParser
+from utils.DataBaseBuilder.purchase_record import NA, PurchaseRecord
+
+
+class AldiParser(BaseReceiptParser):
+    receipt_type = "Aldi"
+    display_fields = (
+        "six_digit_sku",
+        "product",
+        "price",
+        "store_number",
+        "date",
+    )
+
+    def parse_line(
+        self,
+        text: str,
+        store_number: str,
+        receipt_date: str,
+    ) -> PurchaseRecord:
+        return PurchaseRecord(
+            six_digit_sku=self.extract_sku(text),
+            product=self.clean_product_text(
+                text,
+                remove_sku=True,
+            ),
+            tax_code=NA,
+            price=self.extract_price(text),
+            store_number=store_number,
+            date=receipt_date,
+        )
+
+
+================================================================================
+FILE: utils/DataBaseBuilder/parsers/base_parser.py
+================================================================================
+
+from __future__ import annotations
+
+import re
+from abc import ABC, abstractmethod
+
+from utils.DataBaseBuilder.purchase_record import NA, PurchaseRecord
+
+
+PRICE_PATTERN = re.compile(r"(?<!\d)(\d+[.,]\d{2})(?!\d)")
+SKU_PATTERN = re.compile(r"(?<!\d)(\d{6})(?!\d)")
+
+
+class BaseReceiptParser(ABC):
+    receipt_type = "Other"
+    display_fields = (
+        "six_digit_sku",
+        "product",
+        "tax_code",
+        "price",
+        "store_number",
+        "date",
+    )
+
+    field_labels = {
+        "six_digit_sku": "Six-Digit SKU",
+        "product": "Product",
+        "tax_code": "Tax Code",
+        "price": "Price",
+        "store_number": "Store Number",
+        "date": "Date",
+    }
+
+    @abstractmethod
+    def parse_line(
+        self,
+        text: str,
+        store_number: str,
+        receipt_date: str,
+    ) -> PurchaseRecord:
+        raise NotImplementedError
+
+    def extract_price(self, text: str) -> str:
+        matches = PRICE_PATTERN.findall(text)
+
+        if len(matches) != 1:
+            return NA
+
+        return matches[0].replace(",", ".")
+
+    def extract_sku(self, text: str) -> str:
+        matches = SKU_PATTERN.findall(text)
+
+        if len(matches) != 1:
+            return NA
+
+        return matches[0]
+
+    def clean_product_text(
+        self,
+        text: str,
+        remove_sku: bool = False,
+        tax_pattern: re.Pattern | None = None,
+    ) -> str:
+        working = text.strip()
+        working = PRICE_PATTERN.sub(" ", working)
+
+        if remove_sku:
+            working = SKU_PATTERN.sub(" ", working)
+
+        if tax_pattern is not None:
+            working = tax_pattern.sub(" ", working)
+
+        working = re.sub(r"\s+", " ", working).strip()
+        working = working.strip(" -:;,.|_~'\"()[]{}")
+
+        return working or NA
+
+    def format_record(self, record: PurchaseRecord) -> str:
+        lines = []
+
+        for index, field_name in enumerate(
+            self.display_fields,
+            start=1,
+        ):
+            label = self.field_labels[field_name]
+            value = getattr(record, field_name)
+            lines.append(f'{index}. {label}: "{value}"')
+
+        return "\n".join(lines)
+
+
+================================================================================
+FILE: utils/DataBaseBuilder/parsers/other_parser.py
+================================================================================
+
+from __future__ import annotations
+
+from utils.DataBaseBuilder.parsers.base_parser import BaseReceiptParser
+from utils.DataBaseBuilder.purchase_record import NA, PurchaseRecord
+
+
+class OtherParser(BaseReceiptParser):
+    receipt_type = "Other"
+
+    def parse_line(
+        self,
+        text: str,
+        store_number: str,
+        receipt_date: str,
+    ) -> PurchaseRecord:
+        return PurchaseRecord(
+            six_digit_sku=self.extract_sku(text),
+            product=self.clean_product_text(
+                text,
+                remove_sku=True,
+            ),
+            tax_code=NA,
+            price=self.extract_price(text),
+            store_number=store_number,
+            date=receipt_date,
+        )
+
+
+================================================================================
+FILE: utils/DataBaseBuilder/parsers/publix_parser.py
+================================================================================
+
+from __future__ import annotations
+
+import re
+
+from utils.DataBaseBuilder.parsers.base_parser import BaseReceiptParser
+from utils.DataBaseBuilder.purchase_record import NA, PurchaseRecord
+
+
+PUBLIX_TAX_PATTERN = re.compile(
+    r"(?<![A-Za-z])(TLF|TF|LF|F|T)(?![A-Za-z])",
+    re.IGNORECASE,
+)
+
+
+class PublixParser(BaseReceiptParser):
+    receipt_type = "Publix"
+    display_fields = (
+        "product",
+        "tax_code",
+        "price",
+        "store_number",
+        "date",
+    )
+
+    def parse_line(
+        self,
+        text: str,
+        store_number: str,
+        receipt_date: str,
+    ) -> PurchaseRecord:
+        tax_matches = [
+            match.upper()
+            for match in PUBLIX_TAX_PATTERN.findall(text)
+        ]
+
+        tax_code = (
+            tax_matches[0]
+            if len(tax_matches) == 1
+            else NA
+        )
+
+        return PurchaseRecord(
+            six_digit_sku=NA,
+            product=self.clean_product_text(
+                text,
+                tax_pattern=PUBLIX_TAX_PATTERN,
+            ),
+            tax_code=tax_code,
+            price=self.extract_price(text),
+            store_number=store_number,
+            date=receipt_date,
+        )
+
+
+================================================================================
+FILE: utils/DataBaseBuilder/parsers/trader_joes_parser.py
+================================================================================
+
+from __future__ import annotations
+
+from utils.DataBaseBuilder.parsers.base_parser import BaseReceiptParser
+from utils.DataBaseBuilder.purchase_record import NA, PurchaseRecord
+
+
+class TraderJoesParser(BaseReceiptParser):
+    receipt_type = "Trader Joe's"
+    display_fields = (
+        "product",
+        "price",
+        "store_number",
+        "date",
+    )
+
+    def parse_line(
+        self,
+        text: str,
+        store_number: str,
+        receipt_date: str,
+    ) -> PurchaseRecord:
+        return PurchaseRecord(
+            six_digit_sku=NA,
+            product=self.clean_product_text(text),
+            tax_code=NA,
+            price=self.extract_price(text),
+            store_number=store_number,
+            date=receipt_date,
+        )
+
+
+================================================================================
+FILE: utils/DataBaseBuilder/excel/__init__.py
+================================================================================
+
+from utils.DataBaseBuilder.excel.purchase_history import (
+    WORKBOOK_PATH,
+    commit_receipt,
+    source_already_imported,
+)
+
+
+================================================================================
+FILE: utils/DataBaseBuilder/excel/purchase_history.py
+================================================================================
+
+from __future__ import annotations
+
+import os
+import tempfile
+from datetime import datetime
+from pathlib import Path
+
+from openpyxl import Workbook, load_workbook
+from openpyxl.styles import Font
+from openpyxl.utils import get_column_letter
+
+from utils.constants import DATA_DIR
+from utils.DataBaseBuilder.purchase_record import NA, PurchaseRecord
+from utils.DataBaseBuilder.receipt_session import ReceiptSession
+
+
+DATABASE_DIR = DATA_DIR / "database"
+WORKBOOK_PATH = DATABASE_DIR / "shopgraph_purchase_history.xlsx"
+PURCHASE_SHEET = "Purchase History"
+IMPORT_SHEET = "Imported Receipts"
+FIXED_HEADERS = [
+    "Six-Digit SKU",
+    "Product",
+    "Tax Code",
+    "Store Number",
+]
+IMPORT_HEADERS = [
+    "Source OCR JSON",
+    "Store Number",
+    "Receipt Date",
+    "Imported Timestamp",
+]
+
+
+def _create_workbook():
+    workbook = Workbook()
+    purchase_sheet = workbook.active
+    purchase_sheet.title = PURCHASE_SHEET
+
+    for column, header in enumerate(FIXED_HEADERS, start=1):
+        purchase_sheet.cell(row=1, column=column, value=header)
+
+    _ensure_history_pair(purchase_sheet, 1)
+
+    import_sheet = workbook.create_sheet(IMPORT_SHEET)
+
+    for column, header in enumerate(IMPORT_HEADERS, start=1):
+        import_sheet.cell(row=1, column=column, value=header)
+
+    import_sheet.sheet_state = "hidden"
+    _format_workbook(workbook)
+    return workbook
+
+
+def _load_or_create_workbook():
+    if WORKBOOK_PATH.exists():
+        workbook = load_workbook(WORKBOOK_PATH)
+
+        if PURCHASE_SHEET not in workbook.sheetnames:
+            raise ValueError(
+                f"Workbook is missing required sheet: {PURCHASE_SHEET}"
+            )
+
+        if IMPORT_SHEET not in workbook.sheetnames:
+            import_sheet = workbook.create_sheet(IMPORT_SHEET)
+
+            for column, header in enumerate(IMPORT_HEADERS, start=1):
+                import_sheet.cell(row=1, column=column, value=header)
+
+            import_sheet.sheet_state = "hidden"
+
+        return workbook
+
+    return _create_workbook()
+
+
+def _ensure_history_pair(sheet, pair_number: int) -> tuple[int, int]:
+    date_column = 5 + (pair_number - 1) * 2
+    price_column = date_column + 1
+
+    sheet.cell(
+        row=1,
+        column=date_column,
+        value=f"Date {pair_number}",
+    )
+    sheet.cell(
+        row=1,
+        column=price_column,
+        value=f"Price {pair_number}",
+    )
+
+    return date_column, price_column
+
+
+def _format_workbook(workbook) -> None:
+    purchase_sheet = workbook[PURCHASE_SHEET]
+    purchase_sheet.freeze_panes = "A2"
+    purchase_sheet.auto_filter.ref = purchase_sheet.dimensions
+
+    for cell in purchase_sheet[1]:
+        cell.font = Font(bold=True)
+
+    import_sheet = workbook[IMPORT_SHEET]
+    import_sheet.freeze_panes = "A2"
+
+    for cell in import_sheet[1]:
+        cell.font = Font(bold=True)
+
+    widths = {
+        1: 18,
+        2: 34,
+        3: 14,
+        4: 16,
+    }
+
+    for column, width in widths.items():
+        purchase_sheet.column_dimensions[
+            get_column_letter(column)
+        ].width = width
+
+    for column in range(5, purchase_sheet.max_column + 1):
+        purchase_sheet.column_dimensions[
+            get_column_letter(column)
+        ].width = 14
+
+    import_widths = [32, 16, 16, 22]
+
+    for column, width in enumerate(import_widths, start=1):
+        import_sheet.column_dimensions[
+            get_column_letter(column)
+        ].width = width
+
+
+def _normalized(value) -> str:
+    if value is None:
+        return ""
+
+    return str(value).strip().casefold()
+
+
+def _find_matching_row(sheet, record: PurchaseRecord) -> int | None:
+    sku = _normalized(record.six_digit_sku)
+    product = _normalized(record.product)
+    store = _normalized(record.store_number)
+
+    for row in range(2, sheet.max_row + 1):
+        row_sku = _normalized(sheet.cell(row=row, column=1).value)
+        row_product = _normalized(sheet.cell(row=row, column=2).value)
+        row_store = _normalized(sheet.cell(row=row, column=4).value)
+
+        if record.six_digit_sku != NA:
+            if row_sku == sku and row_store == store:
+                return row
+        elif row_product == product and row_store == store:
+            return row
+
+    return None
+
+
+def _next_history_pair(sheet, row: int) -> tuple[int, int]:
+    pair_number = 1
+
+    while True:
+        date_column, price_column = _ensure_history_pair(
+            sheet,
+            pair_number,
+        )
+
+        date_value = sheet.cell(row=row, column=date_column).value
+        price_value = sheet.cell(row=row, column=price_column).value
+
+        if date_value in (None, "") and price_value in (None, ""):
+            return date_column, price_column
+
+        pair_number += 1
+
+
+def _excel_date(value: str):
+    try:
+        return datetime.strptime(value, "%m/%d/%Y").date()
+    except ValueError:
+        return value
+
+
+def _excel_price(value: str):
+    if value == NA:
+        return NA
+
+    try:
+        return float(value)
+    except ValueError:
+        return value
+
+
+def _resolve_tax_code_conflict(
+    existing: str,
+    incoming: str,
+    product: str,
+) -> str:
+    if existing == NA and incoming != NA:
+        return incoming
+
+    if incoming == NA or existing == incoming:
+        return existing
+
+    print(
+        "\n[WARNING] Tax Code conflict for product:"
+        f"\n{product}"
+        f"\n1. Keep existing Tax Code: {existing}"
+        f"\n2. Use incoming Tax Code: {incoming}"
+    )
+
+    while True:
+        option = input("\nSelect option: ").strip()
+
+        if option == "1":
+            return existing
+
+        if option == "2":
+            return incoming
+
+        print("\n[ERROR] Invalid option.")
+
+
+def _append_purchase(sheet, record: PurchaseRecord) -> bool:
+    row = _find_matching_row(sheet, record)
+    created = row is None
+
+    if created:
+        row = sheet.max_row + 1
+        sheet.cell(row=row, column=1, value=record.six_digit_sku)
+        sheet.cell(row=row, column=2, value=record.product)
+        sheet.cell(row=row, column=3, value=record.tax_code)
+        sheet.cell(row=row, column=4, value=record.store_number)
+    else:
+        existing_tax = str(
+            sheet.cell(row=row, column=3).value or NA
+        )
+        selected_tax = _resolve_tax_code_conflict(
+            existing=existing_tax,
+            incoming=record.tax_code,
+            product=record.product,
+        )
+        sheet.cell(row=row, column=3, value=selected_tax)
+
+    date_column, price_column = _next_history_pair(sheet, row)
+    date_cell = sheet.cell(row=row, column=date_column)
+    price_cell = sheet.cell(row=row, column=price_column)
+
+    date_cell.value = _excel_date(record.date)
+    date_cell.number_format = "mm/dd/yyyy"
+
+    price_cell.value = _excel_price(record.price)
+
+    if record.price != NA:
+        price_cell.number_format = "$0.00"
+
+    return created
+
+
+def _source_already_imported(workbook, source_name: str) -> bool:
+    sheet = workbook[IMPORT_SHEET]
+    normalized_source = _normalized(source_name)
+
+    for row in range(2, sheet.max_row + 1):
+        existing = sheet.cell(row=row, column=1).value
+
+        if _normalized(existing) == normalized_source:
+            return True
+
+    return False
+
+
+def source_already_imported(source_path: Path) -> bool:
+    if not WORKBOOK_PATH.exists():
+        return False
+
+    workbook = _load_or_create_workbook()
+    return _source_already_imported(workbook, source_path.name)
+
+
+def _record_import(workbook, session: ReceiptSession) -> None:
+    sheet = workbook[IMPORT_SHEET]
+    row = sheet.max_row + 1
+
+    sheet.cell(row=row, column=1, value=session.source_path.name)
+    sheet.cell(row=row, column=2, value=session.store_number)
+    sheet.cell(
+        row=row,
+        column=3,
+        value=_excel_date(session.receipt_date),
+    )
+    sheet.cell(row=row, column=3).number_format = "mm/dd/yyyy"
+    sheet.cell(
+        row=row,
+        column=4,
+        value=datetime.now(),
+    )
+    sheet.cell(row=row, column=4).number_format = "mm/dd/yyyy hh:mm"
+
+
+def _atomic_save(workbook) -> None:
+    DATABASE_DIR.mkdir(parents=True, exist_ok=True)
+
+    file_descriptor, temporary_name = tempfile.mkstemp(
+        suffix=".xlsx",
+        dir=DATABASE_DIR,
+    )
+    os.close(file_descriptor)
+    temporary_path = Path(temporary_name)
+
+    try:
+        workbook.save(temporary_path)
+        os.replace(temporary_path, WORKBOOK_PATH)
+    finally:
+        if temporary_path.exists():
+            temporary_path.unlink()
+
+
+def commit_receipt(session: ReceiptSession) -> dict:
+    workbook = _load_or_create_workbook()
+    sheet = workbook[PURCHASE_SHEET]
+
+    new_rows = 0
+    updated_rows = 0
+
+    for record in session.accepted_purchases:
+        created = _append_purchase(sheet, record)
+
+        if created:
+            new_rows += 1
+        else:
+            updated_rows += 1
+
+    _record_import(workbook, session)
+    _format_workbook(workbook)
+    _atomic_save(workbook)
+
+    return {
+        "workbook_path": WORKBOOK_PATH.resolve(),
+        "purchases_added": len(session.accepted_purchases),
+        "existing_histories_updated": updated_rows,
+        "new_product_rows": new_rows,
+    }
 
 
 ================================================================================
@@ -5020,3 +6462,4 @@ Pillow
 pytesseract
 opencv-python
 numpy
+openpyxl
