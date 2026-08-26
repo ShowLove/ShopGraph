@@ -1,25 +1,48 @@
-ShopGraph - Data Base Builder Menu Foundation
+ShopGraph - Purchase History Data Base Builder
 
-Add:
+This update implements the first full Data Base Builder receipt-ingestion workflow.
+
+ADD these files:
+    utils/DataBaseBuilder/purchase_record.py
+    utils/DataBaseBuilder/receipt_loader.py
+    utils/DataBaseBuilder/receipt_session.py
+    utils/DataBaseBuilder/parsers/__init__.py
+    utils/DataBaseBuilder/parsers/base_parser.py
+    utils/DataBaseBuilder/parsers/publix_parser.py
+    utils/DataBaseBuilder/parsers/trader_joes_parser.py
+    utils/DataBaseBuilder/parsers/aldi_parser.py
+    utils/DataBaseBuilder/parsers/other_parser.py
+    utils/DataBaseBuilder/excel/__init__.py
+    utils/DataBaseBuilder/excel/purchase_history.py
+
+REPLACE these files:
     utils/DataBaseBuilder/__init__.py
     utils/DataBaseBuilder/data_base_builder_main.py
+    data/requirements.txt
 
-Replace:
-    utils/utils_main.py
+No change is required to utils/utils_main.py because the current codebase already routes
+Utilities option 4 to run_data_base_builder_menu().
 
-The top-level Utilities menu becomes:
+Install/update dependencies from the project root using your normal environment, for example:
+    pip install -r data/requirements.txt
 
-    1. Capabilities
-    2. Capability Sub Tasks
-    3. Utilities
+Run:
+    python3 main.py
+
+Then choose:
+    1. Utilities
     4. Data Base Builder
-    0. Return to Main
+    1. Add Receipt to Purchase History
 
-Selecting 4 opens:
+Raw OCR input is read from:
+    data/raw_ocr/*_raw_ocr.json
 
-    === ShopGraph Data Base Builder ===
+The persistent workbook is created/updated at:
+    data/database/shopgraph_purchase_history.xlsx
 
-    0. Return to Main
+Workbook sheets:
+    Purchase History
+    Imported Receipts (hidden duplicate-import audit sheet)
 
-At this stage, no database functionality is implemented.
-This update only creates the DataBaseBuilder package and its menu entry point.
+The raw OCR JSON is never modified. Accepted lines are held in memory and the workbook is
+written only when the receipt is finished. Cancelling a receipt leaves the workbook unchanged.

@@ -1,0 +1,960 @@
+You are an experienced Python software architect and data engineer.
+
+Your task is to extend an existing long-term grocery receipt analysis
+application called ShopGraph.
+
+I am attaching the CURRENT ShopGraph codebase.
+
+Read the attached codebase carefully before making changes.
+
+Do not redesign unrelated parts of the application.
+
+Preserve the existing architecture, menus, naming conventions, coding style,
+user experience, and simplified workflow wherever possible.
+
+When finished, provide ALL complete Python files necessary for the change.
+Downloadable files are preferred.
+
+Do not provide partial snippets unless specifically requested.
+
+If the attached codebase contains everything required, execute the task
+without asking intermediate questions.
+
+======================================================================
+PROJECT PHILOSOPHY
+======================================================================
+
+ShopGraph is intended to become a long-term grocery shopping database and
+analytics platform.
+
+The system currently follows approximately:
+
+Receipt Image
+    ↓
+OCR Acquisition Pipeline
+    ↓
+Raw OCR JSON
+    ↓
+Database Builder
+    ↓
+Purchase History
+    ↓
+Future analytics
+
+The application should remain:
+
+- modular
+- deterministic
+- maintainable
+- extensible
+- testable
+- easy to debug
+- suitable for long-term growth
+
+Do not optimize for the shortest implementation.
+
+Favor explicit, readable architecture.
+
+======================================================================
+CURRENT ARCHITECTURE
+======================================================================
+
+The current application has a top-level menu that eventually reaches:
+
+=== ShopGraph Utilities ===
+
+1. Capabilities
+2. Capability Sub Tasks
+3. Utilities
+4. Data Base Builder
+0. Return to Main
+
+The Data Base Builder code lives under:
+
+utils/
+    DataBaseBuilder/
+        __init__.py
+        data_base_builder_main.py
+
+Preserve this architecture.
+
+All new database-builder-specific code should normally live inside:
+
+utils/DataBaseBuilder/
+
+Do not move the OCR Acquisition Pipeline.
+
+======================================================================
+CURRENT OCR INPUT
+======================================================================
+
+The OCR Acquisition Pipeline currently produces files such as:
+
+data/raw_ocr/IMG_0253_raw_ocr.json
+
+These JSON files are the INPUT to this new Database Builder workflow.
+
+The JSON contains OCR lines such as:
+
+{
+    "line_number": 8,
+    "text": "Sweet Loren's Gf Brownie",
+    "confidence": 93.25,
+    "source_candidate": "grayscale_psm11",
+    "image_variant": "grayscale",
+    "psm": 11,
+    "support_count": 3,
+    "match_method": "fuzzy",
+    "line_quality_score": 95.45,
+    "consensus_score": 103.45,
+    "reconstructed": false,
+    "reconstruction_reason":
+        "line does not contain exactly one six-digit SKU"
+}
+
+For this stage, the most important fields are:
+
+- line_number
+- text
+
+Do not modify the raw OCR JSON.
+
+It is immutable source data.
+
+======================================================================
+NEW DATABASE BUILDER WORKFLOW
+======================================================================
+
+Update:
+
+utils/DataBaseBuilder/data_base_builder_main.py
+
+so its menu becomes approximately:
+
+=== ShopGraph Data Base Builder ===
+
+1. Add Receipt to Purchase History
+0. Return to Main
+
+Selecting option 1 begins an interactive receipt-ingestion workflow.
+
+======================================================================
+STEP 1 — SELECT RAW OCR FILE
+======================================================================
+
+The program should display the available JSON files from:
+
+data/raw_ocr/
+
+The user chooses one.
+
+Do not require the user to manually type the full path.
+
+If no files exist, display a clear message and return safely.
+
+======================================================================
+STEP 2 — CHOOSE RECEIPT TYPE
+======================================================================
+
+Prompt:
+
+Select receipt type:
+
+1. Publix
+2. Trader Joe's
+3. Aldi
+4. Other
+0. Cancel
+
+Receipt parsing rules should be separated by store type so that additional
+stores can be added later without rewriting the whole Database Builder.
+
+Prefer a design such as:
+
+utils/DataBaseBuilder/
+    data_base_builder_main.py
+    receipt_loader.py
+    receipt_session.py
+    parsers/
+        __init__.py
+        base_parser.py
+        publix_parser.py
+        trader_joes_parser.py
+        aldi_parser.py
+        other_parser.py
+    excel/
+        __init__.py
+        purchase_history.py
+
+You may adjust these exact filenames if the attached architecture suggests a
+better organization, but preserve separation of responsibilities.
+
+======================================================================
+STEP 3 — PREPOPULATE RECEIPT METADATA
+======================================================================
+
+Before processing individual product lines, gather information that applies
+to the entire receipt.
+
+Ask for:
+
+1. Store Number
+2. Receipt Date
+3. Starting OCR Line Number
+
+----------------------------------------------------------------------
+STORE NUMBER
+----------------------------------------------------------------------
+
+For Publix initially provide:
+
+1. 1058 - Indian Harbour Place
+2. Other
+
+If option 1 is selected:
+
+Store Number = 1058
+
+If Other is selected:
+
+Prompt the user to manually enter the store number.
+
+Trader Joe's and Aldi may initially prompt for the store number manually
+unless the current architecture makes a reusable store-choice mechanism
+preferable.
+
+Design store choices so additional known locations can easily be added later.
+
+----------------------------------------------------------------------
+DATE
+----------------------------------------------------------------------
+
+Prompt the user to enter the receipt date.
+
+Expected format:
+
+MM/DD/YYYY
+
+Example:
+
+08/25/2026
+
+Validate the format.
+
+This date should then automatically populate every accepted purchase from
+that receipt.
+
+----------------------------------------------------------------------
+STARTING LINE NUMBER
+----------------------------------------------------------------------
+
+Prompt:
+
+Starting OCR line number:
+
+Example:
+
+22
+
+Processing begins with the JSON object whose:
+
+"line_number": 22
+
+and proceeds forward in ascending line-number order.
+
+This allows the user to skip receipt headers and begin directly at the
+first product.
+
+======================================================================
+STORE-SPECIFIC DATA MODEL
+======================================================================
+
+The interactive parser should produce a standard internal purchase record.
+
+Use this canonical structure:
+
+{
+    "six_digit_sku": "... or NA",
+    "product": "... or NA",
+    "tax_code": "... or NA",
+    "price": "... or NA",
+    "store_number": "...",
+    "date": "MM/DD/YYYY"
+}
+
+All stores ultimately map into this same schema.
+
+Never omit fields.
+
+Use:
+
+"NA"
+
+when the information does not apply or cannot be determined.
+
+----------------------------------------------------------------------
+PUBLIX
+----------------------------------------------------------------------
+
+Publix purchase information consists of:
+
+- Product
+- Tax Code
+- Price
+- Store Number
+- Date
+
+Publix generally does NOT provide the six-digit Aldi-style SKU required by
+our canonical schema.
+
+Therefore:
+
+six_digit_sku = "NA"
+
+Publix tax codes currently supported:
+
+F
+    Food item.
+
+    In most states where Publix operates, such as Florida, basic grocery
+    items and raw foods are generally exempt from state sales tax.
+    This code also commonly identifies food eligible for SNAP/EBT.
+
+T
+    Taxable item.
+
+    Typically used for taxable non-food items, such as household products,
+    or certain prepared foods.
+
+TF
+    Taxable Food.
+
+LF
+    Local Tax Food.
+
+TLF
+    Taxable / Local Tax Food.
+
+Keep these descriptions available to the user during manual correction.
+
+Do NOT attempt to infer tax law beyond these supplied codes.
+
+If a Publix tax code cannot confidently be identified:
+
+tax_code = "NA"
+
+----------------------------------------------------------------------
+TRADER JOE'S
+----------------------------------------------------------------------
+
+Trader Joe's purchase information currently consists of:
+
+- Product
+- Price
+- Store Number
+- Date
+
+Therefore:
+
+six_digit_sku = "NA"
+tax_code = "NA"
+
+----------------------------------------------------------------------
+ALDI
+----------------------------------------------------------------------
+
+Aldi purchase information currently consists of:
+
+- Six-Digit SKU
+- Product
+- Price
+- Store Number
+- Date
+
+The SKU must be exactly six digits when present.
+
+For the canonical schema:
+
+tax_code may be populated if it is clearly available in the OCR input;
+otherwise use "NA".
+
+Do not invent or repair an uncertain SKU during this stage.
+
+----------------------------------------------------------------------
+OTHER
+----------------------------------------------------------------------
+
+For Other, allow the user to define/correct all canonical fields:
+
+- Six-Digit SKU
+- Product
+- Tax Code
+- Price
+- Store Number
+- Date
+
+Initial automatic guesses may be "NA".
+
+======================================================================
+LINE-BY-LINE PARSING
+======================================================================
+
+Beginning at the selected starting line_number, process OCR records in order.
+
+For each OCR line:
+
+1. Display the line number.
+2. Display the original OCR text exactly.
+3. Make a conservative deterministic best guess according to the selected
+   receipt parser.
+4. Show the proposed purchase record.
+5. Allow the user to accept, correct, skip, or finish.
+
+Example Publix OCR:
+
+Line 8:
+
+Sweet Loren's Gf Brownie
+
+Initial interpretation:
+
+1. Product: "Sweet Loren's Gf Brownie"
+2. Tax Code: "NA"
+3. Price: "NA"
+4. Store Number: "1058"
+5. Date: "08/25/2026"
+
+For Publix, six_digit_sku is implicitly "NA" and does not need to clutter the
+interactive correction display unless useful.
+
+The program should make conservative guesses.
+
+Do not manufacture missing information.
+
+If price is not confidently found:
+
+Price = "NA"
+
+If tax code is not confidently found:
+
+Tax Code = "NA"
+
+If SKU is not confidently found:
+
+Six-Digit SKU = "NA"
+
+======================================================================
+PER-LINE REVIEW MENU
+======================================================================
+
+After displaying the proposed interpretation, offer approximately:
+
+1. Accept Line
+2. Correct Columns
+3. Accept With NAs / Skip Corrections
+4. Skip Line
+5. Finish Receipt
+0. Cancel Receipt Import
+
+The exact wording may be refined for clarity.
+
+Behavior:
+
+ACCEPT LINE
+    Add the current interpreted purchase to the current receipt session.
+
+CORRECT COLUMNS
+    Let the user enter one or more column numbers separated by spaces.
+
+Example:
+
+Correct the following column numbers: 2 3
+
+Then correct each selected field one at a time.
+
+ACCEPT WITH NAs / SKIP CORRECTIONS
+    Accept the current proposed record exactly as displayed.
+    Existing "NA" values remain "NA".
+
+SKIP LINE
+    Do not add anything from this OCR line to the purchase history.
+    Continue to the next OCR line.
+
+FINISH RECEIPT
+    Stop processing OCR lines.
+    Commit all accepted purchases from this receipt to the Excel workbook.
+
+CANCEL RECEIPT IMPORT
+    Exit without writing purchases from the current receipt session.
+
+Avoid partially committing a receipt before the user chooses Finish Receipt.
+
+======================================================================
+MANUAL FIELD CORRECTION
+======================================================================
+
+When the user chooses Correct Columns, process requested fields sequentially.
+
+Example:
+
+Current interpretation:
+
+1. Product: "Sweet Loren's Gf Brownie"
+2. Tax Code: "NA"
+3. Price: "NA"
+4. Store Number: "1058"
+5. Date: "08/25/2026"
+
+User enters:
+
+2 3
+
+First correct Tax Code.
+
+For Publix show:
+
+Select Tax Code:
+
+1. F
+   Food item. Basic grocery/raw food category; generally non-taxable in
+   Florida and commonly SNAP/EBT eligible.
+
+2. T
+   Taxable item. Commonly taxable non-food or applicable prepared item.
+
+3. TF
+   Taxable Food.
+
+4. LF
+   Local Tax Food.
+
+5. TLF
+   Taxable / Local Tax Food.
+
+6. NA
+   Unknown / not available.
+
+7. Enter custom value
+
+Then correct Price:
+
+Current value:
+NA
+
+Enter corrected price:
+
+Validate prices when possible as monetary values such as:
+
+6.99
+
+Do not silently transform a user-entered value into something else.
+
+======================================================================
+REVIEW LOOP
+======================================================================
+
+After corrections, redisplay the complete current interpretation.
+
+Example:
+
+1. Product: "Sweet Loren's Gf Brownie"
+2. Tax Code: "F"
+3. Price: "6.99"
+4. Store Number: "1058"
+5. Date: "08/25/2026"
+
+Then return to the per-line review menu.
+
+Continue until the user accepts or skips the line.
+
+Then advance to the next OCR line.
+
+======================================================================
+EXCEL PURCHASE HISTORY
+======================================================================
+
+Use Python and openpyxl.
+
+Do NOT use CSV as the persistent final data store for this stage.
+
+Create/update:
+
+data/database/shopgraph_purchase_history.xlsx
+
+Create the directory automatically if necessary.
+
+The workbook should contain a worksheet named exactly:
+
+Purchase History
+
+Use this conceptual structure:
+
+Six-Digit SKU
+Product
+Tax Code
+Store Number
+Date 1
+Price 1
+Date 2
+Price 2
+Date 3
+Price 3
+...
+Date N
+Price N
+
+IMPORTANT:
+
+Do not create one permanent generic "Price" column in addition to the
+historical Price N columns.
+
+The fixed columns identify the product/store record.
+
+The repeating Date N / Price N pairs represent purchase history.
+
+======================================================================
+HOW PURCHASE HISTORY SHOULD GROW
+======================================================================
+
+When a new accepted purchase is committed:
+
+Try to locate an existing product-history row.
+
+Use conservative matching.
+
+Preferred identity rules:
+
+ALDI:
+    Primary identity:
+        Six-Digit SKU + Store Number
+
+    If SKU == "NA":
+        Product + Store Number
+
+PUBLIX:
+    Product + Store Number
+
+TRADER JOE'S:
+    Product + Store Number
+
+OTHER:
+    Six-Digit SKU + Product + Store Number where available.
+
+Do not fuzzy-match product names in this first implementation.
+
+Exact normalized matching is safer.
+
+Normalization may include:
+
+- trimming surrounding whitespace
+- case-insensitive comparison
+
+Do not spell-correct product names.
+
+If an existing row is found:
+
+Find the next unused Date N / Price N pair and append the new purchase.
+
+Example existing row:
+
+Six-Digit SKU | Product | Tax Code | Store Number | Date 1     | Price 1
+NA            | Milk    | F        | 1058         | 08/25/2026 | 4.99
+
+Next purchase becomes:
+
+Six-Digit SKU | Product | Tax Code | Store Number | Date 1     | Price 1 | Date 2     | Price 2
+NA            | Milk    | F        | 1058         | 08/25/2026 | 4.99    | 09/02/2026 | 5.19
+
+If no matching history row exists:
+
+Create a new row.
+
+======================================================================
+TAX CODE HISTORY
+======================================================================
+
+Tax Code is currently treated as part of the product's descriptive metadata,
+not as a repeating purchase observation.
+
+If an existing product row has:
+
+Tax Code = "NA"
+
+and a new accepted purchase has a real tax code:
+
+update the product row with the real tax code.
+
+If the existing row has a non-NA tax code and the new receipt has a different
+non-NA tax code:
+
+DO NOT silently overwrite it.
+
+Display a warning and ask the user which value should be retained.
+
+======================================================================
+DUPLICATE RECEIPT SAFEGUARD
+======================================================================
+
+Avoid accidentally importing the same receipt twice.
+
+Implement a simple deterministic receipt-import history.
+
+A reasonable solution is a hidden or separate workbook sheet such as:
+
+Imported Receipts
+
+Store at minimum:
+
+- source OCR JSON filename
+- store number
+- receipt date
+- imported timestamp
+
+Before importing, warn if the exact source OCR JSON file has already been
+committed.
+
+Allow the user to:
+
+1. Cancel duplicate import
+2. Continue anyway
+
+Do not rely only on filename if a cleaner deterministic mechanism naturally
+fits the architecture.
+
+======================================================================
+WORKBOOK QUALITY
+======================================================================
+
+Create a professional but simple workbook.
+
+At minimum:
+
+- bold header row
+- freeze header row
+- reasonable column widths
+- monetary cells stored as numeric values where possible
+- Excel-compatible date values where practical
+- no unnecessary decorative formatting
+
+Do not make Excel formatting more complex than the data model.
+
+======================================================================
+DATA SAFETY
+======================================================================
+
+1. Never modify raw OCR JSON.
+
+2. Do not write accepted purchases to Excel until the current receipt session
+   is explicitly finished.
+
+3. If the user cancels the receipt import, leave the workbook unchanged.
+
+4. Save the workbook safely.
+
+5. Preserve existing workbook history when adding later receipts.
+
+6. Never silently delete prior purchase history.
+
+7. Missing OCR information must remain "NA".
+
+8. Do not hallucinate product information.
+
+======================================================================
+PARSING PHILOSOPHY
+======================================================================
+
+The OCR is currently more reliable for prices than for many other fields.
+
+Therefore:
+
+- Be conservative.
+- Prefer "NA" over an unsupported guess.
+- Preserve OCR text exactly when using it as the product description.
+- Use deterministic regex/heuristic parsing.
+- Do not add an LLM/API dependency.
+- Do not call external services.
+- Do not use product databases yet.
+
+This is intentionally a human-in-the-loop ingestion stage.
+
+The user's corrections are authoritative for the current import session.
+
+======================================================================
+ARCHITECTURAL RESPONSIBILITIES
+======================================================================
+
+Keep responsibilities separated.
+
+For example:
+
+receipt_loader.py
+    Select and load raw OCR JSON.
+    Validate expected structure.
+    Expose OCR lines in line-number order.
+
+receipt_session.py
+    Hold receipt type, store number, receipt date, starting line,
+    accepted purchases, skipped lines, and cancellation state.
+
+parsers/
+    Store-specific deterministic parsing rules.
+
+purchase_record.py
+    Canonical purchase data structure if useful.
+
+excel/purchase_history.py
+    Create/open workbook.
+    Match product-history rows.
+    Expand Date N / Price N columns.
+    Commit completed receipt sessions.
+    Manage Imported Receipts.
+
+data_base_builder_main.py
+    CLI menus and orchestration only.
+
+Avoid putting the entire implementation into one giant file.
+
+======================================================================
+DEPENDENCIES
+======================================================================
+
+Use:
+
+openpyxl
+
+If the current requirements file needs updating, include the complete updated
+requirements file.
+
+Do not remove existing dependencies.
+
+======================================================================
+EXPECTED USER FLOW
+======================================================================
+
+Conceptually:
+
+python3 main.py
+
+1. Utilities
+
+4. Data Base Builder
+
+1. Add Receipt to Purchase History
+
+Select OCR file:
+1. IMG_0253_raw_ocr.json
+2. ...
+0. Cancel
+
+Select receipt type:
+1. Publix
+2. Trader Joe's
+3. Aldi
+4. Other
+0. Cancel
+
+Select store:
+1. 1058 - Indian Harbour Place
+2. Other
+
+Receipt date:
+08/25/2026
+
+Starting OCR line number:
+8
+
+--------------------------------------------------
+
+OCR Line 8
+Sweet Loren's Gf Brownie
+
+Proposed interpretation:
+
+1. Product: "Sweet Loren's Gf Brownie"
+2. Tax Code: "NA"
+3. Price: "NA"
+4. Store Number: "1058"
+5. Date: "08/25/2026"
+
+1. Accept Line
+2. Correct Columns
+3. Accept With NAs / Skip Corrections
+4. Skip Line
+5. Finish Receipt
+0. Cancel Receipt Import
+
+Select option:
+2
+
+Correct column numbers:
+2 3
+
+...perform corrections...
+
+Proposed interpretation:
+
+1. Product: "Sweet Loren's Gf Brownie"
+2. Tax Code: "F"
+3. Price: "6.99"
+4. Store Number: "1058"
+5. Date: "08/25/2026"
+
+Accept.
+
+Proceed to the next OCR line.
+
+At the end:
+
+[OK] Receipt committed to Purchase History.
+
+Workbook:
+data/database/shopgraph_purchase_history.xlsx
+
+Purchases added: X
+Existing product histories updated: X
+New product rows created: X
+
+======================================================================
+COMPATIBILITY
+======================================================================
+
+The current ShopGraph menus outside Data Base Builder must continue working.
+
+In particular, preserve:
+
+1. Capabilities
+2. Capability Sub Tasks
+3. Utilities
+4. Data Base Builder
+0. Return to Main
+
+Do not alter the behavior of the OCR Acquisition Pipeline.
+
+The output from:
+
+data/raw_ocr/
+
+is an immutable input to the Database Builder.
+
+======================================================================
+DELIVERABLE
+======================================================================
+
+Provide every complete file required to implement this.
+
+Include:
+
+- all new files
+- all modified files
+- updated requirements file if necessary
+- __init__.py files where needed
+- an INSTALL.txt describing exactly what to add/replace
+- downloadable ZIP containing the correct project-relative folder structure
+
+Do not give me only code snippets.
+
+Build this against the attached CURRENT codebase.
+
+Keep the architecture as close to the existing ShopGraph project as practical
+while establishing a strong foundation for future stores, parsing rules,
+database storage, and analytics.

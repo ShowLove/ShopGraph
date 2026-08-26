@@ -27,6 +27,9 @@ shopping_analysis/
         image_preprocessing.py
         main.py
         utils_main.py
+        DataBaseBuilder/
+            __init__.py
+            data_base_builder_main.py
     receipt/
     extractors/
         __init__.py
@@ -40,7 +43,7 @@ shopping_analysis/
 
 ================================================================================
 
-Generated: 2026-08-26 12:41:13.024520
+Generated: 2026-08-26 14:06:47.674105
 Root: /Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis
 Mode: LLM-clean export
 Excluded: receipt images, OCR JSON, datasets, databases, logs, caches
@@ -53,58 +56,31 @@ Excluded: receipt images, OCR JSON, datasets, databases, logs, caches
 FILE: INSTALL.txt
 ================================================================================
 
-ShopGraph - OCR Acquisition Pipeline Cleanup Utility
-
-FILES
+ShopGraph - Data Base Builder Menu Foundation
 
 Add:
-    utils/clean_ocr_acquisition_pipeline.py
+    utils/DataBaseBuilder/__init__.py
+    utils/DataBaseBuilder/data_base_builder_main.py
 
 Replace:
     utils/utils_main.py
 
-NEW UTILITY MENU
+The top-level Utilities menu becomes:
 
-=== ShopGraph Utilities ===
-
-1. Export Clean Codebase
-2. Clean OCR Acquisition Pipeline Data
-0. Return to Utilities Menu
-
-WHAT THE CLEANUP REMOVES
-
-All contents inside:
-
-    data/cropped/
-    data/perspective_corrected/
-    data/enlarged/
-    data/ocr_variants/
-    data/ocr_candidates/
-    data/raw_ocr/
-
-WHAT IT DOES NOT TOUCH
-
-    data/current_pic/
-
-The folder and all receipt images inside current_pic remain unchanged.
-
-The generated output folders themselves are also preserved. Only their
-contents are removed.
-
-SESSION STATE
-
-After cleanup, OCR Acquisition Pipeline session state is cleared so later
-pipeline stages cannot accidentally reference deleted files.
-
-RUN
-
-    python3 main.py
-
-Then:
-
-    1. Utilities
+    1. Capabilities
+    2. Capability Sub Tasks
     3. Utilities
-    2. Clean OCR Acquisition Pipeline Data
+    4. Data Base Builder
+    0. Return to Main
+
+Selecting 4 opens:
+
+    === ShopGraph Data Base Builder ===
+
+    0. Return to Main
+
+At this stage, no database functionality is implemented.
+This update only creates the DataBaseBuilder package and its menu entry point.
 
 
 ================================================================================
@@ -4740,6 +4716,9 @@ from utils.export_codebase import (
 from utils.clean_ocr_acquisition_pipeline import (
     run_ocr_acquisition_pipeline_cleanup,
 )
+from utils.DataBaseBuilder.data_base_builder_main import (
+    run_data_base_builder_menu,
+)
 
 
 def display_capabilities_menu() -> None:
@@ -4938,6 +4917,10 @@ def display_utils_menu() -> None:
     )
 
     print(
+        "4. Data Base Builder"
+    )
+
+    print(
         "0. Return to Main"
     )
 
@@ -4959,6 +4942,9 @@ def run_utils_menu() -> None:
         elif option == "3":
             run_standalone_utilities_menu()
 
+        elif option == "4":
+            run_data_base_builder_menu()
+
         elif option == "0":
             return
 
@@ -4970,6 +4956,54 @@ def run_utils_menu() -> None:
 
 if __name__ == "__main__":
     run_utils_menu()
+
+
+================================================================================
+FILE: utils/DataBaseBuilder/__init__.py
+================================================================================
+
+from utils.DataBaseBuilder.data_base_builder_main import (
+    run_data_base_builder_menu,
+)
+
+
+================================================================================
+FILE: utils/DataBaseBuilder/data_base_builder_main.py
+================================================================================
+
+def display_data_base_builder_menu() -> None:
+    print(
+        "\n=== ShopGraph Data Base Builder ===\n"
+    )
+
+    print(
+        "0. Return to Main"
+    )
+
+
+def run_data_base_builder_menu() -> None:
+    while True:
+        display_data_base_builder_menu()
+
+        option = input(
+            "\nSelect option: "
+        ).strip()
+
+        if option == "0":
+            return
+
+        else:
+            print(
+                "\n[ERROR] Invalid option."
+            )
+
+
+def main() -> None:
+    run_data_base_builder_menu()
+
+
+if __name__ == "__main__":
+    main()
 
 
 ================================================================================
