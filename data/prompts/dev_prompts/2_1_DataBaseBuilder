@@ -1,0 +1,398 @@
+======================================================================
+UPDATE 3 — CORRECTED BENCHMARK JSON
+======================================================================
+
+After a receipt has been successfully reviewed and ingested, create an
+UPDATED / CORRECTED copy of the raw OCR JSON in:
+
+data/benchmarks/
+
+The purpose of this file is to preserve the corrected, human-reviewed
+version of the OCR data after receipt ingestion.
+
+This corrected JSON becomes benchmark / ground-truth data that can later
+be used to evaluate and improve ShopGraph's OCR and parsing accuracy.
+
+Create:
+
+data/benchmarks/
+
+automatically if it does not already exist.
+
+======================================================================
+BENCHMARK FILE NAME
+======================================================================
+
+IMPORTANT:
+
+The benchmark JSON MUST KEEP THE SAME FILE NAME as the original raw OCR
+JSON.
+
+Do NOT rename it to *_FIXED.json.
+
+Example:
+
+Original:
+
+shopping_analysis/data/raw_ocr/IMG_0250_raw_ocr.json
+
+Corrected benchmark:
+
+shopping_analysis/data/benchmarks/IMG_0250_raw_ocr.json
+
+
+Another example:
+
+Original:
+
+shopping_analysis/data/raw_ocr/aldi_8_23_26_raw_ocr.json
+
+Corrected benchmark:
+
+shopping_analysis/data/benchmarks/aldi_8_23_26_raw_ocr.json
+
+
+The distinction between the files is their DIRECTORY, not their filename:
+
+data/raw_ocr/
+    = original OCR output
+
+data/benchmarks/
+    = corrected human-reviewed OCR output
+
+
+NEVER modify the original file in:
+
+data/raw_ocr/
+
+The original raw OCR JSON is immutable.
+
+======================================================================
+WHAT THE BENCHMARK JSON REPRESENTS
+======================================================================
+
+The benchmark JSON is NOT a separate receipt-summary format.
+
+It is an UPDATED / CORRECTED VERSION of the original raw OCR JSON.
+
+Preserve the existing raw OCR JSON structure as closely as possible.
+
+The goal is:
+
+Original OCR JSON
+        ↓
+Human review during receipt ingestion
+        ↓
+Corrections applied to the JSON representation
+        ↓
+Corrected copy saved to data/benchmarks/
+
+
+For example:
+
+data/raw_ocr/IMG_0250_raw_ocr.json
+
+might contain OCR lines such as:
+
+{
+    "text": [
+        {
+            "line_number": 1,
+            "text": "..."
+        },
+        {
+            "line_number": 2,
+            "text": "..."
+        }
+    ]
+}
+
+
+After the receipt is reviewed, create:
+
+data/benchmarks/IMG_0250_raw_ocr.json
+
+
+using the SAME general JSON structure, but with the human-reviewed
+corrections reflected in the appropriate records.
+
+Do NOT invent an unrelated benchmark schema unless absolutely necessary.
+
+The corrected benchmark should remain structurally comparable to the
+original raw OCR JSON.
+
+======================================================================
+HOW CORRECTIONS SHOULD AFFECT THE BENCHMARK
+======================================================================
+
+The receipt-ingestion workflow already allows the user to review parsed
+purchase lines and correct fields.
+
+Those corrections should be reflected in the benchmark JSON.
+
+The benchmark should represent the final human-reviewed interpretation of
+the receipt.
+
+Examples of corrections include:
+
+- corrected Product
+- corrected Six-Digit SKU
+- corrected Tax Code
+- corrected Price
+- other corrections made through the existing correction workflow
+
+The benchmark should contain the FINAL accepted values after correction,
+not merely the parser's original guesses.
+
+If a field remains unknown and the user accepts it as NA, preserve that
+fact rather than inventing a value.
+
+======================================================================
+PRESERVE ORIGINAL OCR INFORMATION
+======================================================================
+
+Do not unnecessarily destroy useful OCR information.
+
+Where possible, preserve:
+
+- original receipt/source metadata
+- OCR metadata
+- line numbers
+- existing top-level fields
+- existing JSON organization
+
+The benchmark is intended to remain comparable against the original OCR
+output.
+
+If additional structured information must be added to represent the
+human-reviewed corrections, add it conservatively without unnecessarily
+changing the existing format.
+
+The guiding principle is:
+
+ORIGINAL RAW OCR JSON
++
+HUMAN CORRECTIONS
+=
+BENCHMARK JSON
+
+not:
+
+ORIGINAL RAW OCR JSON
+↓
+COMPLETELY DIFFERENT JSON FORMAT
+
+======================================================================
+SKIPPED LINES
+======================================================================
+
+A line skipped during receipt ingestion should NOT automatically be deleted
+from the benchmark JSON.
+
+The OCR engine still detected that line, and preserving it may be useful
+for benchmark comparison.
+
+Preserve the original OCR line unless the existing architecture provides
+a clean way to annotate its review status.
+
+If review-status metadata is added, a skipped line may be marked as:
+
+"review_status": "skipped"
+
+but the original OCR information should remain available.
+
+======================================================================
+ACCEPTED LINES
+======================================================================
+
+For accepted lines, the benchmark should reflect the final accepted
+human-reviewed interpretation.
+
+If the parser's interpretation was accepted without changes, preserve that
+accepted interpretation.
+
+If the user manually corrected the interpretation, store the corrected
+values.
+
+If the user selected:
+
+Accept With NAs / Skip Corrections
+
+preserve the accepted values including any NA values.
+
+======================================================================
+ACCEPT REMAINING LINES
+======================================================================
+
+Lines accepted through:
+
+6. Accept Remaining Lines
+
+should also be represented in the corrected benchmark.
+
+These lines are accepted using the parser's current best interpretation.
+
+If review-status metadata is added, they may be marked:
+
+"review_status": "bulk_accepted"
+
+However, do not redesign the entire JSON merely to support this metadata.
+
+======================================================================
+WHEN TO CREATE THE BENCHMARK
+======================================================================
+
+Create the corrected benchmark JSON ONLY after the receipt has been
+successfully ingested.
+
+The sequence should be:
+
+1. Load original raw OCR JSON.
+
+2. User reviews receipt lines.
+
+3. Collect accepted values and corrections in memory.
+
+4. User finishes receipt OR successfully uses Accept Remaining Lines.
+
+5. Commit the receipt to:
+
+   data/database/shopgraph_purchase_history.xlsx
+
+6. After the receipt commit succeeds, create the corrected JSON in:
+
+   data/benchmarks/
+
+Example:
+
+Original:
+
+data/raw_ocr/IMG_0250_raw_ocr.json
+
+Benchmark:
+
+data/benchmarks/IMG_0250_raw_ocr.json
+
+======================================================================
+CANCEL BEHAVIOR
+======================================================================
+
+If the user chooses:
+
+0. Cancel Receipt Import
+
+do NOT:
+
+- modify the Excel workbook
+- modify the original raw OCR JSON
+- create a benchmark JSON
+- partially save corrections
+
+Everything remains in memory until the receipt is successfully committed.
+
+======================================================================
+RAW OCR IMMUTABILITY
+======================================================================
+
+This rule is absolute:
+
+NEVER modify:
+
+data/raw_ocr/IMG_0250_raw_ocr.json
+
+or any other source raw OCR JSON.
+
+Instead:
+
+READ:
+
+data/raw_ocr/IMG_0250_raw_ocr.json
+
+WRITE:
+
+data/benchmarks/IMG_0250_raw_ocr.json
+
+
+The files intentionally have identical filenames.
+
+They are distinguished by directory.
+
+======================================================================
+EXISTING BENCHMARK
+======================================================================
+
+If:
+
+data/benchmarks/IMG_0250_raw_ocr.json
+
+already exists, do not silently overwrite human-reviewed benchmark data.
+
+Prompt:
+
+A benchmark already exists for this receipt:
+
+IMG_0250_raw_ocr.json
+
+1. Replace benchmark with this newly reviewed version
+0. Keep existing benchmark
+
+If the user chooses 1:
+
+replace the benchmark with the newly reviewed corrected version.
+
+If the user chooses 0:
+
+leave the existing benchmark unchanged.
+
+This should NOT undo an otherwise successful Excel receipt import.
+
+======================================================================
+COMPLETION MESSAGE
+======================================================================
+
+After successful receipt ingestion, report both outputs.
+
+Example:
+
+[OK] Receipt committed to Purchase History.
+
+Workbook:
+.../shopping_analysis/data/database/shopgraph_purchase_history.xlsx
+
+Corrected Benchmark:
+.../shopping_analysis/data/benchmarks/IMG_0250_raw_ocr.json
+
+Purchases added: 7
+Existing product histories updated: 2
+New product rows created: 5
+
+======================================================================
+BENCHMARK DESIGN PRINCIPLE
+======================================================================
+
+The benchmark directory should eventually contain corrected counterparts
+to raw OCR files.
+
+Example:
+
+data/raw_ocr/
+    IMG_0250_raw_ocr.json
+    IMG_0251_raw_ocr.json
+    IMG_0252_raw_ocr.json
+
+data/benchmarks/
+    IMG_0250_raw_ocr.json
+    IMG_0251_raw_ocr.json
+    IMG_0252_raw_ocr.json
+
+
+This creates a simple pairing:
+
+RAW OCR:
+data/raw_ocr/IMG_0250_raw_ocr.json
+
+GROUND TRUTH:
+data/benchmarks/IMG_0250_raw_ocr.json
+
+
+This pairing is intentional and should be preserved.

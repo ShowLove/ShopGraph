@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 from datetime import datetime
+import json
 
+from utils.DataBaseBuilder.benchmark_writer import write_corrected_benchmark
 from utils.DataBaseBuilder.excel.purchase_history import (
     commit_receipt,
     source_already_imported,
@@ -275,6 +277,7 @@ def _review_line(parser, line: dict, record: PurchaseRecord) -> tuple[str, Purch
         print("3. Accept With NAs / Skip Corrections")
         print("4. Skip Line")
         print("5. Finish Receipt")
+        print("6. Accept Remaining Lines")
         print("0. Cancel Receipt Import")
 
         option = input("\nSelect option: ").strip()
@@ -291,6 +294,9 @@ def _review_line(parser, line: dict, record: PurchaseRecord) -> tuple[str, Purch
 
         if option == "5":
             return "finish", current
+
+        if option == "6":
+            return "accept_remaining", current
 
         if option == "0":
             return "cancel", current
@@ -363,12 +369,39 @@ def _run_receipt_import() -> None:
         )
 
         if action == "accept":
-            session.accept(reviewed_record)
+            session.accept(
+                line_number=line["line_number"],
+                purchase=reviewed_record,
+            )
             continue
 
         if action == "skip":
             session.skip(line["line_number"])
             continue
+
+        if action == "accept_remaining":
+            session.accept(
+                line_number=line["line_number"],
+                purchase=reviewed_record,
+                status="bulk_accepted",
+            )
+
+            current_index = eligible_lines.index(line)
+
+            for remaining_line in eligible_lines[current_index + 1:]:
+                remaining_record = parser.parse_line(
+                    text=remaining_line["text"],
+                    store_number=store_number,
+                    receipt_date=receipt_date,
+                )
+                session.accept(
+                    line_number=remaining_line["line_number"],
+                    purchase=remaining_record,
+                    status="bulk_accepted",
+                )
+
+            should_commit = True
+            break
 
         if action == "finish":
             should_commit = True
@@ -399,8 +432,25 @@ def _run_receipt_import() -> None:
         print(f"\n[ERROR] Could not commit receipt: {error}")
         return
 
+    benchmark_path = None
+
+    try:
+        benchmark_path = write_corrected_benchmark(session)
+    except (OSError, ValueError, json.JSONDecodeError) as error:
+        print(
+            "\n[WARNING] Purchase History was committed successfully, "
+            "but the corrected benchmark could not be written:"
+            f"\n{error}"
+        )
+
     print("\n[OK] Receipt committed to Purchase History.")
     print(f"\nWorkbook:\n{summary['workbook_path']}")
+
+    if benchmark_path is not None:
+        print(f"\nCorrected Benchmark:\n{benchmark_path}")
+    else:
+        print("\nCorrected Benchmark:\nExisting benchmark kept unchanged.")
+
     print(
         f"\nPurchases added: {summary['purchases_added']}"
         f"\nExisting product histories updated: "

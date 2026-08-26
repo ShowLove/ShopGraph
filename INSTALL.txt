@@ -1,48 +1,20 @@
-ShopGraph - Purchase History Data Base Builder
+ShopGraph - Corrected OCR Benchmark Update
 
-This update implements the first full Data Base Builder receipt-ingestion workflow.
+ADD:
+    utils/DataBaseBuilder/benchmark_writer.py
 
-ADD these files:
-    utils/DataBaseBuilder/purchase_record.py
-    utils/DataBaseBuilder/receipt_loader.py
-    utils/DataBaseBuilder/receipt_session.py
-    utils/DataBaseBuilder/parsers/__init__.py
-    utils/DataBaseBuilder/parsers/base_parser.py
-    utils/DataBaseBuilder/parsers/publix_parser.py
-    utils/DataBaseBuilder/parsers/trader_joes_parser.py
-    utils/DataBaseBuilder/parsers/aldi_parser.py
-    utils/DataBaseBuilder/parsers/other_parser.py
-    utils/DataBaseBuilder/excel/__init__.py
-    utils/DataBaseBuilder/excel/purchase_history.py
-
-REPLACE these files:
-    utils/DataBaseBuilder/__init__.py
+REPLACE:
     utils/DataBaseBuilder/data_base_builder_main.py
-    data/requirements.txt
+    utils/DataBaseBuilder/receipt_session.py
 
-No change is required to utils/utils_main.py because the current codebase already routes
-Utilities option 4 to run_data_base_builder_menu().
+Behavior added:
+- Review menu option 6: Accept Remaining Lines.
+- Raw OCR JSON remains immutable.
+- After a successful Excel commit, a corrected human-reviewed counterpart is written to data/benchmarks/ using the exact same filename as the raw OCR JSON.
+- Reviewed OCR lines preserve original OCR text in original_ocr_text and expose corrected text plus human_review metadata.
+- Skipped lines remain in the benchmark and are marked review_status=skipped.
+- If a benchmark already exists, the user chooses whether to replace it or keep it.
+- Cancelling before commit creates no benchmark.
 
-Install/update dependencies from the project root using your normal environment, for example:
-    pip install -r data/requirements.txt
-
-Run:
+Run normally:
     python3 main.py
-
-Then choose:
-    1. Utilities
-    4. Data Base Builder
-    1. Add Receipt to Purchase History
-
-Raw OCR input is read from:
-    data/raw_ocr/*_raw_ocr.json
-
-The persistent workbook is created/updated at:
-    data/database/shopgraph_purchase_history.xlsx
-
-Workbook sheets:
-    Purchase History
-    Imported Receipts (hidden duplicate-import audit sheet)
-
-The raw OCR JSON is never modified. Accepted lines are held in memory and the workbook is
-written only when the receipt is finished. Cancelling a receipt leaves the workbook unchanged.
