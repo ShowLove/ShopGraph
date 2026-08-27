@@ -9,6 +9,9 @@ from utils.DataBaseBuilder.excel.purchase_history import (
     commit_receipt,
     source_already_imported,
 )
+from utils.DataBaseBuilder.excel.purchase_analytics import (
+    generate_purchase_analytics,
+)
 from utils.DataBaseBuilder.parsers import build_parser
 from utils.DataBaseBuilder.parsers.publix_parser import PUBLIX_TAX_PATTERN
 from utils.DataBaseBuilder.purchase_record import NA, PurchaseRecord
@@ -36,6 +39,7 @@ PUBLIX_TAX_OPTIONS = {
 def display_data_base_builder_menu() -> None:
     print("\n=== ShopGraph Data Base Builder ===\n")
     print("1. Add Receipt to Purchase History")
+    print("2. Generate / Refresh Purchase Analytics")
     print("0. Return to Main")
 
 
@@ -650,6 +654,35 @@ def _run_receipt_import() -> None:
     )
 
 
+def _run_purchase_analytics() -> None:
+    print("\n=== Purchase Analytics ===\n")
+
+    try:
+        summary = generate_purchase_analytics()
+    except (
+        FileNotFoundError,
+        OSError,
+        ValueError,
+    ) as error:
+        print(
+            f"\n[ERROR] Could not generate Purchase Analytics: {error}"
+        )
+        return
+
+    print(
+        "[OK] Purchase Analytics refreshed."
+        f"\n\nWorkbook:\n{summary['workbook_path']}"
+        f"\n\nCharts created: {summary['charts_created']}"
+        f"\nPurchase observations: {summary['purchase_observations']}"
+    )
+
+    if summary.get("skipped_pairs", 0):
+        print(
+            "\n[WARNING] Skipped malformed/incomplete Date/Price pairs: "
+            f"{summary['skipped_pairs']}"
+        )
+
+
 def run_data_base_builder_menu() -> None:
     while True:
         display_data_base_builder_menu()
@@ -657,6 +690,9 @@ def run_data_base_builder_menu() -> None:
 
         if option == "1":
             _run_receipt_import()
+
+        elif option == "2":
+            _run_purchase_analytics()
 
         elif option == "0":
             return

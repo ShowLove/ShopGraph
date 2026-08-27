@@ -1,0 +1,967 @@
+SHOPGRAPH — PURCHASE HISTORY ANALYTICS DASHBOARD
+
+GOAL
+
+Add a simple, reliable analytics capability to ShopGraph that reads:
+
+    data/database/shopgraph_purchase_history.xlsx
+
+and creates or completely rebuilds a visible Excel worksheet named:
+
+    Analytics
+
+containing seven useful spending charts based on the first worksheet:
+
+    Purchase History
+
+This is a household / shopping expense dashboard.
+
+Do NOT build complicated financial models.
+Do NOT add forecasting.
+Do NOT use macros.
+Do NOT use Excel PivotTables or PivotCharts.
+Do NOT require pandas.
+
+Prefer straightforward Python + openpyxl calculations and native Excel charts.
+
+The goal is:
+
+    useful
+    understandable
+    maintainable
+    deterministic
+    reliable
+
+
+============================================================
+CURRENT PURCHASE HISTORY STRUCTURE
+============================================================
+
+The source worksheet is:
+
+    Purchase History
+
+The current ShopGraph schema is:
+
+    A   Total
+    B   <blank spacer>
+    C   Store
+    D   Six-Digit SKU
+    E   Product
+    F   Tax Code
+    G   Store Number
+    H   Common Name
+    I   Category
+    J   Date 1
+    K   Price 1
+    L   Date 2
+    M   Price 2
+    N   Date 3
+    O   Price 3
+    ...
+
+Date / Price pairs continue dynamically.
+
+Do NOT assume that there is only one Date/Price pair.
+
+The analytics code must dynamically discover all headers matching:
+
+    Date N
+    Price N
+
+and pair:
+
+    Date 1 -> Price 1
+    Date 2 -> Price 2
+    Date 3 -> Price 3
+    etc.
+
+
+============================================================
+CRITICAL DATA RULE
+============================================================
+
+For analytics calculations, DO NOT depend on the value in the Excel:
+
+    Total
+
+column.
+
+The workbook Total field may contain an Excel formula.
+
+openpyxl does not calculate Excel formulas itself, so cached values may be
+missing or stale.
+
+Instead, construct analytics directly from the individual:
+
+    Date N + Price N
+
+purchase observations.
+
+Every valid Date N / Price N pair represents one purchase observation.
+
+
+============================================================
+NORMALIZED ANALYTICS RECORD
+============================================================
+
+Internally flatten Purchase History into records conceptually equivalent to:
+
+{
+    "date": datetime,
+    "price": float,
+    "store": "Aldi",
+    "store_number": "160",
+    "product": "Zucchini",
+    "common_name": "Zucchini",
+    "category": "Fresh Vegetables",
+    "six_digit_sku": "356691"
+}
+
+For example, if one Purchase History row contains:
+
+    Store = Aldi
+    Product = Zucchini
+    Category = Fresh Vegetables
+    Date 1 = 08/23/2026
+    Price 1 = 2.52
+    Date 2 = 09/05/2026
+    Price 2 = 2.69
+
+it creates TWO analytics observations.
+
+This flattened representation should be the source for all charts.
+
+
+============================================================
+VALID PURCHASE OBSERVATION
+============================================================
+
+Only include a Date N / Price N pair when:
+
+1. Date is a valid Excel date, datetime, or recognizable date string.
+2. Price is a valid non-negative numeric value.
+3. Both Date N and its corresponding Price N exist.
+
+Skip malformed/incomplete pairs safely.
+
+Do not crash because one cell contains:
+
+    NA
+    blank
+    malformed text
+    formula
+    None
+
+Print a short warning count if observations were skipped.
+
+
+============================================================
+NA HANDLING
+============================================================
+
+Treat the following as unavailable:
+
+    None
+    ""
+    "NA"
+
+For grouping fields:
+
+If Store is unavailable:
+
+    Store = "Unknown"
+
+If Category is unavailable:
+
+    Category = "Uncategorized"
+
+If Common Name is unavailable:
+
+    first fall back to Product.
+
+If Product is also unavailable:
+
+    Product = "Unknown Product"
+
+Do not discard otherwise-valid spending observations merely because Category,
+Common Name, SKU, or Store Number is unavailable.
+
+
+============================================================
+OUTPUT WORKSHEET
+============================================================
+
+Create a visible worksheet named:
+
+    Analytics
+
+If Analytics already exists:
+
+    DELETE it and regenerate it completely.
+
+This ensures the dashboard never becomes stale or accumulates duplicate
+charts.
+
+Place Analytics after Purchase History if practical.
+
+Do NOT modify purchase-history data while generating analytics.
+
+
+============================================================
+HELPER DATA
+============================================================
+
+Charts will require aggregate tables.
+
+Keep the visible Analytics worksheet clean.
+
+Preferred approach:
+
+Create a second worksheet named:
+
+    _AnalyticsData
+
+containing calculated helper tables.
+
+Set:
+
+    _AnalyticsData.sheet_state = "hidden"
+
+If _AnalyticsData already exists:
+
+    delete and regenerate it.
+
+All chart source ranges should reference _AnalyticsData.
+
+Do NOT expose large calculation tables on the visible dashboard.
+
+
+============================================================
+DASHBOARD HEADER
+============================================================
+
+At the top of Analytics create:
+
+    ShopGraph Spending Analytics
+
+Below it show a small summary area containing:
+
+    Total Spending
+    Purchase Observations
+    Date Range
+    Number of Stores
+    Number of Categories
+
+Definitions:
+
+Total Spending:
+    sum of every valid Price N observation
+
+Purchase Observations:
+    number of valid Date/Price pairs
+
+Date Range:
+    earliest date through latest date
+
+Number of Stores:
+    unique known stores
+
+Number of Categories:
+    unique known categories excluding Uncategorized if possible
+
+Format Total Spending as currency.
+
+Example:
+
+    ShopGraph Spending Analytics
+
+    Total Spending:          $1,428.37
+    Purchase Observations:   214
+    Date Range:              08/23/2026 - 11/30/2026
+    Stores:                  4
+    Categories:              19
+
+
+============================================================
+THE SEVEN CHARTS
+============================================================
+
+
+------------------------------------------------------------
+CHART 1 — MONTHLY SPENDING TREND
+------------------------------------------------------------
+
+Title:
+
+    Monthly Spending
+
+Chart type:
+
+    LineChart
+
+Purpose:
+
+Show whether overall spending is increasing or decreasing over time.
+
+Group all purchase observations by calendar month.
+
+Use:
+
+    YYYY-MM
+
+or an actual first-of-month Excel date displayed as:
+
+    mmm yyyy
+
+Y-axis:
+
+    Spending ($)
+
+X-axis:
+
+    Month
+
+Sort chronologically.
+
+Do not fill missing months incorrectly.
+
+Prefer including zero-spend months between the earliest and latest observed
+months so the time series does not visually skip time.
+
+Example helper table:
+
+    Month          Spending
+    Aug 2026       482.31
+    Sep 2026       394.20
+    Oct 2026       551.72
+
+
+------------------------------------------------------------
+CHART 2 — SPENDING BY CATEGORY
+------------------------------------------------------------
+
+Title:
+
+    Spending by Category
+
+Chart type:
+
+    Horizontal BarChart
+
+Purpose:
+
+Show which types of goods consume the most money.
+
+Aggregate:
+
+    SUM(price)
+    GROUP BY Category
+
+Sort from highest spend to lowest spend.
+
+Include all meaningful categories.
+
+If there are more than approximately 15 categories:
+
+    show Top 14
+    combine remaining categories into "Other"
+
+Y-axis:
+
+    Category
+
+X-axis:
+
+    Spending ($)
+
+A bar chart is preferred over a pie chart because many categories are easier
+to compare as bars.
+
+
+------------------------------------------------------------
+CHART 3 — SPENDING BY STORE
+------------------------------------------------------------
+
+Title:
+
+    Spending by Store
+
+Chart type:
+
+    Horizontal BarChart
+
+Purpose:
+
+Show which retailers receive the most spending.
+
+Aggregate:
+
+    SUM(price)
+    GROUP BY Store
+
+Sort highest to lowest.
+
+Examples:
+
+    Aldi
+    Publix
+    Trader Joe's
+    Other
+
+Do not split one store by Store Number for this chart.
+
+Store Number is intentionally ignored here.
+
+X-axis:
+
+    Spending ($)
+
+
+------------------------------------------------------------
+CHART 4 — CATEGORY SHARE OF SPENDING
+------------------------------------------------------------
+
+Title:
+
+    Spending Share by Category
+
+Chart type:
+
+    DoughnutChart
+
+Purpose:
+
+Provide a quick visual sense of the household spending mix.
+
+Because pie/doughnut charts become unreadable with too many slices:
+
+Use:
+
+    Top 7 categories by spending
+
+and combine every remaining category into:
+
+    Other
+
+Show percentage data labels if openpyxl supports them reliably.
+
+Do not create dozens of slices.
+
+Do not use 3-D pie charts.
+
+This chart intentionally complements Chart 2:
+
+Chart 2 provides precise category comparison.
+Chart 4 provides quick proportional understanding.
+
+
+------------------------------------------------------------
+CHART 5 — TOP 10 PRODUCTS BY SPENDING
+------------------------------------------------------------
+
+Title:
+
+    Top 10 Products by Spending
+
+Chart type:
+
+    Horizontal BarChart
+
+Purpose:
+
+Identify the individual products responsible for the most accumulated
+spending.
+
+Product identity priority:
+
+    Common Name
+        ↓
+    Product
+        ↓
+    "Unknown Product"
+
+Aggregate all historical purchase observations for the same selected identity.
+
+Example:
+
+    Zucchini
+    Ground Turkey
+    Gluten-Free Bread
+    Yogurt
+    Soymilk
+
+Sort highest to lowest.
+
+Display only the Top 10.
+
+X-axis:
+
+    Spending ($)
+
+IMPORTANT:
+
+Do not simply use the current product price.
+
+Sum ALL historical Date N / Price N observations belonging to the product.
+
+
+------------------------------------------------------------
+CHART 6 — MONTHLY SPENDING BY STORE
+------------------------------------------------------------
+
+Title:
+
+    Monthly Spending by Store
+
+Chart type:
+
+    Stacked ColumnChart
+
+Purpose:
+
+Show both:
+
+1. total spending over time
+2. which stores contributed to that spending
+
+Rows:
+
+    Month
+
+Columns:
+
+    Store
+
+Values:
+
+    SUM(price)
+
+Example helper table:
+
+    Month       Aldi    Publix    Trader Joe's    Other
+    Aug 2026    210      170          82             20
+    Sep 2026    165      105          94             30
+
+Sort months chronologically.
+
+If there are more than 6 stores:
+
+    retain the Top 5 stores by lifetime spending
+    combine the rest into "Other"
+
+This prevents the chart from becoming visually noisy.
+
+
+------------------------------------------------------------
+CHART 7 — PURCHASE FREQUENCY BY CATEGORY
+------------------------------------------------------------
+
+Title:
+
+    Purchase Frequency by Category
+
+Chart type:
+
+    Horizontal BarChart
+
+Purpose:
+
+Distinguish categories purchased frequently from categories that merely cost
+a lot.
+
+Aggregate:
+
+    COUNT(valid Date N / Price N observations)
+    GROUP BY Category
+
+This is NOT spending.
+
+It represents number of purchase observations.
+
+Example:
+
+    Fresh Vegetables    48
+    Fresh Fruit         31
+    Yogurt              14
+    Bread                9
+
+Sort highest to lowest.
+
+If there are more than 15 categories:
+
+    show Top 14
+    combine the remainder into "Other"
+
+X-axis:
+
+    Purchases
+
+This chart is valuable because:
+
+    high spending + low frequency
+
+means something different from:
+
+    moderate spending + very high frequency
+
+
+============================================================
+WHY THESE SEVEN
+============================================================
+
+The dashboard deliberately answers seven simple questions:
+
+1. How much am I spending over time?
+       Monthly Spending
+
+2. What kinds of things consume the most money?
+       Spending by Category
+
+3. Where am I spending the money?
+       Spending by Store
+
+4. What proportion of spending goes to each major category?
+       Spending Share by Category
+
+5. Which individual products are my biggest spending drivers?
+       Top 10 Products by Spending
+
+6. How does my store mix change over time?
+       Monthly Spending by Store
+
+7. What categories do I buy most often?
+       Purchase Frequency by Category
+
+Do NOT add more graphs merely because data exists.
+
+Seven useful charts are preferable to a complicated dashboard.
+
+
+============================================================
+LAYOUT
+============================================================
+
+Create a clean dashboard layout.
+
+Suggested placement:
+
+    A1:N5
+        Dashboard title + summary statistics
+
+    A7:G22
+        Chart 1 — Monthly Spending
+
+    H7:N22
+        Chart 4 — Category Share
+
+    A24:G40
+        Chart 2 — Spending by Category
+
+    H24:N40
+        Chart 3 — Spending by Store
+
+    A42:G58
+        Chart 5 — Top 10 Products
+
+    H42:N58
+        Chart 7 — Purchase Frequency
+
+    A60:N80
+        Chart 6 — Monthly Spending by Store
+
+The exact dimensions may be adjusted if necessary for readability.
+
+Avoid charts overlapping each other.
+
+Set sensible widths/heights.
+
+
+============================================================
+FORMATTING
+============================================================
+
+Keep formatting professional but simple.
+
+Use:
+
+    bold dashboard title
+    bold summary labels
+    currency number formats
+    readable chart titles
+    axis titles where useful
+    legends only when useful
+
+Do not rely on custom external fonts.
+
+Do not make the dashboard overly decorative.
+
+Avoid 3-D charts.
+
+Avoid excessive colors or manual per-point coloring.
+
+Use standard Excel/openpyxl chart styling.
+
+
+============================================================
+DYNAMIC BEHAVIOR
+============================================================
+
+The analytics generator must work when:
+
+    new products are added
+    new stores are added
+    new categories are added
+    Date 2 / Price 2 appears
+    Date 3 / Price 3 appears
+    Date 20 / Price 20 eventually appears
+
+Never hard-code:
+
+    J/K only
+
+or a maximum Date/Price pair count.
+
+Discover the history columns from row 1 every time the script runs.
+
+
+============================================================
+DATE HANDLING
+============================================================
+
+Dates may exist as:
+
+    Python datetime
+    Python date
+    Excel date/datetime
+    MM/DD/YYYY strings
+
+Normalize them internally.
+
+Do not group alphabetically by month name.
+
+Always group chronologically by:
+
+    year + month
+
+This is important when history spans multiple years.
+
+
+============================================================
+PRICE HANDLING
+============================================================
+
+Prices may be:
+
+    int
+    float
+    numeric string
+
+Convert safely to float.
+
+Reject:
+
+    NA
+    blank
+    negative values
+    malformed values
+
+Do not count an invalid price as $0 unless it truly represents a numeric zero.
+
+
+============================================================
+RELIABILITY RULES
+============================================================
+
+1. Never modify Purchase History cells.
+2. Never modify Imported Receipts.
+3. Analytics must be reproducible entirely from Purchase History.
+4. Regenerating Analytics should give the same result for the same workbook.
+5. Do not depend on cached values from Total formulas.
+6. Derive spending directly from Date N / Price N pairs.
+7. Handle NA values safely.
+8. Handle missing categories/stores safely.
+9. Do not crash on a malformed individual history cell.
+10. Preserve the workbook's existing worksheets and data.
+11. Save atomically if consistent with the existing ShopGraph workbook code.
+12. Do not corrupt the workbook if chart generation fails.
+
+
+============================================================
+EMPTY / SMALL DATASETS
+============================================================
+
+The feature must work even when there are very few purchase observations.
+
+If there is no valid purchase history:
+
+Create Analytics with:
+
+    ShopGraph Spending Analytics
+
+    No purchase history is available yet.
+
+Do not create broken charts.
+
+If a particular chart has insufficient data:
+
+write a short note in its intended area, for example:
+
+    Not enough data for Monthly Spending by Store.
+
+Do not create an invalid chart.
+
+
+============================================================
+IMPLEMENTATION LOCATION
+============================================================
+
+Keep analytics separate from receipt-import/database-writing logic.
+
+Suggested file:
+
+    utils/DataBaseBuilder/excel/purchase_analytics.py
+
+Suggested public function:
+
+    generate_purchase_analytics() -> Path
+
+or:
+
+    generate_purchase_analytics(
+        workbook_path: Path = WORKBOOK_PATH,
+    ) -> Path
+
+Use:
+
+    openpyxl
+
+because the existing Purchase History implementation already uses openpyxl.
+
+Do not add pandas unless there is a compelling technical reason.
+
+There should not be one for these aggregations.
+
+
+============================================================
+MENU INTEGRATION
+============================================================
+
+Add a second item to:
+
+    === ShopGraph Data Base Builder ===
+
+Current:
+
+    1. Add Receipt to Purchase History
+    0. Return to Main
+
+Change to:
+
+    1. Add Receipt to Purchase History
+    2. Generate / Refresh Purchase Analytics
+    0. Return to Main
+
+Selecting option 2 should:
+
+1. Open shopgraph_purchase_history.xlsx
+2. Read Purchase History
+3. Delete/rebuild Analytics
+4. Delete/rebuild _AnalyticsData
+5. Save the workbook
+6. Print something similar to:
+
+    [OK] Purchase Analytics refreshed.
+
+    Workbook:
+    <path>
+
+    Charts created: 7
+
+Do NOT automatically generate analytics every time a receipt is imported.
+
+Keep it an explicit menu operation for now.
+
+This reduces complexity and makes debugging easier.
+
+A future change can automatically refresh Analytics after every receipt if
+desired.
+
+
+============================================================
+OPTIONAL NICE TOUCH
+============================================================
+
+Freeze panes on Analytics if useful.
+
+Hide gridlines on the Analytics sheet:
+
+    sheet.sheet_view.showGridLines = False
+
+Hide _AnalyticsData:
+
+    data_sheet.sheet_state = "hidden"
+
+Do not protect the sheets with passwords.
+
+
+============================================================
+TESTING
+============================================================
+
+Test at minimum:
+
+1. Workbook with one Date 1 / Price 1 pair.
+2. Workbook with multiple Date N / Price N pairs.
+3. Multiple stores.
+4. Multiple categories.
+5. NA Category.
+6. NA Store.
+7. NA Common Name.
+8. Common Name falling back to Product.
+9. Multiple years.
+10. Malformed date.
+11. Malformed price.
+12. Existing Analytics sheet.
+13. Existing _AnalyticsData sheet.
+14. Empty Purchase History.
+15. More than 7 categories.
+16. More than 6 stores.
+17. More than 10 products.
+
+Verify mathematically that:
+
+    dashboard total spending
+        =
+    sum of every valid Price N cell paired with a valid Date N
+
+Verify that monthly totals sum back to the same overall total.
+
+Verify that category totals sum back to the same overall total.
+
+Verify that store totals sum back to the same overall total.
+
+
+============================================================
+DELIVERABLE
+============================================================
+
+Return ALL complete files that must be added or replaced.
+
+Do not return partial code snippets.
+
+Keep the rest of ShopGraph as close to the attached codebase as possible.
+
+Provide a downloadable ZIP preserving project directory structure.
+
+Include a README explaining:
+
+1. what Purchase Analytics does
+2. the seven charts
+3. how Date N / Price N history is flattened
+4. why Total formulas are not used as the analytics source
+5. how to refresh the dashboard
+6. files added/replaced
+7. how malformed / NA values are handled
+8. how the hidden _AnalyticsData worksheet works
+9. how to test the feature

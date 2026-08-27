@@ -16,6 +16,7 @@ shopping_analysis/
             perspective_correction.py
             receipt_picker.py
             refine_consensus.py
+            refine_json.py
             reliable_receipt_crop.py
             run_ocr.py
             session_state.py
@@ -37,6 +38,7 @@ shopping_analysis/
             purchase_record.py
             receipt_loader.py
             receipt_session.py
+            refined_json_loader.py
             parsers/
                 __init__.py
                 aldi_parser.py
@@ -53,6 +55,7 @@ shopping_analysis/
     data/
         requirements.txt
         database/
+        refined_json/
         preprocessed/
         benchmarks/
         prompts/
@@ -62,7 +65,7 @@ shopping_analysis/
 
 ================================================================================
 
-Generated: 2026-08-27 15:58:01.902609
+Generated: 2026-08-27 17:25:10.810851
 Root: /Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis
 Mode: LLM-clean export
 Excluded: receipt images, OCR JSON, datasets, databases, logs, caches
@@ -142,56 +145,164 @@ Then use Data Base Builder normally.
 FILE: README_UPDATE.txt
 ================================================================================
 
-ShopGraph - Safe Missing-Row Recovery + Numeric Refinement
-===========================================================
+ShopGraph - Stage 7 Refined JSON + DataBaseBuilder Integration
+==================================================================
 
-This package is built against the attached 20260827-191453 codebase.
-
-NEW FILE
---------
-capabilities/OCRAcquisitionPipeline/refine_consensus.py
-
-CHANGED FILE
-------------
-capabilities/OCRAcquisitionPipeline/compare_ocr.py
-
-The other included Python files are matching copies from the attached codebase.
-
-WHAT IT TRIES
+BUILT AGAINST
 -------------
-1. Safe missing-row recovery:
-   - at least 3 independent full-receipt candidates
-   - same narrow y-position
-   - repeated description
-   - plus repeated exact SKU or repeated exact price
-   - existing conservative rows are NOT loosened
+shopgraph_codebase(20260827-195849).txt
 
-2. Numeric token refinement:
-   - OCRs a narrow right-side row strip
-   - 3x enlargement
-   - PSM 7 and PSM 13
-   - numeric/currency whitelist
-   - replaces an existing price only if alternate evidence materially wins
+NEW OCR STAGE
+-------------
+The OCR Acquisition Pipeline now has seven stages:
 
-3. Adds diagnostics:
-   - recovered_missing_row_count
-   - numeric_refinement_count
+1. Reliable Receipt Detection / Crop
+2. Perspective Correction
+3. Receipt Size Normalization
+4. Generate OCR Image Variants
+5. Run Multi-Variant / Multi-PSM OCR
+6. Compare OCR Results / Build Raw OCR JSON
+7. Refine Json File
 
-INSTALL
--------
-Extract over the ShopGraph project root.
+The complete OCR Acquisition Pipeline automatically runs Stage 7.
 
-No new dependency is required: Pillow and pytesseract are already in use.
+STAGE 7 OUTPUT
+--------------
+Input:
+    data/raw_ocr/<receipt>_raw_ocr.json
+
+Output:
+    data/refined_json/<receipt>_refined.json
+
+Every Stage-6 line_number receives one refined line object. No input line is
+discarded.
+
+Each refined line contains:
+    Total
+    Store
+    Six-Digit SKU
+    Product
+    Tax Code
+    Store Number
+    Common Name
+    Category
+    Date 1
+    Price 1
+
+Missing/not-applicable values are "NA".
+
+For human review, Product remains the best editable line-level guess even for
+non-purchase lines. Example:
+
+    source_text: ALDI
+    Product: ALDI
+
+DATABASEBUILDER INTEGRATION
+---------------------------
+When DataBaseBuilder opens a raw OCR receipt, it automatically looks for the
+matching refined JSON.
+
+If the refined file is valid:
+    refined guess > parser guess
+
+However, values explicitly confirmed by the user during the current import
+(Store selection, Store Number, Receipt Date, and later Correct Columns edits)
+remain authoritative.
+
+If refined JSON is missing or invalid, DataBaseBuilder falls back to its
+existing store-specific parsers.
+
+PRE-POPULATED CORRECTIONS
+-------------------------
+The existing readline behavior is preserved.
+
+Example:
+
+    Current Product: ALDI
+    Enter corrected Product: ALDI
+
+The second ALDI is already editable in the terminal input buffer. Press Enter
+to keep it, edit it, or replace it.
+
+COMMON NAME / CATEGORY
+----------------------
+Stage 7 can conservatively infer Common Name and Category. It may also use an
+existing shopgraph_purchase_history.xlsx as supporting evidence for known
+same-store products/SKUs.
+
+Historical prices and dates are NEVER copied into the current receipt.
+
+EXCEL
+-----
+Accepted/corrected records now feed:
+    Store
+    Six-Digit SKU
+    Product
+    Tax Code
+    Store Number
+    Common Name
+    Category
+    Date 1
+    Price 1
+
+The workbook Total column remains its existing formula that sums Price 1,
+Price 2, Price 3, etc. The record-level Total is used for review/refined JSON,
+but does not replace the workbook formula.
+
+FILES ADDED
+-----------
+capabilities/OCRAcquisitionPipeline/refine_json.py
+utils/DataBaseBuilder/refined_json_loader.py
+
+IMPORTANT FILES REPLACED
+------------------------
+capabilities/OCRAcquisitionPipeline/constants.py
+capabilities/OCRAcquisitionPipeline/session_state.py
+capabilities/OCRAcquisitionPipeline/main_OCRAcquisitionPipeline.py
+utils/constants.py
+utils/utils_main.py
+utils/clean_ocr_acquisition_pipeline.py
+utils/DataBaseBuilder/purchase_record.py
+utils/DataBaseBuilder/data_base_builder_main.py
+utils/DataBaseBuilder/benchmark_writer.py
+utils/DataBaseBuilder/parsers/base_parser.py
+utils/DataBaseBuilder/parsers/aldi_parser.py
+utils/DataBaseBuilder/parsers/publix_parser.py
+utils/DataBaseBuilder/parsers/trader_joes_parser.py
+utils/DataBaseBuilder/parsers/other_parser.py
+utils/DataBaseBuilder/excel/purchase_history.py
 
 TEST
 ----
-Run the same three receipts normally, then run:
-Utilities -> Utilities -> Evaluate OCR Against Benchmarks
+1. Run:
+       python3 main.py
 
-Watch specifically for:
-- IMG_0251: recovery of the missing Zucchini row
-- IMG_0253: whether 7.89/9.89 improve only with strong numeric evidence
-- IMG_0255: preserve all six product rows/prices without metadata contamination
+2. Run the complete OCR Acquisition Pipeline.
+   Confirm Stage 7 creates:
+       data/refined_json/<receipt>_refined.json
+
+3. Open:
+       Utilities -> Data Base Builder -> Add Receipt to Purchase History
+
+4. Select the matching raw OCR JSON.
+   DataBaseBuilder should print that refined JSON was loaded.
+
+5. For an ALDI header line, verify the proposal can show Product = ALDI.
+
+6. Choose:
+       2. Correct Columns
+   Select Product.
+   Verify:
+       Current Product: ALDI
+       Enter corrected Product: ALDI
+
+7. Press Enter and verify the value is retained.
+
+8. Test a purchase item and confirm refined Common Name / Category / Price
+   guesses are presented and editable.
+
+9. Accept selected purchase lines and verify the workbook writes the corrected
+   Common Name and Category while retaining the existing Total formula behavior.
 
 
 ================================================================================
@@ -2419,6 +2530,7 @@ ENLARGED_DIR = DATA_DIR / "enlarged"
 OCR_VARIANTS_DIR = DATA_DIR / "ocr_variants"
 OCR_CANDIDATES_DIR = DATA_DIR / "ocr_candidates"
 RAW_OCR_DIR = DATA_DIR / "raw_ocr"
+REFINED_JSON_DIR = DATA_DIR / "refined_json"
 
 EXPORT_DIR = DATA_DIR / "exports"
 
@@ -2650,47 +2762,53 @@ from capabilities.OCRAcquisitionPipeline.run_ocr import (
 from capabilities.OCRAcquisitionPipeline.compare_ocr import (
     run_compare_ocr,
 )
+from capabilities.OCRAcquisitionPipeline.refine_json import (
+    run_refine_json,
+)
 
 
 def run_ocr_acquisition_pipeline() -> None:
     """
-    Run the complete OCR Acquisition Pipeline in order.
-
-    The visible six-stage flow is intentionally retained.
+    Run the complete seven-stage OCR Acquisition Pipeline in order.
     """
     print(
         "\n=== OCR Acquisition Pipeline ===\n"
     )
 
     print(
-        "[1/6] Reliable Receipt Detection / Crop"
+        "[1/7] Reliable Receipt Detection / Crop"
     )
     run_reliable_receipt_crop()
 
     print(
-        "\n[2/6] Perspective Correction"
+        "\n[2/7] Perspective Correction"
     )
     run_perspective_correction()
 
     print(
-        "\n[3/6] Receipt Size Normalization"
+        "\n[3/7] Receipt Size Normalization"
     )
     run_image_enlargement()
 
     print(
-        "\n[4/6] Generate OCR Image Variants"
+        "\n[4/7] Generate OCR Image Variants"
     )
     run_ocr_image_variants()
 
     print(
-        "\n[5/6] Run Multi-Variant / Multi-PSM OCR"
+        "\n[5/7] Run Multi-Variant / Multi-PSM OCR"
     )
     run_ocr()
 
     print(
-        "\n[6/6] Compare OCR Results / Build Raw OCR JSON"
+        "\n[6/7] Compare OCR Results / Build Raw OCR JSON"
     )
     run_compare_ocr()
+
+    print(
+        "\n[7/7] Refine Json File"
+    )
+    run_refine_json()
 
     print(
         "\n[OK] OCR Acquisition Pipeline complete."
@@ -4426,6 +4544,998 @@ def refine_raw_ocr(
 
 
 ================================================================================
+FILE: capabilities/OCRAcquisitionPipeline/refine_json.py
+================================================================================
+
+from __future__ import annotations
+
+import json
+import re
+from datetime import datetime
+from pathlib import Path
+
+from openpyxl import load_workbook
+
+from capabilities.OCRAcquisitionPipeline.constants import (
+    RAW_OCR_DIR,
+    REFINED_JSON_DIR,
+)
+from capabilities.OCRAcquisitionPipeline.session_state import (
+    get_selected_raw_ocr_file,
+    set_selected_refined_json_file,
+)
+
+
+NA = "NA"
+REFINEMENT_VERSION = "1.0"
+
+FIELDS = (
+    "Total",
+    "Store",
+    "Six-Digit SKU",
+    "Product",
+    "Tax Code",
+    "Store Number",
+    "Common Name",
+    "Category",
+    "Date 1",
+    "Price 1",
+)
+
+PRICE_PATTERN = re.compile(r"(?<!\d)(\d+[.,]\d{2})(?!\d)")
+SKU_PATTERN = re.compile(r"(?<!\d)(\d{6})(?!\d)")
+TAX_PATTERN = re.compile(
+    r"(?<![A-Za-z])(TLF|TF|LF|FA|FB|NB|F|T)(?![A-Za-z])",
+    re.IGNORECASE,
+)
+DATE_PATTERN = re.compile(
+    r"(?<!\d)(\d{1,2})[/-](\d{1,2})[/-](\d{2,4})(?!\d)"
+)
+
+STORE_NAMES = (
+    ("trader joe", "Trader Joe's"),
+    ("publix", "Publix"),
+    ("aldi", "Aldi"),
+)
+
+CATEGORY_RULES = (
+    ("Produce", (
+        "apple", "banana", "berry", "berries", "blueberry", "blueberries",
+        "strawberry", "strawberries", "zucchini", "broccoli", "tomato",
+        "tomatoes", "cilantro", "onion", "onions", "potato", "potatoes",
+        "pepper", "peppers", "lettuce", "spinach", "avocado", "orange",
+        "lemon", "lime", "pineapple", "watermelon", "cauliflower",
+    )),
+    ("Bakery", (
+        "bread", "muffin", "bagel", "roll", "tortilla", "bun", "bakery",
+    )),
+    ("Dairy", (
+        "milk", "cheese", "yogurt", "yobaby", "half&half", "half and half",
+        "cream", "butter", "goat cheese",
+    )),
+    ("Meat & Seafood", (
+        "turkey", "trk", "chicken", "beef", "pork", "salmon", "shrimp",
+        "ground", "steak", "kosher",
+    )),
+    ("Frozen", (
+        "frozen", "pizza", "ice cream",
+    )),
+    ("Breakfast", (
+        "waffle", "cereal", "oatmeal", "pancake",
+    )),
+    ("Beverages", (
+        "juice", "water", "soda", "coffee", "tea", "drink",
+    )),
+    ("Snacks", (
+        "cracker", "chips", "cookie", "cookies", "snack", "pretzel",
+    )),
+    ("Pantry", (
+        "pasta", "fusilli", "beans", "rice", "sauce", "flour", "oil",
+        "vinegar", "canned", "can ", "soup",
+    )),
+    ("Prepared Foods", (
+        "prepared", "deli", "sandwich", "salad kit",
+    )),
+    ("Household", (
+        "pen", "pens", "paper towel", "toilet paper", "detergent", "cleaner",
+        "trash bag", "foil", "battery", "batteries",
+    )),
+    ("Personal Care", (
+        "shampoo", "soap", "toothpaste", "deodorant", "lotion",
+    )),
+    ("Baby", (
+        "baby", "diaper", "wipes", "formula",
+    )),
+    ("Pet", (
+        "dog", "cat", "pet", "kibble",
+    )),
+)
+
+COMMON_NAME_RULES = (
+    (("gf wide pan bread", "gluten free bread"), "Gluten-Free Bread"),
+    (("ground trk", "ground turkey"), "Ground Turkey"),
+    (("r-strawberries", "strawberries 1 lb"), "Strawberries"),
+    (("chickpea fusilli",), "Chickpea Fusilli"),
+    (("zucchini",), "Zucchini"),
+    (("broccoli crowns",), "Broccoli"),
+    (("red onions",), "Red Onions"),
+    (("beefsteak tomatoes",), "Tomatoes"),
+    (("goat cheese",), "Goat Cheese"),
+)
+
+
+def _load_json(path: Path) -> dict:
+    with path.open("r", encoding="utf-8") as file:
+        return json.load(file)
+
+
+def _save_json(path: Path, data: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8") as file:
+        json.dump(data, file, ensure_ascii=False, indent=2)
+        file.write("\n")
+
+
+def _normalize(text: str) -> str:
+    return " ".join(
+        re.sub(r"[^a-z0-9&]+", " ", text.lower()).split()
+    )
+
+
+def _single_price(text: str) -> str:
+    values = [value.replace(",", ".") for value in PRICE_PATTERN.findall(text)]
+    return values[0] if len(values) == 1 else NA
+
+
+def _single_sku(text: str) -> str:
+    values = SKU_PATTERN.findall(text)
+    return values[0] if len(values) == 1 else NA
+
+
+def _single_tax(text: str) -> str:
+    values = [value.upper() for value in TAX_PATTERN.findall(text)]
+    return values[0] if len(values) == 1 else NA
+
+
+def _clean_date(text: str) -> str:
+    match = DATE_PATTERN.search(text)
+    if match is None:
+        return NA
+
+    month, day, year = match.groups()
+    if len(year) == 2:
+        year = f"20{year}"
+
+    try:
+        value = datetime(
+            int(year),
+            int(month),
+            int(day),
+        )
+    except ValueError:
+        return NA
+
+    return value.strftime("%m/%d/%Y")
+
+
+def _detect_store(lines: list[dict]) -> tuple[str, float, str]:
+    for line in lines:
+        text = str(line.get("text", ""))
+        normalized = text.lower()
+
+        for needle, store in STORE_NAMES:
+            if needle in normalized:
+                return (
+                    store,
+                    0.99,
+                    f"Receipt contains store identifier '{text.strip()}'.",
+                )
+
+    return NA, 0.0, "No supported store name was detected."
+
+
+def _store_number_candidates(text: str) -> list[str]:
+    patterns = (
+        r"\bstore\s*(?:#|no\.?|number)?\s*[:#-]?\s*(\d{2,5})\b",
+        r"\bst\s*#\s*(\d{2,5})\b",
+        r"\bstore#\s*(\d{2,5})\b",
+    )
+    values = []
+
+    for pattern in patterns:
+        values.extend(
+            re.findall(pattern, text, flags=re.IGNORECASE)
+        )
+
+    return values
+
+
+def _detect_store_number(lines: list[dict]) -> tuple[str, float, str]:
+    for line in lines:
+        text = str(line.get("text", ""))
+        values = _store_number_candidates(text)
+        if len(values) == 1:
+            return (
+                values[0],
+                0.96,
+                f"Store number detected from line '{text.strip()}'.",
+            )
+
+    return NA, 0.0, "No reliable store number was detected."
+
+
+def _detect_receipt_date(lines: list[dict]) -> tuple[str, float, str]:
+    for line in lines:
+        text = str(line.get("text", ""))
+        value = _clean_date(text)
+        if value != NA:
+            return (
+                value,
+                0.97,
+                f"Receipt date detected from line '{text.strip()}'.",
+            )
+
+    return NA, 0.0, "No reliable receipt date was detected."
+
+
+def _is_address(text: str) -> bool:
+    lowered = text.lower()
+    hints = (
+        " ave", " avenue", " blvd", " boulevard", " road", " rd",
+        " street", " st ", " highway", " hwy", " suite", " ste ",
+    )
+    return any(hint in lowered for hint in hints)
+
+
+def _classification(line: dict, store: str) -> str:
+    text = str(line.get("text", "")).strip()
+    normalized = _normalize(text)
+
+    row_classification = line.get("row_classification")
+    if isinstance(row_classification, dict) and row_classification.get("is_merchandise"):
+        return "purchase_item"
+
+    if store != NA and _normalize(store.replace("'s", "")) in normalized.replace("trader joe s", "trader joe"):
+        return "store_name"
+
+    if _store_number_candidates(text):
+        return "store_number"
+
+    if _clean_date(text) != NA:
+        return "receipt_date"
+
+    if _is_address(" " + text.lower() + " "):
+        return "address"
+
+    if "subtotal" in normalized:
+        return "subtotal"
+
+    if (
+        normalized.startswith("total ")
+        or normalized == "total"
+        or "amount due" in normalized
+        or "balance to pay" in normalized
+    ):
+        return "receipt_total"
+
+    if "tax" in normalized and _single_price(text) != NA:
+        return "tax"
+
+    if any(
+        term in normalized
+        for term in (
+            "visa", "mastercard", "credit card", "debit", "cash tendered",
+            "change due", "customer copy", "payment",
+        )
+    ):
+        return "payment"
+
+    if any(
+        term in normalized
+        for term in (
+            "auth", "reference", "transaction", "terminal", "entry mode",
+            "entrymode", "approval", "approved", "trace",
+        )
+    ):
+        return "transaction_metadata"
+
+    if (
+        re.search(r"\b(?:lb|lbs|oz|kg)\b", text, flags=re.IGNORECASE)
+        and (" x " in text.lower() or "/" in text)
+    ):
+        return "quantity_or_weight_detail"
+
+    if normalized in {"", "-", "*"}:
+        return "unknown"
+
+    if any(
+        term in normalized
+        for term in ("thank you", "welcome", "save money", "receipt")
+    ):
+        return "header_or_footer"
+
+    return "unknown"
+
+
+def _purchase_description(line: dict, text: str) -> str:
+    support = line.get("component_support")
+    if isinstance(support, dict):
+        description = support.get("description")
+        if isinstance(description, dict):
+            value = description.get("value")
+            if isinstance(value, str) and value.strip():
+                return value.strip()
+
+    working = PRICE_PATTERN.sub(" ", text)
+    working = SKU_PATTERN.sub(" ", working)
+    working = TAX_PATTERN.sub(" ", working)
+    working = re.sub(r"\s+", " ", working).strip()
+    return working.strip(" -:;,.|_~'\"()[]{}$") or NA
+
+
+def _non_purchase_product_guess(text: str) -> str:
+    cleaned = re.sub(r"\s+", " ", text).strip()
+    return cleaned or NA
+
+
+def _category(product: str) -> tuple[str, float, str]:
+    if product == NA:
+        return NA, 0.0, "No product identity is available."
+
+    normalized = " " + _normalize(product) + " "
+
+    for category, terms in CATEGORY_RULES:
+        if any(term in normalized for term in terms):
+            return (
+                category,
+                0.78,
+                f"Product wording is consistent with the '{category}' category.",
+            )
+
+    return NA, 0.0, "Product category is not clear enough to infer."
+
+
+def _common_name(product: str) -> tuple[str, float, str]:
+    if product == NA:
+        return NA, 0.0, "No product identity is available."
+
+    normalized = _normalize(product)
+
+    for needles, name in COMMON_NAME_RULES:
+        if any(needle in normalized for needle in needles):
+            return (
+                name,
+                0.82,
+                "Conservative normalization of receipt product wording.",
+            )
+
+    # Single/simple produce-like descriptions are already useful common names.
+    category, _, _ = _category(product)
+    words = product.split()
+
+    if category == "Produce" and len(words) <= 4:
+        cleaned = re.sub(
+            r"\b\d+(?:\.\d+)?\s*(?:lb|oz|ct)\b",
+            "",
+            product,
+            flags=re.IGNORECASE,
+        )
+        cleaned = re.sub(r"\s+", " ", cleaned).strip(" -")
+        if cleaned:
+            return (
+                cleaned.title(),
+                0.72,
+                "Simple produce description normalized to a common name.",
+            )
+
+    return NA, 0.0, "No conservative common-name normalization was available."
+
+
+def _history_rows() -> list[dict]:
+    workbook_path = (
+        REFINED_JSON_DIR.parent
+        / "database"
+        / "shopgraph_purchase_history.xlsx"
+    )
+
+    if not workbook_path.exists():
+        return []
+
+    try:
+        workbook = load_workbook(
+            workbook_path,
+            data_only=False,
+            read_only=True,
+        )
+    except (OSError, ValueError):
+        return []
+
+    if "Purchase History" not in workbook.sheetnames:
+        workbook.close()
+        return []
+
+    sheet = workbook["Purchase History"]
+
+    headers = {}
+    for cell in sheet[1]:
+        if cell.value is not None:
+            headers[str(cell.value).strip()] = cell.column
+
+    required = {
+        "Store",
+        "Six-Digit SKU",
+        "Product",
+        "Common Name",
+        "Category",
+    }
+
+    if not required.issubset(headers):
+        workbook.close()
+        return []
+
+    rows = []
+
+    for row in range(2, sheet.max_row + 1):
+        rows.append(
+            {
+                key: str(
+                    sheet.cell(
+                        row=row,
+                        column=headers[key],
+                    ).value
+                    or NA
+                ).strip()
+                for key in required
+            }
+        )
+
+    workbook.close()
+    return rows
+
+
+def _history_support(
+    history: list[dict],
+    store: str,
+    sku: str,
+    product: str,
+) -> dict | None:
+    store_key = _normalize(store)
+    product_key = _normalize(product)
+
+    for row in history:
+        if (
+            store != NA
+            and sku != NA
+            and _normalize(row["Store"]) == store_key
+            and row["Six-Digit SKU"] == sku
+        ):
+            return row
+
+    if product != NA:
+        for row in history:
+            if (
+                store != NA
+                and _normalize(row["Store"]) == store_key
+                and _normalize(row["Product"]) == product_key
+            ):
+                return row
+
+    return None
+
+
+def _value_and_reason(
+    value: str,
+    confidence: float,
+    reason: str,
+) -> tuple[str, float, str]:
+    if not value or value == NA:
+        return NA, 0.0, reason
+    return value, round(confidence, 2), reason
+
+
+def _refine_line(
+    line: dict,
+    context: dict,
+    history: list[dict],
+) -> dict:
+    source_text = str(line.get("text", "")).strip()
+    classification = _classification(
+        line,
+        context["store"],
+    )
+    purchase = classification == "purchase_item"
+
+    confidence_raw = line.get("confidence")
+    try:
+        source_confidence = max(
+            0.0,
+            min(1.0, float(confidence_raw) / 100.0),
+        )
+    except (TypeError, ValueError):
+        source_confidence = 0.5
+
+    component_support = line.get("component_support")
+    if not isinstance(component_support, dict):
+        component_support = {}
+
+    sku = NA
+    price = NA
+    tax_code = NA
+
+    if purchase:
+        sku_support = component_support.get("sku")
+        if isinstance(sku_support, dict):
+            value = sku_support.get("value")
+            if isinstance(value, str) and re.fullmatch(r"\d{6}", value):
+                sku = value
+
+        if sku == NA:
+            sku = _single_sku(source_text)
+
+        price_support = component_support.get("price")
+        if isinstance(price_support, dict):
+            value = price_support.get("value")
+            if isinstance(value, str) and re.fullmatch(r"\d+[.,]\d{2}", value):
+                price = value.replace(",", ".")
+
+        if price == NA:
+            price = _single_price(source_text)
+
+        tax_support = component_support.get("tax_code")
+        if isinstance(tax_support, dict):
+            value = tax_support.get("value")
+            if isinstance(value, str) and value.strip():
+                tax_code = value.upper()
+
+        if tax_code == NA:
+            tax_code = _single_tax(source_text)
+
+        product = _purchase_description(line, source_text)
+
+    else:
+        product = _non_purchase_product_guess(source_text)
+
+    store = NA
+    store_number = NA
+    receipt_date = NA
+
+    if purchase:
+        store = context["store"]
+        store_number = context["store_number"]
+        receipt_date = context["receipt_date"]
+    elif classification == "store_name":
+        store = context["store"]
+    elif classification == "store_number":
+        values = _store_number_candidates(source_text)
+        store_number = values[0] if len(values) == 1 else NA
+    elif classification == "receipt_date":
+        receipt_date = _clean_date(source_text)
+
+    total = price if purchase and price != NA else NA
+
+    common_name = NA
+    common_confidence = 0.0
+    common_reason = "Not applicable to this line."
+
+    category = NA
+    category_confidence = 0.0
+    category_reason = "Not applicable to this line."
+
+    historical = None
+    if purchase:
+        historical = _history_support(
+            history,
+            store,
+            sku,
+            product,
+        )
+
+        if historical is not None:
+            if historical.get("Product", NA) != NA and product == NA:
+                product = historical["Product"]
+
+            if historical.get("Common Name", NA) != NA:
+                common_name = historical["Common Name"]
+                common_confidence = 0.94
+                common_reason = (
+                    "Same-store historical product identity supports this Common Name."
+                )
+
+            if historical.get("Category", NA) != NA:
+                category = historical["Category"]
+                category_confidence = 0.94
+                category_reason = (
+                    "Same-store historical product identity supports this Category."
+                )
+
+        if common_name == NA:
+            (
+                common_name,
+                common_confidence,
+                common_reason,
+            ) = _common_name(product)
+
+        if category == NA:
+            (
+                category,
+                category_confidence,
+                category_reason,
+            ) = _category(product)
+
+    fields = {field: NA for field in FIELDS}
+    field_confidence = {field: 0.0 for field in FIELDS}
+    reasoning = {
+        field: "No relevant value was identified for this line."
+        for field in FIELDS
+    }
+
+    def assign(field: str, value: str, confidence: float, reason: str) -> None:
+        value, confidence, reason = _value_and_reason(
+            value,
+            confidence,
+            reason,
+        )
+        fields[field] = value
+        field_confidence[field] = confidence
+        reasoning[field] = reason
+
+    assign(
+        "Product",
+        product,
+        max(source_confidence, 0.55),
+        (
+            "Best editable line-level interpretation."
+            if not purchase
+            else "Product description isolated from merchandise-row components."
+        ),
+    )
+
+    if purchase:
+        assign(
+            "Total",
+            total,
+            max(source_confidence, 0.75) if total != NA else 0.0,
+            (
+                "For this single receipt observation, Total equals Price 1."
+                if total != NA
+                else "Purchase price is not reliable enough to establish Total."
+            ),
+        )
+        assign(
+            "Store",
+            store,
+            context["store_confidence"],
+            "Receipt-level store propagated to purchase item.",
+        )
+        assign(
+            "Six-Digit SKU",
+            sku,
+            max(source_confidence, 0.80) if sku != NA else 0.0,
+            (
+                "Exact six-digit merchandise SKU detected."
+                if sku != NA
+                else "No reliable six-digit merchandise SKU."
+            ),
+        )
+        assign(
+            "Tax Code",
+            tax_code,
+            max(source_confidence, 0.70) if tax_code != NA else 0.0,
+            (
+                "Tax marker is associated with this merchandise row."
+                if tax_code != NA
+                else "No reliable tax code is associated with this item."
+            ),
+        )
+        assign(
+            "Store Number",
+            store_number,
+            context["store_number_confidence"],
+            "Receipt-level store number propagated to purchase item.",
+        )
+        assign(
+            "Common Name",
+            common_name,
+            common_confidence,
+            common_reason,
+        )
+        assign(
+            "Category",
+            category,
+            category_confidence,
+            category_reason,
+        )
+        assign(
+            "Date 1",
+            receipt_date,
+            context["receipt_date_confidence"],
+            "Receipt transaction date propagated to purchase item.",
+        )
+        assign(
+            "Price 1",
+            price,
+            max(source_confidence, 0.78) if price != NA else 0.0,
+            (
+                "Price is directly associated with this merchandise row."
+                if price != NA
+                else "No reliable merchandise price was identified."
+            ),
+        )
+
+    else:
+        if classification == "store_name":
+            assign(
+                "Store",
+                store,
+                context["store_confidence"],
+                "This line identifies the receipt store.",
+            )
+        elif classification == "store_number":
+            assign(
+                "Store Number",
+                store_number,
+                0.95 if store_number != NA else 0.0,
+                "This line identifies the receipt store number.",
+            )
+        elif classification == "receipt_date":
+            assign(
+                "Date 1",
+                receipt_date,
+                0.96 if receipt_date != NA else 0.0,
+                "This line identifies the receipt transaction date.",
+            )
+
+        reasoning["Total"] = "Not a purchase item."
+        reasoning["Six-Digit SKU"] = "No merchandise SKU is assigned to this non-purchase line."
+        reasoning["Tax Code"] = "No merchandise tax code is assigned to this non-purchase line."
+        reasoning["Common Name"] = "Common Name is reserved for purchase-item normalization."
+        reasoning["Category"] = "Category is reserved for purchase-item normalization."
+        reasoning["Price 1"] = "No product price is assigned to this non-purchase line."
+
+    line_confidence = max(
+        [source_confidence]
+        + [
+            value
+            for value in field_confidence.values()
+            if isinstance(value, (int, float))
+        ]
+    )
+
+    return {
+        "line_number": line["line_number"],
+        "source_text": source_text,
+        "classification": classification,
+        "confidence": round(line_confidence, 2),
+        "fields": fields,
+        "field_confidence": field_confidence,
+        "reasoning": reasoning,
+        "stage6_metadata": {
+            "reconstructed": bool(line.get("reconstructed", False)),
+            "recovered_missing_row": bool(
+                line.get("recovered_missing_row", False)
+            ),
+            "numeric_refined": bool(line.get("numeric_refined", False)),
+            "normalized_y": line.get("normalized_y", NA),
+        },
+    }
+
+
+def get_refined_json_path(raw_ocr_path: str | Path) -> Path:
+    raw_path = Path(raw_ocr_path)
+    stem = raw_path.stem
+
+    if stem.endswith("_raw_ocr"):
+        stem = stem[:-8]
+
+    return REFINED_JSON_DIR / f"{stem}_refined.json"
+
+
+def _list_raw_ocr_files() -> list[Path]:
+    if not RAW_OCR_DIR.exists():
+        return []
+
+    return sorted(
+        RAW_OCR_DIR.glob("*_raw_ocr.json"),
+        key=lambda path: path.name.lower(),
+    )
+
+
+def _choose_raw_ocr_file() -> Path | None:
+    files = _list_raw_ocr_files()
+
+    if not files:
+        print(
+            "\n[INFO] No raw OCR JSON files were found in:"
+            f"\n{RAW_OCR_DIR}"
+        )
+        return None
+
+    print("\nSelect raw OCR file to refine:\n")
+
+    for index, path in enumerate(files, start=1):
+        print(f"{index}. {path.name}")
+
+    print("0. Cancel")
+
+    while True:
+        choice = input("\nSelect option: ").strip()
+
+        if choice == "0":
+            return None
+
+        if choice.isdigit():
+            index = int(choice)
+            if 1 <= index <= len(files):
+                return files[index - 1]
+
+        print("\n[ERROR] Invalid option.")
+
+
+def refine_json_file(
+    raw_ocr_path: str | Path,
+) -> Path:
+    raw_path = Path(raw_ocr_path).expanduser().resolve()
+
+    if not raw_path.exists():
+        raise FileNotFoundError(
+            f"Raw OCR JSON does not exist: {raw_path}"
+        )
+
+    data = _load_json(raw_path)
+    lines = data.get("text")
+
+    if not isinstance(lines, list):
+        raise ValueError(
+            "Raw OCR JSON must contain a top-level 'text' list."
+        )
+
+    validated = []
+
+    for line in lines:
+        if not isinstance(line, dict):
+            raise ValueError(
+                "Every raw OCR line must be a JSON object."
+            )
+
+        if not isinstance(line.get("line_number"), int):
+            raise ValueError(
+                "Every raw OCR line must contain an integer line_number."
+            )
+
+        if not isinstance(line.get("text"), str):
+            raise ValueError(
+                "Every raw OCR line must contain text."
+            )
+
+        validated.append(line)
+
+    store, store_confidence, store_reason = _detect_store(validated)
+    (
+        store_number,
+        store_number_confidence,
+        store_number_reason,
+    ) = _detect_store_number(validated)
+    (
+        receipt_date,
+        receipt_date_confidence,
+        receipt_date_reason,
+    ) = _detect_receipt_date(validated)
+
+    context = {
+        "store": store,
+        "store_confidence": store_confidence,
+        "store_reason": store_reason,
+        "store_number": store_number,
+        "store_number_confidence": store_number_confidence,
+        "store_number_reason": store_number_reason,
+        "receipt_date": receipt_date,
+        "receipt_date_confidence": receipt_date_confidence,
+        "receipt_date_reason": receipt_date_reason,
+    }
+
+    history = _history_rows()
+
+    refined_lines = [
+        _refine_line(
+            line,
+            context,
+            history,
+        )
+        for line in validated
+    ]
+
+    destination = get_refined_json_path(raw_path)
+
+    output = {
+        "source_raw_ocr": str(raw_path),
+        "source_receipt": str(data.get("source_receipt", NA)),
+        "refinement_version": REFINEMENT_VERSION,
+        "receipt_context": {
+            "store": store,
+            "store_number": store_number,
+            "receipt_date": receipt_date,
+        },
+        "receipt_context_confidence": {
+            "store": round(store_confidence, 2),
+            "store_number": round(store_number_confidence, 2),
+            "receipt_date": round(receipt_date_confidence, 2),
+        },
+        "receipt_context_reasoning": {
+            "store": store_reason,
+            "store_number": store_number_reason,
+            "receipt_date": receipt_date_reason,
+        },
+        "line_count": len(refined_lines),
+        "lines": refined_lines,
+        "provenance": {
+            "rule": (
+                "Stage 7 preserves one refined object per Stage-6 line. "
+                "Receipt context may propagate Store, Store Number, and Date 1 "
+                "to genuine purchase items. Product remains an editable best "
+                "guess for every source line. Historical Purchase History may "
+                "support identity/Common Name/Category but never supplies a "
+                "current receipt Price 1 or Date 1."
+            ),
+            "purchase_history_reference_used": bool(history),
+        },
+    }
+
+    _save_json(destination, output)
+    set_selected_refined_json_file(destination)
+
+    return destination.resolve()
+
+
+def ensure_refined_json() -> Path | None:
+    raw_path = get_selected_raw_ocr_file()
+
+    if raw_path is None or not raw_path.exists():
+        raw_path = _choose_raw_ocr_file()
+
+    if raw_path is None:
+        return None
+
+    return refine_json_file(raw_path)
+
+
+def run_refine_json() -> None:
+    print("\n=== Refine Json File ===\n")
+
+    try:
+        output_path = ensure_refined_json()
+
+        if output_path is None:
+            return
+
+        data = _load_json(output_path)
+        context = data["receipt_context"]
+
+        print(
+            "[OK] Refined JSON created:"
+            f"\n{output_path}"
+        )
+        print(
+            "\nReceipt context:"
+            f"\nStore: {context['store']}"
+            f"\nStore Number: {context['store_number']}"
+            f"\nDate: {context['receipt_date']}"
+            f"\nLines refined: {data['line_count']}"
+        )
+        print(
+            "\nThis refined JSON is now available "
+            "to Data Base Builder as its preferred guess source."
+        )
+
+    except (
+        FileNotFoundError,
+        ValueError,
+        OSError,
+        json.JSONDecodeError,
+    ) as error:
+        print(f"\n[ERROR] {error}")
+
+
+================================================================================
 FILE: capabilities/OCRAcquisitionPipeline/reliable_receipt_crop.py
 ================================================================================
 
@@ -5214,6 +6324,12 @@ _selected_grayscale_image: Path | None = None
 _selected_threshold_image: Path | None = None
 _selected_ocr_candidates_file: Path | None = None
 _selected_raw_ocr_file: Path | None = None
+_selected_refined_json_file: Path | None = None
+
+
+def _clear_after_raw() -> None:
+    global _selected_refined_json_file
+    _selected_refined_json_file = None
 
 
 def set_selected_cropped_image(
@@ -5228,16 +6344,17 @@ def set_selected_cropped_image(
     global _selected_threshold_image
     global _selected_ocr_candidates_file
     global _selected_raw_ocr_file
+    global _selected_refined_json_file
 
     _selected_source_image = source_image.resolve()
     _selected_cropped_image = cropped_image.resolve()
-
     _selected_perspective_image = None
     _selected_enlarged_image = None
     _selected_grayscale_image = None
     _selected_threshold_image = None
     _selected_ocr_candidates_file = None
     _selected_raw_ocr_file = None
+    _selected_refined_json_file = None
 
 
 def set_selected_perspective_image(
@@ -5253,16 +6370,17 @@ def set_selected_perspective_image(
     global _selected_threshold_image
     global _selected_ocr_candidates_file
     global _selected_raw_ocr_file
+    global _selected_refined_json_file
 
     _selected_source_image = source_image.resolve()
     _selected_cropped_image = cropped_image.resolve()
     _selected_perspective_image = perspective_image.resolve()
-
     _selected_enlarged_image = None
     _selected_grayscale_image = None
     _selected_threshold_image = None
     _selected_ocr_candidates_file = None
     _selected_raw_ocr_file = None
+    _selected_refined_json_file = None
 
 
 def set_selected_enlarged_image(
@@ -5279,16 +6397,17 @@ def set_selected_enlarged_image(
     global _selected_threshold_image
     global _selected_ocr_candidates_file
     global _selected_raw_ocr_file
+    global _selected_refined_json_file
 
     _selected_source_image = source_image.resolve()
     _selected_cropped_image = cropped_image.resolve()
     _selected_perspective_image = perspective_image.resolve()
     _selected_enlarged_image = enlarged_image.resolve()
-
     _selected_grayscale_image = None
     _selected_threshold_image = None
     _selected_ocr_candidates_file = None
     _selected_raw_ocr_file = None
+    _selected_refined_json_file = None
 
 
 def set_selected_ocr_variants(
@@ -5307,6 +6426,7 @@ def set_selected_ocr_variants(
     global _selected_threshold_image
     global _selected_ocr_candidates_file
     global _selected_raw_ocr_file
+    global _selected_refined_json_file
 
     _selected_source_image = source_image.resolve()
     _selected_cropped_image = cropped_image.resolve()
@@ -5314,23 +6434,32 @@ def set_selected_ocr_variants(
     _selected_enlarged_image = enlarged_image.resolve()
     _selected_grayscale_image = grayscale_image.resolve()
     _selected_threshold_image = threshold_image.resolve()
-
     _selected_ocr_candidates_file = None
     _selected_raw_ocr_file = None
+    _selected_refined_json_file = None
 
 
 def set_selected_ocr_candidates_file(path: Path) -> None:
     global _selected_ocr_candidates_file
     global _selected_raw_ocr_file
+    global _selected_refined_json_file
 
     _selected_ocr_candidates_file = path.resolve()
     _selected_raw_ocr_file = None
+    _selected_refined_json_file = None
 
 
 def set_selected_raw_ocr_file(path: Path) -> None:
     global _selected_raw_ocr_file
+    global _selected_refined_json_file
 
     _selected_raw_ocr_file = path.resolve()
+    _selected_refined_json_file = None
+
+
+def set_selected_refined_json_file(path: Path) -> None:
+    global _selected_refined_json_file
+    _selected_refined_json_file = path.resolve()
 
 
 def get_selected_source_image() -> Path | None:
@@ -5365,6 +6494,10 @@ def get_selected_raw_ocr_file() -> Path | None:
     return _selected_raw_ocr_file
 
 
+def get_selected_refined_json_file() -> Path | None:
+    return _selected_refined_json_file
+
+
 def clear_selected_receipt() -> None:
     global _selected_source_image
     global _selected_cropped_image
@@ -5374,6 +6507,7 @@ def clear_selected_receipt() -> None:
     global _selected_threshold_image
     global _selected_ocr_candidates_file
     global _selected_raw_ocr_file
+    global _selected_refined_json_file
 
     _selected_source_image = None
     _selected_cropped_image = None
@@ -5383,6 +6517,7 @@ def clear_selected_receipt() -> None:
     _selected_threshold_image = None
     _selected_ocr_candidates_file = None
     _selected_raw_ocr_file = None
+    _selected_refined_json_file = None
 
 
 ================================================================================
@@ -5637,6 +6772,7 @@ from capabilities.OCRAcquisitionPipeline.constants import (
     OCR_VARIANTS_DIR,
     OCR_CANDIDATES_DIR,
     RAW_OCR_DIR,
+    REFINED_JSON_DIR,
 )
 from capabilities.OCRAcquisitionPipeline.session_state import (
     clear_selected_receipt,
@@ -5654,6 +6790,7 @@ GENERATED_DIRECTORIES = (
     OCR_VARIANTS_DIR,
     OCR_CANDIDATES_DIR,
     RAW_OCR_DIR,
+    REFINED_JSON_DIR,
 )
 
 
@@ -6025,6 +7162,7 @@ ENLARGED_DIR = DATA_DIR / "enlarged"
 OCR_VARIANTS_DIR = DATA_DIR / "ocr_variants"
 OCR_CANDIDATES_DIR = DATA_DIR / "ocr_candidates"
 RAW_OCR_DIR = DATA_DIR / "raw_ocr"
+REFINED_JSON_DIR = DATA_DIR / "refined_json"
 
 EXPORT_DIR = DATA_DIR / "exports"
 
@@ -6792,6 +7930,9 @@ from capabilities.OCRAcquisitionPipeline.run_ocr import (
 from capabilities.OCRAcquisitionPipeline.compare_ocr import (
     run_compare_ocr,
 )
+from capabilities.OCRAcquisitionPipeline.refine_json import (
+    run_refine_json,
+)
 
 from utils.export_codebase import (
     run_codebase_export,
@@ -6872,6 +8013,9 @@ def display_ocr_acquisition_sub_tasks_menu() -> None:
         "6. Compare OCR Results / Build Raw OCR JSON"
     )
     print(
+        "7. Refine Json File"
+    )
+    print(
         "0. Return to Capability Sub Tasks"
     )
 
@@ -6896,6 +8040,8 @@ def run_ocr_acquisition_sub_tasks_menu() -> None:
             run_ocr()
         elif option == "6":
             run_compare_ocr()
+        elif option == "7":
+            run_refine_json()
         elif option == "0":
             return
         else:
@@ -7037,12 +8183,16 @@ BENCHMARK_DIR = DATA_DIR / "benchmarks"
 
 def _record_fields(record: PurchaseRecord) -> dict[str, str]:
     return {
+        "total": record.total,
+        "store": record.store,
         "six_digit_sku": record.six_digit_sku,
         "product": record.product,
         "tax_code": record.tax_code,
-        "price": record.price,
         "store_number": record.store_number,
+        "common_name": record.common_name,
+        "category": record.category,
         "date": record.date,
+        "price": record.price,
     }
 
 
@@ -7198,6 +8348,10 @@ from utils.DataBaseBuilder.receipt_loader import (
     load_ocr_lines,
 )
 from utils.DataBaseBuilder.receipt_session import ReceiptSession
+from utils.DataBaseBuilder.refined_json_loader import (
+    load_matching_refined_json,
+    merge_refined_guess,
+)
 
 
 PUBLIX_TAX_OPTIONS = {
@@ -7238,12 +8392,20 @@ def _choose_receipt_parser():
         print("\n[ERROR] Invalid option.")
 
 
-def _prompt_store_number(receipt_type: str) -> str | None:
+def _prompt_store_number(
+    receipt_type: str,
+    default_value: str = NA,
+) -> str | None:
     if receipt_type == "Publix":
         print("\nSelect store:\n")
         print("1. 1058 - Indian Harbour Place")
         print("2. Other")
         print("0. Cancel")
+
+        if default_value != NA:
+            print(
+                f"\n[INFO] Refined JSON best guess: {default_value}"
+            )
 
         while True:
             option = input("\nSelect option: ").strip()
@@ -7260,19 +8422,38 @@ def _prompt_store_number(receipt_type: str) -> str | None:
             print("\n[ERROR] Invalid option.")
 
     while True:
-        store_number = input("\nStore Number: ").strip()
+        prompt = "\nStore Number: "
+        value = (
+            _input_with_current_value(
+                prompt,
+                default_value,
+            )
+            if default_value != NA
+            else input(prompt).strip()
+        )
+        value = value.strip()
 
-        if store_number:
-            return store_number
+        if value:
+            return value
 
         print("\n[ERROR] Store Number cannot be blank.")
 
 
-def _prompt_receipt_date() -> str | None:
+def _prompt_receipt_date(
+    default_value: str = NA,
+) -> str | None:
     while True:
-        value = input(
-            "\nReceipt date (MM/DD/YYYY, or 0 to cancel): "
-        ).strip()
+        prompt = "\nReceipt date (MM/DD/YYYY, or 0 to cancel): "
+
+        value = (
+            _input_with_current_value(
+                prompt,
+                default_value,
+            )
+            if default_value != NA
+            else input(prompt).strip()
+        )
+        value = value.strip()
 
         if value == "0":
             return None
@@ -7442,8 +8623,8 @@ def _correct_field(
                 print("\n[ERROR] SKU must be exactly six digits or NA.")
                 continue
 
-        if field_name == "price" and not _valid_price(value):
-            print("\n[ERROR] Price must be a non-negative number or NA.")
+        if field_name in {"price", "total"} and not _valid_price(value):
+            print("\n[ERROR] Value must be a non-negative number or NA.")
             continue
 
         if field_name == "date" and value != NA:
@@ -7541,27 +8722,83 @@ def _run_receipt_import() -> None:
         print(f"\n[ERROR] {error}")
         return
 
+    refined = load_matching_refined_json(
+        source_path
+    )
+
+    if refined is None:
+        print(
+            "\n[INFO] No valid matching refined JSON was found. "
+            "Data Base Builder will use the existing parser guesses."
+        )
+        refined_line_map = {}
+        refined_context = {}
+
+    else:
+        print(
+            "\n[OK] Refined JSON loaded for improved initial guesses:"
+            f"\n{refined['path']}"
+        )
+        refined_line_map = refined["line_map"]
+        refined_context = refined["receipt_context"]
+
+        suggested_store = refined_context.get(
+            "store",
+            NA,
+        )
+
+        if suggested_store != NA:
+            print(
+                "\n[INFO] Refined store best guess: "
+                f"{suggested_store}"
+            )
+
     parser = _choose_receipt_parser()
 
     if parser is None:
         return
 
-    store_number = _prompt_store_number(parser.receipt_type)
+    refined_store_number = str(
+        refined_context.get(
+            "store_number",
+            NA,
+        )
+        or NA
+    )
+
+    store_number = _prompt_store_number(
+        parser.receipt_type,
+        default_value=refined_store_number,
+    )
 
     if store_number is None:
         return
 
-    receipt_date = _prompt_receipt_date()
+    refined_date = str(
+        refined_context.get(
+            "receipt_date",
+            NA,
+        )
+        or NA
+    )
+
+    receipt_date = _prompt_receipt_date(
+        default_value=refined_date,
+    )
 
     if receipt_date is None:
         return
 
-    starting_line = _prompt_starting_line(lines)
+    starting_line = _prompt_starting_line(
+        lines
+    )
 
     if starting_line is None:
         return
 
-    if not _confirm_duplicate_import(source_path):
+    if not _confirm_duplicate_import(
+        source_path
+    ):
         return
 
     session = ReceiptSession(
@@ -7575,17 +8812,42 @@ def _run_receipt_import() -> None:
     eligible_lines = [
         line
         for line in lines
-        if line["line_number"] >= starting_line
+        if line["line_number"]
+        >= starting_line
     ]
 
-    should_commit = False
-
-    for line in eligible_lines:
-        record = parser.parse_line(
+    def _initial_record(
+        line: dict,
+    ) -> PurchaseRecord:
+        parser_record = parser.parse_line(
             text=line["text"],
             store_number=store_number,
             receipt_date=receipt_date,
         )
+
+        # Store selection, Store Number, and Date have just been explicitly
+        # confirmed by the user in this session. They outrank Stage-7 guesses.
+        parser_record = parser_record.with_value(
+            "store",
+            parser.receipt_type,
+        )
+
+        return merge_refined_guess(
+            parser_record,
+            refined_line_map.get(
+                line["line_number"]
+            ),
+            protected_fields={
+                "store",
+                "store_number",
+                "date",
+            },
+        )
+
+    should_commit = False
+
+    for line in eligible_lines:
+        record = _initial_record(line)
 
         action, reviewed_record = _review_line(
             parser,
@@ -7601,7 +8863,9 @@ def _run_receipt_import() -> None:
             continue
 
         if action == "skip":
-            session.skip(line["line_number"])
+            session.skip(
+                line["line_number"]
+            )
             continue
 
         if action == "accept_remaining":
@@ -7611,16 +8875,25 @@ def _run_receipt_import() -> None:
                 status="bulk_accepted",
             )
 
-            current_index = eligible_lines.index(line)
+            current_index = (
+                eligible_lines.index(line)
+            )
 
-            for remaining_line in eligible_lines[current_index + 1:]:
-                remaining_record = parser.parse_line(
-                    text=remaining_line["text"],
-                    store_number=store_number,
-                    receipt_date=receipt_date,
+            for remaining_line in (
+                eligible_lines[
+                    current_index + 1:
+                ]
+            ):
+                remaining_record = (
+                    _initial_record(
+                        remaining_line
+                    )
                 )
+
                 session.accept(
-                    line_number=remaining_line["line_number"],
+                    line_number=remaining_line[
+                        "line_number"
+                    ],
                     purchase=remaining_record,
                     status="bulk_accepted",
                 )
@@ -7638,6 +8911,7 @@ def _run_receipt_import() -> None:
                 "No workbook changes were made."
             )
             return
+
     else:
         should_commit = True
 
@@ -7652,35 +8926,58 @@ def _run_receipt_import() -> None:
         return
 
     try:
-        summary = commit_receipt(session)
+        summary = commit_receipt(
+            session
+        )
     except (OSError, ValueError) as error:
-        print(f"\n[ERROR] Could not commit receipt: {error}")
+        print(
+            f"\n[ERROR] Could not commit receipt: {error}"
+        )
         return
 
     benchmark_path = None
 
     try:
-        benchmark_path = write_corrected_benchmark(session)
-    except (OSError, ValueError, json.JSONDecodeError) as error:
+        benchmark_path = (
+            write_corrected_benchmark(
+                session
+            )
+        )
+    except (
+        OSError,
+        ValueError,
+        json.JSONDecodeError,
+    ) as error:
         print(
             "\n[WARNING] Purchase History was committed successfully, "
             "but the corrected benchmark could not be written:"
             f"\n{error}"
         )
 
-    print("\n[OK] Receipt committed to Purchase History.")
-    print(f"\nWorkbook:\n{summary['workbook_path']}")
+    print(
+        "\n[OK] Receipt committed to Purchase History."
+    )
+    print(
+        f"\nWorkbook:\n{summary['workbook_path']}"
+    )
 
     if benchmark_path is not None:
-        print(f"\nCorrected Benchmark:\n{benchmark_path}")
+        print(
+            f"\nCorrected Benchmark:\n{benchmark_path}"
+        )
     else:
-        print("\nCorrected Benchmark:\nExisting benchmark kept unchanged.")
+        print(
+            "\nCorrected Benchmark:\n"
+            "Existing benchmark kept unchanged."
+        )
 
     print(
-        f"\nPurchases added: {summary['purchases_added']}"
+        f"\nPurchases added: "
+        f"{summary['purchases_added']}"
         f"\nExisting product histories updated: "
         f"{summary['existing_histories_updated']}"
-        f"\nNew product rows created: {summary['new_product_rows']}"
+        f"\nNew product rows created: "
+        f"{summary['new_product_rows']}"
     )
 
 
@@ -7721,16 +9018,27 @@ NA = "NA"
 
 @dataclass(frozen=True)
 class PurchaseRecord:
+    total: str = NA
+    store: str = NA
     six_digit_sku: str = NA
     product: str = NA
     tax_code: str = NA
-    price: str = NA
     store_number: str = NA
+    common_name: str = NA
+    category: str = NA
     date: str = NA
+    price: str = NA
 
-    def with_value(self, field_name: str, value: str) -> "PurchaseRecord":
-        cleaned = value.strip() or NA
-        return replace(self, **{field_name: cleaned})
+    def with_value(
+        self,
+        field_name: str,
+        value: str,
+    ) -> "PurchaseRecord":
+        cleaned = str(value).strip() or NA
+        return replace(
+            self,
+            **{field_name: cleaned},
+        )
 
 
 ================================================================================
@@ -7884,6 +9192,162 @@ class ReceiptSession:
 
 
 ================================================================================
+FILE: utils/DataBaseBuilder/refined_json_loader.py
+================================================================================
+
+from __future__ import annotations
+
+import json
+from dataclasses import replace
+from pathlib import Path
+
+from utils.constants import REFINED_JSON_DIR
+from utils.DataBaseBuilder.purchase_record import NA, PurchaseRecord
+
+
+REQUIRED_FIELDS = (
+    "Total",
+    "Store",
+    "Six-Digit SKU",
+    "Product",
+    "Tax Code",
+    "Store Number",
+    "Common Name",
+    "Category",
+    "Date 1",
+    "Price 1",
+)
+
+FIELD_MAP = {
+    "Total": "total",
+    "Store": "store",
+    "Six-Digit SKU": "six_digit_sku",
+    "Product": "product",
+    "Tax Code": "tax_code",
+    "Store Number": "store_number",
+    "Common Name": "common_name",
+    "Category": "category",
+    "Date 1": "date",
+    "Price 1": "price",
+}
+
+
+def refined_path_for_raw(
+    raw_ocr_path: str | Path,
+) -> Path:
+    raw_path = Path(raw_ocr_path)
+    stem = raw_path.stem
+
+    if stem.endswith("_raw_ocr"):
+        stem = stem[:-8]
+
+    return REFINED_JSON_DIR / f"{stem}_refined.json"
+
+
+def load_matching_refined_json(
+    raw_ocr_path: str | Path,
+) -> dict | None:
+    raw_path = Path(raw_ocr_path).expanduser().resolve()
+    refined_path = refined_path_for_raw(raw_path)
+
+    if not refined_path.exists():
+        return None
+
+    try:
+        with refined_path.open(
+            "r",
+            encoding="utf-8",
+        ) as file:
+            data = json.load(file)
+    except (
+        OSError,
+        json.JSONDecodeError,
+    ):
+        return None
+
+    source_raw = data.get("source_raw_ocr")
+    if not isinstance(source_raw, str):
+        return None
+
+    if Path(source_raw).name != raw_path.name:
+        return None
+
+    lines = data.get("lines")
+    if not isinstance(lines, list):
+        return None
+
+    line_map = {}
+
+    for line in lines:
+        if not isinstance(line, dict):
+            return None
+
+        line_number = line.get("line_number")
+        fields = line.get("fields")
+
+        if not isinstance(line_number, int):
+            return None
+
+        if not isinstance(fields, dict):
+            return None
+
+        if not all(
+            field in fields
+            for field in REQUIRED_FIELDS
+        ):
+            return None
+
+        line_map[line_number] = line
+
+    return {
+        "path": refined_path.resolve(),
+        "data": data,
+        "line_map": line_map,
+        "receipt_context": data.get(
+            "receipt_context",
+            {},
+        ),
+    }
+
+
+def merge_refined_guess(
+    parser_record: PurchaseRecord,
+    refined_line: dict | None,
+    protected_fields: set[str] | None = None,
+) -> PurchaseRecord:
+    if refined_line is None:
+        return parser_record
+
+    fields = refined_line.get("fields")
+    if not isinstance(fields, dict):
+        return parser_record
+
+    protected = protected_fields or set()
+    values = {}
+
+    for refined_name, record_name in FIELD_MAP.items():
+        if record_name in protected:
+            continue
+
+        value = fields.get(refined_name, NA)
+
+        if (
+            isinstance(value, str)
+            and value.strip()
+            and value.strip() != NA
+        ):
+            values[record_name] = value.strip()
+
+    if not values:
+        return parser_record
+
+    return replace(
+        parser_record,
+        **values,
+    )
+
+
+================================================================================
 FILE: utils/DataBaseBuilder/parsers/__init__.py
 ================================================================================
 
@@ -7923,11 +9387,15 @@ from utils.DataBaseBuilder.purchase_record import NA, PurchaseRecord
 class AldiParser(BaseReceiptParser):
     receipt_type = "Aldi"
     display_fields = (
+        "total",
+        "store",
         "six_digit_sku",
         "product",
-        "price",
         "store_number",
+        "common_name",
+        "category",
         "date",
+        "price",
     )
 
     def parse_line(
@@ -7936,14 +9404,16 @@ class AldiParser(BaseReceiptParser):
         store_number: str,
         receipt_date: str,
     ) -> PurchaseRecord:
-        return PurchaseRecord(
+        price = self.extract_price(text)
+
+        return self.build_record(
             six_digit_sku=self.extract_sku(text),
             product=self.clean_product_text(
                 text,
                 remove_sku=True,
             ),
             tax_code=NA,
-            price=self.extract_price(text),
+            price=price,
             store_number=store_number,
             date=receipt_date,
         )
@@ -7967,22 +9437,31 @@ SKU_PATTERN = re.compile(r"(?<!\d)(\d{6})(?!\d)")
 
 class BaseReceiptParser(ABC):
     receipt_type = "Other"
+
     display_fields = (
+        "total",
+        "store",
         "six_digit_sku",
         "product",
         "tax_code",
-        "price",
         "store_number",
+        "common_name",
+        "category",
         "date",
+        "price",
     )
 
     field_labels = {
+        "total": "Total",
+        "store": "Store",
         "six_digit_sku": "Six-Digit SKU",
         "product": "Product",
         "tax_code": "Tax Code",
-        "price": "Price",
         "store_number": "Store Number",
-        "date": "Date",
+        "common_name": "Common Name",
+        "category": "Category",
+        "date": "Date 1",
+        "price": "Price 1",
     }
 
     @abstractmethod
@@ -8030,7 +9509,35 @@ class BaseReceiptParser(ABC):
 
         return working or NA
 
-    def format_record(self, record: PurchaseRecord) -> str:
+    def build_record(
+        self,
+        *,
+        six_digit_sku: str = NA,
+        product: str = NA,
+        tax_code: str = NA,
+        price: str = NA,
+        store_number: str = NA,
+        date: str = NA,
+    ) -> PurchaseRecord:
+        total = price if price != NA else NA
+
+        return PurchaseRecord(
+            total=total,
+            store=self.receipt_type,
+            six_digit_sku=six_digit_sku,
+            product=product,
+            tax_code=tax_code,
+            store_number=store_number,
+            common_name=NA,
+            category=NA,
+            date=date,
+            price=price,
+        )
+
+    def format_record(
+        self,
+        record: PurchaseRecord,
+    ) -> str:
         lines = []
 
         for index, field_name in enumerate(
@@ -8039,7 +9546,9 @@ class BaseReceiptParser(ABC):
         ):
             label = self.field_labels[field_name]
             value = getattr(record, field_name)
-            lines.append(f'{index}. {label}: "{value}"')
+            lines.append(
+                f'{index}. {label}: "{value}"'
+            )
 
         return "\n".join(lines)
 
@@ -8063,14 +9572,16 @@ class OtherParser(BaseReceiptParser):
         store_number: str,
         receipt_date: str,
     ) -> PurchaseRecord:
-        return PurchaseRecord(
+        price = self.extract_price(text)
+
+        return self.build_record(
             six_digit_sku=self.extract_sku(text),
             product=self.clean_product_text(
                 text,
                 remove_sku=True,
             ),
             tax_code=NA,
-            price=self.extract_price(text),
+            price=price,
             store_number=store_number,
             date=receipt_date,
         )
@@ -8097,11 +9608,15 @@ PUBLIX_TAX_PATTERN = re.compile(
 class PublixParser(BaseReceiptParser):
     receipt_type = "Publix"
     display_fields = (
+        "total",
+        "store",
         "product",
         "tax_code",
-        "price",
         "store_number",
+        "common_name",
+        "category",
         "date",
+        "price",
     )
 
     def parse_line(
@@ -8121,14 +9636,16 @@ class PublixParser(BaseReceiptParser):
             else NA
         )
 
-        return PurchaseRecord(
+        price = self.extract_price(text)
+
+        return self.build_record(
             six_digit_sku=NA,
             product=self.clean_product_text(
                 text,
                 tax_pattern=PUBLIX_TAX_PATTERN,
             ),
             tax_code=tax_code,
-            price=self.extract_price(text),
+            price=price,
             store_number=store_number,
             date=receipt_date,
         )
@@ -8147,10 +9664,14 @@ from utils.DataBaseBuilder.purchase_record import NA, PurchaseRecord
 class TraderJoesParser(BaseReceiptParser):
     receipt_type = "Trader Joe's"
     display_fields = (
+        "total",
+        "store",
         "product",
-        "price",
         "store_number",
+        "common_name",
+        "category",
         "date",
+        "price",
     )
 
     def parse_line(
@@ -8159,11 +9680,13 @@ class TraderJoesParser(BaseReceiptParser):
         store_number: str,
         receipt_date: str,
     ) -> PurchaseRecord:
-        return PurchaseRecord(
+        price = self.extract_price(text)
+
+        return self.build_record(
             six_digit_sku=NA,
             product=self.clean_product_text(text),
             tax_code=NA,
-            price=self.extract_price(text),
+            price=price,
             store_number=store_number,
             date=receipt_date,
         )
@@ -8417,30 +9940,40 @@ def _migrate_old_purchase_sheet(
                 value=NA,
             )
 
-        if sheet.cell(
-            row=row,
-            column=COMMON_NAME_COLUMN,
-        ).value in (
-            None,
-            "",
+        existing_common_name = str(
+            sheet.cell(
+                row=row,
+                column=COMMON_NAME_COLUMN,
+            ).value
+            or NA
+        )
+
+        if (
+            existing_common_name == NA
+            and record.common_name != NA
         ):
             sheet.cell(
                 row=row,
                 column=COMMON_NAME_COLUMN,
-                value=NA,
+                value=record.common_name,
             )
 
-        if sheet.cell(
-            row=row,
-            column=CATEGORY_COLUMN,
-        ).value in (
-            None,
-            "",
+        existing_category = str(
+            sheet.cell(
+                row=row,
+                column=CATEGORY_COLUMN,
+            ).value
+            or NA
+        )
+
+        if (
+            existing_category == NA
+            and record.category != NA
         ):
             sheet.cell(
                 row=row,
                 column=CATEGORY_COLUMN,
-                value=NA,
+                value=record.category,
             )
 
         _ensure_total_formula(
@@ -8976,7 +10509,11 @@ def _append_purchase(
         sheet.cell(
             row=row,
             column=STORE_COLUMN,
-            value=store_name,
+            value=(
+                record.store
+                if record.store != NA
+                else store_name
+            ),
         )
 
         sheet.cell(
@@ -9006,13 +10543,13 @@ def _append_purchase(
         sheet.cell(
             row=row,
             column=COMMON_NAME_COLUMN,
-            value=NA,
+            value=record.common_name,
         )
 
         sheet.cell(
             row=row,
             column=CATEGORY_COLUMN,
-            value=NA,
+            value=record.category,
         )
 
     else:
@@ -9027,14 +10564,20 @@ def _append_purchase(
         # Old migrated rows may have Store=NA because the old workbook
         # did not preserve a store name. Once an authoritative receipt type
         # is available, populate the Store column.
+        incoming_store = (
+            record.store
+            if record.store != NA
+            else store_name
+        )
+
         if (
             existing_store == NA
-            and store_name
+            and incoming_store
         ):
             sheet.cell(
                 row=row,
                 column=STORE_COLUMN,
-                value=store_name,
+                value=incoming_store,
             )
 
         existing_tax = str(
