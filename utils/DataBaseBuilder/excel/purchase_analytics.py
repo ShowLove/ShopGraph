@@ -11,6 +11,8 @@ from pathlib import Path
 from openpyxl import load_workbook
 from openpyxl.chart import BarChart, DoughnutChart, LineChart, Reference
 from openpyxl.chart.label import DataLabelList
+from openpyxl.chart.marker import DataPoint
+from openpyxl.chart.shapes import GraphicalProperties
 from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 from openpyxl.utils.datetime import from_excel
@@ -31,6 +33,40 @@ PRICE_HEADER_PATTERN = re.compile(r"^Price\s+(\d+)$", re.IGNORECASE)
 CURRENCY_FORMAT = '$#,##0.00'
 DATE_FORMAT = 'mm/dd/yyyy'
 MONTH_FORMAT = 'mmm yyyy'
+
+# Approximately twice the original chart dimensions.
+CHART_WIDTH = 25.5
+CHART_HEIGHT = 14.5
+LARGE_CHART_HEIGHT = 16.5
+
+# Accessible, high-contrast palette. Colors intentionally repeat after the
+# palette is exhausted; the numeric code remains the primary identifier.
+ACCESSIBLE_COLORS = (
+    "4472C4",  # blue
+    "ED7D31",  # orange
+    "70AD47",  # green
+    "A5A5A5",  # gray
+    "FFC000",  # gold
+    "5B9BD5",  # light blue
+    "C55A11",  # dark orange
+    "548235",  # dark green
+    "8064A2",  # purple
+    "264478",  # navy
+    "9E480E",  # brown
+    "636363",  # dark gray
+)
+
+# Dashboard regions:
+# A:O   -> chart
+# Q:W   -> numbered/color key
+# Y:AG  -> explanation
+CHART_START_COLUMN = 1
+KEY_COLOR_COLUMN = 17       # Q
+KEY_NUMBER_COLUMN = 18      # R
+KEY_DESCRIPTION_COLUMN = 19 # S
+KEY_VALUE_COLUMN = 23       # W
+OVERVIEW_START_COLUMN = 25  # Y
+OVERVIEW_END_COLUMN = 33    # AG
 
 
 class PurchaseAnalyticsError(ValueError):
@@ -189,7 +225,11 @@ def _flatten_purchase_history(sheet) -> tuple[list[dict], dict]:
     for row in range(2, sheet.max_row + 1):
         def value_for(name: str):
             column = fixed_columns.get(name)
-            return sheet.cell(row=row, column=column).value if column else None
+            return (
+                sheet.cell(row=row, column=column).value
+                if column
+                else None
+            )
 
         store = _normalized_text(value_for("store")) or "Unknown"
         store_number = _normalized_text(value_for("store_number")) or NA
@@ -267,30 +307,26 @@ def _month_range(start: date, end: date) -> list[date]:
     return months
 
 
-def _collapse_top(
-    values: dict[str, float | int],
-    *,
-    maximum_rows: int,
-    top_when_collapsing: int,
-) -> list[tuple[str, float | int]]:
-    ranked = sorted(
+def _sorted_desc(values: dict[str, float | int]) -> list[tuple[str, float | int]]:
+    return sorted(
         values.items(),
         key=lambda item: (-item[1], item[0].lower()),
     )
 
-    if len(ranked) <= maximum_rows:
-        return ranked
 
-    kept = ranked[:top_when_collapsing]
-    other_value = sum(
-        item[1]
-        for item in ranked[top_when_collapsing:]
-    )
+def _numbered_rows(
+    rows: list[tuple],
+) -> list[tuple]:
+    return [
+        (index, *row)
+        for index, row in enumerate(rows, start=1)
+    ]
 
-    if other_value:
-        kept.append(("Other", other_value))
 
-    return kept
+def _color_for_number(number: int) -> str:
+    return ACCESSIBLE_COLORS[
+        (number - 1) % len(ACCESSIBLE_COLORS)
+    ]
 
 
 def _aggregate(observations: list[dict]) -> dict:
@@ -310,7 +346,11 @@ def _aggregate(observations: list[dict]) -> dict:
         price = item["price"]
         category = item["category"]
         store = item["store"]
-        product_identity = item["common_name"] or item["product"] or "Unknown Product"
+        product_identity = (
+            item["common_name"]
+            or item["product"]
+            or "Unknown Product"
+        )
 
         monthly_spending[month] += price
         category_spending[category] += price
@@ -326,62 +366,33 @@ def _aggregate(observations: list[dict]) -> dict:
         for month in months
     ]
 
-    category_rows = _collapse_top(
-        category_spending,
-        maximum_rows=15,
-        top_when_collapsing=14,
-    )
+    # IMPORTANT: no "Other" bucket. Every category/store is retained so the
+    # numbered key can identify every segment individually.
+    category_rows = _sorted_desc(category_spending)
+    store_rows = _sorted_desc(store_spending)
+    share_rows = list(category_rows)
+    frequency_rows = _sorted_desc(dict(category_frequency))
 
-    store_rows = sorted(
-        store_spending.items(),
-        key=lambda item: (-item[1], item[0].lower()),
-    )
+    product_rows = _sorted_desc(product_spending)[:10]
 
-    share_rows = _collapse_top(
-        category_spending,
-        maximum_rows=8,
-        top_when_collapsing=7,
-    )
-
-    product_rows = sorted(
-        product_spending.items(),
-        key=lambda item: (-item[1], item[0].lower()),
-    )[:10]
-
-    frequency_rows = _collapse_top(
-        dict(category_frequency),
-        maximum_rows=15,
-        top_when_collapsing=14,
-    )
-
-    ranked_stores = [name for name, _ in store_rows]
-
-    if len(ranked_stores) > 6:
-        monthly_store_names = ranked_stores[:5] + ["Other"]
-        kept_stores = set(ranked_stores[:5])
-    else:
-        monthly_store_names = ranked_stores
-        kept_stores = set(ranked_stores)
+    store_names = [
+        name
+        for name, _ in store_rows
+    ]
 
     monthly_store_rows = []
 
     for month in months:
-        values = []
-
-        for store in monthly_store_names:
-            if store == "Other" and len(ranked_stores) > 6:
-                value = sum(
-                    amount
-                    for actual_store, amount
-                    in monthly_store.get(month, {}).items()
-                    if actual_store not in kept_stores
-                )
-            else:
-                value = monthly_store.get(month, {}).get(store, 0.0)
-
-            values.append(value)
-
-        monthly_store_rows.append((month, values))
+        values = [
+            monthly_store.get(month, {}).get(
+                store,
+                0.0,
+            )
+            for store in store_names
+        ]
+        monthly_store_rows.append(
+            (month, values)
+        )
 
     known_stores = {
         item["store"]
@@ -414,7 +425,7 @@ def _aggregate(observations: list[dict]) -> dict:
         "category_share": share_rows,
         "product_spending": product_rows,
         "category_frequency": frequency_rows,
-        "monthly_store_names": monthly_store_names,
+        "monthly_store_names": store_names,
         "monthly_store": monthly_store_rows,
     }
 
@@ -441,18 +452,22 @@ def _create_output_sheets(workbook):
 
     data_sheet.sheet_state = "hidden"
     analytics.sheet_view.showGridLines = False
-    analytics.freeze_panes = "A6"
+    analytics.freeze_panes = "A7"
 
     return analytics, data_sheet
 
 
-def _style_dashboard_header(analytics, aggregates: dict) -> None:
-    analytics.merge_cells("A1:N2")
+def _style_dashboard_header(
+    analytics,
+    aggregates: dict,
+) -> None:
+    analytics.merge_cells("A1:AG2")
+
     title = analytics["A1"]
     title.value = "ShopGraph Spending Analytics"
     title.font = Font(
         bold=True,
-        size=20,
+        size=22,
         color="FFFFFF",
     )
     title.alignment = Alignment(
@@ -478,28 +493,71 @@ def _style_dashboard_header(analytics, aggregates: dict) -> None:
         ("Categories", aggregates["category_count"]),
     )
 
-    start_columns = (1, 4, 7, 10, 13)
+    start_columns = (1, 7, 13, 20, 26)
 
-    for (label, value), column in zip(summary, start_columns):
-        label_cell = analytics.cell(row=4, column=column)
-        value_cell = analytics.cell(row=5, column=column)
+    for (label, value), column in zip(
+        summary,
+        start_columns,
+    ):
+        label_cell = analytics.cell(
+            row=4,
+            column=column,
+        )
+        value_cell = analytics.cell(
+            row=5,
+            column=column,
+        )
 
         label_cell.value = label
-        label_cell.font = Font(bold=True, color="404040")
-        label_cell.alignment = Alignment(horizontal="center")
+        label_cell.font = Font(
+            bold=True,
+            color="404040",
+        )
+        label_cell.alignment = Alignment(
+            horizontal="left"
+        )
 
         value_cell.value = value
-        value_cell.font = Font(bold=True, size=12)
-        value_cell.alignment = Alignment(horizontal="center")
+        value_cell.font = Font(
+            bold=True,
+            size=12,
+        )
+        value_cell.alignment = Alignment(
+            horizontal="left"
+        )
 
         if label == "Total Spending":
             value_cell.number_format = CURRENCY_FORMAT
 
-    for column in range(1, 15):
-        analytics.column_dimensions[get_column_letter(column)].width = 12
+    # Left chart area.
+    for column in range(1, 16):
+        analytics.column_dimensions[
+            get_column_letter(column)
+        ].width = 10
 
-    analytics.row_dimensions[1].height = 26
-    analytics.row_dimensions[2].height = 26
+    # Spacer.
+    analytics.column_dimensions["P"].width = 2
+
+    # Numbered/color key area.
+    analytics.column_dimensions["Q"].width = 4
+    analytics.column_dimensions["R"].width = 5
+
+    for column in range(19, 23):
+        analytics.column_dimensions[
+            get_column_letter(column)
+        ].width = 15
+
+    analytics.column_dimensions["W"].width = 14
+    analytics.column_dimensions["X"].width = 2
+
+    # Explanation area.
+    for column in range(25, 34):
+        analytics.column_dimensions[
+            get_column_letter(column)
+        ].width = 13
+
+    analytics.row_dimensions[1].height = 28
+    analytics.row_dimensions[2].height = 28
 
 
 def _write_table(
@@ -560,19 +618,46 @@ def _write_table(
     }
 
 
-def _line_chart(data_sheet, table: dict) -> LineChart:
+def _apply_point_colors(
+    chart,
+    count: int,
+) -> None:
+    if not chart.series:
+        return
+
+    points = []
+
+    for index in range(count):
+        color = _color_for_number(
+            index + 1
+        )
+
+        point = DataPoint(idx=index)
+        point.graphicalProperties = GraphicalProperties(
+            solidFill=color,
+        )
+        point.graphicalProperties.line.solidFill = color
+        points.append(point)
+
+    chart.series[0].dPt = points
+
+
+def _line_chart(
+    data_sheet,
+    table: dict,
+) -> LineChart:
     chart = LineChart()
     chart.title = "Monthly Spending"
     chart.y_axis.title = "Spending ($)"
-    chart.x_axis.title = "Month"
+    chart.x_axis.title = "Month Number"
     chart.style = 13
-    chart.height = 7.3
-    chart.width = 13.2
+    chart.height = CHART_HEIGHT
+    chart.width = CHART_WIDTH
     chart.legend = None
 
     data = Reference(
         data_sheet,
-        min_col=table["start_column"] + 1,
+        min_col=table["start_column"] + 2,
         min_row=table["header_row"],
         max_row=table["data_end"],
     )
@@ -583,8 +668,19 @@ def _line_chart(data_sheet, table: dict) -> LineChart:
         max_row=table["data_end"],
     )
 
-    chart.add_data(data, titles_from_data=True)
+    chart.add_data(
+        data,
+        titles_from_data=True,
+    )
     chart.set_categories(categories)
+
+    if chart.series:
+        chart.series[0].graphicalProperties.line.solidFill = (
+            ACCESSIBLE_COLORS[0]
+        )
+        chart.series[0].graphicalProperties.line.width = 28575
+        chart.series[0].marker.symbol = "circle"
+        chart.series[0].marker.size = 7
 
     return chart
 
@@ -601,14 +697,15 @@ def _horizontal_bar_chart(
     chart.style = 10
     chart.title = title
     chart.x_axis.title = x_axis_title
-    chart.y_axis.title = ""
-    chart.height = 7.3
-    chart.width = 13.2
+    chart.y_axis.title = "Number"
+    chart.height = CHART_HEIGHT
+    chart.width = CHART_WIDTH
     chart.legend = None
+    chart.gapWidth = 45
 
     data = Reference(
         data_sheet,
-        min_col=table["start_column"] + 1,
+        min_col=table["start_column"] + 2,
         min_row=table["header_row"],
         max_row=table["data_end"],
     )
@@ -619,23 +716,39 @@ def _horizontal_bar_chart(
         max_row=table["data_end"],
     )
 
-    chart.add_data(data, titles_from_data=True)
+    chart.add_data(
+        data,
+        titles_from_data=True,
+    )
     chart.set_categories(categories)
+
+    labels = DataLabelList()
+    labels.showVal = True
+    chart.dataLabels = labels
+
+    _apply_point_colors(
+        chart,
+        table["row_count"],
+    )
 
     return chart
 
 
-def _doughnut_chart(data_sheet, table: dict) -> DoughnutChart:
+def _doughnut_chart(
+    data_sheet,
+    table: dict,
+) -> DoughnutChart:
     chart = DoughnutChart()
     chart.title = "Spending Share by Category"
-    chart.holeSize = 55
+    chart.holeSize = 58
     chart.style = 10
-    chart.height = 7.3
-    chart.width = 13.2
+    chart.height = LARGE_CHART_HEIGHT
+    chart.width = CHART_WIDTH
+    chart.legend = None
 
     data = Reference(
         data_sheet,
-        min_col=table["start_column"] + 1,
+        min_col=table["start_column"] + 2,
         min_row=table["header_row"],
         max_row=table["data_end"],
     )
@@ -646,18 +759,32 @@ def _doughnut_chart(data_sheet, table: dict) -> DoughnutChart:
         max_row=table["data_end"],
     )
 
-    chart.add_data(data, titles_from_data=True)
+    chart.add_data(
+        data,
+        titles_from_data=True,
+    )
     chart.set_categories(labels)
 
-    labels_options = DataLabelList()
-    labels_options.showPercent = True
-    labels_options.showLeaderLines = True
-    chart.dataLabels = labels_options
+    # The only labels shown on the doughnut are numeric codes.
+    label_options = DataLabelList()
+    label_options.showCatName = True
+    label_options.showPercent = False
+    label_options.showVal = False
+    label_options.showLeaderLines = True
+    chart.dataLabels = label_options
+
+    _apply_point_colors(
+        chart,
+        table["row_count"],
+    )
 
     return chart
 
 
-def _stacked_store_chart(data_sheet, table: dict) -> BarChart:
+def _stacked_store_chart(
+    data_sheet,
+    table: dict,
+) -> BarChart:
     chart = BarChart()
     chart.type = "col"
     chart.grouping = "stacked"
@@ -665,9 +792,9 @@ def _stacked_store_chart(data_sheet, table: dict) -> BarChart:
     chart.style = 12
     chart.title = "Monthly Spending by Store"
     chart.y_axis.title = "Spending ($)"
-    chart.x_axis.title = "Month"
-    chart.height = 9.0
-    chart.width = 27.0
+    chart.x_axis.title = "Month Number"
+    chart.height = LARGE_CHART_HEIGHT
+    chart.width = CHART_WIDTH
 
     data = Reference(
         data_sheet,
@@ -687,10 +814,337 @@ def _stacked_store_chart(data_sheet, table: dict) -> BarChart:
         max_row=table["data_end"],
     )
 
-    chart.add_data(data, titles_from_data=True)
+    chart.add_data(
+        data,
+        titles_from_data=True,
+    )
     chart.set_categories(categories)
 
+    # Series headers are numeric store codes. Keep the built-in legend because
+    # it displays those compact numbers without descriptions.
+    for index, series in enumerate(
+        chart.series,
+        start=1,
+    ):
+        color = _color_for_number(index)
+        series.graphicalProperties.solidFill = color
+        series.graphicalProperties.line.solidFill = color
+
     return chart
+
+
+def _write_section_header(
+    sheet,
+    *,
+    start_row: int,
+    start_column: int,
+    end_column: int,
+    text: str,
+) -> None:
+    sheet.merge_cells(
+        start_row=start_row,
+        start_column=start_column,
+        end_row=start_row,
+        end_column=end_column,
+    )
+
+    cell = sheet.cell(
+        row=start_row,
+        column=start_column,
+    )
+    cell.value = text
+    cell.font = Font(
+        bold=True,
+        size=12,
+        color="FFFFFF",
+    )
+    cell.fill = PatternFill(
+        "solid",
+        fgColor="1F4E78",
+    )
+    cell.alignment = Alignment(
+        horizontal="left",
+        vertical="center",
+    )
+
+
+def _format_metric(
+    value,
+    *,
+    kind: str,
+) -> str:
+    if kind == "currency":
+        return f"${float(value):,.2f}"
+
+    if kind == "percent":
+        return f"{float(value):.1%}"
+
+    if kind == "count":
+        return f"{int(value):,}"
+
+    return str(value)
+
+
+def _write_numbered_key(
+    analytics,
+    *,
+    start_row: int,
+    entries: list[dict],
+    title: str,
+) -> int:
+    _write_section_header(
+        analytics,
+        start_row=start_row,
+        start_column=KEY_COLOR_COLUMN,
+        end_column=KEY_VALUE_COLUMN,
+        text=title,
+    )
+
+    header_row = start_row + 1
+
+    headers = (
+        (KEY_COLOR_COLUMN, ""),
+        (KEY_NUMBER_COLUMN, "#"),
+        (KEY_DESCRIPTION_COLUMN, "Description"),
+        (KEY_VALUE_COLUMN, "Value"),
+    )
+
+    for column, label in headers:
+        cell = analytics.cell(
+            row=header_row,
+            column=column,
+        )
+        cell.value = label
+        cell.font = Font(bold=True)
+        cell.alignment = Alignment(
+            horizontal="left",
+            vertical="center",
+        )
+
+    for offset, entry in enumerate(
+        entries,
+        start=1,
+    ):
+        row = header_row + offset
+        number = int(entry["number"])
+        color = entry.get(
+            "color",
+            _color_for_number(number),
+        )
+
+        color_cell = analytics.cell(
+            row=row,
+            column=KEY_COLOR_COLUMN,
+        )
+        color_cell.fill = PatternFill(
+            "solid",
+            fgColor=color,
+        )
+
+        number_cell = analytics.cell(
+            row=row,
+            column=KEY_NUMBER_COLUMN,
+        )
+        number_cell.value = number
+        number_cell.font = Font(bold=True)
+        number_cell.alignment = Alignment(
+            horizontal="center",
+        )
+
+        analytics.merge_cells(
+            start_row=row,
+            start_column=KEY_DESCRIPTION_COLUMN,
+            end_row=row,
+            end_column=KEY_VALUE_COLUMN - 1,
+        )
+
+        description_cell = analytics.cell(
+            row=row,
+            column=KEY_DESCRIPTION_COLUMN,
+        )
+        description_cell.value = entry["description"]
+        description_cell.alignment = Alignment(
+            wrap_text=True,
+            vertical="top",
+        )
+
+        value_cell = analytics.cell(
+            row=row,
+            column=KEY_VALUE_COLUMN,
+        )
+        value_cell.value = entry["value"]
+        value_cell.alignment = Alignment(
+            horizontal="right",
+            vertical="top",
+        )
+
+        analytics.row_dimensions[row].height = max(
+            analytics.row_dimensions[row].height or 15,
+            22,
+        )
+
+    return header_row + len(entries)
+
+
+def _write_overview(
+    analytics,
+    *,
+    start_row: int,
+    title: str,
+    what_it_shows: str,
+    how_to_read: str,
+    why_useful: str,
+    notes: str = "",
+) -> int:
+    _write_section_header(
+        analytics,
+        start_row=start_row,
+        start_column=OVERVIEW_START_COLUMN,
+        end_column=OVERVIEW_END_COLUMN,
+        text="How to Read This Graph",
+    )
+
+    row = start_row + 2
+
+    sections = (
+        ("What it represents", what_it_shows),
+        ("How to read it", how_to_read),
+        ("What it is useful for", why_useful),
+        ("Notes", notes),
+    )
+
+    for heading, body in sections:
+        if not body:
+            continue
+
+        analytics.merge_cells(
+            start_row=row,
+            start_column=OVERVIEW_START_COLUMN,
+            end_row=row,
+            end_column=OVERVIEW_END_COLUMN,
+        )
+        heading_cell = analytics.cell(
+            row=row,
+            column=OVERVIEW_START_COLUMN,
+        )
+        heading_cell.value = heading
+        heading_cell.font = Font(
+            bold=True,
+            color="1F4E78",
+        )
+        row += 1
+
+        analytics.merge_cells(
+            start_row=row,
+            start_column=OVERVIEW_START_COLUMN,
+            end_row=row + 3,
+            end_column=OVERVIEW_END_COLUMN,
+        )
+        body_cell = analytics.cell(
+            row=row,
+            column=OVERVIEW_START_COLUMN,
+        )
+        body_cell.value = body
+        body_cell.alignment = Alignment(
+            wrap_text=True,
+            vertical="top",
+        )
+        row += 5
+
+    return row
+
+
+def _key_entries_for_months(
+    rows: list[tuple[date, float]],
+) -> list[dict]:
+    return [
+        {
+            "number": index,
+            "color": ACCESSIBLE_COLORS[0],
+            "description": month.strftime("%B %Y"),
+            "value": _format_metric(
+                spending,
+                kind="currency",
+            ),
+        }
+        for index, (month, spending)
+        in enumerate(rows, start=1)
+    ]
+
+
+def _key_entries_for_named_values(
+    rows: list[tuple[str, float | int]],
+    *,
+    value_kind: str,
+    total: float | None = None,
+    include_percent: bool = False,
+) -> list[dict]:
+    entries = []
+
+    for index, (name, value) in enumerate(
+        rows,
+        start=1,
+    ):
+        formatted = _format_metric(
+            value,
+            kind=value_kind,
+        )
+
+        if (
+            include_percent
+            and total
+            and total > 0
+        ):
+            percent = float(value) / total
+            formatted = (
+                f"{formatted} "
+                f"({_format_metric(percent, kind='percent')})"
+            )
+
+        entries.append(
+            {
+                "number": index,
+                "color": _color_for_number(index),
+                "description": name,
+                "value": formatted,
+            }
+        )
+
+    return entries
+
+
+def _key_entries_for_stores(
+    store_names: list[str],
+    store_totals: list[tuple[str, float]],
+) -> list[dict]:
+    totals = {
+        name: value
+        for name, value in store_totals
+    }
+
+    return [
+        {
+            "number": index,
+            "color": _color_for_number(index),
+            "description": store,
+            "value": _format_metric(
+                totals.get(store, 0.0),
+                kind="currency",
+            ),
+        }
+        for index, store
+        in enumerate(store_names, start=1)
+    ]
+
+
+def _section_height(
+    entry_count: int,
+) -> int:
+    # Enough vertical space for the 2x chart, key entries, and explanatory text.
+    return max(
+        36,
+        entry_count + 5,
+    )
 
 
 def _add_insufficient_note(
@@ -705,7 +1159,10 @@ def _add_insufficient_note(
     )
 
 
-def _atomic_save(workbook, workbook_path: Path) -> None:
+def _atomic_save(
+    workbook,
+    workbook_path: Path,
+) -> None:
     workbook_path.parent.mkdir(
         parents=True,
         exist_ok=True,
@@ -720,16 +1177,57 @@ def _atomic_save(workbook, workbook_path: Path) -> None:
 
     try:
         workbook.save(temporary_path)
-        os.replace(temporary_path, workbook_path)
+        os.replace(
+            temporary_path,
+            workbook_path,
+        )
     finally:
         if temporary_path.exists():
             temporary_path.unlink()
 
 
+def _write_chart_section(
+    analytics,
+    *,
+    start_row: int,
+    chart,
+    entries: list[dict],
+    key_title: str,
+    overview: dict,
+) -> int:
+    analytics.add_chart(
+        chart,
+        f"A{start_row}",
+    )
+
+    _write_numbered_key(
+        analytics,
+        start_row=start_row,
+        entries=entries,
+        title=key_title,
+    )
+
+    _write_overview(
+        analytics,
+        start_row=start_row,
+        title=overview.get("title", ""),
+        what_it_shows=overview["what"],
+        how_to_read=overview["read"],
+        why_useful=overview["useful"],
+        notes=overview.get("notes", ""),
+    )
+
+    return start_row + _section_height(
+        len(entries)
+    )
+
+
 def generate_purchase_analytics(
     workbook_path: Path = WORKBOOK_PATH,
 ) -> dict:
-    workbook_path = Path(workbook_path).expanduser().resolve()
+    workbook_path = Path(
+        workbook_path
+    ).expanduser().resolve()
 
     if not workbook_path.exists():
         raise FileNotFoundError(
@@ -748,20 +1246,25 @@ def generate_purchase_analytics(
         )
 
     purchase_sheet = workbook[PURCHASE_SHEET]
-    observations, diagnostics = _flatten_purchase_history(
-        purchase_sheet
+
+    observations, diagnostics = (
+        _flatten_purchase_history(
+            purchase_sheet
+        )
     )
 
-    analytics, data_sheet = _create_output_sheets(
-        workbook
+    analytics, data_sheet = (
+        _create_output_sheets(
+            workbook
+        )
     )
 
     if not observations:
-        analytics.merge_cells("A1:N2")
+        analytics.merge_cells("A1:AG2")
         analytics["A1"] = "ShopGraph Spending Analytics"
         analytics["A1"].font = Font(
             bold=True,
-            size=20,
+            size=22,
             color="FFFFFF",
         )
         analytics["A1"].fill = PatternFill(
@@ -772,206 +1275,620 @@ def generate_purchase_analytics(
             horizontal="center",
             vertical="center",
         )
-        analytics["A4"] = "No purchase history is available yet."
+
+        analytics["A4"] = (
+            "No purchase history is available yet."
+        )
         analytics["A4"].font = Font(
             italic=True,
             size=12,
             color="666666",
         )
-        analytics.sheet_view.showGridLines = False
 
-        data_sheet["A1"] = "No valid purchase observations."
+        data_sheet["A1"] = (
+            "No valid purchase observations."
+        )
         data_sheet.sheet_state = "hidden"
 
-        _atomic_save(workbook, workbook_path)
+        _atomic_save(
+            workbook,
+            workbook_path,
+        )
 
         return {
             "workbook_path": workbook_path,
             "charts_created": 0,
             "purchase_observations": 0,
-            "skipped_pairs": diagnostics["skipped_pairs"],
-            "history_pairs_found": diagnostics["history_pairs_found"],
+            "skipped_pairs": diagnostics[
+                "skipped_pairs"
+            ],
+            "history_pairs_found": diagnostics[
+                "history_pairs_found"
+            ],
         }
 
-    aggregates = _aggregate(observations)
+    aggregates = _aggregate(
+        observations
+    )
+
     _style_dashboard_header(
         analytics,
         aggregates,
     )
 
-    # Helper tables are deliberately separated by columns so each chart has a
-    # simple, inspectable source range.
+    # ---------------------------------------------------------------
+    # Helper tables
+    #
+    # Every chart uses compact numeric codes instead of verbose category/store/
+    # product names. The visible numbered/color key on Analytics explains the
+    # codes. This prevents chart labels from becoming unreadable.
+    # ---------------------------------------------------------------
+
+    monthly_numbered = [
+        (
+            index,
+            month,
+            spending,
+        )
+        for index, (month, spending)
+        in enumerate(
+            aggregates["monthly_spending"],
+            start=1,
+        )
+    ]
+
+    category_numbered = [
+        (
+            index,
+            name,
+            value,
+        )
+        for index, (name, value)
+        in enumerate(
+            aggregates["category_spending"],
+            start=1,
+        )
+    ]
+
+    store_numbered = [
+        (
+            index,
+            name,
+            value,
+        )
+        for index, (name, value)
+        in enumerate(
+            aggregates["store_spending"],
+            start=1,
+        )
+    ]
+
+    share_numbered = [
+        (
+            index,
+            name,
+            value,
+        )
+        for index, (name, value)
+        in enumerate(
+            aggregates["category_share"],
+            start=1,
+        )
+    ]
+
+    product_numbered = [
+        (
+            index,
+            name,
+            value,
+        )
+        for index, (name, value)
+        in enumerate(
+            aggregates["product_spending"],
+            start=1,
+        )
+    ]
+
+    frequency_numbered = [
+        (
+            index,
+            name,
+            value,
+        )
+        for index, (name, value)
+        in enumerate(
+            aggregates["category_frequency"],
+            start=1,
+        )
+    ]
+
     monthly_table = _write_table(
         data_sheet,
         start_column=1,
         start_row=1,
         title="Monthly Spending",
-        headers=["Month", "Spending"],
-        rows=aggregates["monthly_spending"],
-        currency_columns={1},
-        date_columns={0},
+        headers=[
+            "Number",
+            "Month",
+            "Spending",
+        ],
+        rows=monthly_numbered,
+        currency_columns={2},
+        date_columns={1},
     )
 
     category_table = _write_table(
         data_sheet,
-        start_column=4,
+        start_column=5,
         start_row=1,
         title="Spending by Category",
-        headers=["Category", "Spending"],
-        rows=aggregates["category_spending"],
-        currency_columns={1},
+        headers=[
+            "Number",
+            "Category",
+            "Spending",
+        ],
+        rows=category_numbered,
+        currency_columns={2},
     )
 
     store_table = _write_table(
         data_sheet,
-        start_column=7,
+        start_column=9,
         start_row=1,
         title="Spending by Store",
-        headers=["Store", "Spending"],
-        rows=aggregates["store_spending"],
-        currency_columns={1},
+        headers=[
+            "Number",
+            "Store",
+            "Spending",
+        ],
+        rows=store_numbered,
+        currency_columns={2},
     )
 
     share_table = _write_table(
         data_sheet,
-        start_column=10,
+        start_column=13,
         start_row=1,
         title="Spending Share by Category",
-        headers=["Category", "Spending"],
-        rows=aggregates["category_share"],
-        currency_columns={1},
+        headers=[
+            "Number",
+            "Category",
+            "Spending",
+        ],
+        rows=share_numbered,
+        currency_columns={2},
     )
 
     product_table = _write_table(
         data_sheet,
-        start_column=13,
+        start_column=17,
         start_row=1,
         title="Top Products by Spending",
-        headers=["Product", "Spending"],
-        rows=aggregates["product_spending"],
-        currency_columns={1},
+        headers=[
+            "Number",
+            "Product",
+            "Spending",
+        ],
+        rows=product_numbered,
+        currency_columns={2},
     )
 
     frequency_table = _write_table(
         data_sheet,
-        start_column=16,
+        start_column=21,
         start_row=1,
         title="Purchase Frequency by Category",
-        headers=["Category", "Purchases"],
-        rows=aggregates["category_frequency"],
+        headers=[
+            "Number",
+            "Category",
+            "Purchases",
+        ],
+        rows=frequency_numbered,
     )
 
+    # Monthly-by-store chart:
+    # first column = numbered month code
+    # subsequent series headers = numbered store codes
     monthly_store_headers = [
-        "Month",
-        *aggregates["monthly_store_names"],
+        "Month Number",
+        *[
+            str(index)
+            for index, _
+            in enumerate(
+                aggregates[
+                    "monthly_store_names"
+                ],
+                start=1,
+            )
+        ],
     ]
+
     monthly_store_rows = [
-        [month, *values]
-        for month, values in aggregates["monthly_store"]
+        [
+            month_index,
+            *values,
+        ]
+        for month_index, (_, values)
+        in enumerate(
+            aggregates["monthly_store"],
+            start=1,
+        )
     ]
+
     monthly_store_table = _write_table(
         data_sheet,
-        start_column=19,
+        start_column=25,
         start_row=1,
         title="Monthly Spending by Store",
         headers=monthly_store_headers,
         rows=monthly_store_rows,
         currency_columns=set(
-            range(1, len(monthly_store_headers))
+            range(
+                1,
+                len(monthly_store_headers),
+            )
         ),
-        date_columns={0},
     )
 
     charts_created = 0
+    current_row = 8
 
-    chart_specs = (
-        (monthly_table, "A7", lambda table: _line_chart(data_sheet, table)),
-        (share_table, "H7", lambda table: _doughnut_chart(data_sheet, table)),
-        (
-            category_table,
-            "A24",
-            lambda table: _horizontal_bar_chart(
-                data_sheet,
-                table,
-                title="Spending by Category",
-                x_axis_title="Spending ($)",
-            ),
-        ),
-        (
-            store_table,
-            "H24",
-            lambda table: _horizontal_bar_chart(
-                data_sheet,
-                table,
-                title="Spending by Store",
-                x_axis_title="Spending ($)",
-            ),
-        ),
-        (
-            product_table,
-            "A42",
-            lambda table: _horizontal_bar_chart(
-                data_sheet,
-                table,
-                title="Top 10 Products by Spending",
-                x_axis_title="Spending ($)",
-            ),
-        ),
-        (
-            frequency_table,
-            "H42",
-            lambda table: _horizontal_bar_chart(
-                data_sheet,
-                table,
-                title="Purchase Frequency by Category",
-                x_axis_title="Purchases",
-            ),
-        ),
-    )
+    # ---------------------------------------------------------------
+    # 1. MONTHLY SPENDING
+    # ---------------------------------------------------------------
+    if monthly_table["row_count"] > 0:
+        chart = _line_chart(
+            data_sheet,
+            monthly_table,
+        )
 
-    for table, anchor, builder in chart_specs:
-        if table["row_count"] <= 0:
-            _add_insufficient_note(
-                analytics,
-                anchor,
-                "Not enough data for this chart.",
-            )
-            continue
+        entries = _key_entries_for_months(
+            aggregates["monthly_spending"]
+        )
 
-        chart = builder(table)
-        analytics.add_chart(chart, anchor)
+        current_row = _write_chart_section(
+            analytics,
+            start_row=current_row,
+            chart=chart,
+            entries=entries,
+            key_title="Number / Month",
+            overview={
+                "what": (
+                    "Shows total household spending for each calendar month. "
+                    "Every valid Date N / Price N purchase observation is added "
+                    "to its month."
+                ),
+                "read": (
+                    "The x-axis uses month numbers instead of month names to "
+                    "keep the graph clear. Match each number to the month and "
+                    "dollar total in the key. A rising line means monthly "
+                    "spending increased; a falling line means it decreased."
+                ),
+                "useful": (
+                    "Use this to identify overall spending trends, unusually "
+                    "expensive months, and whether spending is gradually moving "
+                    "up or down over time."
+                ),
+                "notes": (
+                    "Months with no spending between the earliest and latest "
+                    "purchase dates are included as zero-spend months."
+                ),
+            },
+        )
         charts_created += 1
 
+    # ---------------------------------------------------------------
+    # 2. SPENDING BY CATEGORY
+    # ---------------------------------------------------------------
+    if category_table["row_count"] > 0:
+        chart = _horizontal_bar_chart(
+            data_sheet,
+            category_table,
+            title="Spending by Category",
+            x_axis_title="Spending ($)",
+        )
+
+        entries = _key_entries_for_named_values(
+            aggregates["category_spending"],
+            value_kind="currency",
+        )
+
+        current_row = _write_chart_section(
+            analytics,
+            start_row=current_row,
+            chart=chart,
+            entries=entries,
+            key_title="Number / Category",
+            overview={
+                "what": (
+                    "Compares total spending across every category in Purchase "
+                    "History. No categories are collapsed into an 'Other' group."
+                ),
+                "read": (
+                    "Each horizontal bar is identified by a number and color. "
+                    "Use the key to map that number/color to the category name "
+                    "and exact spending amount. Longer bars mean more money was "
+                    "spent in that category."
+                ),
+                "useful": (
+                    "Use this to see which types of goods are the biggest "
+                    "drivers of household spending."
+                ),
+            },
+        )
+        charts_created += 1
+
+    # ---------------------------------------------------------------
+    # 3. SPENDING BY STORE
+    # ---------------------------------------------------------------
+    if store_table["row_count"] > 0:
+        chart = _horizontal_bar_chart(
+            data_sheet,
+            store_table,
+            title="Spending by Store",
+            x_axis_title="Spending ($)",
+        )
+
+        entries = _key_entries_for_named_values(
+            aggregates["store_spending"],
+            value_kind="currency",
+        )
+
+        current_row = _write_chart_section(
+            analytics,
+            start_row=current_row,
+            chart=chart,
+            entries=entries,
+            key_title="Number / Store",
+            overview={
+                "what": (
+                    "Compares how much money was spent at each retailer across "
+                    "the entire Purchase History."
+                ),
+                "read": (
+                    "Each store is represented by a numbered colored bar. Match "
+                    "the number/color to the key. Longer bars indicate more "
+                    "total spending at that store."
+                ),
+                "useful": (
+                    "Use this to understand which retailers receive the largest "
+                    "share of your household shopping budget."
+                ),
+                "notes": (
+                    "Store Number is intentionally ignored here; purchases are "
+                    "grouped by the Store name."
+                ),
+            },
+        )
+        charts_created += 1
+
+    # ---------------------------------------------------------------
+    # 4. CATEGORY SHARE
+    # ---------------------------------------------------------------
+    if share_table["row_count"] > 0:
+        chart = _doughnut_chart(
+            data_sheet,
+            share_table,
+        )
+
+        entries = _key_entries_for_named_values(
+            aggregates["category_share"],
+            value_kind="currency",
+            total=aggregates["total_spending"],
+            include_percent=True,
+        )
+
+        current_row = _write_chart_section(
+            analytics,
+            start_row=current_row,
+            chart=chart,
+            entries=entries,
+            key_title="Number / Category",
+            overview={
+                "what": (
+                    "Shows each category's share of total spending as part of "
+                    "the whole shopping budget."
+                ),
+                "read": (
+                    "The doughnut itself displays only numeric category codes. "
+                    "Match each number/color to the key for the category name, "
+                    "dollar amount, and percentage of total spending."
+                ),
+                "useful": (
+                    "Use this for a fast visual picture of the household "
+                    "spending mix—especially which categories take the largest "
+                    "portion of the budget."
+                ),
+                "notes": (
+                    "Unlike the older dashboard, this graph does not create a "
+                    "large 'Other' slice. Every category receives its own "
+                    "numbered segment."
+                ),
+            },
+        )
+        charts_created += 1
+
+    # ---------------------------------------------------------------
+    # 5. TOP PRODUCTS
+    # ---------------------------------------------------------------
+    if product_table["row_count"] > 0:
+        chart = _horizontal_bar_chart(
+            data_sheet,
+            product_table,
+            title="Top 10 Products by Spending",
+            x_axis_title="Spending ($)",
+        )
+
+        entries = _key_entries_for_named_values(
+            aggregates["product_spending"],
+            value_kind="currency",
+        )
+
+        current_row = _write_chart_section(
+            analytics,
+            start_row=current_row,
+            chart=chart,
+            entries=entries,
+            key_title="Number / Product",
+            overview={
+                "what": (
+                    "Ranks the ten individual product identities with the most "
+                    "accumulated spending across all recorded purchases."
+                ),
+                "read": (
+                    "Each product is represented by a numbered colored bar. "
+                    "Use the key to see the product name and its total spending. "
+                    "The longest bar is the largest individual spending driver."
+                ),
+                "useful": (
+                    "Use this to identify specific products that contribute the "
+                    "most to total spending and may be worth price-comparing or "
+                    "watching over time."
+                ),
+                "notes": (
+                    "Product identity prefers Common Name and falls back to "
+                    "Product when Common Name is unavailable."
+                ),
+            },
+        )
+        charts_created += 1
+
+    # ---------------------------------------------------------------
+    # 6. MONTHLY SPENDING BY STORE
+    # ---------------------------------------------------------------
     if (
         monthly_store_table["row_count"] > 0
-        and len(aggregates["monthly_store_names"]) > 0
+        and aggregates["monthly_store_names"]
     ):
-        analytics.add_chart(
-            _stacked_store_chart(
-                data_sheet,
-                monthly_store_table,
-            ),
-            "A60",
+        chart = _stacked_store_chart(
+            data_sheet,
+            monthly_store_table,
+        )
+
+        store_entries = _key_entries_for_stores(
+            aggregates["monthly_store_names"],
+            aggregates["store_spending"],
+        )
+
+        # Add a second compact month-number mapping below the store mapping.
+        month_entries = _key_entries_for_months(
+            aggregates["monthly_spending"]
+        )
+
+        combined_entries = list(
+            store_entries
+        )
+
+        # The chart series numbers refer to stores. Months are x-axis numbers.
+        # Month rows are appended with the same neutral color and descriptions
+        # prefixed so the two number systems are unambiguous.
+        for entry in month_entries:
+            combined_entries.append(
+                {
+                    "number": entry["number"],
+                    "color": "D9EAF7",
+                    "description": (
+                        "Month "
+                        + entry["description"]
+                    ),
+                    "value": entry["value"],
+                }
+            )
+
+        current_row = _write_chart_section(
+            analytics,
+            start_row=current_row,
+            chart=chart,
+            entries=combined_entries,
+            key_title="Store Numbers + Month Numbers",
+            overview={
+                "what": (
+                    "Shows how monthly spending is divided among stores. Each "
+                    "column is one month; each colored section inside the "
+                    "column represents one store."
+                ),
+                "read": (
+                    "Store series use the numbered color key. The x-axis uses "
+                    "month numbers. Match those month numbers to the month rows "
+                    "in the key. The total height of a column is total monthly "
+                    "spending; the colored portions show which stores made up "
+                    "that total."
+                ),
+                "useful": (
+                    "Use this to see whether changes in monthly spending are "
+                    "connected to a particular store and how your retailer mix "
+                    "changes over time."
+                ),
+                "notes": (
+                    "All stores are retained. There is no catch-all 'Other' "
+                    "store series."
+                ),
+            },
         )
         charts_created += 1
-    else:
-        _add_insufficient_note(
-            analytics,
-            "A60",
-            "Not enough data for Monthly Spending by Store.",
+
+    # ---------------------------------------------------------------
+    # 7. PURCHASE FREQUENCY BY CATEGORY
+    # ---------------------------------------------------------------
+    if frequency_table["row_count"] > 0:
+        chart = _horizontal_bar_chart(
+            data_sheet,
+            frequency_table,
+            title="Purchase Frequency by Category",
+            x_axis_title="Purchases",
         )
 
-    # Hidden helper data is useful for debugging but stays out of the shopper's
-    # normal dashboard view.
+        entries = _key_entries_for_named_values(
+            aggregates["category_frequency"],
+            value_kind="count",
+        )
+
+        current_row = _write_chart_section(
+            analytics,
+            start_row=current_row,
+            chart=chart,
+            entries=entries,
+            key_title="Number / Category",
+            overview={
+                "what": (
+                    "Counts how many valid purchase observations occurred in "
+                    "each category. This measures frequency, not dollars."
+                ),
+                "read": (
+                    "Each category is a numbered colored bar. Match the number "
+                    "and color to the key. A longer bar means the category was "
+                    "purchased more frequently."
+                ),
+                "useful": (
+                    "Use this alongside Spending by Category to distinguish "
+                    "frequent routine purchases from categories that are bought "
+                    "less often but cost more."
+                ),
+            },
+        )
+        charts_created += 1
+
+    # Keep helper data available for debugging but invisible during normal use.
     data_sheet.sheet_state = "hidden"
 
-    _atomic_save(workbook, workbook_path)
+    _atomic_save(
+        workbook,
+        workbook_path,
+    )
 
     return {
         "workbook_path": workbook_path,
         "charts_created": charts_created,
-        "purchase_observations": aggregates["observation_count"],
-        "total_spending": aggregates["total_spending"],
-        "skipped_pairs": diagnostics["skipped_pairs"],
-        "history_pairs_found": diagnostics["history_pairs_found"],
+        "purchase_observations": aggregates[
+            "observation_count"
+        ],
+        "total_spending": aggregates[
+            "total_spending"
+        ],
+        "skipped_pairs": diagnostics[
+            "skipped_pairs"
+        ],
+        "history_pairs_found": diagnostics[
+            "history_pairs_found"
+        ],
     }

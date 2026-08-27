@@ -1,158 +1,175 @@
-ShopGraph - Stage 7 Refined JSON + DataBaseBuilder Integration
-==================================================================
+ShopGraph - Accessible Vertical Purchase Analytics Dashboard
+================================================================
 
 BUILT AGAINST
 -------------
-shopgraph_codebase(20260827-195849).txt
+shopgraph_codebase(20260827-222252).txt
 
-NEW OCR STAGE
+PURPOSE
+-------
+This update replaces the current Purchase Analytics dashboard layout.
+
+The previous dashboard placed several charts side-by-side and put long category
+names directly in or around charts. That becomes cluttered quickly, especially
+for the doughnut chart.
+
+The new layout is intentionally long and vertical:
+
+    LARGE GRAPH        NUMBER/COLOR KEY        EXPLANATION
+    LARGE GRAPH        NUMBER/COLOR KEY        EXPLANATION
+    LARGE GRAPH        NUMBER/COLOR KEY        EXPLANATION
+    ...
+
+Each chart is approximately twice the size of the earlier chart.
+
+ACCESSIBILITY
 -------------
-The OCR Acquisition Pipeline now has seven stages:
+The dashboard no longer relies on color alone.
 
-1. Reliable Receipt Detection / Crop
-2. Perspective Correction
-3. Receipt Size Normalization
-4. Generate OCR Image Variants
-5. Run Multi-Variant / Multi-PSM OCR
-6. Compare OCR Results / Build Raw OCR JSON
-7. Refine Json File
+Each category, store, product, or month receives a NUMBER in addition to a
+color.
 
-The complete OCR Acquisition Pipeline automatically runs Stage 7.
+The graph uses compact numeric labels/codes.
 
-STAGE 7 OUTPUT
+To the right of each graph is a key containing:
+
+    colored box
+    number
+    full description
+    dollar amount / count / percent
+
+Farther to the right is a written explanation containing:
+
+    What it represents
+    How to read it
+    What it is useful for
+    Notes when helpful
+
+Colors may repeat when there are more items than available palette colors.
+The number remains the unambiguous identifier, which makes the charts more
+usable for people with color-vision differences.
+
+NO "OTHER" CATEGORY
+-------------------
+The category graphs no longer combine small categories into a large "Other"
+slice/bar.
+
+Every category is retained and receives its own numeric code.
+
+The same principle is used for stores in Monthly Spending by Store.
+
+TOP PRODUCTS
+------------
+Top 10 Products by Spending remains intentionally limited to the ten largest
+product spending totals because "Top 10" is the purpose of that graph. No
+"Other" product bar is created.
+
+THE SEVEN GRAPHS
+----------------
+1. Monthly Spending
+2. Spending by Category
+3. Spending by Store
+4. Spending Share by Category
+5. Top 10 Products by Spending
+6. Monthly Spending by Store
+7. Purchase Frequency by Category
+
+LAYOUT
+------
+The visible Analytics sheet uses:
+
+    A:O   large graph
+    Q:W   numbered/color definition key
+    Y:AG  detailed explanation
+
+The dashboard extends vertically as necessary.
+
+The hidden _AnalyticsData worksheet remains the chart-data source.
+
+GRAPH LABELING
 --------------
-Input:
-    data/raw_ocr/<receipt>_raw_ocr.json
+Descriptions such as full category/product/store names are deliberately kept
+OUT of the graphs.
 
-Output:
-    data/refined_json/<receipt>_refined.json
+Examples:
 
-Every Stage-6 line_number receives one refined line object. No input line is
-discarded.
+    Doughnut slice label:
+        4
 
-Each refined line contains:
-    Total
-    Store
-    Six-Digit SKU
-    Product
-    Tax Code
-    Store Number
-    Common Name
-    Category
-    Date 1
-    Price 1
+    Key:
+        [color] 4  Plant-Based Milk   $18.57 (8.0%)
 
-Missing/not-applicable values are "NA".
+Bar charts use numeric category labels.
 
-For human review, Product remains the best editable line-level guess even for
-non-purchase lines. Example:
+Monthly Spending uses numeric month codes on the x-axis.
 
-    source_text: ALDI
-    Product: ALDI
+Monthly Spending by Store uses:
+    numbered store series
+    numbered months on the x-axis
 
-DATABASEBUILDER INTEGRATION
----------------------------
-When DataBaseBuilder opens a raw OCR receipt, it automatically looks for the
-matching refined JSON.
+The key explains both.
 
-If the refined file is valid:
-    refined guess > parser guess
+DATA RULES
+----------
+The existing reliable analytics rules are preserved:
 
-However, values explicitly confirmed by the user during the current import
-(Store selection, Store Number, Receipt Date, and later Correct Columns edits)
-remain authoritative.
+- Purchase History is the source.
+- Date N / Price N pairs are discovered dynamically.
+- Analytics does not depend on the workbook Total formula.
+- Invalid date/price pairs are skipped safely.
+- Existing Analytics and _AnalyticsData sheets are rebuilt from scratch.
+- Purchase History and Imported Receipts are not modified.
+- _AnalyticsData remains hidden.
+- Workbook saving remains atomic.
 
-If refined JSON is missing or invalid, DataBaseBuilder falls back to its
-existing store-specific parsers.
+MENU
+----
+The existing DataBaseBuilder menu remains:
 
-PRE-POPULATED CORRECTIONS
--------------------------
-The existing readline behavior is preserved.
+    1. Add Receipt to Purchase History
+    2. Generate / Refresh Purchase Analytics
+    0. Return to Main
 
-Example:
+No menu change is required for this update.
 
-    Current Product: ALDI
-    Enter corrected Product: ALDI
-
-The second ALDI is already editable in the terminal input buffer. Press Enter
-to keep it, edit it, or replace it.
-
-COMMON NAME / CATEGORY
-----------------------
-Stage 7 can conservatively infer Common Name and Category. It may also use an
-existing shopgraph_purchase_history.xlsx as supporting evidence for known
-same-store products/SKUs.
-
-Historical prices and dates are NEVER copied into the current receipt.
-
-EXCEL
+FILES
 -----
-Accepted/corrected records now feed:
-    Store
-    Six-Digit SKU
-    Product
-    Tax Code
-    Store Number
-    Common Name
-    Category
-    Date 1
-    Price 1
+FUNCTIONALLY REPLACED:
 
-The workbook Total column remains its existing formula that sums Price 1,
-Price 2, Price 3, etc. The record-level Total is used for review/refined JSON,
-but does not replace the workbook formula.
+    utils/DataBaseBuilder/excel/purchase_analytics.py
 
-FILES ADDED
------------
-capabilities/OCRAcquisitionPipeline/refine_json.py
-utils/DataBaseBuilder/refined_json_loader.py
+INCLUDED AS MATCHING INTEGRATION FILES:
 
-IMPORTANT FILES REPLACED
-------------------------
-capabilities/OCRAcquisitionPipeline/constants.py
-capabilities/OCRAcquisitionPipeline/session_state.py
-capabilities/OCRAcquisitionPipeline/main_OCRAcquisitionPipeline.py
-utils/constants.py
-utils/utils_main.py
-utils/clean_ocr_acquisition_pipeline.py
-utils/DataBaseBuilder/purchase_record.py
-utils/DataBaseBuilder/data_base_builder_main.py
-utils/DataBaseBuilder/benchmark_writer.py
-utils/DataBaseBuilder/parsers/base_parser.py
-utils/DataBaseBuilder/parsers/aldi_parser.py
-utils/DataBaseBuilder/parsers/publix_parser.py
-utils/DataBaseBuilder/parsers/trader_joes_parser.py
-utils/DataBaseBuilder/parsers/other_parser.py
-utils/DataBaseBuilder/excel/purchase_history.py
+    utils/DataBaseBuilder/data_base_builder_main.py
+    utils/DataBaseBuilder/excel/__init__.py
 
 TEST
 ----
-1. Run:
+1. Extract the ZIP over the ShopGraph project root.
+2. Run:
+
        python3 main.py
 
-2. Run the complete OCR Acquisition Pipeline.
-   Confirm Stage 7 creates:
-       data/refined_json/<receipt>_refined.json
+3. Go to:
 
-3. Open:
-       Utilities -> Data Base Builder -> Add Receipt to Purchase History
+       Utilities
+       -> Data Base Builder
+       -> 2. Generate / Refresh Purchase Analytics
 
-4. Select the matching raw OCR JSON.
-   DataBaseBuilder should print that refined JSON was loaded.
+4. Open:
 
-5. For an ALDI header line, verify the proposal can show Product = ALDI.
+       data/database/shopgraph_purchase_history.xlsx
 
-6. Choose:
-       2. Correct Columns
-   Select Product.
-   Verify:
-       Current Product: ALDI
-       Enter corrected Product: ALDI
+5. Open the Analytics worksheet.
 
-7. Press Enter and verify the value is retained.
+Verify:
 
-8. Test a purchase item and confirm refined Common Name / Category / Price
-   guesses are presented and editable.
-
-9. Accept selected purchase lines and verify the workbook writes the corrected
-   Common Name and Category while retaining the existing Total formula behavior.
+- charts are stacked vertically;
+- charts are much larger;
+- the graph itself uses compact numbers rather than long descriptions;
+- every graph has a numbered/color key on the right;
+- every graph has a written explanation farther right;
+- category-share does not create a large "Other" slice;
+- each category has its own doughnut segment and numbered key entry;
+- _AnalyticsData is hidden;
+- Purchase History remains unchanged.
