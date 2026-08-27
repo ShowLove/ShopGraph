@@ -22,9 +22,7 @@ def run_ocr_acquisition_pipeline() -> None:
     """
     Run the complete OCR Acquisition Pipeline in order.
 
-    From the user's point of view, this behaves exactly like the current
-    capability option: the receipt is selected once and downstream stages
-    reuse the same session state and generated artifacts.
+    The visible six-stage flow is intentionally retained.
     """
     print(
         "\n=== OCR Acquisition Pipeline ===\n"
@@ -41,7 +39,7 @@ def run_ocr_acquisition_pipeline() -> None:
     run_perspective_correction()
 
     print(
-        "\n[3/6] 2x Enlargement"
+        "\n[3/6] Receipt Size Normalization"
     )
     run_image_enlargement()
 
@@ -51,7 +49,7 @@ def run_ocr_acquisition_pipeline() -> None:
     run_ocr_image_variants()
 
     print(
-        "\n[5/6] Run OCR - PSM 4 / 6 / 11"
+        "\n[5/6] Run Multi-Variant / Multi-PSM OCR"
     )
     run_ocr()
 

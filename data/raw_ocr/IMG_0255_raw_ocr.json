@@ -1,1079 +1,1364 @@
 {
   "source_receipt": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/current_pic/IMG_0255.JPG",
-  "selection_method": "multi-candidate component consensus: best candidate provides reading order; exact six-digit SKU aligns product observations; description, price, and tax code are selected independently from OCR evidence across all candidates; non-product lines continue to use ordinary consensus",
+  "selection_method": "multi-variant spatial component consensus: best full-receipt candidate provides reading order; rows align by normalized y-coordinate, with exact six-digit SKU as a stronger anchor when present; right-column OCR supplies independent price/tax evidence",
   "backbone_candidate": {
-    "candidate_id": "grayscale_psm4",
+    "candidate_id": "grayscale_psm6",
     "image_variant": "grayscale",
-    "psm": 4,
+    "psm": 6,
     "comparison_metrics": {
-      "score": 37.38,
-      "mean_word_confidence": 42.29,
-      "recognized_word_count": 110,
-      "low_confidence_rate": 0.6,
-      "digit_count": 47,
-      "price_like_count": 4
+      "score": 61.7984,
+      "mean_word_confidence": 65.04,
+      "recognized_word_count": 77,
+      "low_confidence_rate": 0.3247,
+      "price_like_count": 7,
+      "sku_count": 0,
+      "plausible_line_count": 15,
+      "garbage_line_count": 0
     }
   },
   "consensus_summary": {
-    "backbone_line_count": 35,
-    "consensus_line_count": 35,
-    "component_reconstruction_count": 0,
-    "supported_extra_line_count": 52,
-    "candidate_count": 6,
+    "backbone_line_count": 17,
+    "consensus_line_count": 17,
+    "component_reconstruction_count": 11,
+    "candidate_count": 25,
+    "full_candidate_count": 15,
+    "right_column_candidate_count": 10,
     "match_threshold": 0.58,
-    "extra_line_min_support": 2
+    "geometry_y_tolerance": 0.012
   },
-  "raw_text": "SALE TRANSACTION\nEMPIRE KOSHER GROUND TRI\nEMPIRE KOSHER GROUND TRI\nR-STRAWBERRIES 1 LB 3.99\nSTEN DIED RED PEPPERS OA\n> PASTA CHICKPEA FUSTLLI 49 99\nItems in Transaction:6\nx 30.24\nan Mes a3 94\nrun\n4\nSS i te ieee\nA\n5 ee erie aes aes OO AE PS LS AE EE EDL SS LOT\nT CARD PURCHASE TRANSACTION\nCUSTOMER COPY\n< Bs i.\nin el 4\nSe, <\na 4. ae eee\nAuth Code; 0125/0\neeaTID; © 9788216\nx 30.24\n~\nyi.\nA\now |\nio. 2 .\ndie Bey\nA, | e\n— »*\n12! ~ *\ne ae) 7\nree ut\n4",
+  "raw_text": "1 Town Center Ave, Ste 101 T 2.99\nMelbourne, FL 32 3.99\nStore #0848 - 321-338-3418 30.24\nSALE TRANSACTION\nEMPIRE KOSHER GROUND TRK $ 6.99\nEMPIRE KOSHER GROUND JRK 6.99\nSALE TRANSACTION T 3.99\nUFFIN BLUEBERRY F 5.93\n> PAST EF ROASTED RED PEPPERS $ 2.99\nSTA CHICKPEA FUSILLI $ T 2.99\nItems in Transaction:6\nBalance to pay.\nVISA $ 30.24\nE PAYMENT CARD PURCHASE TRANSACTION 30.24\nCUSTOMER COPY\nVISA CREDIT\nAuth Code:",
   "text": [
     {
       "line_number": 1,
-      "text": "SALE TRANSACTION",
-      "confidence": 95.0,
-      "source_candidate": "grayscale_psm4",
-      "image_variant": "grayscale",
-      "psm": 4,
-      "support_count": 2,
-      "match_method": "backbone",
-      "line_quality_score": 96.1,
-      "consensus_score": 100.1,
-      "reconstructed": false,
-      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+      "candidate_id": "sharpened_psm11",
+      "text": "1 Town Center Ave, Ste 101 T 2.99",
+      "confidence": 84.83,
+      "source_candidate": "sharpened_psm11",
+      "image_variant": "sharpened",
+      "psm": 11,
+      "support_count": 13,
+      "match_method": "geometry",
+      "line_quality_score": 88.43,
+      "consensus_score": 136.43,
+      "normalized_y": 0.190775,
+      "bbox": {
+        "left": 474,
+        "top": 478,
+        "right": 1492,
+        "bottom": 585,
+        "width": 1018,
+        "height": 107
+      },
+      "reconstructed": true,
+      "original_consensus_text": "1 Town Center Ave, Ste 101",
+      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        },
+        "description": {
+          "value": "1 Town Center Ave, Ste 101",
+          "source_candidate": "sharpened_psm11",
+          "source_text": "1 Town Center Ave, Ste 101",
+          "support_count": 13,
+          "confidence": 84.83,
+          "score": 157.03
+        },
+        "price": {
+          "value": "2.99",
+          "support_count": 1,
+          "average_confidence": 68.0,
+          "examples": [
+            {
+              "candidate_id": "sharpened_psm11",
+              "text": "$2.99"
+            }
+          ]
+        },
+        "tax_code": {
+          "value": "T",
+          "support_count": 2,
+          "average_confidence": 45.75,
+          "examples": [
+            {
+              "candidate_id": "sharpened_psm4",
+              "text": "P 272 T Town Center Ave, Ste 101"
+            },
+            {
+              "candidate_id": "sharpened_psm11",
+              "text": "a RE cm em mer “at oo aa on nors-tee t-erm ome OO eS —— oe a"
+            }
+          ]
+        }
+      }
     },
     {
       "line_number": 2,
-      "text": "EMPIRE KOSHER GROUND TRI",
-      "confidence": 80.5,
+      "candidate_id": "grayscale_psm11",
+      "text": "Melbourne, FL 32 3.99",
+      "confidence": 89.67,
       "source_candidate": "grayscale_psm11",
       "image_variant": "grayscale",
       "psm": 11,
-      "support_count": 3,
-      "match_method": "fuzzy",
-      "line_quality_score": 82.7,
-      "consensus_score": 90.7,
-      "reconstructed": false,
-      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+      "support_count": 15,
+      "match_method": "geometry",
+      "line_quality_score": 91.47,
+      "consensus_score": 147.47,
+      "normalized_y": 0.215542,
+      "bbox": {
+        "left": 679,
+        "top": 555,
+        "right": 1153,
+        "bottom": 646,
+        "width": 474,
+        "height": 91
+      },
+      "reconstructed": true,
+      "original_consensus_text": "bourne, FL 3",
+      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        },
+        "description": {
+          "value": "Melbourne, FL 32",
+          "source_candidate": "sharpened_psm11",
+          "source_text": "Melbourne, FL 32",
+          "support_count": 14,
+          "confidence": 80.0,
+          "score": 153.6
+        },
+        "price": {
+          "value": "3.99",
+          "support_count": 1,
+          "average_confidence": 87.0,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm11",
+              "text": "3,99"
+            }
+          ]
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
     },
     {
       "line_number": 3,
-      "text": "EMPIRE KOSHER GROUND TRI",
-      "confidence": 80.5,
-      "source_candidate": "grayscale_psm11",
+      "candidate_id": "grayscale_psm6",
+      "text": "Store #0848 - 321-338-3418 30.24",
+      "confidence": 74.6,
+      "source_candidate": "grayscale_psm6",
       "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 3,
-      "match_method": "fuzzy",
-      "line_quality_score": 82.7,
-      "consensus_score": 90.7,
-      "reconstructed": false,
-      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+      "psm": 6,
+      "support_count": 15,
+      "match_method": "backbone",
+      "line_quality_score": 69.6,
+      "consensus_score": 125.6,
+      "normalized_y": 0.25323,
+      "bbox": {
+        "left": 89,
+        "top": 640,
+        "right": 1446,
+        "bottom": 771,
+        "width": 1357,
+        "height": 131
+      },
+      "reconstructed": true,
+      "original_consensus_text": "| Store #0848 - 321-338-3418",
+      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        },
+        "description": {
+          "value": "Store #0848 - 321-338-3418",
+          "source_candidate": "grayscale_psm6",
+          "source_text": "| Store #0848 - 321-338-3418",
+          "support_count": 15,
+          "confidence": 74.6,
+          "score": 150.4
+        },
+        "price": {
+          "value": "30.24",
+          "support_count": 1,
+          "average_confidence": 85.0,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm6",
+              "text": "Balance to pay $30.24"
+            }
+          ]
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
     },
     {
       "line_number": 4,
-      "text": "R-STRAWBERRIES 1 LB 3.99",
-      "confidence": 63.5,
-      "source_candidate": "grayscale_psm4",
+      "candidate_id": "grayscale_psm11",
+      "text": "SALE TRANSACTION",
+      "confidence": 96.0,
+      "source_candidate": "grayscale_psm11",
       "image_variant": "grayscale",
-      "psm": 4,
-      "support_count": 1,
-      "match_method": "backbone",
-      "line_quality_score": 69.58,
-      "consensus_score": 69.58,
+      "psm": 11,
+      "support_count": 14,
+      "match_method": "geometry",
+      "line_quality_score": 97.2,
+      "consensus_score": 149.2,
+      "normalized_y": 0.330402,
+      "bbox": {
+        "left": 619,
+        "top": 882,
+        "right": 1261,
+        "bottom": 959,
+        "width": 642,
+        "height": 77
+      },
       "reconstructed": false,
-      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+      "reconstruction_reason": "line not classified as a merchandise row"
     },
     {
       "line_number": 5,
-      "text": "STEN DIED RED PEPPERS OA",
-      "confidence": 32.2,
-      "source_candidate": "grayscale_psm4",
-      "image_variant": "grayscale",
-      "psm": 4,
-      "support_count": 1,
-      "match_method": "backbone",
-      "line_quality_score": 34.95,
-      "consensus_score": 34.95,
-      "reconstructed": false,
-      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+      "candidate_id": "illumination_psm11",
+      "text": "EMPIRE KOSHER GROUND TRK $ 6.99",
+      "confidence": 84.75,
+      "source_candidate": "illumination_psm11",
+      "image_variant": "illumination",
+      "psm": 11,
+      "support_count": 15,
+      "match_method": "geometry",
+      "line_quality_score": 87.15,
+      "consensus_score": 143.15,
+      "normalized_y": 0.377602,
+      "bbox": {
+        "left": 143,
+        "top": 981,
+        "right": 1123,
+        "bottom": 1123,
+        "width": 980,
+        "height": 142
+      },
+      "reconstructed": true,
+      "original_consensus_text": "EMPIRE KOSHER GROUND JRK",
+      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        },
+        "description": {
+          "value": "EMPIRE KOSHER GROUND TRK $",
+          "source_candidate": "otsu_psm4",
+          "source_text": "EMPIRE KOSHER GROUND TRK $6.99",
+          "support_count": 15,
+          "confidence": 89.2,
+          "score": 166.2
+        },
+        "price": {
+          "value": "6.99",
+          "support_count": 14,
+          "average_confidence": 53.42,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "text": "- | EMPIRE & KOSHER GROUND TRK $6.99"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "text": "~ EMPIRE KOSHER GROUND TRK $6.99"
+            },
+            {
+              "candidate_id": "threshold_psm11",
+              "text": "“$6.99"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "text": "$6.99"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "text": "EMPIRE KOSHER GROUND TRK $6.99"
+            },
+            {
+              "candidate_id": "sharpened_right_psm6",
+              "text": "$6.99"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "text": "~ | EMPIRE & KOSHER GROUND TRK $6.99"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "text": "“\" EMPIRE KOSHER GROUND TRK $6.99"
+            },
+            {
+              "candidate_id": "otsu_psm11",
+              "text": "$6.99"
+            },
+            {
+              "candidate_id": "otsu_right_psm6",
+              "text": "$6.99"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "text": "$6.99"
+            },
+            {
+              "candidate_id": "illumination_psm11",
+              "text": "$6.99"
+            },
+            {
+              "candidate_id": "illumination_right_psm6",
+              "text": "$6.99 Ja"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "text": "$6.99"
+            }
+          ]
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
     },
     {
       "line_number": 6,
-      "text": "> PASTA CHICKPEA FUSTLLI 49 99",
-      "confidence": 63.0,
-      "source_candidate": "grayscale_psm4",
-      "image_variant": "grayscale",
-      "psm": 4,
-      "support_count": 1,
-      "match_method": "backbone",
-      "line_quality_score": 67.18,
-      "consensus_score": 67.18,
-      "reconstructed": false,
-      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+      "candidate_id": "otsu_psm6",
+      "text": "EMPIRE KOSHER GROUND JRK 6.99",
+      "confidence": 71.4,
+      "source_candidate": "otsu_psm6",
+      "image_variant": "otsu",
+      "psm": 6,
+      "support_count": 15,
+      "match_method": "geometry",
+      "line_quality_score": 78.4,
+      "consensus_score": 134.4,
+      "normalized_y": 0.40542,
+      "bbox": {
+        "left": 155,
+        "top": 1050,
+        "right": 1769,
+        "bottom": 1209,
+        "width": 1614,
+        "height": 159
+      },
+      "reconstructed": true,
+      "original_consensus_text": "EMPIRE KOSHER GROUND TRK $6.99",
+      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        },
+        "description": {
+          "value": "EMPIRE KOSHER GROUND JRK",
+          "source_candidate": "illumination_psm11",
+          "source_text": "EMPIRE KOSHER GROUND JRK",
+          "support_count": 18,
+          "confidence": 84.75,
+          "score": 179.55
+        },
+        "price": {
+          "value": "6.99",
+          "support_count": 11,
+          "average_confidence": 54.0,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "text": "- | EMPIRE & KOSHER GROUND TRK $6.99"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "text": "~ EMPIRE KOSHER GROUND TRK $6.99"
+            },
+            {
+              "candidate_id": "threshold_psm11",
+              "text": "$6.99"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "text": "EMPIRE KOSHER GROUND TRK $6.99"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "text": "~ | EMPIRE & KOSHER GROUND TRK $6.99"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "text": "“\" EMPIRE KOSHER GROUND TRK $6.99"
+            },
+            {
+              "candidate_id": "otsu_psm11",
+              "text": "$6.99"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "text": "$6.99"
+            },
+            {
+              "candidate_id": "illumination_psm6",
+              "text": "EMPIRE KOSHER GROUND TRE —6 6.99"
+            },
+            {
+              "candidate_id": "illumination_psm11",
+              "text": "$6.99"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "text": "$6.99"
+            }
+          ]
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
     },
     {
       "line_number": 7,
-      "text": "Items in Transaction:6",
-      "confidence": 78.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 2,
+      "candidate_id": "sharpened_psm4",
+      "text": "SALE TRANSACTION T 3.99",
+      "confidence": 79.75,
+      "source_candidate": "sharpened_psm4",
+      "image_variant": "sharpened",
+      "psm": 4,
+      "support_count": 13,
       "match_method": "fuzzy",
-      "line_quality_score": 79.87,
-      "consensus_score": 83.87,
-      "reconstructed": false,
-      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+      "line_quality_score": 86.15,
+      "consensus_score": 134.15,
+      "normalized_y": 0.446339,
+      "bbox": {
+        "left": 196,
+        "top": 1198,
+        "right": 1777,
+        "bottom": 1289,
+        "width": 1581,
+        "height": 91
+      },
+      "reconstructed": true,
+      "original_consensus_text": "“STRAWBERRIES 1 LB 3,99",
+      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        },
+        "description": {
+          "value": "SALE TRANSACTION",
+          "source_candidate": "sharpened_psm4",
+          "source_text": "SALE TRANSACTION",
+          "support_count": 1,
+          "confidence": 95.5,
+          "score": 102.9
+        },
+        "price": {
+          "value": "3.99",
+          "support_count": 7,
+          "average_confidence": 75.75,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm11",
+              "text": "3,99"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "text": "3,99"
+            },
+            {
+              "candidate_id": "sharpened_psm4",
+              "text": "“STRAWBERRIES 1 LB 3,99"
+            },
+            {
+              "candidate_id": "otsu_psm11",
+              "text": "3.99"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "text": "3.99"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "text": "~ R-STRAWBERRTES 1 LB $3.99 |G"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "text": "$3.99"
+            }
+          ]
+        },
+        "tax_code": {
+          "value": "T",
+          "support_count": 1,
+          "average_confidence": 67.38,
+          "examples": [
+            {
+              "candidate_id": "sharpened_psm4",
+              "text": "P 272 T Town Center Ave, Ste 101"
+            }
+          ]
+        }
+      }
     },
     {
       "line_number": 8,
-      "text": "x 30.24",
-      "confidence": 67.5,
-      "source_candidate": "threshold_psm11",
-      "image_variant": "threshold",
+      "candidate_id": "illumination_psm11",
+      "text": "UFFIN BLUEBERRY F 5.93",
+      "confidence": 84.75,
+      "source_candidate": "illumination_psm11",
+      "image_variant": "illumination",
       "psm": 11,
-      "support_count": 3,
-      "match_method": "fuzzy",
-      "line_quality_score": 72.48,
-      "consensus_score": 80.48,
-      "reconstructed": false,
-      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+      "support_count": 15,
+      "match_method": "geometry",
+      "line_quality_score": 83.15,
+      "consensus_score": 139.15,
+      "normalized_y": 0.46626,
+      "bbox": {
+        "left": 149,
+        "top": 1223,
+        "right": 1091,
+        "bottom": 1375,
+        "width": 942,
+        "height": 152
+      },
+      "reconstructed": true,
+      "original_consensus_text": "MUFFIN | BLUEBERRY GLUTEN",
+      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        },
+        "description": {
+          "value": "UFFIN BLUEBERRY",
+          "source_candidate": "grayscale_psm11",
+          "source_text": "UFFIN BLUEBERRY",
+          "support_count": 12,
+          "confidence": 85.5,
+          "score": 147.9
+        },
+        "price": {
+          "value": "5.93",
+          "support_count": 4,
+          "average_confidence": 48.35,
+          "examples": [
+            {
+              "candidate_id": "otsu_psm6",
+              "text": "_ MUFFIN BLUEBERRY GLUTEN 5.93"
+            },
+            {
+              "candidate_id": "otsu_psm11",
+              "text": "5.93"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "text": "5.93"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "text": "MUFFIN BLUEBERRY GLUTEN = $5.93"
+            }
+          ]
+        },
+        "tax_code": {
+          "value": "F",
+          "support_count": 1,
+          "average_confidence": 30.5,
+          "examples": [
+            {
+              "candidate_id": "grayscale_right_psm6",
+              "text": "f 99"
+            }
+          ]
+        }
+      }
     },
     {
       "line_number": 9,
-      "text": "an Mes a3 94",
-      "confidence": 28.5,
-      "source_candidate": "grayscale_psm4",
-      "image_variant": "grayscale",
-      "psm": 4,
-      "support_count": 1,
-      "match_method": "backbone",
-      "line_quality_score": 31.36,
-      "consensus_score": 31.36,
-      "reconstructed": false,
-      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+      "candidate_id": "otsu_psm6",
+      "text": "> PAST EF ROASTED RED PEPPERS $ 2.99",
+      "confidence": 70.5,
+      "source_candidate": "otsu_psm6",
+      "image_variant": "otsu",
+      "psm": 6,
+      "support_count": 14,
+      "match_method": "geometry",
+      "line_quality_score": 74.1,
+      "consensus_score": 126.1,
+      "normalized_y": 0.520459,
+      "bbox": {
+        "left": 14,
+        "top": 1359,
+        "right": 1792,
+        "bottom": 1541,
+        "width": 1778,
+        "height": 182
+      },
+      "reconstructed": true,
+      "original_consensus_text": "» ike ROASTED REO PEPPERS $3.29",
+      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        },
+        "description": {
+          "value": "> PAST EF ROASTED RED PEPPERS $",
+          "source_candidate": "sharpened_psm4",
+          "source_text": "> PAST EF ROASTED RED PEPPERS $3.25",
+          "support_count": 7,
+          "confidence": 77.57,
+          "score": 112.97
+        },
+        "price": {
+          "value": "2.99",
+          "support_count": 9,
+          "average_confidence": 65.8,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm11",
+              "text": "$2.99"
+            },
+            {
+              "candidate_id": "grayscale_right_psm6",
+              "text": "$2.99"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "text": "$2.99"
+            },
+            {
+              "candidate_id": "sharpened_psm11",
+              "text": "$2.99"
+            },
+            {
+              "candidate_id": "sharpened_right_psm11",
+              "text": "$2.99"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "text": "} STA CHICKPEA FUSILLI $2.99"
+            },
+            {
+              "candidate_id": "otsu_psm11",
+              "text": "$2.99"
+            },
+            {
+              "candidate_id": "otsu_right_psm6",
+              "text": "$2.99"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "text": "$2.99"
+            }
+          ]
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
     },
     {
       "line_number": 10,
-      "text": "run",
-      "confidence": 31.0,
-      "source_candidate": "grayscale_psm4",
-      "image_variant": "grayscale",
+      "candidate_id": "sharpened_psm4",
+      "text": "STA CHICKPEA FUSILLI $ T 2.99",
+      "confidence": 80.0,
+      "source_candidate": "sharpened_psm4",
+      "image_variant": "sharpened",
       "psm": 4,
-      "support_count": 1,
-      "match_method": "backbone",
-      "line_quality_score": 31.55,
-      "consensus_score": 31.55,
-      "reconstructed": false,
-      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+      "support_count": 13,
+      "match_method": "fuzzy",
+      "line_quality_score": 86.4,
+      "consensus_score": 134.4,
+      "normalized_y": 0.534817,
+      "bbox": {
+        "left": 229,
+        "top": 1439,
+        "right": 1805,
+        "bottom": 1541,
+        "width": 1576,
+        "height": 102
+      },
+      "reconstructed": true,
+      "original_consensus_text": "STA CHICKPEA FUSILLI $2.99",
+      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        },
+        "description": {
+          "value": "STA CHICKPEA FUSILLI $",
+          "source_candidate": "sharpened_psm4",
+          "source_text": "STA CHICKPEA FUSILLI $2.99",
+          "support_count": 12,
+          "confidence": 80.0,
+          "score": 140.8
+        },
+        "price": {
+          "value": "2.99",
+          "support_count": 14,
+          "average_confidence": 66.54,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "text": "i STA CHICKPEA FUSTLLI $2,99"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "text": "i STA CHICKPEA FUSTLLI $2,99"
+            },
+            {
+              "candidate_id": "grayscale_psm11",
+              "text": "$2.99"
+            },
+            {
+              "candidate_id": "grayscale_right_psm6",
+              "text": "$2.99"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "text": "$2.99"
+            },
+            {
+              "candidate_id": "sharpened_psm4",
+              "text": "STA CHICKPEA FUSILLI $2.99"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "text": "L STA CHICKPEA FUSILLI $2,99"
+            },
+            {
+              "candidate_id": "sharpened_psm11",
+              "text": "$2.99"
+            },
+            {
+              "candidate_id": "sharpened_right_psm11",
+              "text": "$2.99"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "text": "} STA CHICKPEA FUSILLI $2.99"
+            },
+            {
+              "candidate_id": "otsu_psm11",
+              "text": "$2.99"
+            },
+            {
+              "candidate_id": "otsu_right_psm6",
+              "text": "$2.99"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "text": "$2.99"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "text": "- $2.99"
+            }
+          ]
+        },
+        "tax_code": {
+          "value": "T",
+          "support_count": 1,
+          "average_confidence": 67.38,
+          "examples": [
+            {
+              "candidate_id": "sharpened_psm4",
+              "text": "P 272 T Town Center Ave, Ste 101"
+            }
+          ]
+        }
+      }
     },
     {
       "line_number": 11,
-      "text": "4",
-      "confidence": 96.0,
-      "source_candidate": "threshold_psm4",
-      "image_variant": "threshold",
-      "psm": 4,
-      "support_count": 4,
-      "match_method": "fuzzy",
-      "line_quality_score": 96.77,
-      "consensus_score": 108.77,
+      "candidate_id": "grayscale_psm11",
+      "text": "Items in Transaction:6",
+      "confidence": 83.67,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 15,
+      "match_method": "geometry",
+      "line_quality_score": 85.47,
+      "consensus_score": 141.47,
+      "normalized_y": 0.598169,
+      "bbox": {
+        "left": 57,
+        "top": 1617,
+        "right": 976,
+        "bottom": 1716,
+        "width": 919,
+        "height": 99
+      },
       "reconstructed": false,
-      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+      "reconstruction_reason": "line not classified as a merchandise row"
     },
     {
       "line_number": 12,
-      "text": "SS i te ieee",
-      "confidence": 23.75,
-      "source_candidate": "grayscale_psm4",
-      "image_variant": "grayscale",
-      "psm": 4,
-      "support_count": 1,
-      "match_method": "backbone",
-      "line_quality_score": 25.95,
-      "consensus_score": 25.95,
+      "candidate_id": "threshold_psm11",
+      "text": "Balance to pay.",
+      "confidence": 95.33,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 15,
+      "match_method": "geometry",
+      "line_quality_score": 97.13,
+      "consensus_score": 153.13,
+      "normalized_y": 0.635499,
+      "bbox": {
+        "left": 55,
+        "top": 1723,
+        "right": 656,
+        "bottom": 1818,
+        "width": 601,
+        "height": 95
+      },
       "reconstructed": false,
-      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+      "reconstruction_reason": "line not classified as a merchandise row"
     },
     {
       "line_number": 13,
-      "text": "A",
-      "confidence": 64.0,
-      "source_candidate": "threshold_psm4",
-      "image_variant": "threshold",
-      "psm": 4,
-      "support_count": 5,
-      "match_method": "fuzzy",
-      "line_quality_score": 64.55,
-      "consensus_score": 80.55,
-      "reconstructed": false,
-      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+      "candidate_id": "grayscale_psm6",
+      "text": "VISA $ 30.24",
+      "confidence": 88.5,
+      "source_candidate": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "support_count": 15,
+      "match_method": "backbone",
+      "line_quality_score": 93.7,
+      "consensus_score": 149.7,
+      "normalized_y": 0.66565,
+      "bbox": {
+        "left": 50,
+        "top": 1783,
+        "right": 1810,
+        "bottom": 1926,
+        "width": 1760,
+        "height": 143
+      },
+      "reconstructed": true,
+      "original_consensus_text": "VISA $30.24",
+      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        },
+        "description": {
+          "value": "VISA $",
+          "source_candidate": "grayscale_psm6",
+          "source_text": "VISA $30.24",
+          "support_count": 4,
+          "confidence": 88.5,
+          "score": 106.9
+        },
+        "price": {
+          "value": "30.24",
+          "support_count": 18,
+          "average_confidence": 77.95,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm6",
+              "text": "Balance to pay $30.24"
+            },
+            {
+              "candidate_id": "grayscale_psm11",
+              "text": "$30.24"
+            },
+            {
+              "candidate_id": "grayscale_right_psm6",
+              "text": "$30.24"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "text": "$30.24"
+            },
+            {
+              "candidate_id": "threshold_psm11",
+              "text": "$30.24"
+            },
+            {
+              "candidate_id": "sharpened_psm4",
+              "text": "$30.24"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "text": "VISA $30.24"
+            },
+            {
+              "candidate_id": "sharpened_psm11",
+              "text": "$30.24"
+            },
+            {
+              "candidate_id": "sharpened_right_psm6",
+              "text": "$30.24"
+            },
+            {
+              "candidate_id": "sharpened_right_psm11",
+              "text": "$30.24"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "text": "VISA $30.24"
+            },
+            {
+              "candidate_id": "otsu_psm11",
+              "text": "$30.24"
+            },
+            {
+              "candidate_id": "otsu_right_psm6",
+              "text": "$30.24"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "text": "$30.24"
+            },
+            {
+              "candidate_id": "illumination_psm6",
+              "text": "VISA $30.24 |"
+            },
+            {
+              "candidate_id": "illumination_psm11",
+              "text": "$30.24"
+            },
+            {
+              "candidate_id": "illumination_right_psm6",
+              "text": "$30.24 |"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "text": "$30.24"
+            }
+          ]
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
     },
     {
       "line_number": 14,
-      "text": "5 ee erie aes aes OO AE PS LS AE EE EDL SS LOT",
-      "confidence": 21.43,
-      "source_candidate": "grayscale_psm4",
-      "image_variant": "grayscale",
-      "psm": 4,
-      "support_count": 2,
-      "match_method": "backbone",
-      "line_quality_score": 29.35,
-      "consensus_score": 33.35,
-      "reconstructed": false,
-      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+      "candidate_id": "otsu_psm6",
+      "text": "E PAYMENT CARD PURCHASE TRANSACTION 30.24",
+      "confidence": 83.8,
+      "source_candidate": "otsu_psm6",
+      "image_variant": "otsu",
+      "psm": 6,
+      "support_count": 15,
+      "match_method": "geometry",
+      "line_quality_score": 86.8,
+      "consensus_score": 142.8,
+      "normalized_y": 0.725772,
+      "bbox": {
+        "left": 82,
+        "top": 1955,
+        "right": 1568,
+        "bottom": 2089,
+        "width": 1486,
+        "height": 134
+      },
+      "reconstructed": true,
+      "original_consensus_text": "E PAYMENT CARD PURCHASE TRANSACTION",
+      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        },
+        "description": {
+          "value": "E PAYMENT CARD PURCHASE TRANSACTION",
+          "source_candidate": "otsu_psm6",
+          "source_text": "E PAYMENT CARD PURCHASE TRANSACTION",
+          "support_count": 13,
+          "confidence": 83.8,
+          "score": 154.8
+        },
+        "price": {
+          "value": "30.24",
+          "support_count": 1,
+          "average_confidence": 80.0,
+          "examples": [
+            {
+              "candidate_id": "otsu_psm6",
+              "text": "Balance to pay $30.24"
+            }
+          ]
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
     },
     {
       "line_number": 15,
-      "text": "T CARD PURCHASE TRANSACTION",
-      "confidence": 94.25,
+      "candidate_id": "grayscale_psm4",
+      "text": "CUSTOMER COPY",
+      "confidence": 96.0,
       "source_candidate": "grayscale_psm4",
       "image_variant": "grayscale",
       "psm": 4,
-      "support_count": 2,
-      "match_method": "backbone",
-      "line_quality_score": 96.45,
-      "consensus_score": 100.45,
+      "support_count": 14,
+      "match_method": "geometry",
+      "line_quality_score": 97.2,
+      "consensus_score": 149.2,
+      "normalized_y": 0.760589,
+      "bbox": {
+        "left": 567,
+        "top": 2054,
+        "right": 1106,
+        "bottom": 2184,
+        "width": 539,
+        "height": 130
+      },
       "reconstructed": false,
-      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+      "reconstruction_reason": "line not classified as a merchandise row"
     },
     {
       "line_number": 16,
-      "text": "CUSTOMER COPY",
-      "confidence": 96.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
+      "candidate_id": "threshold_psm11",
+      "text": "VISA CREDIT",
+      "confidence": 95.0,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
       "psm": 11,
-      "support_count": 2,
-      "match_method": "fuzzy",
-      "line_quality_score": 97.1,
-      "consensus_score": 101.1,
+      "support_count": 13,
+      "match_method": "geometry",
+      "line_quality_score": 96.2,
+      "consensus_score": 144.2,
+      "normalized_y": 0.822685,
+      "bbox": {
+        "left": 47,
+        "top": 2242,
+        "right": 518,
+        "bottom": 2342,
+        "width": 471,
+        "height": 100
+      },
       "reconstructed": false,
-      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+      "reconstruction_reason": "line not classified as a merchandise row"
     },
     {
       "line_number": 17,
-      "text": "< Bs i.",
-      "confidence": 34.0,
-      "source_candidate": "grayscale_psm4",
-      "image_variant": "grayscale",
-      "psm": 4,
-      "support_count": 1,
-      "match_method": "backbone",
-      "line_quality_score": 35.65,
-      "consensus_score": 35.65,
-      "reconstructed": false,
-      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
-    },
-    {
-      "line_number": 18,
-      "text": "in el 4",
-      "confidence": 52.0,
-      "source_candidate": "grayscale_psm4",
-      "image_variant": "grayscale",
-      "psm": 4,
-      "support_count": 1,
-      "match_method": "backbone",
-      "line_quality_score": 53.87,
-      "consensus_score": 53.87,
-      "reconstructed": false,
-      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
-    },
-    {
-      "line_number": 19,
-      "text": "Se, <",
-      "confidence": 45.5,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 3,
-      "match_method": "fuzzy",
-      "line_quality_score": 46.6,
-      "consensus_score": 54.6,
-      "reconstructed": false,
-      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
-    },
-    {
-      "line_number": 20,
-      "text": "a 4. ae eee",
-      "confidence": 32.75,
-      "source_candidate": "grayscale_psm4",
-      "image_variant": "grayscale",
-      "psm": 4,
-      "support_count": 1,
-      "match_method": "backbone",
-      "line_quality_score": 35.17,
-      "consensus_score": 35.17,
-      "reconstructed": false,
-      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
-    },
-    {
-      "line_number": 21,
-      "text": "Auth Code; 0125/0",
-      "confidence": 52.33,
-      "source_candidate": "grayscale_psm4",
-      "image_variant": "grayscale",
-      "psm": 4,
-      "support_count": 1,
-      "match_method": "backbone",
-      "line_quality_score": 55.08,
-      "consensus_score": 55.08,
-      "reconstructed": false,
-      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
-    },
-    {
-      "line_number": 22,
-      "text": "eeaTID; © 9788216",
-      "confidence": 8.33,
-      "source_candidate": "grayscale_psm4",
-      "image_variant": "grayscale",
-      "psm": 4,
-      "support_count": 1,
-      "match_method": "backbone",
-      "line_quality_score": 11.52,
-      "consensus_score": 11.52,
-      "reconstructed": false,
-      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
-    },
-    {
-      "line_number": 23,
-      "text": "x 30.24",
-      "confidence": 67.5,
-      "source_candidate": "threshold_psm11",
-      "image_variant": "threshold",
-      "psm": 11,
-      "support_count": 3,
-      "match_method": "fuzzy",
-      "line_quality_score": 72.48,
-      "consensus_score": 80.48,
-      "reconstructed": false,
-      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
-    },
-    {
-      "line_number": 24,
-      "text": "~",
-      "confidence": 18.0,
-      "source_candidate": "grayscale_psm4",
-      "image_variant": "grayscale",
-      "psm": 4,
-      "support_count": 1,
-      "match_method": "backbone",
-      "line_quality_score": 18.55,
-      "consensus_score": 18.55,
-      "reconstructed": false,
-      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
-    },
-    {
-      "line_number": 25,
-      "text": "yi.",
-      "confidence": 2.0,
-      "source_candidate": "grayscale_psm4",
-      "image_variant": "grayscale",
-      "psm": 4,
-      "support_count": 1,
-      "match_method": "backbone",
-      "line_quality_score": 2.55,
-      "consensus_score": 2.55,
-      "reconstructed": false,
-      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
-    },
-    {
-      "line_number": 26,
-      "text": "A",
-      "confidence": 64.0,
-      "source_candidate": "threshold_psm4",
-      "image_variant": "threshold",
-      "psm": 4,
-      "support_count": 5,
-      "match_method": "fuzzy",
-      "line_quality_score": 64.55,
-      "consensus_score": 80.55,
-      "reconstructed": false,
-      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
-    },
-    {
-      "line_number": 27,
-      "text": "ow |",
-      "confidence": 59.0,
-      "source_candidate": "threshold_psm11",
-      "image_variant": "threshold",
-      "psm": 11,
-      "support_count": 2,
-      "match_method": "fuzzy",
-      "line_quality_score": 60.1,
-      "consensus_score": 64.1,
-      "reconstructed": false,
-      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
-    },
-    {
-      "line_number": 28,
-      "text": "io. 2 .",
-      "confidence": 12.0,
-      "source_candidate": "grayscale_psm4",
-      "image_variant": "grayscale",
-      "psm": 4,
-      "support_count": 1,
-      "match_method": "backbone",
-      "line_quality_score": 13.87,
-      "consensus_score": 13.87,
-      "reconstructed": false,
-      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
-    },
-    {
-      "line_number": 29,
-      "text": "die Bey",
-      "confidence": 23.5,
-      "source_candidate": "grayscale_psm4",
-      "image_variant": "grayscale",
-      "psm": 4,
-      "support_count": 1,
-      "match_method": "backbone",
-      "line_quality_score": 24.6,
-      "consensus_score": 24.6,
-      "reconstructed": false,
-      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
-    },
-    {
-      "line_number": 30,
-      "text": "A, | e",
-      "confidence": 62.0,
-      "source_candidate": "grayscale_psm4",
-      "image_variant": "grayscale",
-      "psm": 4,
-      "support_count": 1,
-      "match_method": "backbone",
-      "line_quality_score": 63.65,
-      "consensus_score": 63.65,
-      "reconstructed": false,
-      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
-    },
-    {
-      "line_number": 31,
-      "text": "— »*",
-      "confidence": 15.5,
-      "source_candidate": "grayscale_psm4",
-      "image_variant": "grayscale",
-      "psm": 4,
-      "support_count": 1,
-      "match_method": "backbone",
-      "line_quality_score": 16.6,
-      "consensus_score": 16.6,
-      "reconstructed": false,
-      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
-    },
-    {
-      "line_number": 32,
-      "text": "12! ~ *",
-      "confidence": 34.0,
-      "source_candidate": "grayscale_psm4",
-      "image_variant": "grayscale",
-      "psm": 4,
-      "support_count": 1,
-      "match_method": "backbone",
-      "line_quality_score": 36.09,
-      "consensus_score": 36.09,
-      "reconstructed": false,
-      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
-    },
-    {
-      "line_number": 33,
-      "text": "e ae) 7",
-      "confidence": 25.0,
-      "source_candidate": "grayscale_psm4",
-      "image_variant": "grayscale",
-      "psm": 4,
-      "support_count": 1,
-      "match_method": "backbone",
-      "line_quality_score": 26.87,
-      "consensus_score": 26.87,
-      "reconstructed": false,
-      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
-    },
-    {
-      "line_number": 34,
-      "text": "ree ut",
-      "confidence": 10.0,
-      "source_candidate": "grayscale_psm4",
-      "image_variant": "grayscale",
-      "psm": 4,
-      "support_count": 1,
-      "match_method": "backbone",
-      "line_quality_score": 11.1,
-      "consensus_score": 11.1,
-      "reconstructed": false,
-      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
-    },
-    {
-      "line_number": 35,
-      "text": "4",
+      "candidate_id": "otsu_psm11",
+      "text": "Auth Code:",
       "confidence": 96.0,
-      "source_candidate": "threshold_psm4",
-      "image_variant": "threshold",
-      "psm": 4,
-      "support_count": 4,
-      "match_method": "fuzzy",
-      "line_quality_score": 96.77,
-      "consensus_score": 108.77,
+      "source_candidate": "otsu_psm11",
+      "image_variant": "otsu",
+      "psm": 11,
+      "support_count": 13,
+      "match_method": "geometry",
+      "line_quality_score": 97.2,
+      "consensus_score": 145.2,
+      "normalized_y": 0.844221,
+      "bbox": {
+        "left": 1034,
+        "top": 2308,
+        "right": 1440,
+        "bottom": 2396,
+        "width": 406,
+        "height": 88
+      },
       "reconstructed": false,
-      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
-    }
-  ],
-  "supported_extra_lines": [
-    {
-      "text": "ee ee)",
-      "confidence": 34.5,
-      "source_candidate": "threshold_psm4",
-      "image_variant": "threshold",
-      "psm": 4,
-      "support_count": 3,
-      "line_quality_score": 35.6
-    },
-    {
-      "text": "7",
-      "confidence": 33.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 3,
-      "line_quality_score": 33.77
-    },
-    {
-      "text": "t~",
-      "confidence": 33.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 3,
-      "line_quality_score": 33.55
-    },
-    {
-      "text": "A at a",
-      "confidence": 27.67,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 3,
-      "line_quality_score": 29.32
-    },
-    {
-      "text": "~ \"J",
-      "confidence": 24.5,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 3,
-      "line_quality_score": 25.6
-    },
-    {
-      "text": "+o",
-      "confidence": 23.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 3,
-      "line_quality_score": 23.55
-    },
-    {
-      "text": "oe",
-      "confidence": 21.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 3,
-      "line_quality_score": 21.55
-    },
-    {
-      "text": ",* 2",
-      "confidence": 17.5,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 3,
-      "line_quality_score": 18.82
-    },
-    {
-      "text": "i ‘",
-      "confidence": 0.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 3,
-      "line_quality_score": 1.1
-    },
-    {
-      "text": "“F",
-      "confidence": 0.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 3,
-      "line_quality_score": 0.55
-    },
-    {
-      "text": "ye",
-      "confidence": 0.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 3,
-      "line_quality_score": 0.55
-    },
-    {
-      "text": "e",
-      "confidence": 0.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 3,
-      "line_quality_score": 0.55
-    },
-    {
-      "text": "0]",
-      "confidence": 86.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 2,
-      "line_quality_score": 86.77
-    },
-    {
-      "text": "L",
-      "confidence": 86.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 2,
-      "line_quality_score": 86.55
-    },
-    {
-      "text": "Center.",
-      "confidence": 71.0,
-      "source_candidate": "threshold_psm4",
-      "image_variant": "threshold",
-      "psm": 4,
-      "support_count": 2,
-      "line_quality_score": 71.55
-    },
-    {
-      "text": "Wi",
-      "confidence": 69.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 2,
-      "line_quality_score": 69.55
-    },
-    {
-      "text": "AS",
-      "confidence": 56.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 2,
-      "line_quality_score": 56.55
-    },
-    {
-      "text": "Le.",
-      "confidence": 52.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 2,
-      "line_quality_score": 52.55
-    },
-    {
-      "text": "5",
-      "confidence": 50.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 2,
-      "line_quality_score": 50.77
-    },
-    {
-      "text": "> y)",
-      "confidence": 47.5,
-      "source_candidate": "threshold_psm4",
-      "image_variant": "threshold",
-      "psm": 4,
-      "support_count": 2,
-      "line_quality_score": 48.6
-    },
-    {
-      "text": ". | _ i | I > : ’ ' ; a . - .",
-      "confidence": 40.8,
-      "source_candidate": "threshold_psm6",
-      "image_variant": "threshold",
-      "psm": 6,
-      "support_count": 2,
-      "line_quality_score": 48.5
-    },
-    {
-      "text": "‘pe",
-      "confidence": 44.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 2,
-      "line_quality_score": 44.55
-    },
-    {
-      "text": "2 on",
-      "confidence": 42.5,
-      "source_candidate": "threshold_psm11",
-      "image_variant": "threshold",
-      "psm": 11,
-      "support_count": 2,
-      "line_quality_score": 43.82
-    },
-    {
-      "text": "{ ae S .",
-      "confidence": 36.75,
-      "source_candidate": "threshold_psm4",
-      "image_variant": "threshold",
-      "psm": 4,
-      "support_count": 2,
-      "line_quality_score": 38.95
-    },
-    {
-      "text": "'s",
-      "confidence": 38.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 2,
-      "line_quality_score": 38.55
-    },
-    {
-      "text": "a Aor",
-      "confidence": 35.5,
-      "source_candidate": "grayscale_psm6",
-      "image_variant": "grayscale",
-      "psm": 6,
-      "support_count": 2,
-      "line_quality_score": 36.6
-    },
-    {
-      "text": "Be:",
-      "confidence": 36.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 2,
-      "line_quality_score": 36.55
-    },
-    {
-      "text": "of",
-      "confidence": 34.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 2,
-      "line_quality_score": 34.55
-    },
-    {
-      "text": "ie",
-      "confidence": 34.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 2,
-      "line_quality_score": 34.55
-    },
-    {
-      "text": "aie”",
-      "confidence": 33.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 2,
-      "line_quality_score": 33.55
-    },
-    {
-      "text": "(UNS Lt",
-      "confidence": 31.5,
-      "source_candidate": "threshold_psm4",
-      "image_variant": "threshold",
-      "psm": 4,
-      "support_count": 2,
-      "line_quality_score": 32.6
-    },
-    {
-      "text": "~ af",
-      "confidence": 28.5,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 2,
-      "line_quality_score": 29.6
-    },
-    {
-      "text": "hy",
-      "confidence": 28.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 2,
-      "line_quality_score": 28.55
-    },
-    {
-      "text": "ae",
-      "confidence": 25.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 2,
-      "line_quality_score": 25.55
-    },
-    {
-      "text": "[Sf",
-      "confidence": 24.0,
-      "source_candidate": "threshold_psm4",
-      "image_variant": "threshold",
-      "psm": 4,
-      "support_count": 2,
-      "line_quality_score": 24.55
-    },
-    {
-      "text": "LL",
-      "confidence": 24.0,
-      "source_candidate": "grayscale_psm6",
-      "image_variant": "grayscale",
-      "psm": 6,
-      "support_count": 2,
-      "line_quality_score": 24.55
-    },
-    {
-      "text": "ty",
-      "confidence": 24.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 2,
-      "line_quality_score": 24.55
-    },
-    {
-      "text": "dé",
-      "confidence": 23.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 2,
-      "line_quality_score": 23.55
-    },
-    {
-      "text": "te, ¥",
-      "confidence": 17.5,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 2,
-      "line_quality_score": 18.6
-    },
-    {
-      "text": "Oa",
-      "confidence": 18.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 2,
-      "line_quality_score": 18.55
-    },
-    {
-      "text": "& oh",
-      "confidence": 16.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 2,
-      "line_quality_score": 17.1
-    },
-    {
-      "text": "Pd _* /",
-      "confidence": 14.67,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 2,
-      "line_quality_score": 16.32
-    },
-    {
-      "text": "“Pw,",
-      "confidence": 14.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 2,
-      "line_quality_score": 14.55
-    },
-    {
-      "text": "at-*",
-      "confidence": 14.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 2,
-      "line_quality_score": 14.55
-    },
-    {
-      "text": "CG *.",
-      "confidence": 7.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 2,
-      "line_quality_score": 8.1
-    },
-    {
-      "text": "eo",
-      "confidence": 7.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 2,
-      "line_quality_score": 7.55
-    },
-    {
-      "text": "oo",
-      "confidence": 6.0,
-      "source_candidate": "threshold_psm4",
-      "image_variant": "threshold",
-      "psm": 4,
-      "support_count": 2,
-      "line_quality_score": 6.55
-    },
-    {
-      "text": "‘44>",
-      "confidence": 0.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 2,
-      "line_quality_score": 0.99
-    },
-    {
-      "text": "‘Yt",
-      "confidence": 0.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 2,
-      "line_quality_score": 0.55
-    },
-    {
-      "text": "gt.",
-      "confidence": 0.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 2,
-      "line_quality_score": 0.55
-    },
-    {
-      "text": "fee",
-      "confidence": 0.0,
-      "source_candidate": "threshold_psm4",
-      "image_variant": "threshold",
-      "psm": 4,
-      "support_count": 2,
-      "line_quality_score": 0.55
-    },
-    {
-      "text": "ve",
-      "confidence": 0.0,
-      "source_candidate": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "support_count": 2,
-      "line_quality_score": 0.55
+      "reconstruction_reason": "line not classified as a merchandise row"
     }
   ],
   "candidate_ranking": [
     {
       "rank": 1,
-      "candidate_id": "grayscale_psm4",
-      "image_variant": "grayscale",
-      "psm": 4,
-      "comparison_metrics": {
-        "score": 37.38,
-        "mean_word_confidence": 42.29,
-        "recognized_word_count": 110,
-        "low_confidence_rate": 0.6,
-        "digit_count": 47,
-        "price_like_count": 4
-      }
-    },
-    {
-      "rank": 2,
-      "candidate_id": "grayscale_psm11",
-      "image_variant": "grayscale",
-      "psm": 11,
-      "comparison_metrics": {
-        "score": 34.133,
-        "mean_word_confidence": 35.9,
-        "recognized_word_count": 399,
-        "low_confidence_rate": 0.7118,
-        "digit_count": 93,
-        "price_like_count": 6
-      }
-    },
-    {
-      "rank": 3,
-      "candidate_id": "threshold_psm11",
-      "image_variant": "threshold",
-      "psm": 11,
-      "comparison_metrics": {
-        "score": 30.7805,
-        "mean_word_confidence": 33.66,
-        "recognized_word_count": 997,
-        "low_confidence_rate": 0.7613,
-        "digit_count": 96,
-        "price_like_count": 1
-      }
-    },
-    {
-      "rank": 4,
-      "candidate_id": "threshold_psm4",
-      "image_variant": "threshold",
-      "psm": 4,
-      "comparison_metrics": {
-        "score": 27.1385,
-        "mean_word_confidence": 30.87,
-        "recognized_word_count": 953,
-        "low_confidence_rate": 0.7901,
-        "digit_count": 62,
-        "price_like_count": 0
-      }
-    },
-    {
-      "rank": 5,
-      "candidate_id": "threshold_psm6",
-      "image_variant": "threshold",
-      "psm": 6,
-      "comparison_metrics": {
-        "score": 25.771,
-        "mean_word_confidence": 29.24,
-        "recognized_word_count": 1594,
-        "low_confidence_rate": 0.7886,
-        "digit_count": 86,
-        "price_like_count": 0
-      }
-    },
-    {
-      "rank": 6,
       "candidate_id": "grayscale_psm6",
       "image_variant": "grayscale",
       "psm": 6,
       "comparison_metrics": {
-        "score": 23.9065,
-        "mean_word_confidence": 28.34,
-        "recognized_word_count": 417,
-        "low_confidence_rate": 0.8369,
-        "digit_count": 54,
-        "price_like_count": 1
+        "score": 61.7984,
+        "mean_word_confidence": 65.04,
+        "recognized_word_count": 77,
+        "low_confidence_rate": 0.3247,
+        "price_like_count": 7,
+        "sku_count": 0,
+        "plausible_line_count": 15,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 2,
+      "candidate_id": "otsu_psm6",
+      "image_variant": "otsu",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": 58.4288,
+        "mean_word_confidence": 62.68,
+        "recognized_word_count": 81,
+        "low_confidence_rate": 0.3704,
+        "price_like_count": 8,
+        "sku_count": 0,
+        "plausible_line_count": 14,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 3,
+      "candidate_id": "sharpened_psm4",
+      "image_variant": "sharpened",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 53.0408,
+        "mean_word_confidence": 57.98,
+        "recognized_word_count": 105,
+        "low_confidence_rate": 0.3714,
+        "price_like_count": 6,
+        "sku_count": 0,
+        "plausible_line_count": 16,
+        "garbage_line_count": 1
+      }
+    },
+    {
+      "rank": 4,
+      "candidate_id": "sharpened_psm6",
+      "image_variant": "sharpened",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": 51.2696,
+        "mean_word_confidence": 58.14,
+        "recognized_word_count": 88,
+        "low_confidence_rate": 0.4318,
+        "price_like_count": 6,
+        "sku_count": 0,
+        "plausible_line_count": 14,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 5,
+      "candidate_id": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 51.1588,
+        "mean_word_confidence": 58.02,
+        "recognized_word_count": 96,
+        "low_confidence_rate": 0.4479,
+        "price_like_count": 7,
+        "sku_count": 1,
+        "plausible_line_count": 14,
+        "garbage_line_count": 2
+      }
+    },
+    {
+      "rank": 6,
+      "candidate_id": "otsu_psm11",
+      "image_variant": "otsu",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 49.5696,
+        "mean_word_confidence": 54.76,
+        "recognized_word_count": 99,
+        "low_confidence_rate": 0.4343,
+        "price_like_count": 8,
+        "sku_count": 1,
+        "plausible_line_count": 24,
+        "garbage_line_count": 10
+      }
+    },
+    {
+      "rank": 7,
+      "candidate_id": "sharpened_psm11",
+      "image_variant": "sharpened",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 43.5952,
+        "mean_word_confidence": 52.11,
+        "recognized_word_count": 107,
+        "low_confidence_rate": 0.4766,
+        "price_like_count": 3,
+        "sku_count": 0,
+        "plausible_line_count": 24,
+        "garbage_line_count": 7
+      }
+    },
+    {
+      "rank": 8,
+      "candidate_id": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 43.57,
+        "mean_word_confidence": 52.31,
+        "recognized_word_count": 100,
+        "low_confidence_rate": 0.52,
+        "price_like_count": 8,
+        "sku_count": 0,
+        "plausible_line_count": 13,
+        "garbage_line_count": 1
+      }
+    },
+    {
+      "rank": 9,
+      "candidate_id": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 42.0196,
+        "mean_word_confidence": 52.1,
+        "recognized_word_count": 105,
+        "low_confidence_rate": 0.5143,
+        "price_like_count": 4,
+        "sku_count": 0,
+        "plausible_line_count": 20,
+        "garbage_line_count": 9
+      }
+    },
+    {
+      "rank": 10,
+      "candidate_id": "illumination_psm11",
+      "image_variant": "illumination",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 39.3376,
+        "mean_word_confidence": 46.84,
+        "recognized_word_count": 113,
+        "low_confidence_rate": 0.5133,
+        "price_like_count": 7,
+        "sku_count": 0,
+        "plausible_line_count": 24,
+        "garbage_line_count": 5
+      }
+    },
+    {
+      "rank": 11,
+      "candidate_id": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 34.8096,
+        "mean_word_confidence": 46.25,
+        "recognized_word_count": 92,
+        "low_confidence_rate": 0.5543,
+        "price_like_count": 4,
+        "sku_count": 0,
+        "plausible_line_count": 18,
+        "garbage_line_count": 8
+      }
+    },
+    {
+      "rank": 12,
+      "candidate_id": "illumination_psm4",
+      "image_variant": "illumination",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 32.7488,
+        "mean_word_confidence": 45.32,
+        "recognized_word_count": 113,
+        "low_confidence_rate": 0.5929,
+        "price_like_count": 4,
+        "sku_count": 1,
+        "plausible_line_count": 11,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 13,
+      "candidate_id": "illumination_psm6",
+      "image_variant": "illumination",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": 31.37,
+        "mean_word_confidence": 42.33,
+        "recognized_word_count": 100,
+        "low_confidence_rate": 0.58,
+        "price_like_count": 8,
+        "sku_count": 0,
+        "plausible_line_count": 10,
+        "garbage_line_count": 1
+      }
+    },
+    {
+      "rank": 14,
+      "candidate_id": "threshold_psm6",
+      "image_variant": "threshold",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": 25.7348,
+        "mean_word_confidence": 41.28,
+        "recognized_word_count": 76,
+        "low_confidence_rate": 0.6184,
+        "price_like_count": 1,
+        "sku_count": 0,
+        "plausible_line_count": 8,
+        "garbage_line_count": 1
+      }
+    },
+    {
+      "rank": 15,
+      "candidate_id": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 24.494,
+        "mean_word_confidence": 40.01,
+        "recognized_word_count": 97,
+        "low_confidence_rate": 0.6495,
+        "price_like_count": 3,
+        "sku_count": 0,
+        "plausible_line_count": 8,
+        "garbage_line_count": 1
       }
     }
   ],
   "provenance": {
     "candidates_file": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_candidates/IMG_0255_ocr_candidates.json",
-    "rule": "Product lines may be reconstructed from multiple Tesseract observations only when they share the same exact six-digit SKU. Description text is OCR-derived, and price/tax values must each appear in at least one actual OCR candidate. No spelling correction or external product lookup is performed."
+    "rule": "OCR output is reconstructed only from actual Tesseract observations. Spatial row alignment may combine description, SKU, price, and tax evidence from different OCR candidates when their normalized vertical positions agree. Exact SKU matches override ordinary fuzzy alignment. No external product lookup or spelling correction is performed."
   }
 }
