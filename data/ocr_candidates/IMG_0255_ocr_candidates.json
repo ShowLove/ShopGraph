@@ -15,7 +15,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 4",
-        "generated_at": "2026-08-27T17:52:08.894303+00:00",
+        "generated_at": "2026-08-27T18:27:59.866437+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -1866,7 +1866,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 6",
-        "generated_at": "2026-08-27T17:52:10.238786+00:00",
+        "generated_at": "2026-08-27T18:28:01.206958+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -3300,7 +3300,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 11",
-        "generated_at": "2026-08-27T17:52:11.685298+00:00",
+        "generated_at": "2026-08-27T18:28:02.649919+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -5658,7 +5658,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 6",
-        "generated_at": "2026-08-27T17:52:12.139572+00:00",
+        "generated_at": "2026-08-27T18:28:03.108950+00:00",
         "region": {
           "name": "right_column",
           "crop_fraction": [
@@ -6388,7 +6388,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 11",
-        "generated_at": "2026-08-27T17:52:12.566235+00:00",
+        "generated_at": "2026-08-27T18:28:03.529973+00:00",
         "region": {
           "name": "right_column",
           "crop_fraction": [
@@ -7038,7 +7038,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 4",
-        "generated_at": "2026-08-27T17:52:13.471154+00:00",
+        "generated_at": "2026-08-27T18:28:04.433380+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -8809,7 +8809,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 6",
-        "generated_at": "2026-08-27T17:52:14.318597+00:00",
+        "generated_at": "2026-08-27T18:28:05.279175+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -10229,7 +10229,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 11",
-        "generated_at": "2026-08-27T17:52:15.140782+00:00",
+        "generated_at": "2026-08-27T18:28:06.096675+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -12462,7 +12462,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 6",
-        "generated_at": "2026-08-27T17:52:15.791725+00:00",
+        "generated_at": "2026-08-27T18:28:06.746754+00:00",
         "region": {
           "name": "right_column",
           "crop_fraction": [
@@ -14475,7 +14475,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 11",
-        "generated_at": "2026-08-27T17:52:16.383731+00:00",
+        "generated_at": "2026-08-27T18:28:07.339814+00:00",
         "region": {
           "name": "right_column",
           "crop_fraction": [
@@ -18712,7 +18712,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 4",
-        "generated_at": "2026-08-27T17:52:17.995411+00:00",
+        "generated_at": "2026-08-27T18:28:08.949962+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -20595,7 +20595,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 6",
-        "generated_at": "2026-08-27T17:52:19.592232+00:00",
+        "generated_at": "2026-08-27T18:28:10.525954+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -22221,7 +22221,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 11",
-        "generated_at": "2026-08-27T17:52:21.097598+00:00",
+        "generated_at": "2026-08-27T18:28:12.031783+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -24626,7 +24626,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 6",
-        "generated_at": "2026-08-27T17:52:21.542622+00:00",
+        "generated_at": "2026-08-27T18:28:12.480169+00:00",
         "region": {
           "name": "right_column",
           "crop_fraction": [
@@ -25318,7 +25318,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 11",
-        "generated_at": "2026-08-27T17:52:21.985602+00:00",
+        "generated_at": "2026-08-27T18:28:12.922785+00:00",
         "region": {
           "name": "right_column",
           "crop_fraction": [
@@ -26085,7 +26085,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 4",
-        "generated_at": "2026-08-27T17:52:22.811323+00:00",
+        "generated_at": "2026-08-27T18:28:13.756530+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -27880,7 +27880,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 6",
-        "generated_at": "2026-08-27T17:52:23.475566+00:00",
+        "generated_at": "2026-08-27T18:28:14.419788+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -29370,7 +29370,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 11",
-        "generated_at": "2026-08-27T17:52:24.266579+00:00",
+        "generated_at": "2026-08-27T18:28:15.213972+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -31644,7 +31644,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 6",
-        "generated_at": "2026-08-27T17:52:24.496732+00:00",
+        "generated_at": "2026-08-27T18:28:15.445062+00:00",
         "region": {
           "name": "right_column",
           "crop_fraction": [
@@ -32266,7 +32266,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 11",
-        "generated_at": "2026-08-27T17:52:24.756562+00:00",
+        "generated_at": "2026-08-27T18:28:15.705442+00:00",
         "region": {
           "name": "right_column",
           "crop_fraction": [
@@ -32846,7 +32846,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 4",
-        "generated_at": "2026-08-27T17:52:25.703177+00:00",
+        "generated_at": "2026-08-27T18:28:16.648536+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -34841,7 +34841,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 6",
-        "generated_at": "2026-08-27T17:52:26.624182+00:00",
+        "generated_at": "2026-08-27T18:28:17.560768+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -36616,7 +36616,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 11",
-        "generated_at": "2026-08-27T17:52:27.542504+00:00",
+        "generated_at": "2026-08-27T18:28:18.483263+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -39181,7 +39181,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 6",
-        "generated_at": "2026-08-27T17:52:27.945246+00:00",
+        "generated_at": "2026-08-27T18:28:18.886444+00:00",
         "region": {
           "name": "right_column",
           "crop_fraction": [
@@ -40121,7 +40121,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 11",
-        "generated_at": "2026-08-27T17:52:28.301708+00:00",
+        "generated_at": "2026-08-27T18:28:19.255245+00:00",
         "region": {
           "name": "right_column",
           "crop_fraction": [

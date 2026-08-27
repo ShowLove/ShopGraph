@@ -1,6 +1,6 @@
 {
   "source_receipt": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/current_pic/IMG_0255.JPG",
-  "selection_method": "multi-variant spatial component consensus: best full-receipt candidate provides reading order; rows align by normalized y-coordinate, with exact six-digit SKU as a stronger anchor when present; right-column OCR supplies independent price/tax evidence",
+  "selection_method": "conservative multi-variant receipt-row consensus: best full-receipt candidate supplies reading order; geometry must also have textual/SKU agreement; SKU is never injected into a row; price/tax additions require independent OCR support; absence is preferred to unsupported reconstruction",
   "backbone_candidate": {
     "candidate_id": "grayscale_psm6",
     "image_variant": "grayscale",
@@ -19,27 +19,29 @@
   "consensus_summary": {
     "backbone_line_count": 17,
     "consensus_line_count": 17,
-    "component_reconstruction_count": 11,
+    "merchandise_line_count": 6,
+    "component_reconstruction_count": 6,
     "candidate_count": 25,
     "full_candidate_count": 15,
     "right_column_candidate_count": 10,
-    "match_threshold": 0.58,
-    "geometry_y_tolerance": 0.012
+    "match_threshold": 0.72,
+    "max_row_center_distance": 0.014,
+    "minimum_component_support": 2
   },
-  "raw_text": "1 Town Center Ave, Ste 101 T 2.99\nMelbourne, FL 32 3.99\nStore #0848 - 321-338-3418 30.24\nSALE TRANSACTION\nEMPIRE KOSHER GROUND TRK $ 6.99\nEMPIRE KOSHER GROUND JRK 6.99\nSALE TRANSACTION T 3.99\nUFFIN BLUEBERRY F 5.93\n> PAST EF ROASTED RED PEPPERS $ 2.99\nSTA CHICKPEA FUSILLI $ T 2.99\nItems in Transaction:6\nBalance to pay.\nVISA $ 30.24\nE PAYMENT CARD PURCHASE TRANSACTION 30.24\nCUSTOMER COPY\nVISA CREDIT\nAuth Code:",
+  "raw_text": "1 Town Center Ave, Ste 101\nbourne, FL 3\n| Store #0848 - 321-338-3418\nSALE TRANSACTION\nEMPIRE KOSHER GROUND JRK 6.99\nEMPIRE KOSHER GROUND TRK 6.99\n“STRAWBERRIES 1 LB 3.99\nMUFFIN | BLUEBERRY GLUTEN 5.99\n> PAST EF ROASTED RED PEPPERS 3.29\nSTA CHICKPEA FUSILLI 2.99\nItems in Transaction:6\nBalance to pay.\n$30.24\nE PAYMENT CARD PURCHASE TRANSACTION\nCUSTOMER COPY\nVISA CREDIT\nAuth Code:",
   "text": [
     {
       "line_number": 1,
       "candidate_id": "sharpened_psm11",
-      "text": "1 Town Center Ave, Ste 101 T 2.99",
+      "text": "1 Town Center Ave, Ste 101",
       "confidence": 84.83,
       "source_candidate": "sharpened_psm11",
       "image_variant": "sharpened",
       "psm": 11,
       "support_count": 13,
-      "match_method": "geometry",
+      "match_method": "geometry_plus_text",
       "line_quality_score": 88.43,
-      "consensus_score": 136.43,
+      "consensus_score": 130.43,
       "normalized_y": 0.190775,
       "bbox": {
         "left": 474,
@@ -49,64 +51,22 @@
         "width": 1018,
         "height": 107
       },
-      "reconstructed": true,
-      "original_consensus_text": "1 Town Center Ave, Ste 101",
-      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
-      "component_support": {
-        "sku": {
-          "value": null,
-          "support_count": 0,
-          "average_confidence": null,
-          "examples": []
-        },
-        "description": {
-          "value": "1 Town Center Ave, Ste 101",
-          "source_candidate": "sharpened_psm11",
-          "source_text": "1 Town Center Ave, Ste 101",
-          "support_count": 13,
-          "confidence": 84.83,
-          "score": 157.03
-        },
-        "price": {
-          "value": "2.99",
-          "support_count": 1,
-          "average_confidence": 68.0,
-          "examples": [
-            {
-              "candidate_id": "sharpened_psm11",
-              "text": "$2.99"
-            }
-          ]
-        },
-        "tax_code": {
-          "value": "T",
-          "support_count": 2,
-          "average_confidence": 45.75,
-          "examples": [
-            {
-              "candidate_id": "sharpened_psm4",
-              "text": "P 272 T Town Center Ave, Ste 101"
-            },
-            {
-              "candidate_id": "sharpened_psm11",
-              "text": "a RE cm em mer “at oo aa on nors-tee t-erm ome OO eS —— oe a"
-            }
-          ]
-        }
-      }
+      "reconstructed": false,
+      "reconstruction_reason": "address/header-like row",
+      "row_family_support": 12
     },
     {
       "line_number": 2,
       "candidate_id": "grayscale_psm11",
-      "text": "Melbourne, FL 32 3.99",
+      "text": "bourne, FL 3",
       "confidence": 89.67,
       "source_candidate": "grayscale_psm11",
       "image_variant": "grayscale",
       "psm": 11,
       "support_count": 15,
-      "match_method": "geometry",
+      "match_method": "geometry_plus_text",
       "line_quality_score": 91.47,
-      "consensus_score": 147.47,
+      "consensus_score": 140.47,
       "normalized_y": 0.215542,
       "bbox": {
         "left": 679,
@@ -116,47 +76,14 @@
         "width": 474,
         "height": 91
       },
-      "reconstructed": true,
-      "original_consensus_text": "bourne, FL 3",
-      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
-      "component_support": {
-        "sku": {
-          "value": null,
-          "support_count": 0,
-          "average_confidence": null,
-          "examples": []
-        },
-        "description": {
-          "value": "Melbourne, FL 32",
-          "source_candidate": "sharpened_psm11",
-          "source_text": "Melbourne, FL 32",
-          "support_count": 14,
-          "confidence": 80.0,
-          "score": 153.6
-        },
-        "price": {
-          "value": "3.99",
-          "support_count": 1,
-          "average_confidence": 87.0,
-          "examples": [
-            {
-              "candidate_id": "grayscale_psm11",
-              "text": "3,99"
-            }
-          ]
-        },
-        "tax_code": {
-          "value": null,
-          "support_count": 0,
-          "average_confidence": null,
-          "examples": []
-        }
-      }
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 15
     },
     {
       "line_number": 3,
       "candidate_id": "grayscale_psm6",
-      "text": "Store #0848 - 321-338-3418 30.24",
+      "text": "| Store #0848 - 321-338-3418",
       "confidence": 74.6,
       "source_candidate": "grayscale_psm6",
       "image_variant": "grayscale",
@@ -164,7 +91,7 @@
       "support_count": 15,
       "match_method": "backbone",
       "line_quality_score": 69.6,
-      "consensus_score": 125.6,
+      "consensus_score": 118.6,
       "normalized_y": 0.25323,
       "bbox": {
         "left": 89,
@@ -174,42 +101,9 @@
         "width": 1357,
         "height": 131
       },
-      "reconstructed": true,
-      "original_consensus_text": "| Store #0848 - 321-338-3418",
-      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
-      "component_support": {
-        "sku": {
-          "value": null,
-          "support_count": 0,
-          "average_confidence": null,
-          "examples": []
-        },
-        "description": {
-          "value": "Store #0848 - 321-338-3418",
-          "source_candidate": "grayscale_psm6",
-          "source_text": "| Store #0848 - 321-338-3418",
-          "support_count": 15,
-          "confidence": 74.6,
-          "score": 150.4
-        },
-        "price": {
-          "value": "30.24",
-          "support_count": 1,
-          "average_confidence": 85.0,
-          "examples": [
-            {
-              "candidate_id": "grayscale_psm6",
-              "text": "Balance to pay $30.24"
-            }
-          ]
-        },
-        "tax_code": {
-          "value": null,
-          "support_count": 0,
-          "average_confidence": null,
-          "examples": []
-        }
-      }
+      "reconstructed": false,
+      "reconstruction_reason": "address/header-like row",
+      "row_family_support": 11
     },
     {
       "line_number": 4,
@@ -220,9 +114,9 @@
       "image_variant": "grayscale",
       "psm": 11,
       "support_count": 14,
-      "match_method": "geometry",
+      "match_method": "geometry_plus_text",
       "line_quality_score": 97.2,
-      "consensus_score": 149.2,
+      "consensus_score": 142.7,
       "normalized_y": 0.330402,
       "bbox": {
         "left": 619,
@@ -233,20 +127,21 @@
         "height": 77
       },
       "reconstructed": false,
-      "reconstruction_reason": "line not classified as a merchandise row"
+      "reconstruction_reason": "known receipt metadata/total/payment row",
+      "row_family_support": 14
     },
     {
       "line_number": 5,
       "candidate_id": "illumination_psm11",
-      "text": "EMPIRE KOSHER GROUND TRK $ 6.99",
+      "text": "EMPIRE KOSHER GROUND JRK 6.99",
       "confidence": 84.75,
       "source_candidate": "illumination_psm11",
       "image_variant": "illumination",
       "psm": 11,
-      "support_count": 15,
-      "match_method": "geometry",
+      "support_count": 13,
+      "match_method": "geometry_plus_text",
       "line_quality_score": 87.15,
-      "consensus_score": 143.15,
+      "consensus_score": 129.15,
       "normalized_y": 0.377602,
       "bbox": {
         "left": 143,
@@ -258,203 +153,191 @@
       },
       "reconstructed": true,
       "original_consensus_text": "EMPIRE KOSHER GROUND JRK",
-      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
-      "component_support": {
-        "sku": {
-          "value": null,
-          "support_count": 0,
-          "average_confidence": null,
-          "examples": []
-        },
-        "description": {
-          "value": "EMPIRE KOSHER GROUND TRK $",
-          "source_candidate": "otsu_psm4",
-          "source_text": "EMPIRE KOSHER GROUND TRK $6.99",
-          "support_count": 15,
-          "confidence": 89.2,
-          "score": 166.2
-        },
-        "price": {
-          "value": "6.99",
-          "support_count": 14,
-          "average_confidence": 53.42,
-          "examples": [
-            {
-              "candidate_id": "grayscale_psm4",
-              "text": "- | EMPIRE & KOSHER GROUND TRK $6.99"
-            },
-            {
-              "candidate_id": "grayscale_psm6",
-              "text": "~ EMPIRE KOSHER GROUND TRK $6.99"
-            },
-            {
-              "candidate_id": "threshold_psm11",
-              "text": "“$6.99"
-            },
-            {
-              "candidate_id": "threshold_right_psm11",
-              "text": "$6.99"
-            },
-            {
-              "candidate_id": "sharpened_psm6",
-              "text": "EMPIRE KOSHER GROUND TRK $6.99"
-            },
-            {
-              "candidate_id": "sharpened_right_psm6",
-              "text": "$6.99"
-            },
-            {
-              "candidate_id": "otsu_psm4",
-              "text": "~ | EMPIRE & KOSHER GROUND TRK $6.99"
-            },
-            {
-              "candidate_id": "otsu_psm6",
-              "text": "“\" EMPIRE KOSHER GROUND TRK $6.99"
-            },
-            {
-              "candidate_id": "otsu_psm11",
-              "text": "$6.99"
-            },
-            {
-              "candidate_id": "otsu_right_psm6",
-              "text": "$6.99"
-            },
-            {
-              "candidate_id": "otsu_right_psm11",
-              "text": "$6.99"
-            },
-            {
-              "candidate_id": "illumination_psm11",
-              "text": "$6.99"
-            },
-            {
-              "candidate_id": "illumination_right_psm6",
-              "text": "$6.99 Ja"
-            },
-            {
-              "candidate_id": "illumination_right_psm11",
-              "text": "$6.99"
-            }
-          ]
-        },
-        "tax_code": {
-          "value": null,
-          "support_count": 0,
-          "average_confidence": null,
-          "examples": []
-        }
-      }
-    },
-    {
-      "line_number": 6,
-      "candidate_id": "otsu_psm6",
-      "text": "EMPIRE KOSHER GROUND JRK 6.99",
-      "confidence": 71.4,
-      "source_candidate": "otsu_psm6",
-      "image_variant": "otsu",
-      "psm": 6,
-      "support_count": 15,
-      "match_method": "geometry",
-      "line_quality_score": 78.4,
-      "consensus_score": 134.4,
-      "normalized_y": 0.40542,
-      "bbox": {
-        "left": 155,
-        "top": 1050,
-        "right": 1769,
-        "bottom": 1209,
-        "width": 1614,
-        "height": 159
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "multiple matching row observations plus independent price support",
+        "family_candidate_count": 10
       },
-      "reconstructed": true,
-      "original_consensus_text": "EMPIRE KOSHER GROUND TRK $6.99",
-      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
       "component_support": {
         "sku": {
           "value": null,
           "support_count": 0,
-          "average_confidence": null,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
           "examples": []
         },
         "description": {
           "value": "EMPIRE KOSHER GROUND JRK",
           "source_candidate": "illumination_psm11",
           "source_text": "EMPIRE KOSHER GROUND JRK",
-          "support_count": 18,
+          "support_count": 9,
           "confidence": 84.75,
-          "score": 179.55
+          "similarity_to_anchor": 1.0,
+          "score": 142.55,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
         },
         "price": {
           "value": "6.99",
-          "support_count": 11,
-          "average_confidence": 54.0,
+          "support_count": 7,
+          "average_confidence": 59.71,
           "examples": [
             {
-              "candidate_id": "grayscale_psm4",
-              "text": "- | EMPIRE & KOSHER GROUND TRK $6.99"
-            },
-            {
               "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
               "text": "~ EMPIRE KOSHER GROUND TRK $6.99"
             },
             {
-              "candidate_id": "threshold_psm11",
-              "text": "$6.99"
-            },
-            {
               "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
               "text": "EMPIRE KOSHER GROUND TRK $6.99"
             },
             {
-              "candidate_id": "otsu_psm4",
-              "text": "~ | EMPIRE & KOSHER GROUND TRK $6.99"
-            },
-            {
               "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
               "text": "“\" EMPIRE KOSHER GROUND TRK $6.99"
             },
             {
-              "candidate_id": "otsu_psm11",
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
               "text": "$6.99"
             },
             {
               "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
               "text": "$6.99"
             },
             {
-              "candidate_id": "illumination_psm6",
-              "text": "EMPIRE KOSHER GROUND TRE —6 6.99"
-            },
-            {
-              "candidate_id": "illumination_psm11",
-              "text": "$6.99"
+              "candidate_id": "illumination_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "$6.99 Ja"
             },
             {
               "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
               "text": "$6.99"
             }
-          ]
+          ],
+          "selection_reason": "selected from multiple independent OCR candidates"
         },
         "tax_code": {
           "value": null,
           "support_count": 0,
           "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        }
+      }
+    },
+    {
+      "line_number": 6,
+      "candidate_id": "otsu_psm4",
+      "text": "EMPIRE KOSHER GROUND TRK 6.99",
+      "confidence": 89.2,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 12,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 96.2,
+      "consensus_score": 134.7,
+      "normalized_y": 0.417624,
+      "bbox": {
+        "left": 155,
+        "top": 1118,
+        "right": 1771,
+        "bottom": 1209,
+        "width": 1616,
+        "height": 91
+      },
+      "reconstructed": true,
+      "original_consensus_text": "EMPIRE KOSHER GROUND TRK $6.99",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one price",
+        "family_candidate_count": 11
+      },
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
           "examples": []
+        },
+        "description": {
+          "value": "EMPIRE KOSHER GROUND TRK",
+          "source_candidate": "otsu_psm4",
+          "source_text": "EMPIRE KOSHER GROUND TRK $6.99",
+          "support_count": 11,
+          "confidence": 89.2,
+          "similarity_to_anchor": 1.0,
+          "score": 157.0,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "6.99",
+          "support_count": 7,
+          "average_confidence": 51.29,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "EMPIRE KOSHER GROUND TRK $6.99"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "EMPIRE KOSHER GROUND TRK $6.99"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "EMPIRE KOSHER GROUND TRK $6.99"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "EMPIRE KOSHER GROUND TRK $6.99"
+            },
+            {
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
+              "text": "EMPIRE KOSHER GROUND TRE —6 6.99"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "$6.99"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "$6.99"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
         }
       }
     },
     {
       "line_number": 7,
       "candidate_id": "sharpened_psm4",
-      "text": "SALE TRANSACTION T 3.99",
+      "text": "“STRAWBERRIES 1 LB 3.99",
       "confidence": 79.75,
       "source_candidate": "sharpened_psm4",
       "image_variant": "sharpened",
       "psm": 4,
-      "support_count": 13,
-      "match_method": "fuzzy",
+      "support_count": 10,
+      "match_method": "geometry_plus_text",
       "line_quality_score": 86.15,
-      "consensus_score": 134.15,
+      "consensus_score": 117.65,
       "normalized_y": 0.446339,
       "bbox": {
         "left": 196,
@@ -466,157 +349,176 @@
       },
       "reconstructed": true,
       "original_consensus_text": "“STRAWBERRIES 1 LB 3,99",
-      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one price",
+        "family_candidate_count": 10
+      },
       "component_support": {
         "sku": {
           "value": null,
           "support_count": 0,
-          "average_confidence": null,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
           "examples": []
         },
         "description": {
-          "value": "SALE TRANSACTION",
+          "value": "“STRAWBERRIES 1 LB",
           "source_candidate": "sharpened_psm4",
-          "source_text": "SALE TRANSACTION",
-          "support_count": 1,
-          "confidence": 95.5,
-          "score": 102.9
+          "source_text": "“STRAWBERRIES 1 LB 3,99",
+          "support_count": 9,
+          "confidence": 79.75,
+          "similarity_to_anchor": 1.0,
+          "score": 136.35,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
         },
         "price": {
           "value": "3.99",
           "support_count": 7,
-          "average_confidence": 75.75,
+          "average_confidence": 73.0,
           "examples": [
             {
-              "candidate_id": "grayscale_psm11",
-              "text": "3,99"
-            },
-            {
-              "candidate_id": "grayscale_right_psm11",
-              "text": "3,99"
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "_RSTRANBERRIES. | 1B 3,99"
             },
             {
               "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
               "text": "“STRAWBERRIES 1 LB 3,99"
             },
             {
-              "candidate_id": "otsu_psm11",
-              "text": "3.99"
-            },
-            {
-              "candidate_id": "otsu_right_psm11",
-              "text": "3.99"
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "-RSTRANBERRIES. | 1B 3.99"
             },
             {
               "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
               "text": "~ R-STRAWBERRTES 1 LB $3.99 |G"
             },
             {
+              "candidate_id": "grayscale_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "3,99"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "3.99"
+            },
+            {
               "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
               "text": "$3.99"
             }
-          ]
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
         },
         "tax_code": {
-          "value": "T",
-          "support_count": 1,
-          "average_confidence": 67.38,
-          "examples": [
-            {
-              "candidate_id": "sharpened_psm4",
-              "text": "P 272 T Town Center Ave, Ste 101"
-            }
-          ]
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
         }
       }
     },
     {
       "line_number": 8,
-      "candidate_id": "illumination_psm11",
-      "text": "UFFIN BLUEBERRY F 5.93",
-      "confidence": 84.75,
-      "source_candidate": "illumination_psm11",
-      "image_variant": "illumination",
+      "candidate_id": "grayscale_psm11",
+      "text": "MUFFIN | BLUEBERRY GLUTEN 5.99",
+      "confidence": 85.5,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
       "psm": 11,
-      "support_count": 15,
-      "match_method": "geometry",
-      "line_quality_score": 83.15,
-      "consensus_score": 139.15,
-      "normalized_y": 0.46626,
+      "support_count": 13,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 86.7,
+      "consensus_score": 128.7,
+      "normalized_y": 0.470747,
       "bbox": {
-        "left": 149,
-        "top": 1223,
-        "right": 1091,
-        "bottom": 1375,
-        "width": 942,
-        "height": 152
+        "left": 190,
+        "top": 1222,
+        "right": 806,
+        "bottom": 1401,
+        "width": 616,
+        "height": 179
       },
       "reconstructed": true,
-      "original_consensus_text": "MUFFIN | BLUEBERRY GLUTEN",
-      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
+      "original_consensus_text": "UFFIN BLUEBERRY",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "multiple matching row observations plus independent price support",
+        "family_candidate_count": 13
+      },
       "component_support": {
         "sku": {
           "value": null,
           "support_count": 0,
-          "average_confidence": null,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
           "examples": []
         },
         "description": {
-          "value": "UFFIN BLUEBERRY",
-          "source_candidate": "grayscale_psm11",
-          "source_text": "UFFIN BLUEBERRY",
-          "support_count": 12,
-          "confidence": 85.5,
-          "score": 147.9
+          "value": "MUFFIN | BLUEBERRY GLUTEN",
+          "source_candidate": "illumination_psm11",
+          "source_text": "MUFFIN | BLUEBERRY GLUTEN",
+          "support_count": 13,
+          "confidence": 84.75,
+          "similarity_to_anchor": 0.7895,
+          "score": 156.8658,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
         },
         "price": {
-          "value": "5.93",
+          "value": "5.99",
           "support_count": 4,
-          "average_confidence": 48.35,
+          "average_confidence": 31.25,
           "examples": [
             {
-              "candidate_id": "otsu_psm6",
-              "text": "_ MUFFIN BLUEBERRY GLUTEN 5.93"
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
+              "text": "© MUFFIN BLUEBERRY GLUTEN = $5.99"
             },
             {
-              "candidate_id": "otsu_psm11",
-              "text": "5.93"
+              "candidate_id": "otsu_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "5.99"
             },
             {
-              "candidate_id": "otsu_right_psm11",
-              "text": "5.93"
+              "candidate_id": "illumination_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "$5.99"
             },
             {
-              "candidate_id": "illumination_psm4",
-              "text": "MUFFIN BLUEBERRY GLUTEN = $5.93"
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "$5.99"
             }
-          ]
+          ],
+          "selection_reason": "selected from multiple independent OCR candidates"
         },
         "tax_code": {
-          "value": "F",
-          "support_count": 1,
-          "average_confidence": 30.5,
-          "examples": [
-            {
-              "candidate_id": "grayscale_right_psm6",
-              "text": "f 99"
-            }
-          ]
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
         }
       }
     },
     {
       "line_number": 9,
       "candidate_id": "otsu_psm6",
-      "text": "> PAST EF ROASTED RED PEPPERS $ 2.99",
+      "text": "> PAST EF ROASTED RED PEPPERS 3.29",
       "confidence": 70.5,
       "source_candidate": "otsu_psm6",
       "image_variant": "otsu",
       "psm": 6,
-      "support_count": 14,
-      "match_method": "geometry",
+      "support_count": 8,
+      "match_method": "geometry_plus_text",
       "line_quality_score": 74.1,
-      "consensus_score": 126.1,
+      "consensus_score": 98.6,
       "normalized_y": 0.520459,
       "bbox": {
         "left": 14,
@@ -628,77 +530,80 @@
       },
       "reconstructed": true,
       "original_consensus_text": "» ike ROASTED REO PEPPERS $3.29",
-      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one price",
+        "family_candidate_count": 8
+      },
       "component_support": {
         "sku": {
           "value": null,
           "support_count": 0,
-          "average_confidence": null,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
           "examples": []
         },
         "description": {
-          "value": "> PAST EF ROASTED RED PEPPERS $",
+          "value": "> PAST EF ROASTED RED PEPPERS",
           "source_candidate": "sharpened_psm4",
           "source_text": "> PAST EF ROASTED RED PEPPERS $3.25",
-          "support_count": 7,
+          "support_count": 8,
           "confidence": 77.57,
-          "score": 112.97
+          "similarity_to_anchor": 0.8,
+          "score": 127.17,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
         },
         "price": {
-          "value": "2.99",
-          "support_count": 9,
-          "average_confidence": 65.8,
+          "value": "3.29",
+          "support_count": 6,
+          "average_confidence": 46.5,
           "examples": [
             {
-              "candidate_id": "grayscale_psm11",
-              "text": "$2.99"
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": ": IRE ROASTED REO BEDPERS $3.29"
             },
             {
-              "candidate_id": "grayscale_right_psm6",
-              "text": "$2.99"
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "ss Re ROASTED RED PEPPERS $3.29"
             },
             {
-              "candidate_id": "grayscale_right_psm11",
-              "text": "$2.99"
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "| FuRE ROASTED Rep PEPPERS $3.29"
             },
             {
-              "candidate_id": "sharpened_psm11",
-              "text": "$2.99"
-            },
-            {
-              "candidate_id": "sharpened_right_psm11",
-              "text": "$2.99"
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "} IRE ROASTED REO BEDPERS $3.29"
             },
             {
               "candidate_id": "otsu_psm6",
-              "text": "} STA CHICKPEA FUSILLI $2.99"
+              "candidate_scope": "full",
+              "text": "» ike ROASTED REO PEPPERS $3.29"
             },
             {
-              "candidate_id": "otsu_psm11",
-              "text": "$2.99"
-            },
-            {
-              "candidate_id": "otsu_right_psm6",
-              "text": "$2.99"
-            },
-            {
-              "candidate_id": "otsu_right_psm11",
-              "text": "$2.99"
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
+              "text": "FIRE ROASTED REO PEPPERS = $3.29)"
             }
-          ]
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
         },
         "tax_code": {
           "value": null,
           "support_count": 0,
           "average_confidence": null,
-          "examples": []
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
         }
       }
     },
     {
       "line_number": 10,
       "candidate_id": "sharpened_psm4",
-      "text": "STA CHICKPEA FUSILLI $ T 2.99",
+      "text": "STA CHICKPEA FUSILLI 2.99",
       "confidence": 80.0,
       "source_candidate": "sharpened_psm4",
       "image_variant": "sharpened",
@@ -706,7 +611,7 @@
       "support_count": 13,
       "match_method": "fuzzy",
       "line_quality_score": 86.4,
-      "consensus_score": 134.4,
+      "consensus_score": 128.4,
       "normalized_y": 0.534817,
       "bbox": {
         "left": 229,
@@ -718,95 +623,78 @@
       },
       "reconstructed": true,
       "original_consensus_text": "STA CHICKPEA FUSILLI $2.99",
-      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one price",
+        "family_candidate_count": 9
+      },
       "component_support": {
         "sku": {
           "value": null,
           "support_count": 0,
-          "average_confidence": null,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
           "examples": []
         },
         "description": {
-          "value": "STA CHICKPEA FUSILLI $",
+          "value": "STA CHICKPEA FUSILLI",
           "source_candidate": "sharpened_psm4",
           "source_text": "STA CHICKPEA FUSILLI $2.99",
-          "support_count": 12,
+          "support_count": 9,
           "confidence": 80.0,
-          "score": 140.8
+          "similarity_to_anchor": 1.0,
+          "score": 136.6,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
         },
         "price": {
           "value": "2.99",
-          "support_count": 14,
-          "average_confidence": 66.54,
+          "support_count": 7,
+          "average_confidence": 56.29,
           "examples": [
             {
-              "candidate_id": "grayscale_psm4",
-              "text": "i STA CHICKPEA FUSTLLI $2,99"
-            },
-            {
-              "candidate_id": "grayscale_psm6",
-              "text": "i STA CHICKPEA FUSTLLI $2,99"
-            },
-            {
-              "candidate_id": "grayscale_psm11",
-              "text": "$2.99"
+              "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
+              "text": "STA CHICKPEA FUSILLI $2.99"
             },
             {
               "candidate_id": "grayscale_right_psm6",
+              "candidate_scope": "right_column",
               "text": "$2.99"
             },
             {
               "candidate_id": "grayscale_right_psm11",
-              "text": "$2.99"
-            },
-            {
-              "candidate_id": "sharpened_psm4",
-              "text": "STA CHICKPEA FUSILLI $2.99"
-            },
-            {
-              "candidate_id": "sharpened_psm6",
-              "text": "L STA CHICKPEA FUSILLI $2,99"
-            },
-            {
-              "candidate_id": "sharpened_psm11",
+              "candidate_scope": "right_column",
               "text": "$2.99"
             },
             {
               "candidate_id": "sharpened_right_psm11",
-              "text": "$2.99"
-            },
-            {
-              "candidate_id": "otsu_psm6",
-              "text": "} STA CHICKPEA FUSILLI $2.99"
-            },
-            {
-              "candidate_id": "otsu_psm11",
+              "candidate_scope": "right_column",
               "text": "$2.99"
             },
             {
               "candidate_id": "otsu_right_psm6",
+              "candidate_scope": "right_column",
               "text": "$2.99"
             },
             {
               "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
               "text": "$2.99"
             },
             {
               "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
               "text": "- $2.99"
             }
-          ]
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
         },
         "tax_code": {
-          "value": "T",
-          "support_count": 1,
-          "average_confidence": 67.38,
-          "examples": [
-            {
-              "candidate_id": "sharpened_psm4",
-              "text": "P 272 T Town Center Ave, Ste 101"
-            }
-          ]
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
         }
       }
     },
@@ -819,9 +707,9 @@
       "image_variant": "grayscale",
       "psm": 11,
       "support_count": 15,
-      "match_method": "geometry",
+      "match_method": "geometry_plus_text",
       "line_quality_score": 85.47,
-      "consensus_score": 141.47,
+      "consensus_score": 134.47,
       "normalized_y": 0.598169,
       "bbox": {
         "left": 57,
@@ -832,7 +720,8 @@
         "height": 99
       },
       "reconstructed": false,
-      "reconstruction_reason": "line not classified as a merchandise row"
+      "reconstruction_reason": "known receipt metadata/total/payment row",
+      "row_family_support": 15
     },
     {
       "line_number": 12,
@@ -843,9 +732,9 @@
       "image_variant": "threshold",
       "psm": 11,
       "support_count": 15,
-      "match_method": "geometry",
+      "match_method": "geometry_plus_text",
       "line_quality_score": 97.13,
-      "consensus_score": 153.13,
+      "consensus_score": 146.13,
       "normalized_y": 0.635499,
       "bbox": {
         "left": 55,
@@ -856,146 +745,46 @@
         "height": 95
       },
       "reconstructed": false,
-      "reconstruction_reason": "line not classified as a merchandise row"
+      "reconstruction_reason": "known receipt metadata/total/payment row",
+      "row_family_support": 15
     },
     {
       "line_number": 13,
-      "candidate_id": "grayscale_psm6",
-      "text": "VISA $ 30.24",
-      "confidence": 88.5,
-      "source_candidate": "grayscale_psm6",
-      "image_variant": "grayscale",
-      "psm": 6,
-      "support_count": 15,
-      "match_method": "backbone",
-      "line_quality_score": 93.7,
-      "consensus_score": 149.7,
-      "normalized_y": 0.66565,
+      "candidate_id": "otsu_psm11",
+      "text": "$30.24",
+      "confidence": 93.0,
+      "source_candidate": "otsu_psm11",
+      "image_variant": "otsu",
+      "psm": 11,
+      "support_count": 12,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 97.6,
+      "consensus_score": 136.1,
+      "normalized_y": 0.654882,
       "bbox": {
-        "left": 50,
+        "left": 1566,
         "top": 1783,
-        "right": 1810,
-        "bottom": 1926,
-        "width": 1760,
-        "height": 143
+        "right": 1812,
+        "bottom": 1866,
+        "width": 246,
+        "height": 83
       },
-      "reconstructed": true,
-      "original_consensus_text": "VISA $30.24",
-      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
-      "component_support": {
-        "sku": {
-          "value": null,
-          "support_count": 0,
-          "average_confidence": null,
-          "examples": []
-        },
-        "description": {
-          "value": "VISA $",
-          "source_candidate": "grayscale_psm6",
-          "source_text": "VISA $30.24",
-          "support_count": 4,
-          "confidence": 88.5,
-          "score": 106.9
-        },
-        "price": {
-          "value": "30.24",
-          "support_count": 18,
-          "average_confidence": 77.95,
-          "examples": [
-            {
-              "candidate_id": "grayscale_psm6",
-              "text": "Balance to pay $30.24"
-            },
-            {
-              "candidate_id": "grayscale_psm11",
-              "text": "$30.24"
-            },
-            {
-              "candidate_id": "grayscale_right_psm6",
-              "text": "$30.24"
-            },
-            {
-              "candidate_id": "grayscale_right_psm11",
-              "text": "$30.24"
-            },
-            {
-              "candidate_id": "threshold_psm11",
-              "text": "$30.24"
-            },
-            {
-              "candidate_id": "sharpened_psm4",
-              "text": "$30.24"
-            },
-            {
-              "candidate_id": "sharpened_psm6",
-              "text": "VISA $30.24"
-            },
-            {
-              "candidate_id": "sharpened_psm11",
-              "text": "$30.24"
-            },
-            {
-              "candidate_id": "sharpened_right_psm6",
-              "text": "$30.24"
-            },
-            {
-              "candidate_id": "sharpened_right_psm11",
-              "text": "$30.24"
-            },
-            {
-              "candidate_id": "otsu_psm6",
-              "text": "VISA $30.24"
-            },
-            {
-              "candidate_id": "otsu_psm11",
-              "text": "$30.24"
-            },
-            {
-              "candidate_id": "otsu_right_psm6",
-              "text": "$30.24"
-            },
-            {
-              "candidate_id": "otsu_right_psm11",
-              "text": "$30.24"
-            },
-            {
-              "candidate_id": "illumination_psm6",
-              "text": "VISA $30.24 |"
-            },
-            {
-              "candidate_id": "illumination_psm11",
-              "text": "$30.24"
-            },
-            {
-              "candidate_id": "illumination_right_psm6",
-              "text": "$30.24 |"
-            },
-            {
-              "candidate_id": "illumination_right_psm11",
-              "text": "$30.24"
-            }
-          ]
-        },
-        "tax_code": {
-          "value": null,
-          "support_count": 0,
-          "average_confidence": null,
-          "examples": []
-        }
-      }
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 10
     },
     {
       "line_number": 14,
       "candidate_id": "otsu_psm6",
-      "text": "E PAYMENT CARD PURCHASE TRANSACTION 30.24",
+      "text": "E PAYMENT CARD PURCHASE TRANSACTION",
       "confidence": 83.8,
       "source_candidate": "otsu_psm6",
       "image_variant": "otsu",
       "psm": 6,
       "support_count": 15,
-      "match_method": "geometry",
+      "match_method": "geometry_plus_text",
       "line_quality_score": 86.8,
-      "consensus_score": 142.8,
+      "consensus_score": 135.8,
       "normalized_y": 0.725772,
       "bbox": {
         "left": 82,
@@ -1005,42 +794,9 @@
         "width": 1486,
         "height": 134
       },
-      "reconstructed": true,
-      "original_consensus_text": "E PAYMENT CARD PURCHASE TRANSACTION",
-      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
-      "component_support": {
-        "sku": {
-          "value": null,
-          "support_count": 0,
-          "average_confidence": null,
-          "examples": []
-        },
-        "description": {
-          "value": "E PAYMENT CARD PURCHASE TRANSACTION",
-          "source_candidate": "otsu_psm6",
-          "source_text": "E PAYMENT CARD PURCHASE TRANSACTION",
-          "support_count": 13,
-          "confidence": 83.8,
-          "score": 154.8
-        },
-        "price": {
-          "value": "30.24",
-          "support_count": 1,
-          "average_confidence": 80.0,
-          "examples": [
-            {
-              "candidate_id": "otsu_psm6",
-              "text": "Balance to pay $30.24"
-            }
-          ]
-        },
-        "tax_code": {
-          "value": null,
-          "support_count": 0,
-          "average_confidence": null,
-          "examples": []
-        }
-      }
+      "reconstructed": false,
+      "reconstruction_reason": "known receipt metadata/total/payment row",
+      "row_family_support": 14
     },
     {
       "line_number": 15,
@@ -1051,9 +807,9 @@
       "image_variant": "grayscale",
       "psm": 4,
       "support_count": 14,
-      "match_method": "geometry",
+      "match_method": "geometry_plus_text",
       "line_quality_score": 97.2,
-      "consensus_score": 149.2,
+      "consensus_score": 142.7,
       "normalized_y": 0.760589,
       "bbox": {
         "left": 567,
@@ -1064,7 +820,8 @@
         "height": 130
       },
       "reconstructed": false,
-      "reconstruction_reason": "line not classified as a merchandise row"
+      "reconstruction_reason": "known receipt metadata/total/payment row",
+      "row_family_support": 14
     },
     {
       "line_number": 16,
@@ -1074,10 +831,10 @@
       "source_candidate": "threshold_psm11",
       "image_variant": "threshold",
       "psm": 11,
-      "support_count": 13,
-      "match_method": "geometry",
+      "support_count": 10,
+      "match_method": "geometry_plus_text",
       "line_quality_score": 96.2,
-      "consensus_score": 144.2,
+      "consensus_score": 127.7,
       "normalized_y": 0.822685,
       "bbox": {
         "left": 47,
@@ -1088,7 +845,8 @@
         "height": 100
       },
       "reconstructed": false,
-      "reconstruction_reason": "line not classified as a merchandise row"
+      "reconstruction_reason": "known receipt metadata/total/payment row",
+      "row_family_support": 10
     },
     {
       "line_number": 17,
@@ -1098,10 +856,10 @@
       "source_candidate": "otsu_psm11",
       "image_variant": "otsu",
       "psm": 11,
-      "support_count": 13,
-      "match_method": "geometry",
+      "support_count": 11,
+      "match_method": "geometry_plus_text",
       "line_quality_score": 97.2,
-      "consensus_score": 145.2,
+      "consensus_score": 132.2,
       "normalized_y": 0.844221,
       "bbox": {
         "left": 1034,
@@ -1112,7 +870,8 @@
         "height": 88
       },
       "reconstructed": false,
-      "reconstruction_reason": "line not classified as a merchandise row"
+      "reconstruction_reason": "known receipt metadata/total/payment row",
+      "row_family_support": 11
     }
   ],
   "candidate_ranking": [
@@ -1359,6 +1118,6 @@
   ],
   "provenance": {
     "candidates_file": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_candidates/IMG_0255_ocr_candidates.json",
-    "rule": "OCR output is reconstructed only from actual Tesseract observations. Spatial row alignment may combine description, SKU, price, and tax evidence from different OCR candidates when their normalized vertical positions agree. Exact SKU matches override ordinary fuzzy alignment. No external product lookup or spelling correction is performed."
+    "rule": "All output remains OCR-derived. A full-receipt observation may join another observation only through exact SKU agreement or close physical-row geometry plus textual agreement. Right-column observations can contribute only price/tax evidence at the same narrow row position. SKU values cannot be imported into rows that lacked a SKU in the selected full-receipt observation. Components with insufficient support are omitted rather than guessed."
   }
 }

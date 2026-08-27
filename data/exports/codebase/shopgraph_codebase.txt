@@ -26,6 +26,7 @@ shopping_analysis/
         export_codebase.py
         image_preprocessing.py
         main.py
+        ocr_benchmark_evaluator.py
         utils_main.py
         DataBaseBuilder/
             __init__.py
@@ -59,7 +60,7 @@ shopping_analysis/
 
 ================================================================================
 
-Generated: 2026-08-27 11:52:27.549989
+Generated: 2026-08-27 14:28:39.559147
 Root: /Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis
 Mode: LLM-clean export
 Excluded: receipt images, OCR JSON, datasets, databases, logs, caches
@@ -72,18 +73,67 @@ Excluded: receipt images, OCR JSON, datasets, databases, logs, caches
 FILE: INSTALL.txt
 ================================================================================
 
-ShopGraph - Safe Perspective Validation Update
+ShopGraph - Pre-Populated Correction Input Update
+
+PURPOSE
+
+When using:
+
+    2. Correct Columns
+
+the correction prompt now begins with the current parser guess already
+inserted into the editable terminal input.
+
+BEFORE
+
+    Current Product: SALE TRANSACTION
+    Enter corrected Product:
+
+AFTER
+
+    Current Product: SALE TRANSACTION
+    Enter corrected Product: SALE TRANSACTION
+
+The text after the prompt is editable.
+
+The user can:
+
+- press Enter immediately to keep the current value,
+- move through/edit the existing value,
+- or replace it completely.
+
+This behavior applies to normal editable fields such as:
+
+- Product
+- Price
+- Store Number
+- Date
+- Six-Digit SKU
+
+The existing Publix Tax Code choice menu remains unchanged. If the user
+chooses its custom-value option, that custom text prompt is also pre-populated
+with the current Tax Code.
+
+IMPLEMENTATION
+
+The update uses Python's built-in readline support to insert the current value
+into the interactive terminal buffer before input() begins.
+
+No new pip dependency is required.
+
+INSTALL
 
 Replace only:
 
-    capabilities/OCRAcquisitionPipeline/perspective_correction.py
+    utils/DataBaseBuilder/data_base_builder_main.py
 
-This update validates candidate geometry before perspective warping and validates
-the resulting image afterward. If the candidate is unsafe or produces a blank /
-near-blank result, the code writes the good cropped receipt to the normal
-perspective output path and continues the OCR pipeline.
+No other ShopGraph files need to change.
 
-No other files need to change.
+RUN
+
+    python3 main.py
+
+Then use Data Base Builder normally.
 
 
 ================================================================================
@@ -152,12 +202,87 @@ from capabilities.OCRAcquisitionPipeline.session_state import (
 )
 
 
-MATCH_THRESHOLD = 0.58
-EXTRA_LINE_MIN_SUPPORT = 2
+# ---------------------------------------------------------------------------
+# CONSERVATIVE CONSENSUS SETTINGS
+# ---------------------------------------------------------------------------
+
+MATCH_THRESHOLD = 0.72
+
+# A row may be geometrically near another OCR observation, but geometry alone
+# is NEVER enough to merge text/components. Textual or SKU agreement is also
+# required.
+MAX_ROW_CENTER_DISTANCE = 0.014
+MIN_ROW_TEXT_SIMILARITY = 0.48
+MIN_DESCRIPTION_SIMILARITY = 0.50
+
+# Components not already present in the selected full-receipt line require
+# independent support. A single observation is accepted only for a SKU-anchored
+# merchandise row when that observation is very high confidence.
+MIN_COMPONENT_SUPPORT = 2
+SINGLE_OBSERVATION_MIN_CONFIDENCE = 92.0
+
 SKU_PATTERN = re.compile(r"(?<!\d)(\d{6})(?!\d)")
 PRICE_PATTERN = re.compile(r"(?<!\d)(\d+[.,]\d{2})(?!\d)")
-TAX_PATTERN = re.compile(r"\b(FA|FB|NA|NB)\b", re.IGNORECASE)
+TAX_PATTERN = re.compile(
+    r"(?<![A-Za-z])(FA|FB|NA|NB|TLF|TF|LF|F|T)(?![A-Za-z])",
+    re.IGNORECASE,
+)
+GARBAGE_TOKEN_PATTERN = re.compile(r"^[^A-Za-z0-9]+$")
 
+# These are receipt sections / metadata, not merchandise. These checks happen
+# BEFORE SKU detection so an authorization/reference number can never become a
+# product SKU merely because it happens to contain six digits.
+NON_MERCHANDISE_TERMS = (
+    "subtotal",
+    "total tax",
+    "amount due",
+    "balance to pay",
+    "credit card",
+    "visa credit",
+    "visa debit",
+    "auth code",
+    "auth trace",
+    "auth/trace",
+    "reference",
+    "customer copy",
+    "sale transaction",
+    "purchase transaction",
+    "payment card",
+    "items in transaction",
+    "items in trans",
+    "approved",
+    "entrymode",
+    "entry mode",
+    "aid ",
+    "tsi ",
+    "store manager",
+    "your cashier",
+    "sign up",
+    "thank you",
+    "change due",
+    "cash tendered",
+)
+
+ADDRESS_HINTS = (
+    " ave",
+    " avenue",
+    " blvd",
+    " boulevard",
+    " road",
+    " rd",
+    " street",
+    " st ",
+    " highway",
+    " hwy",
+    "melbourne",
+    "indian harbour",
+    "town center",
+)
+
+
+# ---------------------------------------------------------------------------
+# BASIC HELPERS
+# ---------------------------------------------------------------------------
 
 def _load_json(path: Path) -> dict:
     with path.open("r", encoding="utf-8") as file:
@@ -165,8 +290,8 @@ def _load_json(path: Path) -> dict:
 
 
 def _normalize_line(text: str) -> str:
-    text = text.lower()
-    text = re.sub(r"[^a-z0-9]+", " ", text)
+    text = text.lower().replace(",", ".")
+    text = re.sub(r"[^a-z0-9.]+", " ", text)
     return " ".join(text.split())
 
 
@@ -174,29 +299,27 @@ def _tokens(text: str) -> set[str]:
     return set(_normalize_line(text).split())
 
 
-def _extract_skus(text: str) -> set[str]:
-    return set(SKU_PATTERN.findall(text))
+def _extract_skus(text: str) -> list[str]:
+    return SKU_PATTERN.findall(text)
 
 
 def _extract_prices(text: str) -> list[str]:
-    return PRICE_PATTERN.findall(text)
+    return [
+        value.replace(",", ".")
+        for value in PRICE_PATTERN.findall(text)
+    ]
 
 
 def _extract_tax_codes(text: str) -> list[str]:
-    return [match.upper() for match in TAX_PATTERN.findall(text)]
+    return [
+        value.upper()
+        for value in TAX_PATTERN.findall(text)
+    ]
 
 
 def _shared_sku(left: str, right: str) -> str | None:
-    shared = _extract_skus(left) & _extract_skus(right)
-
-    if not shared:
-        return None
-
-    return sorted(shared)[0]
-
-
-def _same_sku_line(left: str, right: str) -> bool:
-    return _shared_sku(left, right) is not None
+    shared = set(_extract_skus(left)) & set(_extract_skus(right))
+    return sorted(shared)[0] if shared else None
 
 
 def _line_similarity(left: str, right: str) -> float:
@@ -212,74 +335,98 @@ def _line_similarity(left: str, right: str) -> float:
         right_norm,
     ).ratio()
 
-    left_tokens = _tokens(left)
-    right_tokens = _tokens(right)
-
+    left_tokens = set(left_norm.split())
+    right_tokens = set(right_norm.split())
     union = left_tokens | right_tokens
+
     token_score = (
         len(left_tokens & right_tokens) / len(union)
         if union
         else 0.0
     )
 
-    left_numbers = set(
-        re.findall(r"\b\d{4,}\b", left_norm)
-    )
-    right_numbers = set(
-        re.findall(r"\b\d{4,}\b", right_norm)
-    )
-
-    numeric_anchor = (
-        1.0
-        if left_numbers & right_numbers
-        else 0.0
-    )
-
     score = (
-        sequence_score * 0.55
+        sequence_score * 0.70
         + token_score * 0.30
-        + numeric_anchor * 0.15
     )
 
-    if _same_sku_line(left, right):
-        score = max(score, 0.90)
+    if _shared_sku(left, right):
+        score = max(score, 0.96)
 
     return min(score, 1.0)
+
+
+def _garbage_penalty(text: str) -> float:
+    tokens = text.split()
+
+    if not tokens:
+        return 20.0
+
+    penalty = 0.0
+
+    if len(tokens) == 1 and len(tokens[0]) <= 2:
+        penalty += 12.0
+
+    punctuation_only = sum(
+        1
+        for token in tokens
+        if GARBAGE_TOKEN_PATTERN.match(token)
+    )
+    penalty += punctuation_only * 4.0
+
+    alnum_chars = sum(
+        1
+        for character in text
+        if character.isalnum()
+    )
+
+    if alnum_chars < 2:
+        penalty += 10.0
+
+    return penalty
 
 
 def _candidate_metrics(candidate: dict) -> dict:
     result = candidate["result"]
     metrics = result["metrics"]
 
-    mean_confidence = (
-        metrics["mean_word_confidence"]
-        or 0.0
-    )
-
-    recognized_word_count = (
-        metrics["recognized_word_count"]
-    )
-
-    low_confidence_rate = (
-        metrics["low_confidence_rate"]
-    )
-
+    mean_confidence = metrics["mean_word_confidence"] or 0.0
+    recognized_word_count = metrics["recognized_word_count"]
+    low_confidence_rate = metrics["low_confidence_rate"]
     raw_text = result["raw_text"]
 
-    digit_count = len(
-        re.findall(r"\d", raw_text)
-    )
+    price_like_count = len(_extract_prices(raw_text))
+    sku_count = len(_extract_skus(raw_text))
 
-    price_like_count = len(
-        PRICE_PATTERN.findall(raw_text)
-    )
+    plausible_lines = 0
+    garbage_lines = 0
+
+    for line in result.get("text", []):
+        text = line.get("text", "").strip()
+
+        if not text:
+            continue
+
+        confidence = line.get("confidence") or 0.0
+
+        if (
+            confidence >= 45
+            and len(text) >= 4
+            and _garbage_penalty(text) < 10
+        ):
+            plausible_lines += 1
+
+        if _garbage_penalty(text) >= 10:
+            garbage_lines += 1
 
     score = (
         mean_confidence
-        + min(recognized_word_count, 250) * 0.03
-        + min(digit_count, 300) * 0.01
-        + min(price_like_count, 80) * 0.08
-        - low_confidence_rate * 15.0
+        + min(plausible_lines, 100) * 0.18
+        + min(price_like_count, 80) * 0.45
+        + min(sku_count, 80) * 0.25
+        - low_confidence_rate * 28.0
+        - min(garbage_lines, 100) * 0.12
+        - max(recognized_word_count - 700, 0) * 0.01
     )
 
     return {
@@ -287,47 +434,46 @@ def _candidate_metrics(candidate: dict) -> dict:
         "mean_word_confidence": mean_confidence,
         "recognized_word_count": recognized_word_count,
         "low_confidence_rate": low_confidence_rate,
-        "digit_count": digit_count,
         "price_like_count": price_like_count,
+        "sku_count": sku_count,
+        "plausible_line_count": plausible_lines,
+        "garbage_line_count": garbage_lines,
     }
 
 
-def _line_quality(line: dict) -> float:
-    text = line["text"]
-
-    confidence = line.get("confidence")
-
-    if confidence is None:
-        confidence = 0.0
-
-    token_count = len(text.split())
-    digit_count = len(re.findall(r"\d", text))
-    price_count = len(_extract_prices(text))
-    sku_count = len(_extract_skus(text))
-    tax_marker_count = len(_extract_tax_codes(text))
+def _line_quality(record: dict) -> float:
+    text = record["text"]
+    confidence = record.get("confidence") or 0.0
 
     return (
         float(confidence)
-        + min(token_count, 14) * 0.55
-        + min(digit_count, 16) * 0.22
-        + price_count * 3.0
-        + sku_count * 2.0
-        + tax_marker_count * 1.5
+        + min(len(text.split()), 12) * 0.6
+        + len(_extract_prices(text)) * 4.0
+        + len(_extract_skus(text)) * 3.0
+        + len(_extract_tax_codes(text)) * 1.5
+        - _garbage_penalty(text)
     )
 
 
-def _build_line_records(
-    candidates: list[dict],
-) -> list[dict]:
+# ---------------------------------------------------------------------------
+# OCR RECORDS / GEOMETRY
+# ---------------------------------------------------------------------------
+
+def _build_records(candidates: list[dict]) -> list[dict]:
     records = []
 
     for candidate in candidates:
-        candidate_id = candidate["candidate_id"]
-        variant = candidate["image_variant"]
-        psm = candidate["psm"]
+        result = candidate["result"]
+        image_height = result.get(
+            "image",
+            {},
+        ).get(
+            "height",
+            1,
+        ) or 1
 
         for index, line in enumerate(
-            candidate["result"]["text"]
+            result.get("text", [])
         ):
             text = line.get("text", "").strip()
 
@@ -336,205 +482,86 @@ def _build_line_records(
 
             records.append(
                 {
-                    "candidate_id": candidate_id,
-                    "image_variant": variant,
-                    "psm": psm,
+                    "candidate_id": candidate["candidate_id"],
+                    "candidate_scope": candidate.get(
+                        "candidate_scope",
+                        "full",
+                    ),
+                    "image_variant": candidate["image_variant"],
+                    "psm": candidate["psm"],
                     "candidate_line_index": index,
                     "text": text,
                     "confidence": line.get("confidence"),
-                    "skus": sorted(_extract_skus(text)),
+                    "normalized_y": line.get("normalized_y"),
+                    "normalized_x": line.get("normalized_x"),
+                    "bbox": line.get("bbox"),
+                    "words": line.get("words", []),
+                    "image_height": image_height,
+                    "skus": _extract_skus(text),
+                    "prices": _extract_prices(text),
+                    "tax_codes": _extract_tax_codes(text),
                 }
             )
 
     return records
 
 
-def _best_match(
-    target_text: str,
-    records: list[dict],
-    excluded_candidate_id: str | None = None,
-) -> tuple[dict | None, float, str]:
-    eligible_records = []
+def _row_center_distance(
+    left: dict,
+    right: dict,
+) -> float | None:
+    left_y = left.get("normalized_y")
+    right_y = right.get("normalized_y")
 
-    for record in records:
-        if (
-            excluded_candidate_id is not None
-            and record["candidate_id"]
-            == excluded_candidate_id
-        ):
-            continue
+    if left_y is None or right_y is None:
+        return None
 
-        eligible_records.append(record)
+    return abs(float(left_y) - float(right_y))
 
-    sku_matches = []
 
-    for record in eligible_records:
-        shared_sku = _shared_sku(
-            target_text,
-            record["text"],
-        )
-
-        if shared_sku is None:
-            continue
-
-        similarity = _line_similarity(
-            target_text,
-            record["text"],
-        )
-
-        quality = _line_quality(record)
-
-        sku_matches.append(
-            (
-                record,
-                similarity,
-                quality,
-            )
-        )
-
-    if sku_matches:
-        sku_matches.sort(
-            key=lambda item: (
-                item[2],
-                item[1],
-                len(item[0]["text"]),
-            ),
-            reverse=True,
-        )
-
-        record, similarity, _ = sku_matches[0]
-
-        return (
-            record,
-            similarity,
-            "sku",
-        )
-
-    best_record = None
-    best_score = 0.0
-
-    for record in eligible_records:
-        score = _line_similarity(
-            target_text,
-            record["text"],
-        )
-
-        if score > best_score:
-            best_record = record
-            best_score = score
-
-    return (
-        best_record,
-        best_score,
-        "fuzzy",
+def _same_physical_row(
+    left: dict,
+    right: dict,
+) -> bool:
+    distance = _row_center_distance(
+        left,
+        right,
     )
 
+    if distance is None:
+        return False
 
-def _support_for_line(
-    line: dict,
-    candidates: list[dict],
-) -> tuple[int, list[dict]]:
-    supporting = []
+    # Small OCR lines receive a narrow band. Large PSM bounding boxes do not
+    # get permission to swallow neighboring rows; the tolerance stays capped.
+    left_bbox = left.get("bbox") or {}
+    right_bbox = right.get("bbox") or {}
 
-    for candidate in candidates:
-        if (
-            candidate["candidate_id"]
-            == line["candidate_id"]
-        ):
-            continue
-
-        candidate_records = []
-
-        for index, candidate_line in enumerate(
-            candidate["result"]["text"]
-        ):
-            candidate_text = candidate_line.get(
-                "text",
-                "",
-            ).strip()
-
-            if not candidate_text:
-                continue
-
-            candidate_records.append(
-                {
-                    "candidate_id": candidate[
-                        "candidate_id"
-                    ],
-                    "image_variant": candidate[
-                        "image_variant"
-                    ],
-                    "psm": candidate["psm"],
-                    "candidate_line_index": index,
-                    "text": candidate_text,
-                    "confidence": candidate_line.get(
-                        "confidence"
-                    ),
-                }
-            )
-
-        best, similarity, method = _best_match(
-            line["text"],
-            candidate_records,
-        )
-
-        if best is None:
-            continue
-
-        if (
-            method != "sku"
-            and similarity < MATCH_THRESHOLD
-        ):
-            continue
-
-        supporting.append(
-            {
-                "candidate_id": candidate[
-                    "candidate_id"
-                ],
-                "similarity": round(
-                    similarity,
-                    4,
-                ),
-                "match_method": method,
-                "text": best["text"],
-            }
-        )
-
-    return (
-        1 + len(supporting),
-        supporting,
+    left_height = (
+        float(left_bbox.get("height", 0))
+        / float(left.get("image_height", 1) or 1)
+    )
+    right_height = (
+        float(right_bbox.get("height", 0))
+        / float(right.get("image_height", 1) or 1)
     )
 
+    natural_tolerance = max(
+        0.0035,
+        min(
+            MAX_ROW_CENTER_DISTANCE,
+            max(left_height, right_height) * 0.40,
+        ),
+    )
 
-def _description_without_components(
-    text: str,
-    sku: str,
-) -> str:
-    """
-    Remove fields that can be independently reconstructed.
+    return distance <= natural_tolerance
 
-    The returned description remains OCR-derived. This function does not
-    spell-correct or normalize words.
-    """
+
+def _description_without_components(text: str) -> str:
     working = text
 
-    working = re.sub(
-        rf"(?<!\d){re.escape(sku)}(?!\d)",
-        " ",
-        working,
-        count=1,
-    )
-
-    working = PRICE_PATTERN.sub(
-        " ",
-        working,
-    )
-
-    working = TAX_PATTERN.sub(
-        " ",
-        working,
-    )
+    working = SKU_PATTERN.sub(" ", working)
+    working = PRICE_PATTERN.sub(" ", working)
+    working = TAX_PATTERN.sub(" ", working)
 
     working = re.sub(
         r"\s+",
@@ -542,30 +569,300 @@ def _description_without_components(
         working,
     ).strip()
 
-    working = working.strip(
-        " -:;,.|_~'\"()[]{}"
+    return working.strip(
+        " -:;,.|_~'\"()[]{}$"
     )
 
-    return working
+
+def _description_similarity(
+    left: dict,
+    right: dict,
+) -> float:
+    left_description = _description_without_components(
+        left["text"]
+    )
+    right_description = _description_without_components(
+        right["text"]
+    )
+
+    if not left_description or not right_description:
+        return 0.0
+
+    return SequenceMatcher(
+        None,
+        _normalize_line(left_description),
+        _normalize_line(right_description),
+    ).ratio()
 
 
-def _component_vote(
-    observations: list[dict],
-    value_getter,
-) -> tuple[str | None, dict]:
+def _strong_row_match(
+    anchor: dict,
+    record: dict,
+) -> tuple[bool, float, str]:
     """
-    Vote on a component using one vote per OCR candidate.
+    Determine whether two FULL-receipt OCR lines are observations of the same
+    physical receipt row.
 
-    Repeated observations from the same candidate do not increase support.
+    Geometry alone is intentionally insufficient.
     """
-    by_value: dict[str, dict] = {}
+    shared_sku = _shared_sku(
+        anchor["text"],
+        record["text"],
+    )
 
-    for observation in observations:
-        value = value_getter(observation)
+    if shared_sku:
+        return True, 1.0, "sku"
 
-        if not value:
+    line_similarity = _line_similarity(
+        anchor["text"],
+        record["text"],
+    )
+
+    if not _same_physical_row(
+        anchor,
+        record,
+    ):
+        return False, line_similarity, "different_row"
+
+    description_similarity = _description_similarity(
+        anchor,
+        record,
+    )
+
+    if (
+        line_similarity >= MIN_ROW_TEXT_SIMILARITY
+        or description_similarity
+        >= MIN_DESCRIPTION_SIMILARITY
+    ):
+        return (
+            True,
+            max(
+                line_similarity,
+                description_similarity,
+            ),
+            "geometry_plus_text",
+        )
+
+    return False, line_similarity, "geometry_only_rejected"
+
+
+def _row_family(
+    anchor: dict,
+    all_records: list[dict],
+) -> list[dict]:
+    """
+    Full-receipt observations that are credibly the same row as anchor.
+    """
+    family = []
+
+    for record in all_records:
+        if record["candidate_scope"] != "full":
             continue
 
+        if record["candidate_id"] == anchor["candidate_id"]:
+            if (
+                record["candidate_line_index"]
+                == anchor.get(
+                    "candidate_line_index"
+                )
+            ):
+                family.append(record)
+            continue
+
+        matched, _, _ = _strong_row_match(
+            anchor,
+            record,
+        )
+
+        if matched:
+            family.append(record)
+
+    if not family:
+        family.append(anchor)
+
+    return family
+
+
+# ---------------------------------------------------------------------------
+# COMPONENT EVIDENCE
+# ---------------------------------------------------------------------------
+
+def _component_word_observations(
+    record: dict,
+    component: str,
+) -> list[dict]:
+    observations = []
+
+    words = record.get("words", [])
+
+    for word in words:
+        word_text = str(
+            word.get("text", "")
+        ).strip()
+
+        if not word_text:
+            continue
+
+        if component == "price":
+            values = _extract_prices(word_text)
+        elif component == "sku":
+            values = _extract_skus(word_text)
+        elif component == "tax_code":
+            values = _extract_tax_codes(word_text)
+        else:
+            values = []
+
+        for value in values:
+            observations.append(
+                {
+                    "value": value,
+                    "candidate_id": record["candidate_id"],
+                    "candidate_scope": record["candidate_scope"],
+                    "confidence": word.get(
+                        "confidence",
+                        record.get("confidence"),
+                    ),
+                    "normalized_y": word.get(
+                        "normalized_y",
+                        record.get("normalized_y"),
+                    ),
+                    "normalized_x": word.get(
+                        "normalized_x",
+                        record.get("normalized_x"),
+                    ),
+                    "source_text": record["text"],
+                }
+            )
+
+    # Tesseract occasionally creates a valid component across punctuation that
+    # is easier to recover from the complete line than from a single word.
+    if component == "price":
+        line_values = _extract_prices(record["text"])
+    elif component == "sku":
+        line_values = _extract_skus(record["text"])
+    elif component == "tax_code":
+        line_values = _extract_tax_codes(record["text"])
+    else:
+        line_values = []
+
+    existing_values = {
+        observation["value"]
+        for observation in observations
+    }
+
+    for value in line_values:
+        if value in existing_values:
+            continue
+
+        observations.append(
+            {
+                "value": value,
+                "candidate_id": record["candidate_id"],
+                "candidate_scope": record["candidate_scope"],
+                "confidence": record.get("confidence"),
+                "normalized_y": record.get("normalized_y"),
+                "normalized_x": record.get("normalized_x"),
+                "source_text": record["text"],
+            }
+        )
+
+    return observations
+
+
+def _observation_near_anchor(
+    observation: dict,
+    anchor: dict,
+) -> bool:
+    observation_y = observation.get("normalized_y")
+    anchor_y = anchor.get("normalized_y")
+
+    if observation_y is None or anchor_y is None:
+        return False
+
+    distance = abs(
+        float(observation_y)
+        - float(anchor_y)
+    )
+
+    bbox = anchor.get("bbox") or {}
+    image_height = float(
+        anchor.get("image_height", 1)
+        or 1
+    )
+
+    anchor_height = (
+        float(bbox.get("height", 0))
+        / image_height
+    )
+
+    tolerance = max(
+        0.0035,
+        min(
+            0.010,
+            anchor_height * 0.40,
+        ),
+    )
+
+    return distance <= tolerance
+
+
+def _component_evidence(
+    anchor: dict,
+    family: list[dict],
+    all_records: list[dict],
+    component: str,
+) -> list[dict]:
+    evidence = []
+
+    family_ids = {
+        (
+            record["candidate_id"],
+            record["candidate_line_index"],
+        )
+        for record in family
+    }
+
+    # Full-receipt component evidence comes ONLY from the same row family.
+    for record in family:
+        evidence.extend(
+            _component_word_observations(
+                record,
+                component,
+            )
+        )
+
+    # Right-column OCR is allowed to contribute only price/tax evidence and
+    # only when the component itself is tightly aligned with the anchor row.
+    if component in (
+        "price",
+        "tax_code",
+    ):
+        for record in all_records:
+            if record["candidate_scope"] != "right_column":
+                continue
+
+            for observation in _component_word_observations(
+                record,
+                component,
+            ):
+                if _observation_near_anchor(
+                    observation,
+                    anchor,
+                ):
+                    evidence.append(
+                        observation
+                    )
+
+    return evidence
+
+
+def _rank_component_values(
+    evidence: list[dict],
+) -> list[dict]:
+    by_value: dict[str, dict] = {}
+
+    for observation in evidence:
+        value = observation["value"]
         candidate_id = observation["candidate_id"]
 
         entry = by_value.setdefault(
@@ -590,24 +887,34 @@ def _component_vote(
         )
 
         if confidence is not None:
-            entry["confidence_sum"] += float(
-                confidence
-            )
-            entry["confidence_count"] += 1
+            try:
+                confidence_float = float(
+                    confidence
+                )
+            except (
+                TypeError,
+                ValueError,
+            ):
+                confidence_float = 0.0
+
+            if confidence_float >= 0:
+                entry["confidence_sum"] += (
+                    confidence_float
+                )
+                entry["confidence_count"] += 1
 
         entry["examples"].append(
             {
                 "candidate_id": candidate_id,
-                "text": observation["text"],
+                "candidate_scope": observation.get(
+                    "candidate_scope",
+                    "full",
+                ),
+                "text": observation[
+                    "source_text"
+                ],
             }
         )
-
-    if not by_value:
-        return None, {
-            "support_count": 0,
-            "average_confidence": None,
-            "examples": [],
-        }
 
     ranked = []
 
@@ -615,7 +922,6 @@ def _component_vote(
         support_count = len(
             entry["candidate_ids"]
         )
-
         average_confidence = (
             entry["confidence_sum"]
             / entry["confidence_count"]
@@ -624,71 +930,249 @@ def _component_vote(
         )
 
         ranked.append(
-            (
-                support_count,
-                average_confidence,
-                len(value),
-                value,
-                entry,
-            )
+            {
+                "value": value,
+                "support_count": support_count,
+                "average_confidence": round(
+                    average_confidence,
+                    2,
+                ),
+                "examples": entry["examples"],
+            }
         )
 
     ranked.sort(
-        reverse=True
+        key=lambda item: (
+            item["support_count"],
+            item["average_confidence"],
+        ),
+        reverse=True,
     )
 
-    (
-        support_count,
-        average_confidence,
-        _,
-        selected_value,
-        entry,
-    ) = ranked[0]
+    return ranked
 
-    return selected_value, {
-        "support_count": support_count,
-        "average_confidence": round(
-            average_confidence,
-            2,
+
+def _select_component(
+    anchor: dict,
+    family: list[dict],
+    all_records: list[dict],
+    component: str,
+    existing_values: list[str],
+    allow_single_high_confidence: bool,
+) -> tuple[str | None, dict]:
+    evidence = _component_evidence(
+        anchor=anchor,
+        family=family,
+        all_records=all_records,
+        component=component,
+    )
+
+    ranked = _rank_component_values(
+        evidence
+    )
+
+    empty_meta = {
+        "support_count": 0,
+        "average_confidence": None,
+        "examples": [],
+        "selection_reason": (
+            "no reliable OCR evidence"
         ),
-        "examples": entry["examples"],
     }
 
+    if not ranked:
+        if existing_values:
+            return (
+                existing_values[0],
+                {
+                    **empty_meta,
+                    "selection_reason": (
+                        "kept value already present "
+                        "in selected full-receipt line"
+                    ),
+                },
+            )
+
+        return None, empty_meta
+
+    # If the selected full-receipt line already contains exactly one value,
+    # preservation is preferred. Another value must have materially stronger
+    # independent evidence before it can replace it.
+    if len(existing_values) == 1:
+        existing = existing_values[0]
+
+        existing_rank = next(
+            (
+                item
+                for item in ranked
+                if item["value"] == existing
+            ),
+            None,
+        )
+
+        best = ranked[0]
+
+        if (
+            best["value"] != existing
+            and best["support_count"]
+            >= max(
+                MIN_COMPONENT_SUPPORT + 1,
+                (
+                    existing_rank[
+                        "support_count"
+                    ]
+                    if existing_rank
+                    else 1
+                ) + 2,
+            )
+        ):
+            return (
+                best["value"],
+                {
+                    **best,
+                    "selection_reason": (
+                        "alternate OCR value had "
+                        "materially stronger support"
+                    ),
+                },
+            )
+
+        if existing_rank is not None:
+            return (
+                existing,
+                {
+                    **existing_rank,
+                    "selection_reason": (
+                        "preserved value already present "
+                        "in selected full-receipt line"
+                    ),
+                },
+            )
+
+        return (
+            existing,
+            {
+                **empty_meta,
+                "selection_reason": (
+                    "preserved value already present "
+                    "in selected full-receipt line"
+                ),
+            },
+        )
+
+    best = ranked[0]
+
+    if best["support_count"] >= MIN_COMPONENT_SUPPORT:
+        return (
+            best["value"],
+            {
+                **best,
+                "selection_reason": (
+                    "selected from multiple independent "
+                    "OCR candidates"
+                ),
+            },
+        )
+
+    if (
+        allow_single_high_confidence
+        and best["average_confidence"]
+        >= SINGLE_OBSERVATION_MIN_CONFIDENCE
+    ):
+        return (
+            best["value"],
+            {
+                **best,
+                "selection_reason": (
+                    "single very-high-confidence observation "
+                    "accepted for strongly anchored row"
+                ),
+            },
+        )
+
+    return (
+        None,
+        {
+            **best,
+            "selection_reason": (
+                "evidence rejected because support "
+                "was too weak"
+            ),
+        },
+    )
+
+
+# ---------------------------------------------------------------------------
+# DESCRIPTION CONSENSUS
+# ---------------------------------------------------------------------------
 
 def _best_description(
-    observations: list[dict],
-    sku: str,
+    anchor: dict,
+    family: list[dict],
 ) -> tuple[str, dict]:
-    """
-    Pick a product description independently from price/tax.
+    anchor_description = (
+        _description_without_components(
+            anchor["text"]
+        )
+    )
 
-    The description must come verbatim from one OCR candidate after
-    removing the SKU, price, and tax components from that same OCR line.
-    """
     candidates = []
 
-    for observation in observations:
-        description = _description_without_components(
-            observation["text"],
-            sku,
+    for observation in family:
+        description = (
+            _description_without_components(
+                observation["text"]
+            )
         )
 
         if not description:
             continue
 
+        if anchor_description:
+            similarity_to_anchor = (
+                SequenceMatcher(
+                    None,
+                    _normalize_line(
+                        anchor_description
+                    ),
+                    _normalize_line(
+                        description
+                    ),
+                ).ratio()
+            )
+        else:
+            similarity_to_anchor = 0.0
+
+        # For SKU-anchored rows, OCR may badly damage the anchor description,
+        # so exact SKU agreement is allowed to rescue it.
+        sku_anchor = bool(
+            _shared_sku(
+                anchor["text"],
+                observation["text"],
+            )
+        )
+
+        if (
+            anchor_description
+            and similarity_to_anchor < 0.42
+            and not sku_anchor
+        ):
+            continue
+
         support = 1
 
-        for other in observations:
+        for other in family:
             if (
                 other["candidate_id"]
-                == observation["candidate_id"]
+                == observation[
+                    "candidate_id"
+                ]
             ):
                 continue
 
             other_description = (
                 _description_without_components(
-                    other["text"],
-                    sku,
+                    other["text"]
                 )
             )
 
@@ -698,26 +1182,29 @@ def _best_description(
             similarity = SequenceMatcher(
                 None,
                 _normalize_line(description),
-                _normalize_line(other_description),
+                _normalize_line(
+                    other_description
+                ),
             ).ratio()
 
-            if similarity >= 0.62:
+            if similarity >= 0.64:
                 support += 1
 
         confidence = observation.get(
             "confidence"
-        )
-
-        if confidence is None:
-            confidence = 0.0
+        ) or 0.0
 
         score = (
             support * 5.0
             + float(confidence)
             + min(
                 len(description.split()),
-                8,
-            ) * 1.5
+                10,
+            ) * 1.2
+            + similarity_to_anchor * 8.0
+            - _garbage_penalty(
+                description
+            )
         )
 
         candidates.append(
@@ -731,16 +1218,33 @@ def _best_description(
                 ],
                 "confidence": confidence,
                 "support_count": support,
+                "similarity_to_anchor": round(
+                    similarity_to_anchor,
+                    4,
+                ),
                 "score": score,
             }
         )
 
     if not candidates:
-        return "", {
-            "source_candidate": None,
-            "support_count": 0,
-            "score": 0.0,
-        }
+        return (
+            anchor_description,
+            {
+                "source_candidate": anchor[
+                    "candidate_id"
+                ],
+                "source_text": anchor["text"],
+                "support_count": 1,
+                "confidence": anchor.get(
+                    "confidence"
+                ),
+                "score": 0.0,
+                "selection_reason": (
+                    "kept selected full-receipt "
+                    "description"
+                ),
+            },
+        )
 
     candidates.sort(
         key=lambda item: (
@@ -752,148 +1256,319 @@ def _best_description(
 
     selected = candidates[0]
 
-    return selected["description"], {
-        "source_candidate": selected[
-            "source_candidate"
-        ],
-        "source_text": selected[
-            "source_text"
-        ],
-        "support_count": selected[
-            "support_count"
-        ],
-        "confidence": selected[
-            "confidence"
-        ],
-        "score": round(
-            selected["score"],
-            4,
-        ),
-    }
+    return (
+        selected["description"],
+        {
+            "source_candidate": selected[
+                "source_candidate"
+            ],
+            "source_text": selected[
+                "source_text"
+            ],
+            "support_count": selected[
+                "support_count"
+            ],
+            "confidence": selected[
+                "confidence"
+            ],
+            "similarity_to_anchor": selected[
+                "similarity_to_anchor"
+            ],
+            "score": round(
+                selected["score"],
+                4,
+            ),
+            "selection_reason": (
+                "best description among strongly "
+                "matched full-receipt row observations"
+            ),
+        },
+    )
 
 
-def _component_observations_for_sku(
-    sku: str,
+# ---------------------------------------------------------------------------
+# MERCHANDISE CLASSIFICATION
+# ---------------------------------------------------------------------------
+
+def _contains_non_merchandise_term(
+    text: str,
+) -> bool:
+    normalized = _normalize_line(text)
+
+    return any(
+        term in normalized
+        for term in NON_MERCHANDISE_TERMS
+    )
+
+
+def _looks_like_address_or_header(
+    text: str,
+) -> bool:
+    lowered = " " + text.lower() + " "
+
+    if any(
+        hint in lowered
+        for hint in ADDRESS_HINTS
+    ):
+        return True
+
+    # US-style phone number.
+    if re.search(
+        r"\b\d{3}[-.) ]\d{3}[- ]\d{4}\b",
+        text,
+    ):
+        return True
+
+    return False
+
+
+def _alphabetic_character_count(
+    text: str,
+) -> int:
+    return sum(
+        1
+        for character in text
+        if character.isalpha()
+    )
+
+
+def _looks_like_merchandise_row(
+    anchor: dict,
+    family: list[dict],
     all_records: list[dict],
-) -> list[dict]:
-    return [
-        record
-        for record in all_records
-        if sku in record.get(
-            "skus",
-            []
+) -> tuple[bool, str]:
+    text = anchor["text"]
+
+    # Metadata rules always beat SKU/price heuristics.
+    if _contains_non_merchandise_term(
+        text
+    ):
+        return (
+            False,
+            "known receipt metadata/total/payment row",
         )
-    ]
 
+    if _looks_like_address_or_header(
+        text
+    ):
+        return (
+            False,
+            "address/header-like row",
+        )
 
-def _reconstruct_product_line(
-    base_line: dict,
-    all_records: list[dict],
-) -> dict:
-    skus = sorted(
-        _extract_skus(
-            base_line["text"]
+    description = (
+        _description_without_components(
+            text
         )
     )
 
-    if len(skus) != 1:
-        return {
-            **base_line,
-            "reconstructed": False,
-            "reconstruction_reason": (
-                "line does not contain exactly one six-digit SKU"
-            ),
-        }
+    if (
+        _alphabetic_character_count(
+            description
+        )
+        < 3
+    ):
+        return (
+            False,
+            "insufficient product-like text",
+        )
 
-    sku = skus[0]
+    anchor_skus = _extract_skus(text)
+    anchor_prices = _extract_prices(text)
 
-    observations = (
-        _component_observations_for_sku(
-            sku,
+    if len(anchor_skus) == 1:
+        return (
+            True,
+            "selected full-receipt line contains one SKU",
+        )
+
+    if len(anchor_prices) == 1:
+        return (
+            True,
+            "selected full-receipt line contains one price",
+        )
+
+    # A price missing from the chosen line can still be recovered, but only
+    # when the same textual row is independently observed and the price has
+    # multiple-candidate support.
+    price_evidence = _component_evidence(
+        anchor=anchor,
+        family=family,
+        all_records=all_records,
+        component="price",
+    )
+    ranked_prices = _rank_component_values(
+        price_evidence
+    )
+
+    full_family_candidates = {
+        record["candidate_id"]
+        for record in family
+        if record["candidate_scope"] == "full"
+    }
+
+    if (
+        len(full_family_candidates) >= 2
+        and ranked_prices
+        and ranked_prices[0][
+            "support_count"
+        ] >= MIN_COMPONENT_SUPPORT
+    ):
+        return (
+            True,
+            "multiple matching row observations plus "
+            "independent price support",
+        )
+
+    return (
+        False,
+        "no sufficiently supported merchandise evidence",
+    )
+
+
+# ---------------------------------------------------------------------------
+# CONSERVATIVE ROW RECONSTRUCTION
+# ---------------------------------------------------------------------------
+
+def _reconstruct_row(
+    base_line: dict,
+    all_records: list[dict],
+) -> dict:
+    family = _row_family(
+        base_line,
+        all_records,
+    )
+
+    merchandise, classification_reason = (
+        _looks_like_merchandise_row(
+            base_line,
+            family,
             all_records,
         )
     )
 
-    if not observations:
+    if not merchandise:
         return {
             **base_line,
             "reconstructed": False,
             "reconstruction_reason": (
-                "no matching SKU observations"
+                classification_reason
+            ),
+            "row_family_support": len(
+                {
+                    record["candidate_id"]
+                    for record in family
+                }
             ),
         }
 
-    description, description_meta = (
-        _best_description(
-            observations,
-            sku,
+    existing_skus = _extract_skus(
+        base_line["text"]
+    )
+    existing_prices = _extract_prices(
+        base_line["text"]
+    )
+    existing_tax_codes = (
+        _extract_tax_codes(
+            base_line["text"]
         )
     )
 
-    price, price_meta = _component_vote(
-        observations,
-        lambda observation: (
-            _extract_prices(
-                observation["text"]
-            )[0]
-            if _extract_prices(
-                observation["text"]
-            )
-            else None
-        ),
+    sku_anchor = (
+        len(existing_skus) == 1
     )
 
-    tax_code, tax_meta = _component_vote(
-        observations,
-        lambda observation: (
-            _extract_tax_codes(
-                observation["text"]
-            )[0]
-            if _extract_tax_codes(
-                observation["text"]
-            )
-            else None
-        ),
-    )
-
-    parts = [sku]
-
-    if description:
-        parts.append(description)
-
-    if price:
-        parts.append(price)
-
-    if tax_code:
-        parts.append(tax_code)
-
-    reconstructed_text = " ".join(
-        parts
-    )
-
-    component_support = {
-        "sku": {
+    # A SKU is NEVER injected into a line that did not already have one.
+    if sku_anchor:
+        sku = existing_skus[0]
+        sku_meta = {
             "value": sku,
             "support_count": len(
                 {
                     record["candidate_id"]
-                    for record in observations
+                    for record in family
+                    if sku in record.get(
+                        "skus",
+                        [],
+                    )
                 }
             ),
-        },
-        "description": {
-            "value": description or None,
-            **description_meta,
-        },
-        "price": {
-            "value": price,
-            **price_meta,
-        },
-        "tax_code": {
-            "value": tax_code,
-            **tax_meta,
-        },
-    }
+            "selection_reason": (
+                "preserved SKU already present "
+                "in selected full-receipt line"
+            ),
+            "examples": [],
+        }
+    else:
+        sku = None
+        sku_meta = {
+            "value": None,
+            "support_count": 0,
+            "selection_reason": (
+                "SKU injection disabled because "
+                "selected line had no SKU"
+            ),
+            "examples": [],
+        }
+
+    description, description_meta = (
+        _best_description(
+            base_line,
+            family,
+        )
+    )
+
+    price, price_meta = _select_component(
+        anchor=base_line,
+        family=family,
+        all_records=all_records,
+        component="price",
+        existing_values=existing_prices,
+        allow_single_high_confidence=(
+            sku_anchor
+        ),
+    )
+
+    # Tax code is useful for Publix-like rows, but it is not guessed from a
+    # single weak observation.
+    tax_code, tax_meta = _select_component(
+        anchor=base_line,
+        family=family,
+        all_records=all_records,
+        component="tax_code",
+        existing_values=existing_tax_codes,
+        allow_single_high_confidence=False,
+    )
+
+    # Keep Aldi/SKU-style rows clean for the existing Aldi parser, which does
+    # not remove tax codes from product text. For no-SKU rows, preserve the
+    # Publix-style Description + Tax + Price layout.
+    parts = []
+
+    if sku:
+        parts.append(sku)
+
+    if description:
+        parts.append(description)
+
+    if not sku and tax_code:
+        parts.append(tax_code)
+
+    if price:
+        parts.append(price)
+
+    reconstructed_text = (
+        " ".join(parts).strip()
+    )
+
+    if not reconstructed_text:
+        return {
+            **base_line,
+            "reconstructed": False,
+            "reconstruction_reason": (
+                "no reliable components recovered"
+            ),
+        }
 
     return {
         **base_line,
@@ -906,31 +1581,152 @@ def _reconstruct_product_line(
             base_line["text"]
         ),
         "reconstruction_method": (
-            "component consensus by exact six-digit SKU"
+            "conservative receipt-row consensus: "
+            "same-row geometry must also have textual/SKU agreement; "
+            "SKU cannot be injected; price/tax additions require "
+            "independent support; unsupported components remain absent"
         ),
-        "component_support": (
-            component_support
-        ),
+        "row_classification": {
+            "is_merchandise": True,
+            "reason": classification_reason,
+            "family_candidate_count": len(
+                {
+                    record["candidate_id"]
+                    for record in family
+                }
+            ),
+        },
+        "component_support": {
+            "sku": {
+                "value": sku,
+                **sku_meta,
+            },
+            "description": {
+                "value": (
+                    description
+                    or None
+                ),
+                **description_meta,
+            },
+            "price": {
+                "value": price,
+                **price_meta,
+            },
+            "tax_code": {
+                "value": tax_code,
+                **tax_meta,
+            },
+        },
     }
 
 
-def _choose_consensus_line(
-    backbone_line: dict,
-    all_records: list[dict],
+# ---------------------------------------------------------------------------
+# SELECT BEST ACTUAL OCR LINE
+# ---------------------------------------------------------------------------
+
+def _best_row_match(
+    anchor: dict,
+    records: list[dict],
+) -> tuple[dict | None, float, str]:
+    sku_matches = []
+
+    for record in records:
+        shared = _shared_sku(
+            anchor["text"],
+            record["text"],
+        )
+
+        if shared:
+            sku_matches.append(record)
+
+    if sku_matches:
+        sku_matches.sort(
+            key=lambda record: (
+                _line_quality(record),
+                _line_similarity(
+                    anchor["text"],
+                    record["text"],
+                ),
+            ),
+            reverse=True,
+        )
+        return (
+            sku_matches[0],
+            1.0,
+            "sku",
+        )
+
+    strong_matches = []
+
+    for record in records:
+        matched, similarity, method = (
+            _strong_row_match(
+                anchor,
+                record,
+            )
+        )
+
+        if not matched:
+            continue
+
+        strong_matches.append(
+            (
+                record,
+                similarity,
+                method,
+            )
+        )
+
+    if strong_matches:
+        strong_matches.sort(
+            key=lambda item: (
+                item[1],
+                _line_quality(item[0]),
+            ),
+            reverse=True,
+        )
+        return strong_matches[0]
+
+    # Fuzzy fallback is deliberately strict and does not use geometry alone.
+    best_record = None
+    best_score = 0.0
+
+    for record in records:
+        score = _line_similarity(
+            anchor["text"],
+            record["text"],
+        )
+
+        if (
+            score >= MATCH_THRESHOLD
+            and score > best_score
+        ):
+            best_record = record
+            best_score = score
+
+    return (
+        best_record,
+        best_score,
+        "fuzzy",
+    )
+
+
+def _support_for_line(
+    line: dict,
     candidates: list[dict],
-) -> dict:
-    alternatives = [
-        {
-            **backbone_line,
-            "match_to_backbone": 1.0,
-            "match_method": "backbone",
-        }
-    ]
+    all_records: list[dict],
+) -> tuple[int, list[dict]]:
+    supporting = []
 
     for candidate in candidates:
         if (
             candidate["candidate_id"]
-            == backbone_line["candidate_id"]
+            == line["candidate_id"]
+            or candidate.get(
+                "candidate_scope",
+                "full",
+            )
+            != "full"
         ):
             continue
 
@@ -941,44 +1737,97 @@ def _choose_consensus_line(
             == candidate["candidate_id"]
         ]
 
-        (
-            match,
-            similarity,
-            method,
-        ) = _best_match(
-            backbone_line["text"],
-            candidate_records,
+        best, similarity, method = (
+            _best_row_match(
+                line,
+                candidate_records,
+            )
+        )
+
+        if best is None:
+            continue
+
+        supporting.append(
+            {
+                "candidate_id": candidate[
+                    "candidate_id"
+                ],
+                "similarity": round(
+                    similarity,
+                    4,
+                ),
+                "match_method": method,
+                "text": best["text"],
+            }
+        )
+
+    return (
+        1 + len(supporting),
+        supporting,
+    )
+
+
+def _choose_consensus_line(
+    backbone_line: dict,
+    all_records: list[dict],
+    candidates: list[dict],
+) -> dict:
+    alternatives = [
+        {
+            **backbone_line,
+            "match_method": "backbone",
+        }
+    ]
+
+    for candidate in candidates:
+        if (
+            candidate["candidate_id"]
+            == backbone_line["candidate_id"]
+            or candidate.get(
+                "candidate_scope",
+                "full",
+            )
+            != "full"
+        ):
+            continue
+
+        candidate_records = [
+            record
+            for record in all_records
+            if record["candidate_id"]
+            == candidate["candidate_id"]
+        ]
+
+        match, similarity, method = (
+            _best_row_match(
+                backbone_line,
+                candidate_records,
+            )
         )
 
         if match is None:
             continue
 
-        if (
-            method != "sku"
-            and similarity < MATCH_THRESHOLD
-        ):
-            continue
-
-        matched = dict(match)
-        matched["match_to_backbone"] = round(
-            similarity,
-            4,
-        )
-        matched["match_method"] = method
-
         alternatives.append(
-            matched
+            {
+                **match,
+                "match_method": method,
+                "match_to_backbone": round(
+                    similarity,
+                    4,
+                ),
+            }
         )
 
     scored = []
 
     for alternative in alternatives:
-        (
-            support_count,
-            supporting,
-        ) = _support_for_line(
-            alternative,
-            candidates,
+        support_count, supporting = (
+            _support_for_line(
+                alternative,
+                candidates,
+                all_records,
+            )
         )
 
         quality = _line_quality(
@@ -987,9 +1836,7 @@ def _choose_consensus_line(
 
         consensus_score = (
             quality
-            + (
-                support_count - 1
-            ) * 4.0
+            + (support_count - 1) * 3.5
         )
 
         scored.append(
@@ -1019,123 +1866,9 @@ def _choose_consensus_line(
     return scored[0]
 
 
-def _record_matches_consensus(
-    record: dict,
-    consensus_lines: list[dict],
-) -> bool:
-    for consensus in consensus_lines:
-        if _same_sku_line(
-            record["text"],
-            consensus["text"],
-        ):
-            return True
-
-        similarity = _line_similarity(
-            record["text"],
-            consensus["text"],
-        )
-
-        if similarity >= MATCH_THRESHOLD:
-            return True
-
-    return False
-
-
-def _collect_supported_extra_lines(
-    candidates: list[dict],
-    all_records: list[dict],
-    consensus_lines: list[dict],
-) -> list[dict]:
-    extras = []
-    seen_normalized = set()
-
-    for record in all_records:
-        normalized = _normalize_line(
-            record["text"]
-        )
-
-        if (
-            not normalized
-            or normalized in seen_normalized
-        ):
-            continue
-
-        seen_normalized.add(
-            normalized
-        )
-
-        if _record_matches_consensus(
-            record,
-            consensus_lines,
-        ):
-            continue
-
-        (
-            support_count,
-            supporting,
-        ) = _support_for_line(
-            record,
-            candidates,
-        )
-
-        if (
-            support_count
-            < EXTRA_LINE_MIN_SUPPORT
-        ):
-            continue
-
-        extras.append(
-            {
-                **record,
-                "support_count": support_count,
-                "supporting_candidates": supporting,
-                "line_quality_score": round(
-                    _line_quality(record),
-                    4,
-                ),
-            }
-        )
-
-    deduplicated = []
-
-    for extra in sorted(
-        extras,
-        key=lambda item: (
-            item["support_count"],
-            item["line_quality_score"],
-            len(item["text"]),
-        ),
-        reverse=True,
-    ):
-        duplicate = False
-
-        for existing in deduplicated:
-            if _same_sku_line(
-                extra["text"],
-                existing["text"],
-            ):
-                duplicate = True
-                break
-
-            if (
-                _line_similarity(
-                    extra["text"],
-                    existing["text"],
-                )
-                >= MATCH_THRESHOLD
-            ):
-                duplicate = True
-                break
-
-        if duplicate:
-            continue
-
-        deduplicated.append(
-            extra
-        )
-
-    return deduplicated
-
+# ---------------------------------------------------------------------------
+# CANDIDATE RANKING / PIPELINE
+# ---------------------------------------------------------------------------
 
 def _score_and_rank_candidates(
     candidates: list[dict],
@@ -1143,6 +1876,12 @@ def _score_and_rank_candidates(
     scored = []
 
     for candidate in candidates:
+        if not candidate.get(
+            "eligible_for_backbone",
+            True,
+        ):
+            continue
+
         scored.append(
             {
                 "candidate_id": candidate[
@@ -1152,12 +1891,18 @@ def _score_and_rank_candidates(
                     "image_variant"
                 ],
                 "psm": candidate["psm"],
+                "candidate_scope": candidate.get(
+                    "candidate_scope",
+                    "full",
+                ),
                 "comparison_metrics": (
                     _candidate_metrics(
                         candidate
                     )
                 ),
-                "result": candidate["result"],
+                "result": candidate[
+                    "result"
+                ],
             }
         )
 
@@ -1202,7 +1947,6 @@ def compare_and_build_raw_ocr() -> Path | None:
     candidates_data = _load_json(
         candidates_path
     )
-
     candidates = candidates_data[
         "candidates"
     ]
@@ -1218,59 +1962,35 @@ def compare_and_build_raw_ocr() -> Path | None:
         )
     )
 
+    if not ranked_candidates:
+        raise ValueError(
+            "No full-receipt OCR candidate is available "
+            "for the reading-order backbone."
+        )
+
     backbone_ranked = (
         ranked_candidates[0]
     )
-
     backbone_id = backbone_ranked[
         "candidate_id"
     ]
 
-    backbone_candidate = next(
-        candidate
-        for candidate in candidates
-        if candidate["candidate_id"]
-        == backbone_id
+    all_records = _build_records(
+        candidates
     )
 
-    all_records = (
-        _build_line_records(
-            candidates
-        )
-    )
+    backbone_records = [
+        record
+        for record in all_records
+        if record["candidate_id"]
+        == backbone_id
+    ]
 
     consensus_lines = []
     component_reconstructions = 0
+    merchandise_lines = 0
 
-    for line_index, line in enumerate(
-        backbone_candidate["result"]["text"],
-        start=1,
-    ):
-        text = line.get(
-            "text",
-            "",
-        ).strip()
-
-        if not text:
-            continue
-
-        backbone_record = {
-            "candidate_id": backbone_candidate[
-                "candidate_id"
-            ],
-            "image_variant": backbone_candidate[
-                "image_variant"
-            ],
-            "psm": backbone_candidate["psm"],
-            "candidate_line_index": (
-                line_index - 1
-            ),
-            "text": text,
-            "confidence": line.get(
-                "confidence"
-            ),
-        }
-
+    for backbone_record in backbone_records:
         chosen = _choose_consensus_line(
             backbone_record,
             all_records,
@@ -1279,8 +1999,17 @@ def compare_and_build_raw_ocr() -> Path | None:
 
         consensus_line = {
             "line_number": (
-                len(consensus_lines)
-                + 1
+                len(consensus_lines) + 1
+            ),
+            "candidate_id": chosen[
+                "candidate_id"
+            ],
+            "candidate_line_index": chosen.get(
+                "candidate_line_index"
+            ),
+            "candidate_scope": chosen.get(
+                "candidate_scope",
+                "full",
             ),
             "text": chosen["text"],
             "confidence": chosen[
@@ -1306,13 +2035,37 @@ def compare_and_build_raw_ocr() -> Path | None:
             "consensus_score": chosen[
                 "consensus_score"
             ],
+            "normalized_y": chosen.get(
+                "normalized_y"
+            ),
+            "bbox": chosen.get(
+                "bbox"
+            ),
+            "words": chosen.get(
+                "words",
+                [],
+            ),
+            "image_height": chosen.get(
+                "image_height",
+                1,
+            ),
+            "skus": chosen.get(
+                "skus",
+                [],
+            ),
+            "prices": chosen.get(
+                "prices",
+                [],
+            ),
+            "tax_codes": chosen.get(
+                "tax_codes",
+                [],
+            ),
         }
 
-        reconstructed = (
-            _reconstruct_product_line(
-                consensus_line,
-                all_records,
-            )
+        reconstructed = _reconstruct_row(
+            consensus_line,
+            all_records,
         )
 
         if reconstructed.get(
@@ -1320,17 +2073,48 @@ def compare_and_build_raw_ocr() -> Path | None:
         ):
             component_reconstructions += 1
 
+        if reconstructed.get(
+            "row_classification",
+            {},
+        ).get(
+            "is_merchandise"
+        ):
+            merchandise_lines += 1
+
+        # Keep output compact and backwards-friendly. Geometry remains available
+        # at the line level, while full word arrays stay in the candidate file.
+        reconstructed.pop(
+            "words",
+            None,
+        )
+        reconstructed.pop(
+            "image_height",
+            None,
+        )
+        reconstructed.pop(
+            "skus",
+            None,
+        )
+        reconstructed.pop(
+            "prices",
+            None,
+        )
+        reconstructed.pop(
+            "tax_codes",
+            None,
+        )
+        reconstructed.pop(
+            "candidate_scope",
+            None,
+        )
+        reconstructed.pop(
+            "candidate_line_index",
+            None,
+        )
+
         consensus_lines.append(
             reconstructed
         )
-
-    extra_lines = (
-        _collect_supported_extra_lines(
-            candidates,
-            all_records,
-            consensus_lines,
-        )
-    )
 
     source_receipt = Path(
         candidates_data[
@@ -1355,16 +2139,14 @@ def compare_and_build_raw_ocr() -> Path | None:
         "source_receipt": str(
             source_receipt
         ),
-
         "selection_method": (
-            "multi-candidate component consensus: "
-            "best candidate provides reading order; "
-            "exact six-digit SKU aligns product observations; "
-            "description, price, and tax code are selected "
-            "independently from OCR evidence across all candidates; "
-            "non-product lines continue to use ordinary consensus"
+            "conservative multi-variant receipt-row consensus: "
+            "best full-receipt candidate supplies reading order; "
+            "geometry must also have textual/SKU agreement; "
+            "SKU is never injected into a row; price/tax additions "
+            "require independent OCR support; absence is preferred "
+            "to unsupported reconstruction"
         ),
-
         "backbone_candidate": {
             "candidate_id": backbone_ranked[
                 "candidate_id"
@@ -1372,66 +2154,61 @@ def compare_and_build_raw_ocr() -> Path | None:
             "image_variant": backbone_ranked[
                 "image_variant"
             ],
-            "psm": backbone_ranked["psm"],
+            "psm": backbone_ranked[
+                "psm"
+            ],
             "comparison_metrics": (
                 backbone_ranked[
                     "comparison_metrics"
                 ]
             ),
         },
-
         "consensus_summary": {
             "backbone_line_count": len(
-                backbone_candidate[
-                    "result"
-                ]["text"]
+                backbone_records
             ),
             "consensus_line_count": len(
                 consensus_lines
             ),
+            "merchandise_line_count": (
+                merchandise_lines
+            ),
             "component_reconstruction_count": (
                 component_reconstructions
-            ),
-            "supported_extra_line_count": len(
-                extra_lines
             ),
             "candidate_count": len(
                 candidates
             ),
+            "full_candidate_count": sum(
+                1
+                for candidate in candidates
+                if candidate.get(
+                    "candidate_scope",
+                    "full",
+                )
+                == "full"
+            ),
+            "right_column_candidate_count": sum(
+                1
+                for candidate in candidates
+                if candidate.get(
+                    "candidate_scope",
+                    "full",
+                )
+                == "right_column"
+            ),
             "match_threshold": (
                 MATCH_THRESHOLD
             ),
-            "extra_line_min_support": (
-                EXTRA_LINE_MIN_SUPPORT
+            "max_row_center_distance": (
+                MAX_ROW_CENTER_DISTANCE
+            ),
+            "minimum_component_support": (
+                MIN_COMPONENT_SUPPORT
             ),
         },
-
         "raw_text": raw_text,
         "text": consensus_lines,
-
-        "supported_extra_lines": [
-            {
-                "text": line["text"],
-                "confidence": line[
-                    "confidence"
-                ],
-                "source_candidate": line[
-                    "candidate_id"
-                ],
-                "image_variant": line[
-                    "image_variant"
-                ],
-                "psm": line["psm"],
-                "support_count": line[
-                    "support_count"
-                ],
-                "line_quality_score": line[
-                    "line_quality_score"
-                ],
-            }
-            for line in extra_lines
-        ],
-
         "candidate_ranking": [
             {
                 "rank": rank,
@@ -1441,10 +2218,14 @@ def compare_and_build_raw_ocr() -> Path | None:
                 "image_variant": candidate[
                     "image_variant"
                 ],
-                "psm": candidate["psm"],
-                "comparison_metrics": candidate[
-                    "comparison_metrics"
+                "psm": candidate[
+                    "psm"
                 ],
+                "comparison_metrics": (
+                    candidate[
+                        "comparison_metrics"
+                    ]
+                ),
             }
             for rank, candidate
             in enumerate(
@@ -1452,18 +2233,19 @@ def compare_and_build_raw_ocr() -> Path | None:
                 start=1,
             )
         ],
-
         "provenance": {
             "candidates_file": str(
                 candidates_path.resolve()
             ),
             "rule": (
-                "Product lines may be reconstructed from multiple "
-                "Tesseract observations only when they share the same "
-                "exact six-digit SKU. Description text is OCR-derived, "
-                "and price/tax values must each appear in at least one "
-                "actual OCR candidate. No spelling correction or "
-                "external product lookup is performed."
+                "All output remains OCR-derived. A full-receipt "
+                "observation may join another observation only through "
+                "exact SKU agreement or close physical-row geometry plus "
+                "textual agreement. Right-column observations can contribute "
+                "only price/tax evidence at the same narrow row position. "
+                "SKU values cannot be imported into rows that lacked a SKU "
+                "in the selected full-receipt observation. Components with "
+                "insufficient support are omitted rather than guessed."
             ),
         },
     }
@@ -1483,7 +2265,6 @@ def compare_and_build_raw_ocr() -> Path | None:
             ensure_ascii=False,
             indent=2,
         )
-
         file.write("\n")
 
     set_selected_raw_ocr_file(
@@ -1496,7 +2277,7 @@ def compare_and_build_raw_ocr() -> Path | None:
 def run_compare_ocr() -> None:
     print(
         "\n=== Compare OCR Results / "
-        "Build Component Consensus ===\n"
+        "Build Conservative Row Consensus ===\n"
     )
 
     try:
@@ -1510,17 +2291,15 @@ def run_compare_ocr() -> None:
         data = _load_json(
             output_path
         )
-
         backbone = data[
             "backbone_candidate"
         ]
-
         summary = data[
             "consensus_summary"
         ]
 
         print(
-            "[OK] Component consensus OCR "
+            "[OK] Conservative row consensus OCR "
             "built from all candidates."
         )
 
@@ -1537,10 +2316,14 @@ def run_compare_ocr() -> None:
             "\nConsensus:"
             f"\nLines: "
             f"{summary['consensus_line_count']}"
-            "\nProduct lines reconstructed: "
+            "\nMerchandise lines: "
+            f"{summary['merchandise_line_count']}"
+            "\nRows reconstructed: "
             f"{summary['component_reconstruction_count']}"
-            "\nSupported extra lines: "
-            f"{summary['supported_extra_line_count']}"
+            "\nFull OCR candidates: "
+            f"{summary['full_candidate_count']}"
+            "\nRight-column OCR candidates: "
+            f"{summary['right_column_candidate_count']}"
         )
 
         print(
@@ -1611,35 +2394,40 @@ from capabilities.OCRAcquisitionPipeline.session_state import (
 )
 
 
-SCALE_FACTOR = 2.0
+# Normalize every perspective-corrected receipt to approximately the same
+# physical OCR scale instead of blindly enlarging every photo by 2x.
+TARGET_RECEIPT_WIDTH = 2000
+MIN_TARGET_WIDTH = 1600
+MAX_TARGET_WIDTH = 2200
 
 
-def get_enlarged_path(
-    source_path: str | Path,
-) -> Path:
+def get_enlarged_path(source_path: str | Path) -> Path:
     source = Path(source_path)
+    return ENLARGED_DIR / f"{source.stem}_normalized.png"
 
-    return (
-        ENLARGED_DIR
-        / f"{source.stem}_2x.png"
-    )
+
+def _target_width_for(image) -> int:
+    """
+    Use a stable OCR width while avoiding needless enlargement of already
+    high-resolution receipts.
+    """
+    width = image.shape[1]
+
+    if width < MIN_TARGET_WIDTH:
+        return TARGET_RECEIPT_WIDTH
+
+    if width > MAX_TARGET_WIDTH:
+        return TARGET_RECEIPT_WIDTH
+
+    return width
 
 
 def enlarge_receipt(
     perspective_image_path: str | Path,
     source_image_path: str | Path,
 ) -> Path:
-    perspective_path = (
-        Path(perspective_image_path)
-        .expanduser()
-        .resolve()
-    )
-
-    source_path = (
-        Path(source_image_path)
-        .expanduser()
-        .resolve()
-    )
+    perspective_path = Path(perspective_image_path).expanduser().resolve()
+    source_path = Path(source_image_path).expanduser().resolve()
 
     if not perspective_path.exists():
         raise FileNotFoundError(
@@ -1647,41 +2435,45 @@ def enlarge_receipt(
             f"{perspective_path}"
         )
 
-    image = cv2.imread(
-        str(perspective_path)
-    )
-
+    image = cv2.imread(str(perspective_path))
     if image is None:
         raise ValueError(
             "OpenCV could not read perspective-corrected receipt: "
             f"{perspective_path}"
         )
 
-    enlarged = cv2.resize(
+    original_height, original_width = image.shape[:2]
+    target_width = _target_width_for(image)
+    scale = target_width / float(original_width)
+    target_height = max(1, int(round(original_height * scale)))
+
+    interpolation = (
+        cv2.INTER_CUBIC
+        if scale >= 1.0
+        else cv2.INTER_AREA
+    )
+
+    normalized = cv2.resize(
         image,
-        None,
-        fx=SCALE_FACTOR,
-        fy=SCALE_FACTOR,
-        interpolation=cv2.INTER_CUBIC,
+        (target_width, target_height),
+        interpolation=interpolation,
     )
 
-    destination = get_enlarged_path(
-        source_path
-    )
+    destination = get_enlarged_path(source_path)
+    destination.parent.mkdir(parents=True, exist_ok=True)
 
-    destination.parent.mkdir(
-        parents=True,
-        exist_ok=True,
-    )
-
-    if not cv2.imwrite(
-        str(destination),
-        enlarged,
-    ):
+    if not cv2.imwrite(str(destination), normalized):
         raise RuntimeError(
-            "OpenCV could not save enlarged receipt: "
+            "OpenCV could not save normalized receipt: "
             f"{destination}"
         )
+
+    print(
+        "[INFO] Receipt size normalization: "
+        f"{original_width}x{original_height} -> "
+        f"{target_width}x{target_height} "
+        f"(scale {scale:.3f}x)"
+    )
 
     return destination.resolve()
 
@@ -1709,37 +2501,23 @@ def ensure_enlarged_receipt() -> tuple[Path, Path, Path, Path] | None:
             enlarged_path,
         )
 
-    if (
-        source_path is None
-        or not source_path.exists()
-    ):
+    if source_path is None or not source_path.exists():
         source_path = choose_receipt_image()
-
         if source_path is None:
             return None
 
-    if (
-        cropped_path is None
-        or not cropped_path.exists()
-    ):
-        cropped_path = crop_selected_receipt(
-            source_path
-        )
-
+    if cropped_path is None or not cropped_path.exists():
+        cropped_path = crop_selected_receipt(source_path)
         print(
             "\n[OK] Cropped receipt created:"
             f"\n{cropped_path}"
         )
 
-    if (
-        perspective_path is None
-        or not perspective_path.exists()
-    ):
+    if perspective_path is None or not perspective_path.exists():
         perspective_path = correct_selected_receipt(
             source_path=source_path,
             cropped_path=cropped_path,
         )
-
         print(
             "\n[OK] Perspective-corrected receipt created:"
             f"\n{perspective_path}"
@@ -1766,23 +2544,19 @@ def ensure_enlarged_receipt() -> tuple[Path, Path, Path, Path] | None:
 
 
 def run_image_enlargement() -> None:
-    print(
-        "\n=== 2x Enlargement ===\n"
-    )
+    print("\n=== Receipt Size Normalization ===\n")
 
     try:
         selected = ensure_enlarged_receipt()
-
         if selected is None:
             return
 
         enlarged_path = selected[3]
 
         print(
-            "\n[OK] Enlarged receipt created:"
+            "\n[OK] Normalized receipt created:"
             f"\n{enlarged_path}"
         )
-
         print(
             "\nThis receipt is now selected "
             "for OCR Image Variants."
@@ -1793,9 +2567,7 @@ def run_image_enlargement() -> None:
         ValueError,
         RuntimeError,
     ) as error:
-        print(
-            f"\n[ERROR] {error}"
-        )
+        print(f"\n[ERROR] {error}")
 
 
 ================================================================================
@@ -1826,9 +2598,7 @@ def run_ocr_acquisition_pipeline() -> None:
     """
     Run the complete OCR Acquisition Pipeline in order.
 
-    From the user's point of view, this behaves exactly like the current
-    capability option: the receipt is selected once and downstream stages
-    reuse the same session state and generated artifacts.
+    The visible six-stage flow is intentionally retained.
     """
     print(
         "\n=== OCR Acquisition Pipeline ===\n"
@@ -1845,7 +2615,7 @@ def run_ocr_acquisition_pipeline() -> None:
     run_perspective_correction()
 
     print(
-        "\n[3/6] 2x Enlargement"
+        "\n[3/6] Receipt Size Normalization"
     )
     run_image_enlargement()
 
@@ -1855,7 +2625,7 @@ def run_ocr_acquisition_pipeline() -> None:
     run_ocr_image_variants()
 
     print(
-        "\n[5/6] Run OCR - PSM 4 / 6 / 11"
+        "\n[5/6] Run Multi-Variant / Multi-PSM OCR"
     )
     run_ocr()
 
@@ -1886,6 +2656,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import cv2
+import numpy as np
 
 from capabilities.OCRAcquisitionPipeline.constants import OCR_VARIANTS_DIR
 from capabilities.OCRAcquisitionPipeline.image_enlargement import ensure_enlarged_receipt
@@ -1896,68 +2667,70 @@ from capabilities.OCRAcquisitionPipeline.session_state import (
 )
 
 
-def get_grayscale_path(
-    source_path: str | Path,
-) -> Path:
+def _variant_path(source_path: str | Path, suffix: str) -> Path:
     source = Path(source_path)
+    return OCR_VARIANTS_DIR / f"{source.stem}_{suffix}.png"
 
-    return (
-        OCR_VARIANTS_DIR
-        / f"{source.stem}_grayscale.png"
+
+def get_grayscale_path(source_path: str | Path) -> Path:
+    return _variant_path(source_path, "grayscale")
+
+
+def get_threshold_path(source_path: str | Path) -> Path:
+    return _variant_path(source_path, "threshold")
+
+
+def get_ocr_variant_paths(source_path: str | Path) -> dict[str, Path]:
+    """
+    Deterministic paths for every OCR variant. The first two names are retained
+    for compatibility with the existing session-state flow.
+    """
+    return {
+        "grayscale": get_grayscale_path(source_path),
+        "threshold": get_threshold_path(source_path),
+        "sharpened": _variant_path(source_path, "sharpened"),
+        "otsu": _variant_path(source_path, "otsu"),
+        "illumination": _variant_path(source_path, "illumination"),
+    }
+
+
+def _illumination_normalize(gray: np.ndarray) -> np.ndarray:
+    """
+    Remove slow-changing paper/shadow illumination while retaining print.
+    """
+    background = cv2.GaussianBlur(gray, (0, 0), sigmaX=31, sigmaY=31)
+    normalized = cv2.divide(gray, background, scale=255)
+    normalized = cv2.normalize(
+        normalized,
+        None,
+        0,
+        255,
+        cv2.NORM_MINMAX,
     )
-
-
-def get_threshold_path(
-    source_path: str | Path,
-) -> Path:
-    source = Path(source_path)
-
-    return (
-        OCR_VARIANTS_DIR
-        / f"{source.stem}_threshold.png"
-    )
+    return normalized.astype(np.uint8)
 
 
 def generate_variants(
     enlarged_image_path: str | Path,
     source_image_path: str | Path,
 ) -> tuple[Path, Path]:
-    enlarged_path = (
-        Path(enlarged_image_path)
-        .expanduser()
-        .resolve()
-    )
+    enlarged_path = Path(enlarged_image_path).expanduser().resolve()
+    source_path = Path(source_image_path).expanduser().resolve()
 
-    source_path = (
-        Path(source_image_path)
-        .expanduser()
-        .resolve()
-    )
-
-    image = cv2.imread(
-        str(enlarged_path)
-    )
-
+    image = cv2.imread(str(enlarged_path))
     if image is None:
         raise ValueError(
-            "OpenCV could not read enlarged image: "
+            "OpenCV could not read normalized image: "
             f"{enlarged_path}"
         )
 
-    gray = cv2.cvtColor(
-        image,
-        cv2.COLOR_BGR2GRAY,
-    )
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     clahe = cv2.createCLAHE(
         clipLimit=2.0,
         tileGridSize=(8, 8),
     )
-
-    grayscale_enhanced = clahe.apply(
-        gray
-    )
-
+    grayscale_enhanced = clahe.apply(gray)
     grayscale_enhanced = cv2.fastNlMeansDenoising(
         grayscale_enhanced,
         None,
@@ -1975,44 +2748,62 @@ def generate_variants(
         15,
     )
 
-    grayscale_path = get_grayscale_path(
-        source_path
-    )
-
-    threshold_path = get_threshold_path(
-        source_path
-    )
-
-    OCR_VARIANTS_DIR.mkdir(
-        parents=True,
-        exist_ok=True,
-    )
-
-    if not cv2.imwrite(
-        str(grayscale_path),
+    blurred = cv2.GaussianBlur(
         grayscale_enhanced,
-    ):
-        raise RuntimeError(
-            "Could not save grayscale OCR variant."
-        )
+        (0, 0),
+        sigmaX=1.2,
+    )
+    sharpened = cv2.addWeighted(
+        grayscale_enhanced,
+        1.8,
+        blurred,
+        -0.8,
+        0,
+    )
 
-    if not cv2.imwrite(
-        str(threshold_path),
-        thresholded,
-    ):
-        raise RuntimeError(
-            "Could not save threshold OCR variant."
-        )
+    _, otsu = cv2.threshold(
+        grayscale_enhanced,
+        0,
+        255,
+        cv2.THRESH_BINARY + cv2.THRESH_OTSU,
+    )
+
+    illumination_gray = _illumination_normalize(gray)
+    illumination = cv2.adaptiveThreshold(
+        illumination_gray,
+        255,
+        cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+        cv2.THRESH_BINARY,
+        51,
+        11,
+    )
+
+    variants = {
+        "grayscale": grayscale_enhanced,
+        "threshold": thresholded,
+        "sharpened": sharpened,
+        "otsu": otsu,
+        "illumination": illumination,
+    }
+
+    paths = get_ocr_variant_paths(source_path)
+    OCR_VARIANTS_DIR.mkdir(parents=True, exist_ok=True)
+
+    for name, variant in variants.items():
+        path = paths[name]
+        if not cv2.imwrite(str(path), variant):
+            raise RuntimeError(
+                f"Could not save {name} OCR variant."
+            )
 
     return (
-        grayscale_path.resolve(),
-        threshold_path.resolve(),
+        paths["grayscale"].resolve(),
+        paths["threshold"].resolve(),
     )
 
 
 def ensure_ocr_variants() -> tuple[Path, Path, Path, Path, Path, Path] | None:
     selected = ensure_enlarged_receipt()
-
     if selected is None:
         return None
 
@@ -2025,12 +2816,16 @@ def ensure_ocr_variants() -> tuple[Path, Path, Path, Path, Path, Path] | None:
 
     grayscale_path = get_selected_grayscale_image()
     threshold_path = get_selected_threshold_image()
+    all_paths = get_ocr_variant_paths(source_path)
+
+    all_exist = all(path.exists() for path in all_paths.values())
 
     if (
         grayscale_path is not None
         and grayscale_path.exists()
         and threshold_path is not None
         and threshold_path.exists()
+        and all_exist
     ):
         return (
             source_path,
@@ -2041,10 +2836,7 @@ def ensure_ocr_variants() -> tuple[Path, Path, Path, Path, Path, Path] | None:
             threshold_path,
         )
 
-    (
-        grayscale_path,
-        threshold_path,
-    ) = generate_variants(
+    grayscale_path, threshold_path = generate_variants(
         enlarged_image_path=enlarged_path,
         source_image_path=source_path,
     )
@@ -2069,28 +2861,18 @@ def ensure_ocr_variants() -> tuple[Path, Path, Path, Path, Path, Path] | None:
 
 
 def run_ocr_image_variants() -> None:
-    print(
-        "\n=== OCR Image Variants ===\n"
-    )
+    print("\n=== OCR Image Variants ===\n")
 
     try:
         selected = ensure_ocr_variants()
-
         if selected is None:
             return
 
-        grayscale_path = selected[4]
-        threshold_path = selected[5]
+        paths = get_ocr_variant_paths(selected[0])
 
-        print(
-            "\n[OK] Grayscale enhanced variant:"
-            f"\n{grayscale_path}"
-        )
-
-        print(
-            "\n[OK] Thresholded variant:"
-            f"\n{threshold_path}"
-        )
+        print("\n[OK] OCR variants created:")
+        for name, path in paths.items():
+            print(f"- {name}: {path}")
 
         print(
             "\nThese variants are now selected "
@@ -2102,9 +2884,7 @@ def run_ocr_image_variants() -> None:
         ValueError,
         RuntimeError,
     ) as error:
-        print(
-            f"\n[ERROR] {error}"
-        )
+        print(f"\n[ERROR] {error}")
 
 
 ================================================================================
@@ -3463,25 +4243,24 @@ from pathlib import Path
 
 from capabilities.OCRAcquisitionPipeline.tesseract import extract_receipt
 from capabilities.OCRAcquisitionPipeline.constants import OCR_CANDIDATES_DIR
-from capabilities.OCRAcquisitionPipeline.ocr_image_variants import ensure_ocr_variants
-from capabilities.OCRAcquisitionPipeline.session_state import set_selected_ocr_candidates_file
-
-
-PSM_MODES = (
-    4,
-    6,
-    11,
+from capabilities.OCRAcquisitionPipeline.ocr_image_variants import (
+    ensure_ocr_variants,
+    get_ocr_variant_paths,
+)
+from capabilities.OCRAcquisitionPipeline.session_state import (
+    set_selected_ocr_candidates_file,
 )
 
 
-def _save_json(
-    data: dict,
-    output_path: Path,
-) -> None:
-    output_path.parent.mkdir(
-        parents=True,
-        exist_ok=True,
-    )
+PSM_MODES = (4, 6, 11)
+
+# Right-column OCR gives prices/tax markers another chance to be recognized.
+RIGHT_COLUMN_CROP = (0.68, 0.0, 1.0, 1.0)
+RIGHT_COLUMN_PSMS = (6, 11)
+
+
+def _save_json(data: dict, output_path: Path) -> None:
+    output_path.parent.mkdir(parents=True, exist_ok=True)
 
     with output_path.open(
         "w",
@@ -3493,17 +4272,13 @@ def _save_json(
             ensure_ascii=False,
             indent=2,
         )
-
         file.write("\n")
 
 
 def get_ocr_candidates_path(
     source_path: str | Path,
 ) -> Path:
-    source = Path(
-        source_path
-    )
-
+    source = Path(source_path)
     return (
         OCR_CANDIDATES_DIR
         / f"{source.stem}_ocr_candidates.json"
@@ -3512,18 +4287,11 @@ def get_ocr_candidates_path(
 
 def run_all_ocr_candidates() -> Path | None:
     selected = ensure_ocr_variants()
-
     if selected is None:
         return None
 
     source_path = selected[0]
-    grayscale_path = selected[4]
-    threshold_path = selected[5]
-
-    variants = {
-        "grayscale": grayscale_path,
-        "threshold": threshold_path,
-    }
+    variants = get_ocr_variant_paths(source_path)
 
     candidates = []
 
@@ -3537,6 +4305,7 @@ def run_all_ocr_candidates() -> Path | None:
             result = extract_receipt(
                 image_path=image_path,
                 psm=psm,
+                region_name="full",
             )
 
             candidates.append(
@@ -3546,64 +4315,84 @@ def run_all_ocr_candidates() -> Path | None:
                     ),
                     "image_variant": variant_name,
                     "psm": psm,
+                    "candidate_scope": "full",
+                    "eligible_for_backbone": True,
+                    "result": result,
+                }
+            )
+
+        for psm in RIGHT_COLUMN_PSMS:
+            print(
+                "[INFO] OCR "
+                f"{variant_name} / right column / PSM {psm}"
+            )
+
+            result = extract_receipt(
+                image_path=image_path,
+                psm=psm,
+                crop_fraction=RIGHT_COLUMN_CROP,
+                region_name="right_column",
+            )
+
+            candidates.append(
+                {
+                    "candidate_id": (
+                        f"{variant_name}_right_psm{psm}"
+                    ),
+                    "image_variant": variant_name,
+                    "psm": psm,
+                    "candidate_scope": "right_column",
+                    "eligible_for_backbone": False,
                     "result": result,
                 }
             )
 
     output = {
-        "source_receipt": str(
-            source_path
+        "source_receipt": str(source_path),
+        "candidate_count": len(candidates),
+        "full_candidate_count": sum(
+            1 for candidate in candidates
+            if candidate["candidate_scope"] == "full"
         ),
-        "candidate_count": len(
-            candidates
+        "right_column_candidate_count": sum(
+            1 for candidate in candidates
+            if candidate["candidate_scope"] == "right_column"
         ),
         "candidates": candidates,
     }
 
-    output_path = (
-        get_ocr_candidates_path(
-            source_path
-        )
-    )
+    output_path = get_ocr_candidates_path(source_path)
+    _save_json(output, output_path)
 
-    _save_json(
-        output,
-        output_path,
-    )
-
-    set_selected_ocr_candidates_file(
-        output_path
-    )
+    set_selected_ocr_candidates_file(output_path)
 
     return output_path.resolve()
 
 
 def run_ocr() -> None:
-    print(
-        "\n=== Multi-PSM OCR ===\n"
-    )
+    print("\n=== Multi-Variant / Multi-PSM OCR ===\n")
 
     try:
         output_path = run_all_ocr_candidates()
-
         if output_path is None:
             return
+
+        with output_path.open(
+            "r",
+            encoding="utf-8",
+        ) as file:
+            data = json.load(file)
 
         print(
             "\n[OK] OCR candidates created:"
             f"\n{output_path}"
         )
-
         print(
-            "\nGenerated 6 candidates:"
-            "\n- grayscale / PSM 4"
-            "\n- grayscale / PSM 6"
-            "\n- grayscale / PSM 11"
-            "\n- threshold / PSM 4"
-            "\n- threshold / PSM 6"
-            "\n- threshold / PSM 11"
+            "\nGenerated "
+            f"{data['candidate_count']} OCR candidates:"
+            f"\n- {data['full_candidate_count']} full-receipt candidates"
+            f"\n- {data['right_column_candidate_count']} right-column candidates"
         )
-
         print(
             "\nNext step: Compare OCR Results."
         )
@@ -3613,9 +4402,7 @@ def run_ocr() -> None:
         ValueError,
         RuntimeError,
     ) as error:
-        print(
-            f"\n[ERROR] {error}"
-        )
+        print(f"\n[ERROR] {error}")
 
 
 ================================================================================
@@ -3824,41 +4611,31 @@ OCR_ENGINE = "tesseract"
 
 
 def get_tesseract_version() -> str:
-    version = str(
-        pytesseract.get_tesseract_version()
-    )
-
+    version = str(pytesseract.get_tesseract_version())
     return version.splitlines()[0].strip()
 
 
-def _average_confidence(
-    values: list[float],
-) -> float | None:
-    valid_values = [
-        value
-        for value in values
-        if value >= 0
-    ]
-
+def _average_confidence(values: list[float]) -> float | None:
+    valid_values = [value for value in values if value >= 0]
     if not valid_values:
         return None
-
-    return round(
-        sum(valid_values)
-        / len(valid_values),
-        2,
-    )
+    return round(sum(valid_values) / len(valid_values), 2)
 
 
 def extract_receipt(
     image_path: str | Path,
     psm: int,
+    crop_fraction: tuple[float, float, float, float] | None = None,
+    region_name: str = "full",
 ) -> dict:
-    path = (
-        Path(image_path)
-        .expanduser()
-        .resolve()
-    )
+    """
+    OCR a receipt while retaining word and line geometry.
+
+    crop_fraction is (left, top, right, bottom), each in [0, 1].
+    Geometry returned in normalized_x/y coordinates is relative to the
+    FULL input image, even when a region is OCR'd separately.
+    """
+    path = Path(image_path).expanduser().resolve()
 
     if not path.exists():
         raise FileNotFoundError(
@@ -3867,7 +4644,23 @@ def extract_receipt(
 
     config = f"--psm {psm}"
 
-    with Image.open(path) as image:
+    with Image.open(path) as original:
+        original = original.convert("RGB")
+        full_width, full_height = original.size
+
+        if crop_fraction is None:
+            left = 0
+            top = 0
+            right = full_width
+            bottom = full_height
+        else:
+            lf, tf, rf, bf = crop_fraction
+            left = int(round(full_width * lf))
+            top = int(round(full_height * tf))
+            right = int(round(full_width * rf))
+            bottom = int(round(full_height * bf))
+
+        image = original.crop((left, top, right, bottom))
         width, height = image.size
 
         data = pytesseract.image_to_data(
@@ -3883,16 +4676,23 @@ def extract_receipt(
 
     confidences: list[float] = []
 
-    for index, raw_text in enumerate(
-        data["text"]
-    ):
+    for index, raw_text in enumerate(data["text"]):
         if raw_text is None:
             continue
 
         text = raw_text.strip()
-
         if not text:
             continue
+
+        try:
+            confidence = float(data["conf"][index])
+        except (TypeError, ValueError):
+            confidence = -1.0
+
+        word_left = int(data["left"][index]) + left
+        word_top = int(data["top"][index]) + top
+        word_width = int(data["width"][index])
+        word_height = int(data["height"][index])
 
         key = (
             int(data["page_num"][index]),
@@ -3901,30 +4701,31 @@ def extract_receipt(
             int(data["line_num"][index]),
         )
 
-        try:
-            confidence = float(
-                data["conf"][index]
-            )
-        except (
-            TypeError,
-            ValueError,
-        ):
-            confidence = -1.0
-
-        grouped.setdefault(
-            key,
-            [],
-        ).append(
+        grouped.setdefault(key, []).append(
             {
                 "text": text,
                 "confidence": confidence,
+                "left": word_left,
+                "top": word_top,
+                "width": word_width,
+                "height": word_height,
+                "right": word_left + word_width,
+                "bottom": word_top + word_height,
+                "center_x": word_left + word_width / 2.0,
+                "center_y": word_top + word_height / 2.0,
+                "normalized_x": (
+                    (word_left + word_width / 2.0) / full_width
+                    if full_width else 0.0
+                ),
+                "normalized_y": (
+                    (word_top + word_height / 2.0) / full_height
+                    if full_height else 0.0
+                ),
             }
         )
 
         if confidence >= 0:
-            confidences.append(
-                confidence
-            )
+            confidences.append(confidence)
 
     text_lines = []
     raw_lines = []
@@ -3933,56 +4734,60 @@ def extract_receipt(
         grouped.values(),
         start=1,
     ):
-        line_text = " ".join(
-            word["text"]
-            for word in words
+        words = sorted(words, key=lambda word: word["left"])
+
+        line_text = " ".join(word["text"] for word in words)
+        line_confidence = _average_confidence(
+            [word["confidence"] for word in words]
         )
 
-        line_confidence = (
-            _average_confidence(
-                [
-                    word["confidence"]
-                    for word in words
-                ]
-            )
-        )
+        line_left = min(word["left"] for word in words)
+        line_top = min(word["top"] for word in words)
+        line_right = max(word["right"] for word in words)
+        line_bottom = max(word["bottom"] for word in words)
 
-        raw_lines.append(
-            line_text
-        )
+        center_x = (line_left + line_right) / 2.0
+        center_y = (line_top + line_bottom) / 2.0
 
+        raw_lines.append(line_text)
         text_lines.append(
             {
                 "line_number": line_number,
                 "text": line_text,
                 "confidence": line_confidence,
+                "bbox": {
+                    "left": line_left,
+                    "top": line_top,
+                    "right": line_right,
+                    "bottom": line_bottom,
+                    "width": line_right - line_left,
+                    "height": line_bottom - line_top,
+                },
+                "center_x": round(center_x, 2),
+                "center_y": round(center_y, 2),
+                "normalized_x": round(
+                    center_x / full_width if full_width else 0.0,
+                    6,
+                ),
+                "normalized_y": round(
+                    center_y / full_height if full_height else 0.0,
+                    6,
+                ),
+                "words": words,
             }
         )
 
-    raw_text = "\n".join(
-        raw_lines
-    )
-
-    mean_confidence = (
-        _average_confidence(
-            confidences
-        )
-    )
+    raw_text = "\n".join(raw_lines)
+    mean_confidence = _average_confidence(confidences)
 
     low_confidence_count = sum(
-        1
-        for confidence in confidences
+        1 for confidence in confidences
         if confidence < 50
     )
-
-    recognized_word_count = len(
-        confidences
-    )
-
+    recognized_word_count = len(confidences)
     low_confidence_rate = (
         round(
-            low_confidence_count
-            / recognized_word_count,
+            low_confidence_count / recognized_word_count,
             4,
         )
         if recognized_word_count
@@ -3997,9 +4802,15 @@ def extract_receipt(
         "generated_at": datetime.now(
             timezone.utc
         ).isoformat(),
+        "region": {
+            "name": region_name,
+            "crop_fraction": crop_fraction,
+        },
         "image": {
-            "width": width,
-            "height": height,
+            "width": full_width,
+            "height": full_height,
+            "ocr_region_width": width,
+            "ocr_region_height": height,
         },
         "metrics": {
             "mean_word_confidence": mean_confidence,
@@ -4827,6 +5638,344 @@ if __name__ == "__main__":
 
 
 ================================================================================
+FILE: utils/ocr_benchmark_evaluator.py
+================================================================================
+
+from __future__ import annotations
+
+import json
+import re
+from difflib import SequenceMatcher
+from pathlib import Path
+
+from utils.constants import DATA_DIR
+
+
+RAW_OCR_DIR = DATA_DIR / "raw_ocr"
+BENCHMARK_DIR = DATA_DIR / "benchmarks"
+
+SKU_PATTERN = re.compile(r"(?<!\d)(\d{6})(?!\d)")
+PRICE_PATTERN = re.compile(r"(?<!\d)(\d+[.,]\d{2})(?!\d)")
+
+
+def _normalize(value: str) -> str:
+    value = value.lower().replace(",", ".")
+    value = re.sub(r"[^a-z0-9.]+", " ", value)
+    return " ".join(value.split())
+
+
+def _load_json(path: Path) -> dict:
+    with path.open("r", encoding="utf-8") as file:
+        return json.load(file)
+
+
+def _benchmark_files() -> list[Path]:
+    if not BENCHMARK_DIR.exists():
+        return []
+
+    return sorted(
+        path
+        for path in BENCHMARK_DIR.iterdir()
+        if path.is_file()
+        and path.suffix.lower() == ".json"
+    )
+
+
+def _ground_truth_rows(data: dict) -> list[dict]:
+    rows = []
+
+    for line in data.get("text", []):
+        review = line.get("human_review")
+        if not isinstance(review, dict):
+            continue
+
+        rows.append(
+            {
+                "line_number": line.get("line_number"),
+                "sku": review.get("six_digit_sku", "NA"),
+                "product": review.get("product", "NA"),
+                "tax_code": review.get("tax_code", "NA"),
+                "price": review.get("price", "NA"),
+                "text": line.get("text", ""),
+            }
+        )
+
+    return rows
+
+
+def _predicted_rows(data: dict) -> list[dict]:
+    rows = []
+
+    for line in data.get("text", []):
+        text = line.get("text", "")
+        rows.append(
+            {
+                "line_number": line.get("line_number"),
+                "text": text,
+                "normalized": _normalize(text),
+                "sku": (
+                    SKU_PATTERN.findall(text)[0]
+                    if SKU_PATTERN.findall(text)
+                    else None
+                ),
+                "prices": [
+                    price.replace(",", ".")
+                    for price in PRICE_PATTERN.findall(text)
+                ],
+            }
+        )
+
+    return rows
+
+
+def _best_prediction(
+    truth: dict,
+    predictions: list[dict],
+) -> dict | None:
+    if truth["sku"] != "NA":
+        for prediction in predictions:
+            if prediction["sku"] == truth["sku"]:
+                return prediction
+
+    product_norm = _normalize(truth["product"])
+    best = None
+    best_score = 0.0
+
+    for prediction in predictions:
+        score = SequenceMatcher(
+            None,
+            product_norm,
+            prediction["normalized"],
+        ).ratio()
+
+        if score > best_score:
+            best = prediction
+            best_score = score
+
+    if best_score < 0.35:
+        return None
+
+    return best
+
+
+def evaluate_pair(
+    benchmark_path: Path,
+    raw_path: Path,
+) -> dict:
+    benchmark = _load_json(benchmark_path)
+    raw = _load_json(raw_path)
+
+    truth_rows = _ground_truth_rows(benchmark)
+    predictions = _predicted_rows(raw)
+
+    product_exact = 0
+    product_close = 0
+    sku_exact = 0
+    sku_total = 0
+    price_exact = 0
+    price_total = 0
+    matched_rows = 0
+
+    details = []
+
+    for truth in truth_rows:
+        prediction = _best_prediction(
+            truth,
+            predictions,
+        )
+
+        if prediction is None:
+            details.append(
+                {
+                    "truth": truth,
+                    "prediction": None,
+                }
+            )
+            continue
+
+        matched_rows += 1
+
+        truth_product = _normalize(truth["product"])
+        prediction_text = prediction["normalized"]
+
+        if truth_product in prediction_text:
+            product_exact += 1
+
+        product_similarity = SequenceMatcher(
+            None,
+            truth_product,
+            prediction_text,
+        ).ratio()
+
+        if product_similarity >= 0.70:
+            product_close += 1
+
+        if truth["sku"] != "NA":
+            sku_total += 1
+            if prediction["sku"] == truth["sku"]:
+                sku_exact += 1
+
+        if truth["price"] != "NA":
+            price_total += 1
+            if truth["price"] in prediction["prices"]:
+                price_exact += 1
+
+        details.append(
+            {
+                "truth": truth,
+                "prediction": prediction,
+                "product_similarity": round(
+                    product_similarity,
+                    4,
+                ),
+            }
+        )
+
+    total = len(truth_rows)
+
+    return {
+        "benchmark": benchmark_path.name,
+        "raw_ocr": raw_path.name,
+        "receipt_type": benchmark.get(
+            "benchmark",
+            {},
+        ).get(
+            "receipt_type",
+            "Unknown",
+        ),
+        "ground_truth_rows": total,
+        "matched_rows": matched_rows,
+        "matched_row_rate": (
+            round(matched_rows / total, 4)
+            if total else 0.0
+        ),
+        "product_exact": product_exact,
+        "product_exact_rate": (
+            round(product_exact / total, 4)
+            if total else 0.0
+        ),
+        "product_close": product_close,
+        "product_close_rate": (
+            round(product_close / total, 4)
+            if total else 0.0
+        ),
+        "sku_exact": sku_exact,
+        "sku_total": sku_total,
+        "sku_exact_rate": (
+            round(sku_exact / sku_total, 4)
+            if sku_total else None
+        ),
+        "price_exact": price_exact,
+        "price_total": price_total,
+        "price_exact_rate": (
+            round(price_exact / price_total, 4)
+            if price_total else None
+        ),
+        "details": details,
+    }
+
+
+def run_benchmark_evaluator() -> None:
+    print("\n=== OCR Benchmark Evaluator ===\n")
+
+    benchmarks = _benchmark_files()
+
+    if not benchmarks:
+        print(
+            "[ERROR] No JSON benchmarks found in:"
+            f"\n{BENCHMARK_DIR}"
+        )
+        return
+
+    results = []
+
+    for benchmark_path in benchmarks:
+        raw_path = RAW_OCR_DIR / benchmark_path.name
+
+        if not raw_path.exists():
+            print(
+                "[SKIP] No matching raw OCR file:"
+                f"\n{raw_path.name}"
+            )
+            continue
+
+        result = evaluate_pair(
+            benchmark_path,
+            raw_path,
+        )
+        results.append(result)
+
+        print(
+            "\n"
+            + "-" * 60
+            + f"\n{result['receipt_type']} - "
+            f"{benchmark_path.name}"
+        )
+        print(
+            f"Rows matched: "
+            f"{result['matched_rows']}/"
+            f"{result['ground_truth_rows']} "
+            f"({result['matched_row_rate']:.1%})"
+        )
+        print(
+            f"Product exact: "
+            f"{result['product_exact']}/"
+            f"{result['ground_truth_rows']} "
+            f"({result['product_exact_rate']:.1%})"
+        )
+        print(
+            f"Product close >= 70%: "
+            f"{result['product_close']}/"
+            f"{result['ground_truth_rows']} "
+            f"({result['product_close_rate']:.1%})"
+        )
+
+        if result["sku_total"]:
+            print(
+                f"SKU exact: "
+                f"{result['sku_exact']}/"
+                f"{result['sku_total']} "
+                f"({result['sku_exact_rate']:.1%})"
+            )
+
+        if result["price_total"]:
+            print(
+                f"Price exact: "
+                f"{result['price_exact']}/"
+                f"{result['price_total']} "
+                f"({result['price_exact_rate']:.1%})"
+            )
+
+    if not results:
+        print(
+            "\n[ERROR] No benchmark/raw OCR filename pairs "
+            "were available to compare."
+        )
+        return
+
+    output_path = DATA_DIR / "benchmark_results.json"
+
+    with output_path.open(
+        "w",
+        encoding="utf-8",
+    ) as file:
+        json.dump(
+            {
+                "results": results,
+            },
+            file,
+            ensure_ascii=False,
+            indent=2,
+        )
+        file.write("\n")
+
+    print(
+        "\n[OK] Detailed benchmark results created:"
+        f"\n{output_path.resolve()}"
+    )
+
+
+================================================================================
 FILE: utils/utils_main.py
 ================================================================================
 
@@ -4861,17 +6010,18 @@ from utils.clean_ocr_acquisition_pipeline import (
 from utils.DataBaseBuilder.data_base_builder_main import (
     run_data_base_builder_menu,
 )
+from utils.ocr_benchmark_evaluator import (
+    run_benchmark_evaluator,
+)
 
 
 def display_capabilities_menu() -> None:
     print(
         "\n=== ShopGraph Capabilities ===\n"
     )
-
     print(
         "1. OCR Acquisition Pipeline"
     )
-
     print(
         "0. Return to Utilities Menu"
     )
@@ -4887,10 +6037,8 @@ def run_capabilities_menu() -> None:
 
         if option == "1":
             run_ocr_acquisition_pipeline()
-
         elif option == "0":
             return
-
         else:
             print(
                 "\n[ERROR] Invalid option."
@@ -4901,11 +6049,9 @@ def display_capability_sub_tasks_menu() -> None:
     print(
         "\n=== ShopGraph Capability Sub Tasks ===\n"
     )
-
     print(
         "1. OCR Acquisition Pipeline"
     )
-
     print(
         "0. Return to Utilities Menu"
     )
@@ -4915,31 +6061,24 @@ def display_ocr_acquisition_sub_tasks_menu() -> None:
     print(
         "\n=== OCR Acquisition Pipeline - Sub Tasks ===\n"
     )
-
     print(
         "1. Reliable Receipt Detection / Crop"
     )
-
     print(
         "2. Perspective Correction"
     )
-
     print(
-        "3. 2x Enlargement"
+        "3. Receipt Size Normalization"
     )
-
     print(
         "4. Generate OCR Image Variants"
     )
-
     print(
-        "5. Run OCR - PSM 4 / 6 / 11"
+        "5. Run Multi-Variant / Multi-PSM OCR"
     )
-
     print(
         "6. Compare OCR Results / Build Raw OCR JSON"
     )
-
     print(
         "0. Return to Capability Sub Tasks"
     )
@@ -4955,25 +6094,18 @@ def run_ocr_acquisition_sub_tasks_menu() -> None:
 
         if option == "1":
             run_reliable_receipt_crop()
-
         elif option == "2":
             run_perspective_correction()
-
         elif option == "3":
             run_image_enlargement()
-
         elif option == "4":
             run_ocr_image_variants()
-
         elif option == "5":
             run_ocr()
-
         elif option == "6":
             run_compare_ocr()
-
         elif option == "0":
             return
-
         else:
             print(
                 "\n[ERROR] Invalid option."
@@ -4990,10 +6122,8 @@ def run_capability_sub_tasks_menu() -> None:
 
         if option == "1":
             run_ocr_acquisition_sub_tasks_menu()
-
         elif option == "0":
             return
-
         else:
             print(
                 "\n[ERROR] Invalid option."
@@ -5004,15 +6134,15 @@ def display_standalone_utilities_menu() -> None:
     print(
         "\n=== ShopGraph Utilities ===\n"
     )
-
     print(
         "1. Export Clean Codebase"
     )
-
     print(
         "2. Clean OCR Acquisition Pipeline Data"
     )
-
+    print(
+        "3. Evaluate OCR Against Benchmarks"
+    )
     print(
         "0. Return to Utilities Menu"
     )
@@ -5028,13 +6158,12 @@ def run_standalone_utilities_menu() -> None:
 
         if option == "1":
             run_codebase_export()
-
         elif option == "2":
             run_ocr_acquisition_pipeline_cleanup()
-
+        elif option == "3":
+            run_benchmark_evaluator()
         elif option == "0":
             return
-
         else:
             print(
                 "\n[ERROR] Invalid option."
@@ -5045,23 +6174,18 @@ def display_utils_menu() -> None:
     print(
         "\n=== ShopGraph Utilities ===\n"
     )
-
     print(
         "1. Capabilities"
     )
-
     print(
         "2. Capability Sub Tasks"
     )
-
     print(
         "3. Utilities"
     )
-
     print(
         "4. Data Base Builder"
     )
-
     print(
         "0. Return to Main"
     )
@@ -5077,27 +6201,18 @@ def run_utils_menu() -> None:
 
         if option == "1":
             run_capabilities_menu()
-
         elif option == "2":
             run_capability_sub_tasks_menu()
-
         elif option == "3":
             run_standalone_utilities_menu()
-
         elif option == "4":
             run_data_base_builder_menu()
-
         elif option == "0":
             return
-
         else:
             print(
                 "\n[ERROR] Invalid option."
             )
-
-
-if __name__ == "__main__":
-    run_utils_menu()
 
 
 ================================================================================
@@ -5276,6 +6391,7 @@ from __future__ import annotations
 
 from datetime import datetime
 import json
+import readline
 
 from utils.DataBaseBuilder.benchmark_writer import write_corrected_benchmark
 from utils.DataBaseBuilder.excel.purchase_history import (
@@ -5435,6 +6551,40 @@ def _display_line(parser, line: dict, record: PurchaseRecord) -> None:
     print(parser.format_record(record))
 
 
+def _input_with_current_value(
+    prompt: str,
+    current_value: str,
+) -> str:
+    """
+    Display an editable input prompt pre-populated with the current value.
+
+    The user can:
+    - press Enter to keep the current value,
+    - edit part of the current value,
+    - or replace it completely.
+
+    readline is used only for the interactive pre-population behavior.
+    """
+
+    def _prefill() -> None:
+        readline.insert_text(
+            str(current_value)
+        )
+        readline.redisplay()
+
+    readline.set_startup_hook(
+        _prefill
+    )
+
+    try:
+        return input(
+            prompt
+        ).strip()
+
+    finally:
+        readline.set_startup_hook()
+
+
 def _prompt_tax_code(current_value: str) -> str:
     print(f"\nCurrent Tax Code: {current_value}")
     print("\nSelect Tax Code:\n")
@@ -5452,7 +6602,13 @@ def _prompt_tax_code(current_value: str) -> str:
             return PUBLIX_TAX_OPTIONS[option][0]
 
         if option == "7":
-            return input("\nEnter Tax Code: ").strip() or NA
+            return (
+                _input_with_current_value(
+                    "\nEnter Tax Code: ",
+                    current_value,
+                )
+                or NA
+            )
 
         print("\n[ERROR] Invalid option.")
 
@@ -5483,7 +6639,10 @@ def _correct_field(
 
     while True:
         print(f"\nCurrent {label}: {current}")
-        value = input(f"Enter corrected {label}: ").strip()
+        value = _input_with_current_value(
+            f"Enter corrected {label}: ",
+            current,
+        )
         value = value or NA
 
         if field_name == "six_digit_sku":

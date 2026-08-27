@@ -15,7 +15,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 4",
-        "generated_at": "2026-08-27T17:50:04.823042+00:00",
+        "generated_at": "2026-08-27T18:25:28.765256+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -4738,7 +4738,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 6",
-        "generated_at": "2026-08-27T17:50:08.005895+00:00",
+        "generated_at": "2026-08-27T18:25:31.950117+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -15049,7 +15049,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 11",
-        "generated_at": "2026-08-27T17:50:10.409240+00:00",
+        "generated_at": "2026-08-27T18:25:34.357873+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -26846,7 +26846,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 6",
-        "generated_at": "2026-08-27T17:50:11.040397+00:00",
+        "generated_at": "2026-08-27T18:25:34.991827+00:00",
         "region": {
           "name": "right_column",
           "crop_fraction": [
@@ -29848,7 +29848,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 11",
-        "generated_at": "2026-08-27T17:50:11.476450+00:00",
+        "generated_at": "2026-08-27T18:25:35.432738+00:00",
         "region": {
           "name": "right_column",
           "crop_fraction": [
@@ -31455,7 +31455,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 4",
-        "generated_at": "2026-08-27T17:50:13.395055+00:00",
+        "generated_at": "2026-08-27T18:25:37.351978+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -38314,7 +38314,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 6",
-        "generated_at": "2026-08-27T17:50:16.064054+00:00",
+        "generated_at": "2026-08-27T18:25:40.023224+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -47937,7 +47937,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 11",
-        "generated_at": "2026-08-27T17:50:19.603721+00:00",
+        "generated_at": "2026-08-27T18:25:43.559433+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -70311,7 +70311,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 6",
-        "generated_at": "2026-08-27T17:50:20.338036+00:00",
+        "generated_at": "2026-08-27T18:25:44.290659+00:00",
         "region": {
           "name": "right_column",
           "crop_fraction": [
@@ -72858,7 +72858,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 11",
-        "generated_at": "2026-08-27T17:50:21.464268+00:00",
+        "generated_at": "2026-08-27T18:25:45.414734+00:00",
         "region": {
           "name": "right_column",
           "crop_fraction": [
@@ -82149,7 +82149,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 4",
-        "generated_at": "2026-08-27T17:50:23.327700+00:00",
+        "generated_at": "2026-08-27T18:25:47.273867+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -86712,7 +86712,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 6",
-        "generated_at": "2026-08-27T17:50:26.916095+00:00",
+        "generated_at": "2026-08-27T18:25:50.882905+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -97938,7 +97938,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 11",
-        "generated_at": "2026-08-27T17:50:29.408071+00:00",
+        "generated_at": "2026-08-27T18:25:53.387974+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -110092,7 +110092,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 6",
-        "generated_at": "2026-08-27T17:50:30.233929+00:00",
+        "generated_at": "2026-08-27T18:25:54.209753+00:00",
         "region": {
           "name": "right_column",
           "crop_fraction": [
@@ -113317,7 +113317,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 11",
-        "generated_at": "2026-08-27T17:50:30.917336+00:00",
+        "generated_at": "2026-08-27T18:25:54.892242+00:00",
         "region": {
           "name": "right_column",
           "crop_fraction": [
@@ -117605,7 +117605,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 4",
-        "generated_at": "2026-08-27T17:50:32.329728+00:00",
+        "generated_at": "2026-08-27T18:25:56.302955+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -122216,7 +122216,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 6",
-        "generated_at": "2026-08-27T17:50:34.741314+00:00",
+        "generated_at": "2026-08-27T18:25:58.713064+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -131729,7 +131729,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 11",
-        "generated_at": "2026-08-27T17:50:36.660952+00:00",
+        "generated_at": "2026-08-27T18:26:00.647059+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -143540,7 +143540,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 6",
-        "generated_at": "2026-08-27T17:50:37.359966+00:00",
+        "generated_at": "2026-08-27T18:26:01.351454+00:00",
         "region": {
           "name": "right_column",
           "crop_fraction": [
@@ -146910,7 +146910,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 11",
-        "generated_at": "2026-08-27T17:50:37.996258+00:00",
+        "generated_at": "2026-08-27T18:26:01.990865+00:00",
         "region": {
           "name": "right_column",
           "crop_fraction": [
@@ -151226,7 +151226,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 4",
-        "generated_at": "2026-08-27T17:50:40.193926+00:00",
+        "generated_at": "2026-08-27T18:26:04.200588+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -158432,7 +158432,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 6",
-        "generated_at": "2026-08-27T17:50:43.479215+00:00",
+        "generated_at": "2026-08-27T18:26:07.498409+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -170774,7 +170774,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 11",
-        "generated_at": "2026-08-27T17:50:48.528399+00:00",
+        "generated_at": "2026-08-27T18:26:12.567233+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -200844,7 +200844,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 6",
-        "generated_at": "2026-08-27T17:50:50.198891+00:00",
+        "generated_at": "2026-08-27T18:26:14.233724+00:00",
         "region": {
           "name": "right_column",
           "crop_fraction": [
@@ -207350,7 +207350,7 @@
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 11",
-        "generated_at": "2026-08-27T17:50:51.952513+00:00",
+        "generated_at": "2026-08-27T18:26:15.987847+00:00",
         "region": {
           "name": "right_column",
           "crop_fraction": [

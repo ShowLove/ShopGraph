@@ -1,6 +1,6 @@
 {
   "source_receipt": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/current_pic/IMG_0253.JPG",
-  "selection_method": "multi-variant spatial component consensus: best full-receipt candidate provides reading order; rows align by normalized y-coordinate, with exact six-digit SKU as a stronger anchor when present; right-column OCR supplies independent price/tax evidence",
+  "selection_method": "conservative multi-variant receipt-row consensus: best full-receipt candidate supplies reading order; geometry must also have textual/SKU agreement; SKU is never injected into a row; price/tax additions require independent OCR support; absence is preferred to unsupported reconstruction",
   "backbone_candidate": {
     "candidate_id": "otsu_psm4",
     "image_variant": "otsu",
@@ -19,99 +19,54 @@
   "consensus_summary": {
     "backbone_line_count": 23,
     "consensus_line_count": 23,
-    "component_reconstruction_count": 20,
+    "merchandise_line_count": 11,
+    "component_reconstruction_count": 1,
     "candidate_count": 25,
     "full_candidate_count": 15,
     "right_column_candidate_count": 10,
-    "match_threshold": 0.58,
-    "geometry_y_tolerance": 0.012
+    "match_threshold": 0.72,
+    "max_row_center_distance": 0.014,
+    "minimum_component_support": 2
   },
-  "raw_text": "712697 Indian Harbour Place F 0.00\n712697 270 EF Eau Gallie F 0.00\n712697 Indian Harbour Beach F 3.89\n712697 321) 773-2915 F 3.89\n712697 Store Manager: William Morse F 3.89\n712697 Stony Yobaby Pouch Peach F 7.89\n712697 Stony Yobaby Pouch Banana F 7.89\n712697 Sweet Loren's Gf Brownie F 6.99\n712697 Vans Waffle Blueberry Gf F 3.89\n712697 Vans Waffle Blueberry Gf F 3.89\n712697 Chobani 4Pk Hero Batch F 5.65\n712697 Silk Soy Organic Nsa Hg F 6.19\n712697 Silk Soy Organic Nsa Hg F 6.19\n712697 Silk Soy Organic Nsa Hg F 6.19\n712697 Publix Half&Half Hg F 9.89\nSubtotal\nTotal Tax 0.00\n712697 Total F 60.58\n712697 Visa: *8858 F 60.58\nCredit Card\n712697 Auth/Trace: 00549D/ F 6.19\n712697 Reference: 001836758884 F 6.19\n712697 Reference: 001836758884 F 6.19",
+  "raw_text": "Indian Harbour Place\n270 F Eau Gallie BIV\nIndian Harbour Beach, FL 32937 4874\n(321) 773-2915\nStore Manager: William Morse\nStony Yobaby Pouch Peach F 7.89\nStony Yobaby Pouch Banana F 7.89\nSweet Loren's Gf Brownie F 6.99\nVans Waffle Blueberry Gf F 3.89\nVans Waffle Blueberry Gf F 3.89\nChobani 4Pk Hero Batch F 5.65\nSilk Soy Organic Nsa Hg F 6.19\nSilk Soy Organic Nsa Hg F 6.19\nSilk Soy Organic Nsa Hg F 6.19\nPublix Half&Half Hg F 9.89\nSubtotal\nTotal Tax 0.00\nTotal 60.58\nVisa: *8858\nCredit Card\nAuth/Trace: 00549D/712697\nReference: 001836758884\nPIN verifies",
   "text": [
     {
       "line_number": 1,
-      "candidate_id": "sharpened_psm4",
-      "text": "712697 Indian Harbour Place F 0.00",
-      "confidence": 95.0,
-      "source_candidate": "sharpened_psm4",
-      "image_variant": "sharpened",
-      "psm": 4,
+      "candidate_id": "otsu_psm11",
+      "text": "Indian Harbour Place",
+      "confidence": 91.67,
+      "source_candidate": "otsu_psm11",
+      "image_variant": "otsu",
+      "psm": 11,
       "support_count": 13,
-      "match_method": "geometry",
-      "line_quality_score": 96.8,
-      "consensus_score": 144.8,
-      "normalized_y": 0.144574,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 93.47,
+      "consensus_score": 135.47,
+      "normalized_y": 0.144949,
       "bbox": {
-        "left": 724,
+        "left": 574,
         "top": 343,
         "right": 1331,
-        "bottom": 427,
-        "width": 607,
-        "height": 84
+        "bottom": 429,
+        "width": 757,
+        "height": 86
       },
-      "reconstructed": true,
-      "original_consensus_text": "an Harbour Place",
-      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
-      "component_support": {
-        "sku": {
-          "value": "712697",
-          "support_count": 1,
-          "average_confidence": 68.0,
-          "examples": [
-            {
-              "candidate_id": "sharpened_psm4",
-              "text": "Auth/Trace: 00549D/712697 Ctis"
-            }
-          ]
-        },
-        "description": {
-          "value": "Indian Harbour Place",
-          "source_candidate": "otsu_psm11",
-          "source_text": "Indian Harbour Place",
-          "support_count": 12,
-          "confidence": 91.67,
-          "score": 155.27
-        },
-        "price": {
-          "value": "0.00",
-          "support_count": 1,
-          "average_confidence": 95.67,
-          "examples": [
-            {
-              "candidate_id": "sharpened_psm4",
-              "text": "Total Tax 0.00"
-            }
-          ]
-        },
-        "tax_code": {
-          "value": "F",
-          "support_count": 2,
-          "average_confidence": 61.62,
-          "examples": [
-            {
-              "candidate_id": "grayscale_psm6",
-              "text": "Indian Harbour F'Blvd oe"
-            },
-            {
-              "candidate_id": "sharpened_psm4",
-              "text": "Stony Yobaby Pouch Peach F te"
-            }
-          ]
-        }
-      }
+      "reconstructed": false,
+      "reconstruction_reason": "address/header-like row",
+      "row_family_support": 12
     },
     {
       "line_number": 2,
       "candidate_id": "illumination_psm11",
-      "text": "712697 270 EF Eau Gallie F 0.00",
+      "text": "270 F Eau Gallie BIV",
       "confidence": 86.2,
       "source_candidate": "illumination_psm11",
       "image_variant": "illumination",
       "psm": 11,
       "support_count": 13,
-      "match_method": "geometry",
+      "match_method": "geometry_plus_text",
       "line_quality_score": 90.7,
-      "consensus_score": 138.7,
+      "consensus_score": 132.7,
       "normalized_y": 0.171986,
       "bbox": {
         "left": 572,
@@ -121,69 +76,22 @@
         "width": 758,
         "height": 86
       },
-      "reconstructed": true,
-      "original_consensus_text": "270 F Eau Gallie BIV",
-      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
-      "component_support": {
-        "sku": {
-          "value": "712697",
-          "support_count": 1,
-          "average_confidence": 64.5,
-          "examples": [
-            {
-              "candidate_id": "illumination_psm11",
-              "text": "-Auth/Trace: 00949D/712697"
-            }
-          ]
-        },
-        "description": {
-          "value": "270 EF Eau Gallie",
-          "source_candidate": "otsu_psm11",
-          "source_text": "270 EF Eau Gallie",
-          "support_count": 13,
-          "confidence": 83.75,
-          "score": 153.55
-        },
-        "price": {
-          "value": "0.00",
-          "support_count": 1,
-          "average_confidence": 96.0,
-          "examples": [
-            {
-              "candidate_id": "illumination_psm11",
-              "text": "0.00"
-            }
-          ]
-        },
-        "tax_code": {
-          "value": "F",
-          "support_count": 2,
-          "average_confidence": 80.22,
-          "examples": [
-            {
-              "candidate_id": "sharpened_psm11",
-              "text": "970 F Eau Gallie"
-            },
-            {
-              "candidate_id": "illumination_psm11",
-              "text": "270 F Eau Gallie BIV"
-            }
-          ]
-        }
-      }
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 13
     },
     {
       "line_number": 3,
       "candidate_id": "otsu_psm6",
-      "text": "712697 Indian Harbour Beach F 3.89",
+      "text": "Indian Harbour Beach, FL 32937 4874",
       "confidence": 95.5,
       "source_candidate": "otsu_psm6",
       "image_variant": "otsu",
       "psm": 6,
-      "support_count": 15,
-      "match_method": "geometry",
+      "support_count": 14,
+      "match_method": "geometry_plus_text",
       "line_quality_score": 99.1,
-      "consensus_score": 155.1,
+      "consensus_score": 144.6,
       "normalized_y": 0.191889,
       "bbox": {
         "left": 300,
@@ -193,73 +101,22 @@
         "width": 1362,
         "height": 126
       },
-      "reconstructed": true,
-      "original_consensus_text": "Indian Harbour Beach, FL 32937 4874",
-      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
-      "component_support": {
-        "sku": {
-          "value": "712697",
-          "support_count": 1,
-          "average_confidence": 71.0,
-          "examples": [
-            {
-              "candidate_id": "otsu_psm6",
-              "text": "Auth/Trace: 00549D/712697 Ctic"
-            }
-          ]
-        },
-        "description": {
-          "value": "Indian Harbour Beach",
-          "source_candidate": "sharpened_psm11",
-          "source_text": "Indian Harbour Beach,",
-          "support_count": 14,
-          "confidence": 95.67,
-          "score": 169.27
-        },
-        "price": {
-          "value": "3.89",
-          "support_count": 1,
-          "average_confidence": 92.83,
-          "examples": [
-            {
-              "candidate_id": "otsu_psm6",
-              "text": "Vans Waffle Blueberry Gf F 3.89"
-            }
-          ]
-        },
-        "tax_code": {
-          "value": "F",
-          "support_count": 3,
-          "average_confidence": 92.03,
-          "examples": [
-            {
-              "candidate_id": "grayscale_psm11",
-              "text": "Indian Harbour Beach, F"
-            },
-            {
-              "candidate_id": "otsu_psm6",
-              "text": "Stony Yobaby Pouch Peach F 7.89"
-            },
-            {
-              "candidate_id": "otsu_psm11",
-              "text": "Indian Harbour Beach, F"
-            }
-          ]
-        }
-      }
+      "reconstructed": false,
+      "reconstruction_reason": "address/header-like row",
+      "row_family_support": 14
     },
     {
       "line_number": 4,
       "candidate_id": "grayscale_psm6",
-      "text": "712697 321) 773-2915 F 3.89",
+      "text": "(321) 773-2915",
       "confidence": 95.5,
       "source_candidate": "grayscale_psm6",
       "image_variant": "grayscale",
       "psm": 6,
-      "support_count": 13,
-      "match_method": "geometry",
+      "support_count": 12,
+      "match_method": "geometry_plus_text",
       "line_quality_score": 96.7,
-      "consensus_score": 144.7,
+      "consensus_score": 135.2,
       "normalized_y": 0.230943,
       "bbox": {
         "left": 693,
@@ -269,65 +126,22 @@
         "width": 516,
         "height": 90
       },
-      "reconstructed": true,
-      "original_consensus_text": "(321) 773-2915",
-      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
-      "component_support": {
-        "sku": {
-          "value": "712697",
-          "support_count": 1,
-          "average_confidence": 60.67,
-          "examples": [
-            {
-              "candidate_id": "grayscale_psm6",
-              "text": "Auth/Trace: 00549D/712697 Cty"
-            }
-          ]
-        },
-        "description": {
-          "value": "321) 773-2915",
-          "source_candidate": "grayscale_psm6",
-          "source_text": "(321) 773-2915",
-          "support_count": 12,
-          "confidence": 95.5,
-          "score": 157.9
-        },
-        "price": {
-          "value": "3.89",
-          "support_count": 1,
-          "average_confidence": 92.83,
-          "examples": [
-            {
-              "candidate_id": "grayscale_psm6",
-              "text": "Vans Waffle Blueberry Gf F 3.89"
-            }
-          ]
-        },
-        "tax_code": {
-          "value": "F",
-          "support_count": 1,
-          "average_confidence": 45.75,
-          "examples": [
-            {
-              "candidate_id": "grayscale_psm6",
-              "text": "Indian Harbour F'Blvd oe"
-            }
-          ]
-        }
-      }
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 12
     },
     {
       "line_number": 5,
       "candidate_id": "sharpened_psm6",
-      "text": "712697 Store Manager: William Morse F 3.89",
+      "text": "Store Manager: William Morse",
       "confidence": 95.75,
       "source_candidate": "sharpened_psm6",
       "image_variant": "sharpened",
       "psm": 6,
       "support_count": 14,
-      "match_method": "geometry",
+      "match_method": "geometry_plus_text",
       "line_quality_score": 98.15,
-      "consensus_score": 150.15,
+      "consensus_score": 143.65,
       "normalized_y": 0.256853,
       "bbox": {
         "left": 414,
@@ -337,65 +151,22 @@
         "width": 1078,
         "height": 88
       },
-      "reconstructed": true,
-      "original_consensus_text": "Store Manager: William Morse",
-      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
-      "component_support": {
-        "sku": {
-          "value": "712697",
-          "support_count": 1,
-          "average_confidence": 53.67,
-          "examples": [
-            {
-              "candidate_id": "sharpened_psm6",
-              "text": "Auth/Trace: 005490/712697 meee"
-            }
-          ]
-        },
-        "description": {
-          "value": "Store Manager: William Morse",
-          "source_candidate": "sharpened_psm6",
-          "source_text": "Store Manager: William Morse",
-          "support_count": 14,
-          "confidence": 95.75,
-          "score": 170.55
-        },
-        "price": {
-          "value": "3.89",
-          "support_count": 1,
-          "average_confidence": 93.33,
-          "examples": [
-            {
-              "candidate_id": "sharpened_psm6",
-              "text": "Vans Waffle Blueberry Gf F 3.89"
-            }
-          ]
-        },
-        "tax_code": {
-          "value": "F",
-          "support_count": 1,
-          "average_confidence": 91.67,
-          "examples": [
-            {
-              "candidate_id": "sharpened_psm6",
-              "text": "Stony Yobaby Pouch Peach F 7.89"
-            }
-          ]
-        }
-      }
+      "reconstructed": false,
+      "reconstruction_reason": "known receipt metadata/total/payment row",
+      "row_family_support": 14
     },
     {
       "line_number": 6,
       "candidate_id": "sharpened_psm6",
-      "text": "712697 Stony Yobaby Pouch Peach F 7.89",
+      "text": "Stony Yobaby Pouch Peach F 7.89",
       "confidence": 91.67,
       "source_candidate": "sharpened_psm6",
       "image_variant": "sharpened",
       "psm": 6,
       "support_count": 15,
-      "match_method": "geometry",
+      "match_method": "geometry_plus_text",
       "line_quality_score": 100.77,
-      "consensus_score": 156.77,
+      "consensus_score": 149.77,
       "normalized_y": 0.308862,
       "bbox": {
         "left": 137,
@@ -405,137 +176,156 @@
         "width": 1608,
         "height": 105
       },
-      "reconstructed": true,
+      "reconstructed": false,
       "original_consensus_text": "Stony Yobaby Pouch Peach F 7.89",
-      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one price",
+        "family_candidate_count": 15
+      },
       "component_support": {
         "sku": {
-          "value": "712697",
-          "support_count": 1,
-          "average_confidence": 53.67,
-          "examples": [
-            {
-              "candidate_id": "sharpened_psm6",
-              "text": "Auth/Trace: 005490/712697 meee"
-            }
-          ]
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
         },
         "description": {
           "value": "Stony Yobaby Pouch Peach",
           "source_candidate": "illumination_psm11",
           "source_text": "Stony Yobaby Pouch Peach",
-          "support_count": 18,
+          "support_count": 14,
           "confidence": 94.75,
-          "score": 189.55
+          "similarity_to_anchor": 1.0,
+          "score": 177.55,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
         },
         "price": {
           "value": "7.89",
           "support_count": 6,
-          "average_confidence": 83.01,
+          "average_confidence": 82.33,
           "examples": [
             {
               "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
               "text": "Stony Yobaby Pouch Peach F 7.89"
             },
             {
-              "candidate_id": "grayscale_right_psm6",
-              "text": "7.89"
-            },
-            {
               "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
               "text": "Stony Yobaby Pouch Peach F 7.89"
             },
             {
               "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
               "text": "Stony Yobaby Pouch Peach F 7.89"
             },
             {
               "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
               "text": "Stony Yobaby Pouch Peach F 7.89"
             },
             {
               "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
               "text": "Stony Yobaby Pouch Peach F | 7.89 oa"
+            },
+            {
+              "candidate_id": "grayscale_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "7.89"
             }
-          ]
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
         },
         "tax_code": {
           "value": "F",
-          "support_count": 14,
-          "average_confidence": 85.97,
+          "support_count": 13,
+          "average_confidence": 80.69,
           "examples": [
             {
               "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
               "text": "Stony Yobaby Pouch Peach F ee"
             },
             {
               "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
               "text": "Stony Yobaby Pouch Peach F 7.89"
             },
             {
               "candidate_id": "grayscale_psm11",
+              "candidate_scope": "full",
               "text": "Stony Yobaby Pouch Peach F"
             },
             {
               "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
               "text": "Stony Yobaby Pouch Peach F"
             },
             {
               "candidate_id": "threshold_psm11",
+              "candidate_scope": "full",
               "text": "Stony Yobaby Pouch Peach F"
             },
             {
               "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
               "text": "Stony Yobaby Pouch Peach F te"
             },
             {
               "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
               "text": "Stony Yobaby Pouch Peach F 7.89"
             },
             {
               "candidate_id": "sharpened_psm11",
+              "candidate_scope": "full",
               "text": "Stony Yobaby Pouch Peach F"
             },
             {
               "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
               "text": "Stony Yobaby Pouch Peach F 7.89"
             },
             {
               "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
               "text": "Stony Yobaby Pouch Peach F 7.89"
             },
             {
               "candidate_id": "otsu_psm11",
+              "candidate_scope": "full",
               "text": "Stony Yobaby Pouch Peach F"
             },
             {
               "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
               "text": "Stony Yobaby Pouch Peach F"
             },
             {
               "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
               "text": "Stony Yobaby Pouch Peach F | 7.89 oa"
-            },
-            {
-              "candidate_id": "illumination_psm11",
-              "text": "F"
             }
-          ]
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
         }
       }
     },
     {
       "line_number": 7,
       "candidate_id": "grayscale_psm6",
-      "text": "712697 Stony Yobaby Pouch Banana F 7.89",
+      "text": "Stony Yobaby Pouch Banana F 7.89",
       "confidence": 93.33,
       "source_candidate": "grayscale_psm6",
       "image_variant": "grayscale",
       "psm": 6,
       "support_count": 14,
-      "match_method": "geometry",
+      "match_method": "geometry_plus_text",
       "line_quality_score": 102.43,
-      "consensus_score": 154.43,
+      "consensus_score": 147.93,
       "normalized_y": 0.338152,
       "bbox": {
         "left": 135,
@@ -545,141 +335,151 @@
         "width": 1610,
         "height": 97
       },
-      "reconstructed": true,
+      "reconstructed": false,
       "original_consensus_text": "Stony Yobaby Pouch Banana F 7.89",
-      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one price",
+        "family_candidate_count": 14
+      },
       "component_support": {
         "sku": {
-          "value": "712697",
-          "support_count": 1,
-          "average_confidence": 60.67,
-          "examples": [
-            {
-              "candidate_id": "grayscale_psm6",
-              "text": "Auth/Trace: 00549D/712697 Cty"
-            }
-          ]
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
         },
         "description": {
           "value": "Stony Yobaby Pouch Banana",
-          "source_candidate": "grayscale_psm11",
-          "source_text": "Stony Yobaby Pouch Banana F",
-          "support_count": 19,
-          "confidence": 93.2,
-          "score": 193.0
+          "source_candidate": "grayscale_psm6",
+          "source_text": "Stony Yobaby Pouch Banana F 7.89",
+          "support_count": 14,
+          "confidence": 93.33,
+          "similarity_to_anchor": 1.0,
+          "score": 176.13,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
         },
         "price": {
           "value": "7.89",
-          "support_count": 7,
-          "average_confidence": 82.87,
+          "support_count": 4,
+          "average_confidence": 78.75,
           "examples": [
             {
               "candidate_id": "grayscale_psm6",
-              "text": "Stony Yobaby Pouch Peach F 7.89"
-            },
-            {
-              "candidate_id": "threshold_psm11",
-              "text": "7.89"
-            },
-            {
-              "candidate_id": "threshold_right_psm11",
-              "text": "7.89"
+              "candidate_scope": "full",
+              "text": "Stony Yobaby Pouch Banana F 7.89"
             },
             {
               "candidate_id": "sharpened_psm6",
-              "text": "Stony Yobaby Pouch Peach F 7.89"
-            },
-            {
-              "candidate_id": "otsu_psm4",
-              "text": "Stony Yobaby Pouch Peach F 7.89"
+              "candidate_scope": "full",
+              "text": "Stony Yobaby Pouch Banana F 7.89"
             },
             {
               "candidate_id": "otsu_psm6",
-              "text": "Stony Yobaby Pouch Peach F 7.89"
+              "candidate_scope": "full",
+              "text": "Stony Yobaby Pouch Banana F 7.89"
             },
             {
-              "candidate_id": "illumination_psm6",
-              "text": "Stony Yobaby Pouch Peach F | 7.89 oa"
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "7.89"
             }
-          ]
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
         },
         "tax_code": {
           "value": "F",
           "support_count": 14,
-          "average_confidence": 84.59,
+          "average_confidence": 88.64,
           "examples": [
             {
               "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
               "text": "Stony Yobaby Pouch Banana F ie"
             },
             {
               "candidate_id": "grayscale_psm6",
-              "text": "Indian Harbour F'Blvd oe"
+              "candidate_scope": "full",
+              "text": "Stony Yobaby Pouch Banana F 7.89"
             },
             {
               "candidate_id": "grayscale_psm11",
+              "candidate_scope": "full",
               "text": "Stony Yobaby Pouch Banana F"
             },
             {
               "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
               "text": "Stony Yobaby Pouch Banana F"
             },
             {
               "candidate_id": "threshold_psm11",
+              "candidate_scope": "full",
               "text": "Stony Yobaby Pouch Banana F"
             },
             {
               "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
               "text": "Stony Yobaby Pouch Banana F i"
             },
             {
               "candidate_id": "sharpened_psm6",
-              "text": "Stony Yobaby Pouch Peach F 7.89"
+              "candidate_scope": "full",
+              "text": "Stony Yobaby Pouch Banana F 7.89"
             },
             {
               "candidate_id": "sharpened_psm11",
+              "candidate_scope": "full",
               "text": "Stony Yobaby Pouch Banana F"
             },
             {
               "candidate_id": "otsu_psm4",
-              "text": "Stony Yobaby Pouch Peach F 7.89"
+              "candidate_scope": "full",
+              "text": "Stony Yobaby Pouch Banana F 7."
             },
             {
               "candidate_id": "otsu_psm6",
-              "text": "Stony Yobaby Pouch Peach F 7.89"
+              "candidate_scope": "full",
+              "text": "Stony Yobaby Pouch Banana F 7.89"
             },
             {
               "candidate_id": "otsu_psm11",
+              "candidate_scope": "full",
               "text": "Stony Yobaby Pouch Banana F"
             },
             {
               "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
               "text": "Stony Yobaby Pouch Banana F"
             },
             {
               "candidate_id": "illumination_psm6",
-              "text": "Stony Yobaby Pouch Peach F | 7.89 oa"
+              "candidate_scope": "full",
+              "text": "Stony Yobaby Pouch Banana F 7.8 -"
             },
             {
               "candidate_id": "illumination_psm11",
+              "candidate_scope": "full",
               "text": "Stony Yobaby Pouch Banana F"
             }
-          ]
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
         }
       }
     },
     {
       "line_number": 8,
       "candidate_id": "sharpened_psm4",
-      "text": "712697 Sweet Loren's Gf Brownie F 6.99",
+      "text": "Sweet Loren's Gf Brownie F 6.99",
       "confidence": 91.83,
       "source_candidate": "sharpened_psm4",
       "image_variant": "sharpened",
       "psm": 4,
-      "support_count": 15,
-      "match_method": "geometry",
+      "support_count": 14,
+      "match_method": "geometry_plus_text",
       "line_quality_score": 100.93,
-      "consensus_score": 156.93,
+      "consensus_score": 146.43,
       "normalized_y": 0.366316,
       "bbox": {
         "left": 133,
@@ -689,20 +489,20 @@
         "width": 1611,
         "height": 81
       },
-      "reconstructed": true,
+      "reconstructed": false,
       "original_consensus_text": "Sweet Loren's Gf Brownie F 6.99",
-      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one price",
+        "family_candidate_count": 14
+      },
       "component_support": {
         "sku": {
-          "value": "712697",
-          "support_count": 1,
-          "average_confidence": 68.0,
-          "examples": [
-            {
-              "candidate_id": "sharpened_psm4",
-              "text": "Auth/Trace: 00549D/712697 Ctis"
-            }
-          ]
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
         },
         "description": {
           "value": "Sweet Loren's Gf Brownie",
@@ -710,136 +510,140 @@
           "source_text": "Sweet Loren's Gf Brownie",
           "support_count": 14,
           "confidence": 93.75,
-          "score": 168.55
+          "similarity_to_anchor": 1.0,
+          "score": 176.55,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
         },
         "price": {
           "value": "6.99",
-          "support_count": 13,
-          "average_confidence": 75.32,
+          "support_count": 12,
+          "average_confidence": 71.33,
           "examples": [
             {
               "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
               "text": "Sweet Loren's Gf Brownie F 6.99"
             },
             {
               "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
               "text": "Sweet Loren's Gf Brownie F 6.99"
             },
             {
               "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
               "text": "Sweet Loren's Gf Brownie EF a 6.99\" of"
             },
             {
-              "candidate_id": "threshold_psm11",
-              "text": "6.99"
-            },
-            {
-              "candidate_id": "threshold_right_psm11",
-              "text": "6.99: ."
-            },
-            {
               "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
               "text": "Sweet Loren's Gf Brownie F 6.99"
             },
             {
               "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
               "text": "Sweet Loren's Gf Brownie F 6.99"
             },
             {
-              "candidate_id": "sharpened_right_psm6",
-              "text": "6.99"
-            },
-            {
               "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
               "text": "Sweet Loren's Gf Brownie F 6.99"
             },
             {
               "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
               "text": "Sweet Loren's Gf Brownie F 6.99"
             },
             {
-              "candidate_id": "otsu_right_psm6",
-              "text": "6.99"
-            },
-            {
               "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
               "text": "Sweet Loren's Gf Brownie F — 6.99 :"
             },
             {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "6.99: ."
+            },
+            {
+              "candidate_id": "sharpened_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "6.99"
+            },
+            {
+              "candidate_id": "otsu_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "6.99"
+            },
+            {
               "candidate_id": "illumination_right_psm6",
+              "candidate_scope": "right_column",
               "text": "6.99 |"
             }
-          ]
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
         },
         "tax_code": {
           "value": "F",
-          "support_count": 12,
-          "average_confidence": 87.48,
+          "support_count": 8,
+          "average_confidence": 86.75,
           "examples": [
             {
               "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
               "text": "Sweet Loren's Gf Brownie F 6.99"
             },
             {
               "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
               "text": "Sweet Loren's Gf Brownie F 6.99"
-            },
-            {
-              "candidate_id": "grayscale_psm11",
-              "text": "F"
-            },
-            {
-              "candidate_id": "threshold_psm11",
-              "text": "F"
             },
             {
               "candidate_id": "sharpened_psm4",
-              "text": "Stony Yobaby Pouch Peach F te"
-            },
-            {
-              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
               "text": "Sweet Loren's Gf Brownie F 6.99"
             },
             {
-              "candidate_id": "sharpened_psm11",
-              "text": "F"
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "Sweet Loren's Gf Brownie F 6.99"
             },
             {
               "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
               "text": "Sweet Loren's Gf Brownie F 6.99"
             },
             {
               "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
               "text": "Sweet Loren's Gf Brownie F 6.99"
             },
             {
-              "candidate_id": "otsu_psm11",
-              "text": "F"
-            },
-            {
               "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
               "text": "Sweet Loren's Gf Brownie F"
             },
             {
               "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
               "text": "Sweet Loren's Gf Brownie F — 6.99 :"
             }
-          ]
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
         }
       }
     },
     {
       "line_number": 9,
       "candidate_id": "sharpened_psm6",
-      "text": "712697 Vans Waffle Blueberry Gf F 3.89",
+      "text": "Vans Waffle Blueberry Gf F 3.89",
       "confidence": 93.33,
       "source_candidate": "sharpened_psm6",
       "image_variant": "sharpened",
       "psm": 6,
       "support_count": 15,
-      "match_method": "geometry",
+      "match_method": "geometry_plus_text",
       "line_quality_score": 102.43,
-      "consensus_score": 158.43,
+      "consensus_score": 151.43,
       "normalized_y": 0.397109,
       "bbox": {
         "left": 132,
@@ -849,157 +653,181 @@
         "width": 1611,
         "height": 83
       },
-      "reconstructed": true,
+      "reconstructed": false,
       "original_consensus_text": "Vans Waffle Blueberry Gf F 3.89",
-      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one price",
+        "family_candidate_count": 15
+      },
       "component_support": {
         "sku": {
-          "value": "712697",
-          "support_count": 1,
-          "average_confidence": 53.67,
-          "examples": [
-            {
-              "candidate_id": "sharpened_psm6",
-              "text": "Auth/Trace: 005490/712697 meee"
-            }
-          ]
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
         },
         "description": {
           "value": "Vans Waffle Blueberry Gf",
           "source_candidate": "illumination_psm11",
           "source_text": "Vans Waffle Blueberry Gf",
-          "support_count": 27,
+          "support_count": 14,
           "confidence": 95.5,
-          "score": 235.3
+          "similarity_to_anchor": 1.0,
+          "score": 178.3,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
         },
         "price": {
           "value": "3.89",
-          "support_count": 14,
-          "average_confidence": 85.22,
+          "support_count": 13,
+          "average_confidence": 83.85,
           "examples": [
             {
               "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
               "text": "Vans Waffle Blueberry Gf F 3.89"
             },
             {
               "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
               "text": "Vans Waffle Blueberry Gf F 3.89"
             },
             {
-              "candidate_id": "grayscale_right_psm6",
-              "text": "3.89"
-            },
-            {
               "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
               "text": "Vans Waffle Blueberry Gf Fo | 3.89"
             },
             {
-              "candidate_id": "threshold_psm11",
+              "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
+              "text": "Vans Waffle Blueberry Gf F 3.89"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "Vans Waffle Blueberry Gf F 3.89"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "Vans Waffle Blueberry Gf F 3.89"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "Vans Waffle Blueberry Gf F 3.89"
+            },
+            {
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
+              "text": "Vans Waffle Blueberry Gf F - 3.89"
+            },
+            {
+              "candidate_id": "grayscale_right_psm6",
+              "candidate_scope": "right_column",
               "text": "3.89"
             },
             {
               "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
               "text": "3.89"
-            },
-            {
-              "candidate_id": "sharpened_psm4",
-              "text": "Vans Waffle Blueberry Gf F 3.89"
-            },
-            {
-              "candidate_id": "sharpened_psm6",
-              "text": "Vans Waffle Blueberry Gf F 3.89"
             },
             {
               "candidate_id": "sharpened_right_psm6",
+              "candidate_scope": "right_column",
               "text": "3.89"
-            },
-            {
-              "candidate_id": "otsu_psm4",
-              "text": "Vans Waffle Blueberry Gf F 3.89"
-            },
-            {
-              "candidate_id": "otsu_psm6",
-              "text": "Vans Waffle Blueberry Gf F 3.89"
             },
             {
               "candidate_id": "otsu_right_psm6",
+              "candidate_scope": "right_column",
               "text": "3.89"
             },
             {
-              "candidate_id": "illumination_psm6",
-              "text": "Vans Waffle Blueberry Gf F - 3.89"
-            },
-            {
               "candidate_id": "illumination_right_psm6",
+              "candidate_scope": "right_column",
               "text": "| 3.89"
             }
-          ]
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
         },
         "tax_code": {
           "value": "F",
           "support_count": 11,
-          "average_confidence": 91.2,
+          "average_confidence": 88.91,
           "examples": [
             {
               "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
               "text": "Vans Waffle Blueberry Gf F 3.89"
             },
             {
               "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
               "text": "Vans Waffle Blueberry Gf F 3.89"
             },
             {
               "candidate_id": "grayscale_psm11",
+              "candidate_scope": "full",
               "text": "Vans Waffle Blueberry Gf F"
             },
             {
               "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
               "text": "Vans Waffle Blueberry Gf F 3.89"
             },
             {
               "candidate_id": "sharpened_psm6",
-              "text": "Stony Yobaby Pouch Peach F 7.89"
+              "candidate_scope": "full",
+              "text": "Vans Waffle Blueberry Gf F 3.89"
             },
             {
               "candidate_id": "sharpened_psm11",
+              "candidate_scope": "full",
               "text": "Vans Waffle Blueberry Gf F"
             },
             {
               "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
               "text": "Vans Waffle Blueberry Gf F 3.89"
             },
             {
               "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
               "text": "Vans Waffle Blueberry Gf F 3.89"
             },
             {
               "candidate_id": "otsu_psm11",
+              "candidate_scope": "full",
               "text": "Vans Waffle Blueberry Gf F"
             },
             {
               "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
               "text": "Vans Waffle Blueberry Gf F"
             },
             {
               "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
               "text": "Vans Waffle Blueberry Gf F - 3.89"
             }
-          ]
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
         }
       }
     },
     {
       "line_number": 10,
       "candidate_id": "grayscale_psm4",
-      "text": "712697 Vans Waffle Blueberry Gf F 3.89",
+      "text": "Vans Waffle Blueberry Gf F 3.89",
       "confidence": 92.0,
       "source_candidate": "grayscale_psm4",
       "image_variant": "grayscale",
       "psm": 4,
       "support_count": 14,
-      "match_method": "geometry",
+      "match_method": "geometry_plus_text",
       "line_quality_score": 101.1,
-      "consensus_score": 153.1,
+      "consensus_score": 146.6,
       "normalized_y": 0.426399,
       "bbox": {
         "left": 130,
@@ -1009,184 +837,209 @@
         "width": 1612,
         "height": 75
       },
-      "reconstructed": true,
+      "reconstructed": false,
       "original_consensus_text": "Vans Waffle Blueberry Gf F 3.89",
-      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one price",
+        "family_candidate_count": 14
+      },
       "component_support": {
         "sku": {
-          "value": "712697",
-          "support_count": 1,
-          "average_confidence": 31.67,
-          "examples": [
-            {
-              "candidate_id": "grayscale_psm4",
-              "text": "Auth/Trace: 005490/712697 Orie"
-            }
-          ]
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
         },
         "description": {
           "value": "Vans Waffle Blueberry Gf",
           "source_candidate": "illumination_psm11",
           "source_text": "Vans Waffle Blueberry Gf",
-          "support_count": 27,
-          "confidence": 95.5,
-          "score": 235.3
+          "support_count": 14,
+          "confidence": 94.5,
+          "similarity_to_anchor": 1.0,
+          "score": 177.3,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
         },
         "price": {
           "value": "3.89",
-          "support_count": 15,
-          "average_confidence": 89.67,
+          "support_count": 14,
+          "average_confidence": 88.14,
           "examples": [
             {
               "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
               "text": "Vans Waffle Blueberry Gf F 3.89"
             },
             {
               "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "Vans Waffle Blueberry Gf F 3.89"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "Vans Waffle Blueberry Gf Fo 3.89 |"
+            },
+            {
+              "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
+              "text": "Vans Waffle Blueberry Gf F 3.89"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "Vans Waffle Blueberry Gf F 3.89"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "Vans Waffle Blueberry Gf F 3.89"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "Vans Waffle Blueberry Gf F 3.89"
+            },
+            {
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
               "text": "Vans Waffle Blueberry Gf F 3.89"
             },
             {
               "candidate_id": "grayscale_right_psm6",
-              "text": "3.89"
-            },
-            {
-              "candidate_id": "threshold_psm4",
-              "text": "Vans Waffle Blueberry Gf Fo | 3.89"
-            },
-            {
-              "candidate_id": "threshold_psm11",
+              "candidate_scope": "right_column",
               "text": "3.89"
             },
             {
               "candidate_id": "threshold_right_psm6",
+              "candidate_scope": "right_column",
               "text": "3.89 |"
             },
             {
               "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
               "text": "3.89"
-            },
-            {
-              "candidate_id": "sharpened_psm4",
-              "text": "Vans Waffle Blueberry Gf F 3.89"
-            },
-            {
-              "candidate_id": "sharpened_psm6",
-              "text": "Vans Waffle Blueberry Gf F 3.89"
             },
             {
               "candidate_id": "sharpened_right_psm6",
+              "candidate_scope": "right_column",
               "text": "3.89"
-            },
-            {
-              "candidate_id": "otsu_psm4",
-              "text": "Vans Waffle Blueberry Gf F 3.89"
-            },
-            {
-              "candidate_id": "otsu_psm6",
-              "text": "Vans Waffle Blueberry Gf F 3.89"
             },
             {
               "candidate_id": "otsu_right_psm6",
+              "candidate_scope": "right_column",
               "text": "3.89"
-            },
-            {
-              "candidate_id": "illumination_psm6",
-              "text": "Vans Waffle Blueberry Gf F - 3.89"
             },
             {
               "candidate_id": "illumination_right_psm6",
+              "candidate_scope": "right_column",
               "text": "3.89"
             }
-          ]
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
         },
         "tax_code": {
           "value": "F",
           "support_count": 11,
-          "average_confidence": 90.27,
+          "average_confidence": 84.18,
           "examples": [
             {
               "candidate_id": "grayscale_psm4",
-              "text": "Stony Yobaby Pouch Peach F ee"
+              "candidate_scope": "full",
+              "text": "Vans Waffle Blueberry Gf F 3.89"
             },
             {
               "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
               "text": "Vans Waffle Blueberry Gf F 3.89"
             },
             {
               "candidate_id": "grayscale_psm11",
+              "candidate_scope": "full",
               "text": "Vans Waffle Blueberry Gf F"
             },
             {
               "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
               "text": "Vans Waffle Blueberry Gf F 3.89"
             },
             {
               "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
               "text": "Vans Waffle Blueberry Gf F 3.89"
             },
             {
               "candidate_id": "sharpened_psm11",
+              "candidate_scope": "full",
               "text": "Vans Waffle Blueberry Gf F"
             },
             {
               "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
               "text": "Vans Waffle Blueberry Gf F 3.89"
             },
             {
               "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
               "text": "Vans Waffle Blueberry Gf F 3.89"
             },
             {
               "candidate_id": "otsu_psm11",
+              "candidate_scope": "full",
               "text": "Vans Waffle Blueberry Gf F"
             },
             {
               "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
               "text": "Vans Waffle Blueberry Gf F"
             },
             {
               "candidate_id": "illumination_psm6",
-              "text": "Vans Waffle Blueberry Gf F - 3.89"
+              "candidate_scope": "full",
+              "text": "Vans Waffle Blueberry Gf F 3.89"
             }
-          ]
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
         }
       }
     },
     {
       "line_number": 11,
-      "candidate_id": "otsu_psm4",
-      "text": "712697 Chobani 4Pk Hero Batch F 5.65",
-      "confidence": 90.83,
-      "source_candidate": "otsu_psm4",
-      "image_variant": "otsu",
-      "psm": 4,
-      "support_count": 15,
-      "match_method": "backbone",
-      "line_quality_score": 99.93,
-      "consensus_score": 155.93,
-      "normalized_y": 0.453811,
+      "candidate_id": "grayscale_psm6",
+      "text": "Chobani 4Pk Hero Batch F 5.65",
+      "confidence": 92.0,
+      "source_candidate": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "support_count": 14,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 101.1,
+      "consensus_score": 146.6,
+      "normalized_y": 0.457567,
       "bbox": {
         "left": 126,
         "top": 1175,
         "right": 1741,
-        "bottom": 1242,
+        "bottom": 1262,
         "width": 1615,
-        "height": 67
+        "height": 87
       },
-      "reconstructed": true,
-      "original_consensus_text": "Chobani 4Pk Hero Batch F 9.65",
-      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
+      "reconstructed": false,
+      "original_consensus_text": "Chobani 4Pk Hero Batch F 5.65",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one price",
+        "family_candidate_count": 14
+      },
       "component_support": {
         "sku": {
-          "value": "712697",
-          "support_count": 1,
-          "average_confidence": 44.33,
-          "examples": [
-            {
-              "candidate_id": "otsu_psm4",
-              "text": "Auth/Trace: 005490/712697 cre"
-            }
-          ]
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
         },
         "description": {
           "value": "Chobani 4Pk Hero Batch",
@@ -1194,112 +1047,115 @@
           "source_text": "Chobani 4Pk Hero Batch",
           "support_count": 14,
           "confidence": 93.75,
-          "score": 168.55
+          "similarity_to_anchor": 1.0,
+          "score": 176.55,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
         },
         "price": {
           "value": "5.65",
           "support_count": 6,
-          "average_confidence": 86.67,
+          "average_confidence": 84.0,
           "examples": [
             {
               "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "Chobani 4Pk Hero Batch F 5.65"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "Chobani 4Pk Hero Batch F 5.65"
+            },
+            {
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
               "text": "Chobani 4Pk Hero Batch F 5.65"
             },
             {
               "candidate_id": "grayscale_right_psm6",
+              "candidate_scope": "right_column",
               "text": "5.65"
-            },
-            {
-              "candidate_id": "otsu_psm6",
-              "text": "Chobani 4Pk Hero Batch F 5.65"
             },
             {
               "candidate_id": "otsu_right_psm6",
+              "candidate_scope": "right_column",
               "text": "5.65"
-            },
-            {
-              "candidate_id": "illumination_psm6",
-              "text": "Chobani 4Pk Hero Batch F 5.65"
             },
             {
               "candidate_id": "illumination_right_psm6",
+              "candidate_scope": "right_column",
               "text": "5.65"
             }
-          ]
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
         },
         "tax_code": {
           "value": "F",
-          "support_count": 13,
-          "average_confidence": 84.87,
+          "support_count": 9,
+          "average_confidence": 89.0,
           "examples": [
             {
               "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
               "text": "Chobani 4Pk Hero Batch F 5.60"
             },
             {
               "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
               "text": "Chobani 4Pk Hero Batch F 5.65"
             },
             {
-              "candidate_id": "grayscale_psm11",
-              "text": "F"
-            },
-            {
               "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
               "text": "Chobani 4Pk Hero Batch =F | 9.69."
             },
             {
-              "candidate_id": "threshold_psm6",
-              "text": "Stk Soy Or ganic Batch f Fo oe oe"
-            },
-            {
               "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
               "text": "Chobani 4Pk Hero Batch F 5.60"
             },
             {
               "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
               "text": "Chobani 4Pk Hero Batch F 5.60"
             },
             {
-              "candidate_id": "sharpened_psm11",
-              "text": "F"
-            },
-            {
               "candidate_id": "otsu_psm4",
-              "text": "Stony Yobaby Pouch Peach F 7.89"
+              "candidate_scope": "full",
+              "text": "Chobani 4Pk Hero Batch F 9.65"
             },
             {
               "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
               "text": "Chobani 4Pk Hero Batch F 5.65"
             },
             {
-              "candidate_id": "otsu_psm11",
-              "text": "F"
-            },
-            {
               "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
               "text": "Chobani 4Pk Hero Batch F"
             },
             {
               "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
               "text": "Chobani 4Pk Hero Batch F 5.65"
             }
-          ]
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
         }
       }
     },
     {
       "line_number": 12,
       "candidate_id": "grayscale_psm4",
-      "text": "712697 Silk Soy Organic Nsa Hg F 6.19",
+      "text": "Silk Soy Organic Nsa Hg F 6.19",
       "confidence": 88.71,
       "source_candidate": "grayscale_psm4",
       "image_variant": "grayscale",
       "psm": 4,
       "support_count": 14,
-      "match_method": "geometry",
+      "match_method": "geometry_plus_text",
       "line_quality_score": 98.41,
-      "consensus_score": 150.41,
+      "consensus_score": 143.91,
       "normalized_y": 0.483665,
       "bbox": {
         "left": 124,
@@ -1309,153 +1165,158 @@
         "width": 1615,
         "height": 76
       },
-      "reconstructed": true,
+      "reconstructed": false,
       "original_consensus_text": "Silk Soy Organic Nsa Hg F 6.19",
-      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one price",
+        "family_candidate_count": 14
+      },
       "component_support": {
         "sku": {
-          "value": "712697",
-          "support_count": 1,
-          "average_confidence": 31.67,
-          "examples": [
-            {
-              "candidate_id": "grayscale_psm4",
-              "text": "Auth/Trace: 005490/712697 Orie"
-            }
-          ]
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
         },
         "description": {
           "value": "Silk Soy Organic Nsa Hg",
           "source_candidate": "sharpened_psm11",
           "source_text": "Silk Soy Organic Nsa Hg",
-          "support_count": 40,
+          "support_count": 14,
           "confidence": 94.4,
-          "score": 300.4
+          "similarity_to_anchor": 1.0,
+          "score": 178.4,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
         },
         "price": {
           "value": "6.19",
-          "support_count": 14,
-          "average_confidence": 83.26,
+          "support_count": 13,
+          "average_confidence": 82.23,
           "examples": [
             {
               "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
               "text": "Silk Soy Organic Nsa Hg F 6.19"
             },
             {
               "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
               "text": "Silk Soy Organic Nsa Hg F 6.19"
             },
             {
               "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
               "text": "Silk Soy Organic Nsa Ho FO. 6.19."
             },
             {
-              "candidate_id": "threshold_psm11",
-              "text": "6.19"
+              "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
+              "text": "Silk Soy Organic Nsa Hg F 6.19"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "Silk Soy Organic Nsa Hg F 6.19"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "Silk Soy Organic Nsa Hg F 6.19"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "Silk Soy Organic Nsa Hg F 6.19"
+            },
+            {
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
+              "text": "Silk Soy Organic Nsa Hg F 6.19"
             },
             {
               "candidate_id": "threshold_right_psm6",
+              "candidate_scope": "right_column",
               "text": "| 6.19: |"
             },
             {
               "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
               "text": "6.19"
-            },
-            {
-              "candidate_id": "sharpened_psm4",
-              "text": "Silk Soy Organic Nsa Hg F 6.19"
-            },
-            {
-              "candidate_id": "sharpened_psm6",
-              "text": "Silk Soy Organic Nsa Hg F 6.19"
             },
             {
               "candidate_id": "sharpened_right_psm6",
+              "candidate_scope": "right_column",
               "text": "6.19"
-            },
-            {
-              "candidate_id": "otsu_psm4",
-              "text": "Silk Soy Organic Nsa Hg F 6.19"
-            },
-            {
-              "candidate_id": "otsu_psm6",
-              "text": "Silk Soy Organic Nsa Hg F 6.19"
             },
             {
               "candidate_id": "otsu_right_psm6",
+              "candidate_scope": "right_column",
               "text": "6.19"
-            },
-            {
-              "candidate_id": "illumination_psm6",
-              "text": "Silk Soy Organic Nsa Hg F 6.19"
             },
             {
               "candidate_id": "illumination_right_psm6",
+              "candidate_scope": "right_column",
               "text": "6.19"
             }
-          ]
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
         },
         "tax_code": {
           "value": "F",
-          "support_count": 12,
-          "average_confidence": 86.16,
+          "support_count": 8,
+          "average_confidence": 74.5,
           "examples": [
             {
               "candidate_id": "grayscale_psm4",
-              "text": "Stony Yobaby Pouch Peach F ee"
-            },
-            {
-              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
               "text": "Silk Soy Organic Nsa Hg F 6.19"
             },
             {
-              "candidate_id": "grayscale_psm11",
-              "text": "F"
-            },
-            {
-              "candidate_id": "threshold_psm4",
-              "text": "Silk Soy Organic Nsa Hg F | 6.19"
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "Silk Soy Organic Nsa Hg F 6.19"
             },
             {
               "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
               "text": "Silk Soy Organic Nsa Hg F 6.19"
             },
             {
               "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
               "text": "Silk Soy Organic Nsa Hg F 6.19"
             },
             {
-              "candidate_id": "sharpened_psm11",
-              "text": "F"
-            },
-            {
               "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
               "text": "Silk Soy Organic Nsa Hg F 6.19"
             },
             {
               "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
               "text": "Silk Soy Organic Nsa Hg F 6.19"
             },
             {
-              "candidate_id": "otsu_psm11",
-              "text": "F"
-            },
-            {
               "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
               "text": "Silk Soy Organic Nsa Hg F"
             },
             {
               "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
               "text": "Silk Soy Organic Nsa Hg F 6.19"
             }
-          ]
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
         }
       }
     },
     {
       "line_number": 13,
       "candidate_id": "otsu_psm4",
-      "text": "712697 Silk Soy Organic Nsa Hg F 6.19",
+      "text": "Silk Soy Organic Nsa Hg F 6.19",
       "confidence": 90.43,
       "source_candidate": "otsu_psm4",
       "image_variant": "otsu",
@@ -1463,7 +1324,7 @@
       "support_count": 14,
       "match_method": "backbone",
       "line_quality_score": 100.13,
-      "consensus_score": 152.13,
+      "consensus_score": 145.63,
       "normalized_y": 0.512204,
       "bbox": {
         "left": 121,
@@ -1473,157 +1334,166 @@
         "width": 1621,
         "height": 76
       },
-      "reconstructed": true,
+      "reconstructed": false,
       "original_consensus_text": "Silk Soy Organic Nsa Hg F 6.19",
-      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one price",
+        "family_candidate_count": 14
+      },
       "component_support": {
         "sku": {
-          "value": "712697",
-          "support_count": 1,
-          "average_confidence": 44.33,
-          "examples": [
-            {
-              "candidate_id": "otsu_psm4",
-              "text": "Auth/Trace: 005490/712697 cre"
-            }
-          ]
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
         },
         "description": {
           "value": "Silk Soy Organic Nsa Hg",
-          "source_candidate": "threshold_psm11",
+          "source_candidate": "sharpened_psm11",
           "source_text": "Silk Soy Organic Nsa Hg",
-          "support_count": 40,
-          "confidence": 94.0,
-          "score": 300.0
+          "support_count": 14,
+          "confidence": 94.2,
+          "similarity_to_anchor": 1.0,
+          "score": 178.2,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
         },
         "price": {
           "value": "6.19",
-          "support_count": 13,
-          "average_confidence": 87.21,
-          "examples": [
-            {
-              "candidate_id": "grayscale_psm4",
-              "text": "Silk Soy Organic Nsa Hg F 6.19"
-            },
-            {
-              "candidate_id": "grayscale_psm6",
-              "text": "Silk Soy Organic Nsa Hg F 6.19"
-            },
-            {
-              "candidate_id": "grayscale_right_psm6",
-              "text": "6.19"
-            },
-            {
-              "candidate_id": "threshold_psm4",
-              "text": "Silk Soy Organic Nsa Ho FO. 6.19."
-            },
-            {
-              "candidate_id": "threshold_psm11",
-              "text": "6.19"
-            },
-            {
-              "candidate_id": "sharpened_psm4",
-              "text": "Silk Soy Organic Nsa Hg F 6.19"
-            },
-            {
-              "candidate_id": "sharpened_psm6",
-              "text": "Silk Soy Organic Nsa Hg F 6.19"
-            },
-            {
-              "candidate_id": "sharpened_right_psm6",
-              "text": "6.19"
-            },
-            {
-              "candidate_id": "otsu_psm4",
-              "text": "Silk Soy Organic Nsa Hg F 6.19"
-            },
-            {
-              "candidate_id": "otsu_psm6",
-              "text": "Silk Soy Organic Nsa Hg F 6.19"
-            },
-            {
-              "candidate_id": "otsu_right_psm6",
-              "text": "6.19"
-            },
-            {
-              "candidate_id": "illumination_psm6",
-              "text": "Silk Soy Organic Nsa Hg F 6.19"
-            },
-            {
-              "candidate_id": "illumination_right_psm6",
-              "text": "6.19"
-            }
-          ]
-        },
-        "tax_code": {
-          "value": "F",
           "support_count": 12,
-          "average_confidence": 88.02,
+          "average_confidence": 90.0,
           "examples": [
             {
               "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
               "text": "Silk Soy Organic Nsa Hg F 6.19"
             },
             {
               "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
               "text": "Silk Soy Organic Nsa Hg F 6.19"
             },
             {
-              "candidate_id": "grayscale_psm11",
-              "text": "F"
-            },
-            {
               "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
               "text": "Silk Soy Organic Nsa Hg F | 6.19"
             },
             {
               "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
               "text": "Silk Soy Organic Nsa Hg F 6.19"
             },
             {
               "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
               "text": "Silk Soy Organic Nsa Hg F 6.19"
-            },
-            {
-              "candidate_id": "sharpened_psm11",
-              "text": "F"
             },
             {
               "candidate_id": "otsu_psm4",
-              "text": "Stony Yobaby Pouch Peach F 7.89"
-            },
-            {
-              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
               "text": "Silk Soy Organic Nsa Hg F 6.19"
             },
             {
-              "candidate_id": "otsu_psm11",
-              "text": "F"
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "Silk Soy Organic Nsa Hg F 6.19"
+            },
+            {
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
+              "text": "Silk Soy Organic Nsa Hg F 6.19"
+            },
+            {
+              "candidate_id": "grayscale_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "6.19"
+            },
+            {
+              "candidate_id": "sharpened_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "6.19"
+            },
+            {
+              "candidate_id": "otsu_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "6.19"
+            },
+            {
+              "candidate_id": "illumination_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "6.19"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": "F",
+          "support_count": 9,
+          "average_confidence": 70.67,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "Silk Soy Organic Nsa Hg F 6.19"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "Silk Soy Organic Nsa Hg F 6.19"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "Silk Soy Organic Nsa Hg F | 6.19"
+            },
+            {
+              "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
+              "text": "Silk Soy Organic Nsa Hg F 6.19"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "Silk Soy Organic Nsa Hg F 6.19"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "Silk Soy Organic Nsa Hg F 6.19"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "Silk Soy Organic Nsa Hg F 6.19"
             },
             {
               "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
               "text": "Silk Soy Organic Nsa Hg F"
             },
             {
               "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
               "text": "Silk Soy Organic Nsa Hg F 6.19"
             }
-          ]
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
         }
       }
     },
     {
       "line_number": 14,
       "candidate_id": "grayscale_psm6",
-      "text": "712697 Silk Soy Organic Nsa Hg F 6.19",
+      "text": "Silk Soy Organic Nsa Hg F 6.19",
       "confidence": 90.14,
       "source_candidate": "grayscale_psm6",
       "image_variant": "grayscale",
       "psm": 6,
-      "support_count": 15,
-      "match_method": "geometry",
+      "support_count": 14,
+      "match_method": "geometry_plus_text",
       "line_quality_score": 99.84,
-      "consensus_score": 155.84,
+      "consensus_score": 145.34,
       "normalized_y": 0.541307,
       "bbox": {
         "left": 119,
@@ -1633,165 +1503,171 @@
         "width": 1623,
         "height": 77
       },
-      "reconstructed": true,
+      "reconstructed": false,
       "original_consensus_text": "Silk Soy Organic Nsa Hg F 6.19",
-      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one price",
+        "family_candidate_count": 14
+      },
       "component_support": {
         "sku": {
-          "value": "712697",
-          "support_count": 1,
-          "average_confidence": 60.67,
-          "examples": [
-            {
-              "candidate_id": "grayscale_psm6",
-              "text": "Auth/Trace: 00549D/712697 Cty"
-            }
-          ]
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
         },
         "description": {
           "value": "Silk Soy Organic Nsa Hg",
-          "source_candidate": "threshold_psm11",
+          "source_candidate": "otsu_psm11",
           "source_text": "Silk Soy Organic Nsa Hg",
-          "support_count": 40,
-          "confidence": 94.0,
-          "score": 300.0
+          "support_count": 14,
+          "confidence": 94.4,
+          "similarity_to_anchor": 1.0,
+          "score": 178.4,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
         },
         "price": {
           "value": "6.19",
-          "support_count": 15,
-          "average_confidence": 83.98,
+          "support_count": 14,
+          "average_confidence": 88.43,
           "examples": [
             {
               "candidate_id": "grayscale_psm4",
-              "text": "Silk Soy Organic Nsa Hg F 6.19"
+              "candidate_scope": "full",
+              "text": "Silk Soy Organic Nsa Hg =F 6.19"
             },
             {
               "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
               "text": "Silk Soy Organic Nsa Hg F 6.19"
             },
             {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "Silk Soy Organic Nsa Hg FC 6.19."
+            },
+            {
+              "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
+              "text": "Silk Soy Organic Nsa Hg =F 6.19"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "Silk Soy Organic Nsa Hg F 6.19"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "Silk Soy Organic Nsa Hg F 6.19"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "Silk Soy Organic Nsa Hg F 6.19"
+            },
+            {
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
+              "text": "Silk Soy Organic Nsa Hg F 6.19 |"
+            },
+            {
               "candidate_id": "grayscale_right_psm6",
+              "candidate_scope": "right_column",
               "text": "6.19"
             },
             {
-              "candidate_id": "threshold_psm4",
-              "text": "Silk Soy Organic Nsa Ho FO. 6.19."
-            },
-            {
-              "candidate_id": "threshold_psm11",
-              "text": "6,19"
-            },
-            {
               "candidate_id": "threshold_right_psm6",
+              "candidate_scope": "right_column",
               "text": "6.19 a:"
             },
             {
               "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
               "text": "6,19"
-            },
-            {
-              "candidate_id": "sharpened_psm4",
-              "text": "Silk Soy Organic Nsa Hg F 6.19"
-            },
-            {
-              "candidate_id": "sharpened_psm6",
-              "text": "Silk Soy Organic Nsa Hg F 6.19"
             },
             {
               "candidate_id": "sharpened_right_psm6",
+              "candidate_scope": "right_column",
               "text": "6.19"
             },
             {
-              "candidate_id": "otsu_psm4",
-              "text": "Silk Soy Organic Nsa Hg F 6.19"
-            },
-            {
-              "candidate_id": "otsu_psm6",
-              "text": "Silk Soy Organic Nsa Hg F 6.19"
-            },
-            {
               "candidate_id": "otsu_right_psm6",
+              "candidate_scope": "right_column",
               "text": "6,19"
             },
             {
-              "candidate_id": "illumination_psm6",
-              "text": "Silk Soy Organic Nsa Hg F 6.19"
-            },
-            {
               "candidate_id": "illumination_right_psm6",
+              "candidate_scope": "right_column",
               "text": "6.19 |"
             }
-          ]
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
         },
         "tax_code": {
           "value": "F",
-          "support_count": 12,
-          "average_confidence": 78.29,
+          "support_count": 8,
+          "average_confidence": 68.88,
           "examples": [
             {
               "candidate_id": "grayscale_psm4",
-              "text": "Silk Soy Organic Nsa Hg F 6.19"
+              "candidate_scope": "full",
+              "text": "Silk Soy Organic Nsa Hg =F 6.19"
             },
             {
               "candidate_id": "grayscale_psm6",
-              "text": "Indian Harbour F'Blvd oe"
-            },
-            {
-              "candidate_id": "grayscale_psm11",
-              "text": "F"
-            },
-            {
-              "candidate_id": "threshold_psm4",
-              "text": "Silk Soy Organic Nsa Hg F | 6.19"
+              "candidate_scope": "full",
+              "text": "Silk Soy Organic Nsa Hg F 6.19"
             },
             {
               "candidate_id": "sharpened_psm4",
-              "text": "Silk Soy Organic Nsa Hg F 6.19"
+              "candidate_scope": "full",
+              "text": "Silk Soy Organic Nsa Hg =F 6.19"
             },
             {
               "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
               "text": "Silk Soy Organic Nsa Hg F 6.19"
             },
             {
-              "candidate_id": "sharpened_psm11",
-              "text": "F"
-            },
-            {
               "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
               "text": "Silk Soy Organic Nsa Hg F 6.19"
             },
             {
               "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
               "text": "Silk Soy Organic Nsa Hg F 6.19"
             },
             {
-              "candidate_id": "otsu_psm11",
-              "text": "F"
-            },
-            {
               "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
               "text": "Silk Soy Organic Nsa Hg F"
             },
             {
               "candidate_id": "illumination_psm6",
-              "text": "Silk Soy Organic Nsa Hg F 6.19"
+              "candidate_scope": "full",
+              "text": "Silk Soy Organic Nsa Hg F 6.19 |"
             }
-          ]
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
         }
       }
     },
     {
       "line_number": 15,
       "candidate_id": "otsu_psm6",
-      "text": "712697 Publix Half&Half Hg F 9.89",
+      "text": "Publix Half&Half Hg F 9.89",
       "confidence": 89.6,
       "source_candidate": "otsu_psm6",
       "image_variant": "otsu",
       "psm": 6,
-      "support_count": 15,
-      "match_method": "geometry",
+      "support_count": 14,
+      "match_method": "geometry_plus_text",
       "line_quality_score": 98.1,
-      "consensus_score": 154.1,
+      "consensus_score": 143.6,
       "normalized_y": 0.570973,
       "bbox": {
         "left": 115,
@@ -1801,20 +1677,20 @@
         "width": 1626,
         "height": 81
       },
-      "reconstructed": true,
+      "reconstructed": false,
       "original_consensus_text": "Publix Half&Half Hg F 9.89",
-      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one price",
+        "family_candidate_count": 14
+      },
       "component_support": {
         "sku": {
-          "value": "712697",
-          "support_count": 1,
-          "average_confidence": 71.0,
-          "examples": [
-            {
-              "candidate_id": "otsu_psm6",
-              "text": "Auth/Trace: 00549D/712697 Ctic"
-            }
-          ]
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
         },
         "description": {
           "value": "Publix Half&Half Hg",
@@ -1822,105 +1698,110 @@
           "source_text": "Publix Half&Half Hg",
           "support_count": 14,
           "confidence": 91.67,
-          "score": 165.27
+          "similarity_to_anchor": 1.0,
+          "score": 173.27,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
         },
         "price": {
           "value": "9.89",
-          "support_count": 9,
-          "average_confidence": 77.2,
+          "support_count": 8,
+          "average_confidence": 64.88,
           "examples": [
             {
               "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
               "text": "Publix Half&Half Ho F 9.89"
             },
             {
-              "candidate_id": "grayscale_right_psm6",
-              "text": "9.89"
-            },
-            {
               "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
               "text": "Publix Half&Half Hg F 9.89"
             },
             {
-              "candidate_id": "threshold_psm11",
-              "text": "9.89"
-            },
-            {
-              "candidate_id": "threshold_right_psm11",
-              "text": "9.89"
-            },
-            {
-              "candidate_id": "sharpened_right_psm6",
-              "text": "9.89"
-            },
-            {
               "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
               "text": "Publix Half&Half Hg F 9.89"
             },
             {
               "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
               "text": "Publix Half&Half Hg FO 9.89"
             },
             {
+              "candidate_id": "grayscale_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "9.89"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "9.89"
+            },
+            {
+              "candidate_id": "sharpened_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "9.89"
+            },
+            {
               "candidate_id": "illumination_right_psm6",
+              "candidate_scope": "right_column",
               "text": "9.89"
             }
-          ]
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
         },
         "tax_code": {
           "value": "F",
-          "support_count": 12,
-          "average_confidence": 73.42,
+          "support_count": 9,
+          "average_confidence": 78.67,
           "examples": [
             {
               "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
               "text": "Publix Half&Half Ho F 5.89"
             },
             {
               "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
               "text": "Publix Half&Half Ho F 9.89"
             },
             {
-              "candidate_id": "grayscale_psm11",
-              "text": "F"
-            },
-            {
               "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
               "text": "Publix Half&Half Hg F 9.89"
             },
             {
-              "candidate_id": "threshold_psm6",
-              "text": "Subtotal F 6.19 |"
-            },
-            {
               "candidate_id": "threshold_psm11",
+              "candidate_scope": "full",
               "text": "Publix Hal f&Half Hg"
             },
             {
               "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
               "text": "Publix Half&Half Ho F 5 89"
             },
             {
               "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
               "text": "Publix Hal f&Half Ho F"
             },
             {
-              "candidate_id": "sharpened_psm11",
-              "text": "F"
-            },
-            {
               "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
               "text": "Publix Half&Half Hg F 5.89"
             },
             {
               "candidate_id": "otsu_psm6",
-              "text": "Stony Yobaby Pouch Peach F 7.89"
+              "candidate_scope": "full",
+              "text": "Publix Half&Half Hg F 9.89"
             },
             {
               "candidate_id": "otsu_psm11",
+              "candidate_scope": "full",
               "text": "Publix Hal f&Half Hg"
             }
-          ]
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
         }
       }
     },
@@ -1932,10 +1813,10 @@
       "source_candidate": "sharpened_psm6",
       "image_variant": "sharpened",
       "psm": 6,
-      "support_count": 15,
-      "match_method": "geometry",
+      "support_count": 14,
+      "match_method": "geometry_plus_text",
       "line_quality_score": 95.6,
-      "consensus_score": 151.6,
+      "consensus_score": 141.1,
       "normalized_y": 0.626173,
       "bbox": {
         "left": 349,
@@ -1946,7 +1827,8 @@
         "height": 63
       },
       "reconstructed": false,
-      "reconstruction_reason": "line not classified as a merchandise row"
+      "reconstruction_reason": "known receipt metadata/total/payment row",
+      "row_family_support": 14
     },
     {
       "line_number": 17,
@@ -1956,10 +1838,10 @@
       "source_candidate": "grayscale_psm4",
       "image_variant": "grayscale",
       "psm": 4,
-      "support_count": 15,
-      "match_method": "geometry",
+      "support_count": 14,
+      "match_method": "geometry_plus_text",
       "line_quality_score": 101.47,
-      "consensus_score": 157.47,
+      "consensus_score": 146.97,
       "normalized_y": 0.660721,
       "bbox": {
         "left": 348,
@@ -1970,20 +1852,21 @@
         "height": 93
       },
       "reconstructed": false,
-      "reconstruction_reason": "line not classified as a merchandise row"
+      "reconstruction_reason": "known receipt metadata/total/payment row",
+      "row_family_support": 14
     },
     {
       "line_number": 18,
       "candidate_id": "grayscale_psm11",
-      "text": "712697 Total F 60.58",
+      "text": "Total 60.58",
       "confidence": 96.0,
       "source_candidate": "grayscale_psm11",
       "image_variant": "grayscale",
       "psm": 11,
       "support_count": 11,
-      "match_method": "geometry",
+      "match_method": "geometry_plus_text",
       "line_quality_score": 96.6,
-      "consensus_score": 136.6,
+      "consensus_score": 131.6,
       "normalized_y": 0.683627,
       "bbox": {
         "left": 185,
@@ -1995,142 +1878,95 @@
       },
       "reconstructed": true,
       "original_consensus_text": "Total",
-      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "multiple matching row observations plus independent price support",
+        "family_candidate_count": 11
+      },
       "component_support": {
         "sku": {
-          "value": "712697",
-          "support_count": 1,
-          "average_confidence": 68.0,
-          "examples": [
-            {
-              "candidate_id": "grayscale_psm11",
-              "text": "Auth/Trace: 00549D/712697"
-            }
-          ]
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
         },
         "description": {
           "value": "Total",
-          "source_candidate": "sharpened_psm11",
+          "source_candidate": "grayscale_psm11",
           "source_text": "Total",
-          "support_count": 13,
+          "support_count": 11,
           "confidence": 96.0,
-          "score": 162.2
+          "similarity_to_anchor": 1.0,
+          "score": 160.2,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
         },
         "price": {
           "value": "60.58",
-          "support_count": 6,
-          "average_confidence": 72.84,
+          "support_count": 5,
+          "average_confidence": 73.2,
           "examples": [
             {
               "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
               "text": "Total 60.58"
             },
             {
-              "candidate_id": "grayscale_psm11",
-              "text": "60.58"
-            },
-            {
               "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
               "text": "Total 60.58"
             },
             {
               "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
               "text": "| Total 60.58"
             },
             {
               "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
               "text": "Total 60.58"
             },
             {
               "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
               "text": "r Total | 60.58 |"
             }
-          ]
+          ],
+          "selection_reason": "selected from multiple independent OCR candidates"
         },
         "tax_code": {
-          "value": "F",
-          "support_count": 1,
-          "average_confidence": 94.25,
-          "examples": [
-            {
-              "candidate_id": "grayscale_psm11",
-              "text": "Indian Harbour Beach, F"
-            }
-          ]
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
         }
       }
     },
     {
       "line_number": 19,
-      "candidate_id": "illumination_psm11",
-      "text": "712697 Visa: *8858 F 60.58",
-      "confidence": 96.0,
-      "source_candidate": "illumination_psm11",
-      "image_variant": "illumination",
+      "candidate_id": "grayscale_psm11",
+      "text": "Visa: *8858",
+      "confidence": 92.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
       "psm": 11,
       "support_count": 13,
-      "match_method": "geometry",
-      "line_quality_score": 96.6,
-      "consensus_score": 144.6,
-      "normalized_y": 0.835712,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 93.2,
+      "consensus_score": 135.2,
+      "normalized_y": 0.835336,
       "bbox": {
-        "left": 78,
-        "top": 2191,
-        "right": 262,
-        "bottom": 2260,
-        "width": 184,
-        "height": 69
+        "left": 77,
+        "top": 2188,
+        "right": 524,
+        "bottom": 2261,
+        "width": 447,
+        "height": 73
       },
-      "reconstructed": true,
-      "original_consensus_text": "Visa:",
-      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
-      "component_support": {
-        "sku": {
-          "value": "712697",
-          "support_count": 1,
-          "average_confidence": 64.5,
-          "examples": [
-            {
-              "candidate_id": "illumination_psm11",
-              "text": "-Auth/Trace: 00949D/712697"
-            }
-          ]
-        },
-        "description": {
-          "value": "Visa: *8858",
-          "source_candidate": "grayscale_psm11",
-          "source_text": "Visa: *8858",
-          "support_count": 11,
-          "confidence": 92.0,
-          "score": 149.4
-        },
-        "price": {
-          "value": "60.58",
-          "support_count": 2,
-          "average_confidence": 40.5,
-          "examples": [
-            {
-              "candidate_id": "sharpened_right_psm6",
-              "text": "$60.58"
-            },
-            {
-              "candidate_id": "illumination_psm11",
-              "text": "$60.58"
-            }
-          ]
-        },
-        "tax_code": {
-          "value": "F",
-          "support_count": 1,
-          "average_confidence": 86.2,
-          "examples": [
-            {
-              "candidate_id": "illumination_psm11",
-              "text": "270 F Eau Gallie BIV"
-            }
-          ]
-        }
-      }
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 13
     },
     {
       "line_number": 20,
@@ -2141,9 +1977,9 @@
       "image_variant": "grayscale",
       "psm": 11,
       "support_count": 14,
-      "match_method": "geometry",
+      "match_method": "geometry_plus_text",
       "line_quality_score": 97.2,
-      "consensus_score": 149.2,
+      "consensus_score": 142.7,
       "normalized_y": 0.86763,
       "bbox": {
         "left": 66,
@@ -2154,20 +1990,21 @@
         "height": 75
       },
       "reconstructed": false,
-      "reconstruction_reason": "line not classified as a merchandise row"
+      "reconstruction_reason": "known receipt metadata/total/payment row",
+      "row_family_support": 14
     },
     {
       "line_number": 21,
       "candidate_id": "threshold_psm11",
-      "text": "712697 Auth/Trace: 00549D/ F 6.19",
+      "text": "Auth/Trace: 00549D/712697",
       "confidence": 92.0,
       "source_candidate": "threshold_psm11",
       "image_variant": "threshold",
       "psm": 11,
-      "support_count": 15,
+      "support_count": 14,
       "match_method": "sku",
       "line_quality_score": 96.2,
-      "consensus_score": 152.2,
+      "consensus_score": 141.7,
       "normalized_y": 0.899549,
       "bbox": {
         "left": 58,
@@ -2177,117 +2014,22 @@
         "width": 1024,
         "height": 75
       },
-      "reconstructed": true,
-      "original_consensus_text": "Auth/Trace: 00549D/712697",
-      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
-      "component_support": {
-        "sku": {
-          "value": "712697",
-          "support_count": 14,
-          "average_confidence": 65.54,
-          "examples": [
-            {
-              "candidate_id": "grayscale_psm4",
-              "text": "Auth/Trace: 005490/712697 Orie"
-            },
-            {
-              "candidate_id": "grayscale_psm6",
-              "text": "Auth/Trace: 00549D/712697 Cty"
-            },
-            {
-              "candidate_id": "grayscale_psm11",
-              "text": "Auth/Trace: 00549D/712697"
-            },
-            {
-              "candidate_id": "threshold_psm4",
-              "text": "Auth/Trace: O0349D/712697 Cth."
-            },
-            {
-              "candidate_id": "threshold_psm11",
-              "text": "Auth/Trace: 00549D/712697"
-            },
-            {
-              "candidate_id": "sharpened_psm4",
-              "text": "Auth/Trace: 00549D/712697 Ctis"
-            },
-            {
-              "candidate_id": "sharpened_psm6",
-              "text": "Auth/Trace: 005490/712697 meee"
-            },
-            {
-              "candidate_id": "sharpened_psm11",
-              "text": "Auth/Trace: 00549D/712697"
-            },
-            {
-              "candidate_id": "otsu_psm4",
-              "text": "Auth/Trace: 005490/712697 cre"
-            },
-            {
-              "candidate_id": "otsu_psm6",
-              "text": "Auth/Trace: 00549D/712697 Ctic"
-            },
-            {
-              "candidate_id": "otsu_psm11",
-              "text": "Auth/Trace: 00549D/712697"
-            },
-            {
-              "candidate_id": "illumination_psm4",
-              "text": "| Auth/Trace: 00549D/712697"
-            },
-            {
-              "candidate_id": "illumination_psm6",
-              "text": "| Auth/Trace: 00549D/712697 | Ctie"
-            },
-            {
-              "candidate_id": "illumination_psm11",
-              "text": "-Auth/Trace: 00949D/712697"
-            }
-          ]
-        },
-        "description": {
-          "value": "Auth/Trace: 00549D/",
-          "source_candidate": "threshold_psm11",
-          "source_text": "Auth/Trace: 00549D/712697",
-          "support_count": 14,
-          "confidence": 92.0,
-          "score": 164.4
-        },
-        "price": {
-          "value": "6.19",
-          "support_count": 1,
-          "average_confidence": 95.0,
-          "examples": [
-            {
-              "candidate_id": "threshold_psm11",
-              "text": "6.19"
-            }
-          ]
-        },
-        "tax_code": {
-          "value": "F",
-          "support_count": 1,
-          "average_confidence": 91.2,
-          "examples": [
-            {
-              "candidate_id": "threshold_psm11",
-              "text": "Stony Yobaby Pouch Peach F"
-            }
-          ]
-        }
-      }
+      "reconstructed": false,
+      "reconstruction_reason": "known receipt metadata/total/payment row",
+      "row_family_support": 14
     },
     {
       "line_number": 22,
       "candidate_id": "threshold_psm11",
-      "text": "712697 Reference: 001836758884 F 6.19",
+      "text": "Reference: 001836758884",
       "confidence": 95.0,
       "source_candidate": "threshold_psm11",
       "image_variant": "threshold",
       "psm": 11,
-      "support_count": 13,
-      "match_method": "geometry",
+      "support_count": 7,
+      "match_method": "geometry_plus_text",
       "line_quality_score": 96.2,
-      "consensus_score": 144.2,
+      "consensus_score": 117.2,
       "normalized_y": 0.931281,
       "bbox": {
         "left": 58,
@@ -2297,120 +2039,34 @@
         "width": 940,
         "height": 68
       },
-      "reconstructed": true,
-      "original_consensus_text": "Reference: 001836758884",
-      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
-      "component_support": {
-        "sku": {
-          "value": "712697",
-          "support_count": 1,
-          "average_confidence": 92.0,
-          "examples": [
-            {
-              "candidate_id": "threshold_psm11",
-              "text": "Auth/Trace: 00549D/712697"
-            }
-          ]
-        },
-        "description": {
-          "value": "Reference: 001836758884",
-          "source_candidate": "threshold_psm11",
-          "source_text": "Reference: 001836758884",
-          "support_count": 5,
-          "confidence": 95.0,
-          "score": 122.4
-        },
-        "price": {
-          "value": "6.19",
-          "support_count": 1,
-          "average_confidence": 95.0,
-          "examples": [
-            {
-              "candidate_id": "threshold_psm11",
-              "text": "6.19"
-            }
-          ]
-        },
-        "tax_code": {
-          "value": "F",
-          "support_count": 1,
-          "average_confidence": 91.2,
-          "examples": [
-            {
-              "candidate_id": "threshold_psm11",
-              "text": "Stony Yobaby Pouch Peach F"
-            }
-          ]
-        }
-      }
+      "reconstructed": false,
+      "reconstruction_reason": "known receipt metadata/total/payment row",
+      "row_family_support": 7
     },
     {
       "line_number": 23,
-      "candidate_id": "threshold_psm11",
-      "text": "712697 Reference: 001836758884 F 6.19",
-      "confidence": 87.5,
-      "source_candidate": "threshold_psm11",
-      "image_variant": "threshold",
+      "candidate_id": "grayscale_psm11",
+      "text": "PIN verifies",
+      "confidence": 65.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
       "psm": 11,
-      "support_count": 15,
-      "match_method": "geometry",
-      "line_quality_score": 88.7,
-      "consensus_score": 144.7,
-      "normalized_y": 0.944799,
+      "support_count": 9,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 66.2,
+      "consensus_score": 94.2,
+      "normalized_y": 0.93466,
       "bbox": {
-        "left": 1290,
-        "top": 2460,
+        "left": 1289,
+        "top": 2405,
         "right": 1805,
-        "bottom": 2572,
-        "width": 515,
-        "height": 112
+        "bottom": 2573,
+        "width": 516,
+        "height": 168
       },
-      "reconstructed": true,
-      "original_consensus_text": "PIN veritieg",
-      "reconstruction_method": "spatial row consensus using normalized y-coordinate; exact SKU remains a stronger anchor when available; right-column OCR contributes price/tax evidence",
-      "component_support": {
-        "sku": {
-          "value": "712697",
-          "support_count": 1,
-          "average_confidence": 92.0,
-          "examples": [
-            {
-              "candidate_id": "threshold_psm11",
-              "text": "Auth/Trace: 00549D/712697"
-            }
-          ]
-        },
-        "description": {
-          "value": "Reference: 001836758884",
-          "source_candidate": "threshold_psm11",
-          "source_text": "Reference: 001836758884",
-          "support_count": 4,
-          "confidence": 95.0,
-          "score": 117.4
-        },
-        "price": {
-          "value": "6.19",
-          "support_count": 1,
-          "average_confidence": 95.0,
-          "examples": [
-            {
-              "candidate_id": "threshold_psm11",
-              "text": "6.19"
-            }
-          ]
-        },
-        "tax_code": {
-          "value": "F",
-          "support_count": 1,
-          "average_confidence": 91.2,
-          "examples": [
-            {
-              "candidate_id": "threshold_psm11",
-              "text": "Stony Yobaby Pouch Peach F"
-            }
-          ]
-        }
-      }
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 9
     }
   ],
   "candidate_ranking": [
@@ -2657,6 +2313,6 @@
   ],
   "provenance": {
     "candidates_file": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_candidates/IMG_0253_ocr_candidates.json",
-    "rule": "OCR output is reconstructed only from actual Tesseract observations. Spatial row alignment may combine description, SKU, price, and tax evidence from different OCR candidates when their normalized vertical positions agree. Exact SKU matches override ordinary fuzzy alignment. No external product lookup or spelling correction is performed."
+    "rule": "All output remains OCR-derived. A full-receipt observation may join another observation only through exact SKU agreement or close physical-row geometry plus textual agreement. Right-column observations can contribute only price/tax evidence at the same narrow row position. SKU values cannot be imported into rows that lacked a SKU in the selected full-receipt observation. Components with insufficient support are omitted rather than guessed."
   }
 }
