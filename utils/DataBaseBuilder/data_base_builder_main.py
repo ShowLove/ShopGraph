@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from datetime import datetime
 import json
+import readline
 
 from utils.DataBaseBuilder.benchmark_writer import write_corrected_benchmark
 from utils.DataBaseBuilder.excel.purchase_history import (
@@ -161,6 +162,40 @@ def _display_line(parser, line: dict, record: PurchaseRecord) -> None:
     print(parser.format_record(record))
 
 
+def _input_with_current_value(
+    prompt: str,
+    current_value: str,
+) -> str:
+    """
+    Display an editable input prompt pre-populated with the current value.
+
+    The user can:
+    - press Enter to keep the current value,
+    - edit part of the current value,
+    - or replace it completely.
+
+    readline is used only for the interactive pre-population behavior.
+    """
+
+    def _prefill() -> None:
+        readline.insert_text(
+            str(current_value)
+        )
+        readline.redisplay()
+
+    readline.set_startup_hook(
+        _prefill
+    )
+
+    try:
+        return input(
+            prompt
+        ).strip()
+
+    finally:
+        readline.set_startup_hook()
+
+
 def _prompt_tax_code(current_value: str) -> str:
     print(f"\nCurrent Tax Code: {current_value}")
     print("\nSelect Tax Code:\n")
@@ -178,7 +213,13 @@ def _prompt_tax_code(current_value: str) -> str:
             return PUBLIX_TAX_OPTIONS[option][0]
 
         if option == "7":
-            return input("\nEnter Tax Code: ").strip() or NA
+            return (
+                _input_with_current_value(
+                    "\nEnter Tax Code: ",
+                    current_value,
+                )
+                or NA
+            )
 
         print("\n[ERROR] Invalid option.")
 
@@ -209,7 +250,10 @@ def _correct_field(
 
     while True:
         print(f"\nCurrent {label}: {current}")
-        value = input(f"Enter corrected {label}: ").strip()
+        value = _input_with_current_value(
+            f"Enter corrected {label}: ",
+            current,
+        )
         value = value or NA
 
         if field_name == "six_digit_sku":

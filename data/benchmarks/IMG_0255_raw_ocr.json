@@ -1,0 +1,1151 @@
+{
+  "source_receipt": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/current_pic/IMG_0255.JPG",
+  "selection_method": "multi-candidate component consensus: best candidate provides reading order; exact six-digit SKU aligns product observations; description, price, and tax code are selected independently from OCR evidence across all candidates; non-product lines continue to use ordinary consensus",
+  "backbone_candidate": {
+    "candidate_id": "grayscale_psm4",
+    "image_variant": "grayscale",
+    "psm": 4,
+    "comparison_metrics": {
+      "score": 37.38,
+      "mean_word_confidence": 42.29,
+      "recognized_word_count": 110,
+      "low_confidence_rate": 0.6,
+      "digit_count": 47,
+      "price_like_count": 4
+    }
+  },
+  "consensus_summary": {
+    "backbone_line_count": 35,
+    "consensus_line_count": 35,
+    "component_reconstruction_count": 0,
+    "supported_extra_line_count": 52,
+    "candidate_count": 6,
+    "match_threshold": 0.58,
+    "extra_line_min_support": 2
+  },
+  "raw_text": "SALE TRANSACTION\nEMPIRE KOSHER GROUND TRI\nEMPIRE KOSHER GROUND TRI\nR-STRAWBERRIES 1 LB 3.99\nSTEN DIED RED PEPPERS OA\n> PASTA CHICKPEA FUSTLLI 49 99\nItems in Transaction:6\nx 30.24\nan Mes a3 94\nrun\n4\nSS i te ieee\nA\n5 ee erie aes aes OO AE PS LS AE EE EDL SS LOT\nT CARD PURCHASE TRANSACTION\nCUSTOMER COPY\n< Bs i.\nin el 4\nSe, <\na 4. ae eee\nAuth Code; 0125/0\neeaTID; © 9788216\nx 30.24\n~\nyi.\nA\now |\nio. 2 .\ndie Bey\nA, | e\n— »*\n12! ~ *\ne ae) 7\nree ut\n4",
+  "text": [
+    {
+      "line_number": 1,
+      "text": "SALE TRANSACTION",
+      "confidence": 95.0,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 2,
+      "match_method": "backbone",
+      "line_quality_score": 96.1,
+      "consensus_score": 100.1,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU",
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 2,
+      "text": "EMPIRE KOSHER GROUND TRK 6.99",
+      "confidence": 80.5,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 3,
+      "match_method": "fuzzy",
+      "line_quality_score": 82.7,
+      "consensus_score": 90.7,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU",
+      "review_status": "accepted",
+      "original_ocr_text": "EMPIRE KOSHER GROUND TRI",
+      "human_review": {
+        "six_digit_sku": "NA",
+        "product": "EMPIRE KOSHER GROUND TRK",
+        "tax_code": "NA",
+        "price": "6.99",
+        "store_number": "0848",
+        "date": "08/24/2026"
+      }
+    },
+    {
+      "line_number": 3,
+      "text": "EMPIRE KOSHER GROUND TRK 6.99",
+      "confidence": 80.5,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 3,
+      "match_method": "fuzzy",
+      "line_quality_score": 82.7,
+      "consensus_score": 90.7,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU",
+      "review_status": "accepted",
+      "original_ocr_text": "EMPIRE KOSHER GROUND TRI",
+      "human_review": {
+        "six_digit_sku": "NA",
+        "product": "EMPIRE KOSHER GROUND TRK",
+        "tax_code": "NA",
+        "price": "6.99",
+        "store_number": "0848",
+        "date": "08/24/2026"
+      }
+    },
+    {
+      "line_number": 4,
+      "text": "R-STRAWBERRIES 1 LB 3.99",
+      "confidence": 63.5,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 1,
+      "match_method": "backbone",
+      "line_quality_score": 69.58,
+      "consensus_score": 69.58,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU",
+      "review_status": "accepted",
+      "original_ocr_text": "R-STRAWBERRIES 1 LB 3.99",
+      "human_review": {
+        "six_digit_sku": "NA",
+        "product": "R-STRAWBERRIES 1 LB",
+        "tax_code": "NA",
+        "price": "3.99",
+        "store_number": "0848",
+        "date": "08/24/2026"
+      }
+    },
+    {
+      "line_number": 5,
+      "text": "FIRE ROASTED RED PEPPERS 3.29",
+      "confidence": 32.2,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 1,
+      "match_method": "backbone",
+      "line_quality_score": 34.95,
+      "consensus_score": 34.95,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU",
+      "review_status": "accepted",
+      "original_ocr_text": "STEN DIED RED PEPPERS OA",
+      "human_review": {
+        "six_digit_sku": "NA",
+        "product": "FIRE ROASTED RED PEPPERS",
+        "tax_code": "NA",
+        "price": "3.29",
+        "store_number": "0848",
+        "date": "08/24/2026"
+      }
+    },
+    {
+      "line_number": 6,
+      "text": "PASTA CHICKPEA FUSILLI 2.99",
+      "confidence": 63.0,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 1,
+      "match_method": "backbone",
+      "line_quality_score": 67.18,
+      "consensus_score": 67.18,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU",
+      "review_status": "accepted",
+      "original_ocr_text": "> PASTA CHICKPEA FUSTLLI 49 99",
+      "human_review": {
+        "six_digit_sku": "NA",
+        "product": "PASTA CHICKPEA FUSILLI",
+        "tax_code": "NA",
+        "price": "2.99",
+        "store_number": "0848",
+        "date": "08/24/2026"
+      }
+    },
+    {
+      "line_number": 7,
+      "text": "MUFFIN BLUEBERRY GLUTEN 5.99",
+      "confidence": 78.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "match_method": "fuzzy",
+      "line_quality_score": 79.87,
+      "consensus_score": 83.87,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU",
+      "review_status": "accepted",
+      "original_ocr_text": "Items in Transaction:6",
+      "human_review": {
+        "six_digit_sku": "NA",
+        "product": "MUFFIN BLUEBERRY GLUTEN",
+        "tax_code": "NA",
+        "price": "5.99",
+        "store_number": "0848",
+        "date": "08/24/2026"
+      }
+    },
+    {
+      "line_number": 8,
+      "text": "x 30.24",
+      "confidence": 67.5,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 3,
+      "match_method": "fuzzy",
+      "line_quality_score": 72.48,
+      "consensus_score": 80.48,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 9,
+      "text": "an Mes a3 94",
+      "confidence": 28.5,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 1,
+      "match_method": "backbone",
+      "line_quality_score": 31.36,
+      "consensus_score": 31.36,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 10,
+      "text": "run",
+      "confidence": 31.0,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 1,
+      "match_method": "backbone",
+      "line_quality_score": 31.55,
+      "consensus_score": 31.55,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 11,
+      "text": "4",
+      "confidence": 96.0,
+      "source_candidate": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "support_count": 4,
+      "match_method": "fuzzy",
+      "line_quality_score": 96.77,
+      "consensus_score": 108.77,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 12,
+      "text": "SS i te ieee",
+      "confidence": 23.75,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 1,
+      "match_method": "backbone",
+      "line_quality_score": 25.95,
+      "consensus_score": 25.95,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 13,
+      "text": "A",
+      "confidence": 64.0,
+      "source_candidate": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "support_count": 5,
+      "match_method": "fuzzy",
+      "line_quality_score": 64.55,
+      "consensus_score": 80.55,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 14,
+      "text": "5 ee erie aes aes OO AE PS LS AE EE EDL SS LOT",
+      "confidence": 21.43,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 2,
+      "match_method": "backbone",
+      "line_quality_score": 29.35,
+      "consensus_score": 33.35,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 15,
+      "text": "T CARD PURCHASE TRANSACTION",
+      "confidence": 94.25,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 2,
+      "match_method": "backbone",
+      "line_quality_score": 96.45,
+      "consensus_score": 100.45,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 16,
+      "text": "CUSTOMER COPY",
+      "confidence": 96.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "match_method": "fuzzy",
+      "line_quality_score": 97.1,
+      "consensus_score": 101.1,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 17,
+      "text": "< Bs i.",
+      "confidence": 34.0,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 1,
+      "match_method": "backbone",
+      "line_quality_score": 35.65,
+      "consensus_score": 35.65,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 18,
+      "text": "in el 4",
+      "confidence": 52.0,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 1,
+      "match_method": "backbone",
+      "line_quality_score": 53.87,
+      "consensus_score": 53.87,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 19,
+      "text": "Se, <",
+      "confidence": 45.5,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 3,
+      "match_method": "fuzzy",
+      "line_quality_score": 46.6,
+      "consensus_score": 54.6,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 20,
+      "text": "a 4. ae eee",
+      "confidence": 32.75,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 1,
+      "match_method": "backbone",
+      "line_quality_score": 35.17,
+      "consensus_score": 35.17,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 21,
+      "text": "Auth Code; 0125/0",
+      "confidence": 52.33,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 1,
+      "match_method": "backbone",
+      "line_quality_score": 55.08,
+      "consensus_score": 55.08,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 22,
+      "text": "eeaTID; © 9788216",
+      "confidence": 8.33,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 1,
+      "match_method": "backbone",
+      "line_quality_score": 11.52,
+      "consensus_score": 11.52,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 23,
+      "text": "x 30.24",
+      "confidence": 67.5,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 3,
+      "match_method": "fuzzy",
+      "line_quality_score": 72.48,
+      "consensus_score": 80.48,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 24,
+      "text": "~",
+      "confidence": 18.0,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 1,
+      "match_method": "backbone",
+      "line_quality_score": 18.55,
+      "consensus_score": 18.55,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 25,
+      "text": "yi.",
+      "confidence": 2.0,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 1,
+      "match_method": "backbone",
+      "line_quality_score": 2.55,
+      "consensus_score": 2.55,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 26,
+      "text": "A",
+      "confidence": 64.0,
+      "source_candidate": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "support_count": 5,
+      "match_method": "fuzzy",
+      "line_quality_score": 64.55,
+      "consensus_score": 80.55,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 27,
+      "text": "ow |",
+      "confidence": 59.0,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 2,
+      "match_method": "fuzzy",
+      "line_quality_score": 60.1,
+      "consensus_score": 64.1,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 28,
+      "text": "io. 2 .",
+      "confidence": 12.0,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 1,
+      "match_method": "backbone",
+      "line_quality_score": 13.87,
+      "consensus_score": 13.87,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 29,
+      "text": "die Bey",
+      "confidence": 23.5,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 1,
+      "match_method": "backbone",
+      "line_quality_score": 24.6,
+      "consensus_score": 24.6,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 30,
+      "text": "A, | e",
+      "confidence": 62.0,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 1,
+      "match_method": "backbone",
+      "line_quality_score": 63.65,
+      "consensus_score": 63.65,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 31,
+      "text": "— »*",
+      "confidence": 15.5,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 1,
+      "match_method": "backbone",
+      "line_quality_score": 16.6,
+      "consensus_score": 16.6,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 32,
+      "text": "12! ~ *",
+      "confidence": 34.0,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 1,
+      "match_method": "backbone",
+      "line_quality_score": 36.09,
+      "consensus_score": 36.09,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 33,
+      "text": "e ae) 7",
+      "confidence": 25.0,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 1,
+      "match_method": "backbone",
+      "line_quality_score": 26.87,
+      "consensus_score": 26.87,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 34,
+      "text": "ree ut",
+      "confidence": 10.0,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 1,
+      "match_method": "backbone",
+      "line_quality_score": 11.1,
+      "consensus_score": 11.1,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 35,
+      "text": "4",
+      "confidence": 96.0,
+      "source_candidate": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "support_count": 4,
+      "match_method": "fuzzy",
+      "line_quality_score": 96.77,
+      "consensus_score": 108.77,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    }
+  ],
+  "supported_extra_lines": [
+    {
+      "text": "ee ee)",
+      "confidence": 34.5,
+      "source_candidate": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "support_count": 3,
+      "line_quality_score": 35.6
+    },
+    {
+      "text": "7",
+      "confidence": 33.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 3,
+      "line_quality_score": 33.77
+    },
+    {
+      "text": "t~",
+      "confidence": 33.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 3,
+      "line_quality_score": 33.55
+    },
+    {
+      "text": "A at a",
+      "confidence": 27.67,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 3,
+      "line_quality_score": 29.32
+    },
+    {
+      "text": "~ \"J",
+      "confidence": 24.5,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 3,
+      "line_quality_score": 25.6
+    },
+    {
+      "text": "+o",
+      "confidence": 23.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 3,
+      "line_quality_score": 23.55
+    },
+    {
+      "text": "oe",
+      "confidence": 21.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 3,
+      "line_quality_score": 21.55
+    },
+    {
+      "text": ",* 2",
+      "confidence": 17.5,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 3,
+      "line_quality_score": 18.82
+    },
+    {
+      "text": "i ‘",
+      "confidence": 0.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 3,
+      "line_quality_score": 1.1
+    },
+    {
+      "text": "“F",
+      "confidence": 0.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 3,
+      "line_quality_score": 0.55
+    },
+    {
+      "text": "ye",
+      "confidence": 0.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 3,
+      "line_quality_score": 0.55
+    },
+    {
+      "text": "e",
+      "confidence": 0.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 3,
+      "line_quality_score": 0.55
+    },
+    {
+      "text": "0]",
+      "confidence": 86.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 86.77
+    },
+    {
+      "text": "L",
+      "confidence": 86.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 86.55
+    },
+    {
+      "text": "Center.",
+      "confidence": 71.0,
+      "source_candidate": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "support_count": 2,
+      "line_quality_score": 71.55
+    },
+    {
+      "text": "Wi",
+      "confidence": 69.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 69.55
+    },
+    {
+      "text": "AS",
+      "confidence": 56.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 56.55
+    },
+    {
+      "text": "Le.",
+      "confidence": 52.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 52.55
+    },
+    {
+      "text": "5",
+      "confidence": 50.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 50.77
+    },
+    {
+      "text": "> y)",
+      "confidence": 47.5,
+      "source_candidate": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "support_count": 2,
+      "line_quality_score": 48.6
+    },
+    {
+      "text": ". | _ i | I > : ’ ' ; a . - .",
+      "confidence": 40.8,
+      "source_candidate": "threshold_psm6",
+      "image_variant": "threshold",
+      "psm": 6,
+      "support_count": 2,
+      "line_quality_score": 48.5
+    },
+    {
+      "text": "‘pe",
+      "confidence": 44.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 44.55
+    },
+    {
+      "text": "2 on",
+      "confidence": 42.5,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 43.82
+    },
+    {
+      "text": "{ ae S .",
+      "confidence": 36.75,
+      "source_candidate": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "support_count": 2,
+      "line_quality_score": 38.95
+    },
+    {
+      "text": "'s",
+      "confidence": 38.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 38.55
+    },
+    {
+      "text": "a Aor",
+      "confidence": 35.5,
+      "source_candidate": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "support_count": 2,
+      "line_quality_score": 36.6
+    },
+    {
+      "text": "Be:",
+      "confidence": 36.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 36.55
+    },
+    {
+      "text": "of",
+      "confidence": 34.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 34.55
+    },
+    {
+      "text": "ie",
+      "confidence": 34.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 34.55
+    },
+    {
+      "text": "aie”",
+      "confidence": 33.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 33.55
+    },
+    {
+      "text": "(UNS Lt",
+      "confidence": 31.5,
+      "source_candidate": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "support_count": 2,
+      "line_quality_score": 32.6
+    },
+    {
+      "text": "~ af",
+      "confidence": 28.5,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 29.6
+    },
+    {
+      "text": "hy",
+      "confidence": 28.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 28.55
+    },
+    {
+      "text": "ae",
+      "confidence": 25.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 25.55
+    },
+    {
+      "text": "[Sf",
+      "confidence": 24.0,
+      "source_candidate": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "support_count": 2,
+      "line_quality_score": 24.55
+    },
+    {
+      "text": "LL",
+      "confidence": 24.0,
+      "source_candidate": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "support_count": 2,
+      "line_quality_score": 24.55
+    },
+    {
+      "text": "ty",
+      "confidence": 24.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 24.55
+    },
+    {
+      "text": "dé",
+      "confidence": 23.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 23.55
+    },
+    {
+      "text": "te, ¥",
+      "confidence": 17.5,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 18.6
+    },
+    {
+      "text": "Oa",
+      "confidence": 18.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 18.55
+    },
+    {
+      "text": "& oh",
+      "confidence": 16.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 17.1
+    },
+    {
+      "text": "Pd _* /",
+      "confidence": 14.67,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 16.32
+    },
+    {
+      "text": "“Pw,",
+      "confidence": 14.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 14.55
+    },
+    {
+      "text": "at-*",
+      "confidence": 14.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 14.55
+    },
+    {
+      "text": "CG *.",
+      "confidence": 7.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 8.1
+    },
+    {
+      "text": "eo",
+      "confidence": 7.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 7.55
+    },
+    {
+      "text": "oo",
+      "confidence": 6.0,
+      "source_candidate": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "support_count": 2,
+      "line_quality_score": 6.55
+    },
+    {
+      "text": "‘44>",
+      "confidence": 0.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 0.99
+    },
+    {
+      "text": "‘Yt",
+      "confidence": 0.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 0.55
+    },
+    {
+      "text": "gt.",
+      "confidence": 0.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 0.55
+    },
+    {
+      "text": "fee",
+      "confidence": 0.0,
+      "source_candidate": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "support_count": 2,
+      "line_quality_score": 0.55
+    },
+    {
+      "text": "ve",
+      "confidence": 0.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 0.55
+    }
+  ],
+  "candidate_ranking": [
+    {
+      "rank": 1,
+      "candidate_id": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 37.38,
+        "mean_word_confidence": 42.29,
+        "recognized_word_count": 110,
+        "low_confidence_rate": 0.6,
+        "digit_count": 47,
+        "price_like_count": 4
+      }
+    },
+    {
+      "rank": 2,
+      "candidate_id": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 34.133,
+        "mean_word_confidence": 35.9,
+        "recognized_word_count": 399,
+        "low_confidence_rate": 0.7118,
+        "digit_count": 93,
+        "price_like_count": 6
+      }
+    },
+    {
+      "rank": 3,
+      "candidate_id": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 30.7805,
+        "mean_word_confidence": 33.66,
+        "recognized_word_count": 997,
+        "low_confidence_rate": 0.7613,
+        "digit_count": 96,
+        "price_like_count": 1
+      }
+    },
+    {
+      "rank": 4,
+      "candidate_id": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 27.1385,
+        "mean_word_confidence": 30.87,
+        "recognized_word_count": 953,
+        "low_confidence_rate": 0.7901,
+        "digit_count": 62,
+        "price_like_count": 0
+      }
+    },
+    {
+      "rank": 5,
+      "candidate_id": "threshold_psm6",
+      "image_variant": "threshold",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": 25.771,
+        "mean_word_confidence": 29.24,
+        "recognized_word_count": 1594,
+        "low_confidence_rate": 0.7886,
+        "digit_count": 86,
+        "price_like_count": 0
+      }
+    },
+    {
+      "rank": 6,
+      "candidate_id": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": 23.9065,
+        "mean_word_confidence": 28.34,
+        "recognized_word_count": 417,
+        "low_confidence_rate": 0.8369,
+        "digit_count": 54,
+        "price_like_count": 1
+      }
+    }
+  ],
+  "provenance": {
+    "candidates_file": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_candidates/IMG_0255_ocr_candidates.json",
+    "rule": "Product lines may be reconstructed from multiple Tesseract observations only when they share the same exact six-digit SKU. Description text is OCR-derived, and price/tax values must each appear in at least one actual OCR candidate. No spelling correction or external product lookup is performed."
+  },
+  "benchmark": {
+    "source_raw_ocr": "IMG_0255_raw_ocr.json",
+    "receipt_type": "Trader Joe's",
+    "store_number": "0848",
+    "receipt_date": "08/24/2026",
+    "starting_line_number": 1,
+    "reviewed_line_count": 7,
+    "accepted_purchase_count": 6,
+    "skipped_line_count": 1,
+    "ground_truth": true
+  }
+}

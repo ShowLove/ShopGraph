@@ -1,12 +1,61 @@
-ShopGraph - Safe Perspective Validation Update
+ShopGraph - Pre-Populated Correction Input Update
+
+PURPOSE
+
+When using:
+
+    2. Correct Columns
+
+the correction prompt now begins with the current parser guess already
+inserted into the editable terminal input.
+
+BEFORE
+
+    Current Product: SALE TRANSACTION
+    Enter corrected Product:
+
+AFTER
+
+    Current Product: SALE TRANSACTION
+    Enter corrected Product: SALE TRANSACTION
+
+The text after the prompt is editable.
+
+The user can:
+
+- press Enter immediately to keep the current value,
+- move through/edit the existing value,
+- or replace it completely.
+
+This behavior applies to normal editable fields such as:
+
+- Product
+- Price
+- Store Number
+- Date
+- Six-Digit SKU
+
+The existing Publix Tax Code choice menu remains unchanged. If the user
+chooses its custom-value option, that custom text prompt is also pre-populated
+with the current Tax Code.
+
+IMPLEMENTATION
+
+The update uses Python's built-in readline support to insert the current value
+into the interactive terminal buffer before input() begins.
+
+No new pip dependency is required.
+
+INSTALL
 
 Replace only:
 
-    capabilities/OCRAcquisitionPipeline/perspective_correction.py
+    utils/DataBaseBuilder/data_base_builder_main.py
 
-This update validates candidate geometry before perspective warping and validates
-the resulting image afterward. If the candidate is unsafe or produces a blank /
-near-blank result, the code writes the good cropped receipt to the normal
-perspective output path and continues the OCR pipeline.
+No other ShopGraph files need to change.
 
-No other files need to change.
+RUN
+
+    python3 main.py
+
+Then use Data Base Builder normally.
