@@ -15,6 +15,21 @@ from capabilities.OCRAcquisitionPipeline.session_state import (
 )
 
 
+# Conservative safety thresholds for validating perspective candidates.
+MIN_QUAD_AREA_RATIO = 0.25
+MAX_QUAD_AREA_RATIO = 1.02
+MIN_SIDE_RATIO = 0.10
+MIN_OUTPUT_DIMENSION_RATIO = 0.20
+MAX_OUTPUT_DIMENSION_RATIO = 1.50
+MIN_ASPECT_RATIO = 0.12
+MAX_ASPECT_RATIO = 3.00
+MIN_OUTPUT_STD = 8.0
+MIN_OUTPUT_DYNAMIC_RANGE = 25.0
+MIN_OUTPUT_EDGE_DENSITY = 0.0005
+MIN_RELATIVE_STD = 0.15
+MIN_RELATIVE_EDGE_DENSITY = 0.08
+
+
 def _order_points(
     points: np.ndarray,
 ) -> np.ndarray:
@@ -178,60 +193,130 @@ def _find_document_corners(
     return None
 
 
+def _proposed_output_size(
+    rectangle: np.ndarray,
+) -> tuple[int, int]:
+    top_left, top_right, bottom_right, bottom_left = rectangle
+
+    output_width = max(
+        int(round(max(
+            np.linalg.norm(bottom_right - bottom_left),
+            np.linalg.norm(top_right - top_left),
+        ))),
+        1,
+    )
+
+    output_height = max(
+        int(round(max(
+            np.linalg.norm(top_right - bottom_right),
+            np.linalg.norm(top_left - bottom_left),
+        ))),
+        1,
+    )
+
+    return output_width, output_height
+
+
+def _validate_candidate_quad(
+    image: np.ndarray,
+    corners: np.ndarray,
+) -> tuple[bool, dict]:
+    height, width = image.shape[:2]
+    points = np.asarray(corners, dtype="float32").reshape(4, 2)
+
+    if not np.isfinite(points).all():
+        return False, {"reason": "candidate contains invalid coordinates"}
+
+    if len(np.unique(np.round(points, 2), axis=0)) != 4:
+        return False, {"reason": "candidate does not contain four unique corners"}
+
+    ordered = _order_points(points)
+    contour = ordered.reshape(-1, 1, 2).astype(np.float32)
+
+    if not cv2.isContourConvex(contour):
+        return False, {"reason": "candidate quadrilateral is not convex"}
+
+    image_area = float(width * height)
+    area_ratio = abs(cv2.contourArea(contour)) / image_area if image_area else 0.0
+
+    if not MIN_QUAD_AREA_RATIO <= area_ratio <= MAX_QUAD_AREA_RATIO:
+        return False, {"reason": f"candidate area ratio is implausible ({area_ratio:.3f})"}
+
+    tl, tr, br, bl = ordered
+    side_lengths = [
+        np.linalg.norm(tr - tl),
+        np.linalg.norm(br - tr),
+        np.linalg.norm(bl - br),
+        np.linalg.norm(tl - bl),
+    ]
+
+    if min(side_lengths) < min(width, height) * MIN_SIDE_RATIO:
+        return False, {"reason": "candidate contains an implausibly short side"}
+
+    output_width, output_height = _proposed_output_size(ordered)
+
+    if (
+        output_width < width * MIN_OUTPUT_DIMENSION_RATIO
+        or output_height < height * MIN_OUTPUT_DIMENSION_RATIO
+        or output_width > width * MAX_OUTPUT_DIMENSION_RATIO
+        or output_height > height * MAX_OUTPUT_DIMENSION_RATIO
+    ):
+        return False, {"reason": "candidate would create implausible output dimensions"}
+
+    aspect_ratio = output_width / output_height if output_height else 0.0
+
+    if not MIN_ASPECT_RATIO <= aspect_ratio <= MAX_ASPECT_RATIO:
+        return False, {"reason": f"candidate aspect ratio is implausible ({aspect_ratio:.3f})"}
+
+    return True, {
+        "reason": "candidate geometry accepted",
+        "area_ratio": area_ratio,
+        "aspect_ratio": aspect_ratio,
+    }
+
+
+def _image_quality_metrics(image: np.ndarray) -> dict:
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    edges = cv2.Canny(gray, 50, 150)
+
+    return {
+        "std_dev": float(np.std(gray)),
+        "dynamic_range": float(np.percentile(gray, 95) - np.percentile(gray, 5)),
+        "edge_density": float(np.count_nonzero(edges) / edges.size),
+    }
+
+
+def _validate_warped_image(
+    source_image: np.ndarray,
+    corrected_image: np.ndarray,
+) -> tuple[bool, str, dict]:
+    source = _image_quality_metrics(source_image)
+    corrected = _image_quality_metrics(corrected_image)
+
+    if corrected["std_dev"] < MIN_OUTPUT_STD:
+        return False, "warped image has insufficient tonal variation", corrected
+
+    if corrected["dynamic_range"] < MIN_OUTPUT_DYNAMIC_RANGE:
+        return False, "warped image has insufficient intensity range", corrected
+
+    if corrected["edge_density"] < MIN_OUTPUT_EDGE_DENSITY:
+        return False, "warped image contains too little edge/detail information", corrected
+
+    if source["std_dev"] > 0 and corrected["std_dev"] < source["std_dev"] * MIN_RELATIVE_STD:
+        return False, "warped image lost too much tonal information", corrected
+
+    if source["edge_density"] > 0 and corrected["edge_density"] < source["edge_density"] * MIN_RELATIVE_EDGE_DENSITY:
+        return False, "warped image lost too much structural detail", corrected
+
+    return True, "warped image quality accepted", corrected
+
+
 def _warp_receipt(
     image: np.ndarray,
     corners: np.ndarray,
 ) -> np.ndarray:
-    rectangle = _order_points(
-        corners
-    )
-
-    (
-        top_left,
-        top_right,
-        bottom_right,
-        bottom_left,
-    ) = rectangle
-
-    width_bottom = np.linalg.norm(
-        bottom_right - bottom_left
-    )
-
-    width_top = np.linalg.norm(
-        top_right - top_left
-    )
-
-    output_width = max(
-        int(
-            round(
-                max(
-                    width_bottom,
-                    width_top,
-                )
-            )
-        ),
-        1,
-    )
-
-    height_right = np.linalg.norm(
-        top_right - bottom_right
-    )
-
-    height_left = np.linalg.norm(
-        top_left - bottom_left
-    )
-
-    output_height = max(
-        int(
-            round(
-                max(
-                    height_right,
-                    height_left,
-                )
-            )
-        ),
-        1,
-    )
+    rectangle = _order_points(corners)
+    output_width, output_height = _proposed_output_size(rectangle)
 
     destination = np.array(
         [
@@ -248,13 +333,15 @@ def _warp_receipt(
         destination,
     )
 
+    if not np.isfinite(transform).all():
+        raise ValueError(
+            "Perspective transform matrix contains invalid values."
+        )
+
     corrected = cv2.warpPerspective(
         image,
         transform,
-        (
-            output_width,
-            output_height,
-        ),
+        (output_width, output_height),
         flags=cv2.INTER_CUBIC,
         borderMode=cv2.BORDER_CONSTANT,
         borderValue=(255, 255, 255),
@@ -335,25 +422,77 @@ def correct_perspective(
     )
 
     if corners is None:
-        # The crop stage may already have produced a good rectangular
-        # receipt. In that case, keep the image rather than failing the
-        # streamlined pipeline.
         corrected = image.copy()
 
         correction_status = (
-            "no additional perspective distortion detected; "
+            "no trustworthy additional perspective geometry detected; "
             "using cropped image as-is"
         )
 
     else:
-        corrected = _warp_receipt(
+        geometry_valid, geometry_metrics = _validate_candidate_quad(
             image,
             corners,
         )
 
-        correction_status = (
-            "perspective correction applied"
-        )
+        if not geometry_valid:
+            corrected = image.copy()
+
+            correction_status = (
+                "perspective candidate rejected during geometry validation; "
+                "using cropped image as-is"
+            )
+
+            print(
+                "[WARNING] Perspective geometry rejected: "
+                f"{geometry_metrics['reason']}"
+            )
+
+        else:
+            candidate = _warp_receipt(
+                image,
+                corners,
+            )
+
+            candidate_valid, candidate_reason, candidate_metrics = (
+                _validate_warped_image(
+                    source_image=image,
+                    corrected_image=candidate,
+                )
+            )
+
+            if not candidate_valid:
+                corrected = image.copy()
+
+                correction_status = (
+                    "perspective candidate rejected during output validation; "
+                    "using cropped image as-is"
+                )
+
+                print(
+                    "[WARNING] Perspective output rejected: "
+                    f"{candidate_reason}"
+                )
+
+                print(
+                    "[INFO] Rejected output metrics: "
+                    f"std={candidate_metrics['std_dev']:.2f}, "
+                    f"dynamic_range={candidate_metrics['dynamic_range']:.2f}, "
+                    f"edge_density={candidate_metrics['edge_density']:.5f}"
+                )
+
+            else:
+                corrected = candidate
+
+                correction_status = (
+                    "perspective correction applied and validated"
+                )
+
+                print(
+                    "[INFO] Perspective geometry validated: "
+                    f"area_ratio={geometry_metrics['area_ratio']:.3f}, "
+                    f"aspect_ratio={geometry_metrics['aspect_ratio']:.3f}"
+                )
 
     destination = (
         get_perspective_corrected_path(

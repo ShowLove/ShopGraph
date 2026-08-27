@@ -1,104 +1,12 @@
-ShopGraph - Purchase History Excel Schema Update
-
-PURPOSE
-
-This update changes the Purchase History worksheet from:
-
-    Six-Digit SKU
-    Product
-    Tax Code
-    Store Number
-    Date 1
-    Price 1
-    Date 2
-    Price 2
-    ...
-
-to:
-
-    Total
-    <blank spacer>
-    Store
-    Six-Digit SKU
-    Product
-    Tax Code
-    Store Number
-    Common Name
-    Category
-    Date 1
-    Price 1
-    Date 2
-    Price 2
-    ...
-
-ONLY THESE NEW FIELDS ARE POPULATED NOW
-
-Total
-    Added as an Excel equation that sums all Price N cells in that row.
-
-Store
-    Automatically populated from the selected receipt type:
-        Publix
-        Trader Joe's
-        Aldi
-        Other
-
-Common Name
-    Initialized to NA.
-    No current parsing or correction behavior attempts to fill it.
-
-Category
-    Initialized to NA.
-    No current parsing or correction behavior attempts to fill it.
-
-TOTAL EQUATION
-
-Each row receives a future-safe Excel formula beginning in column A.
-
-If column A already contains an Excel formula, the code leaves that formula
-unchanged.
-
-The formula sums Price 1, Price 2, Price 3, etc. while ignoring Date columns
-and text values such as NA.
-
-EXISTING WORKBOOKS
-
-You do NOT need to delete shopgraph_purchase_history.xlsx.
-
-The first time this updated code opens the existing old-format workbook,
-it automatically migrates the Purchase History sheet.
-
-Existing:
-    SKU / Product / Tax Code / Store Number / Date N / Price N
-
-is moved safely into the new layout.
-
-Existing purchase history is preserved.
-
-Because the old workbook did not store the store company name, migrated rows
-initially receive:
-
-    Store = NA
-
-When a later receipt matches an existing product-history row, the selected
-receipt type fills that Store value automatically.
-
-Common Name and Category are initialized to NA.
-
-INSTALL
+ShopGraph - Safe Perspective Validation Update
 
 Replace only:
 
-    utils/DataBaseBuilder/excel/purchase_history.py
+    capabilities/OCRAcquisitionPipeline/perspective_correction.py
 
-No other Python file needs to change.
+This update validates candidate geometry before perspective warping and validates
+the resulting image afterward. If the candidate is unsafe or produces a blank /
+near-blank result, the code writes the good cropped receipt to the normal
+perspective output path and continues the OCR pipeline.
 
-RUN
-
-    python3 main.py
-
-Use the Data Base Builder normally.
-
-The workbook remains:
-
-    data/database/shopgraph_purchase_history.xlsx
+No other files need to change.

@@ -1,0 +1,2010 @@
+{
+  "source_receipt": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/current_pic/IMG_0251.png",
+  "selection_method": "multi-candidate component consensus: best candidate provides reading order; exact six-digit SKU aligns product observations; description, price, and tax code are selected independently from OCR evidence across all candidates; non-product lines continue to use ordinary consensus",
+  "backbone_candidate": {
+    "candidate_id": "grayscale_psm4",
+    "image_variant": "grayscale",
+    "psm": 4,
+    "comparison_metrics": {
+      "score": 91.2035,
+      "mean_word_confidence": 82.86,
+      "recognized_word_count": 175,
+      "low_confidence_rate": 0.0971,
+      "digit_count": 295,
+      "price_like_count": 20
+    }
+  },
+  "consensus_summary": {
+    "backbone_line_count": 40,
+    "consensus_line_count": 40,
+    "component_reconstruction_count": 13,
+    "supported_extra_line_count": 24,
+    "candidate_count": 6,
+    "match_threshold": 0.58,
+    "extra_line_min_support": 2
+  },
+  "raw_text": "383212 GF Wide Pari)Bread\n356691 Zucchini\n1.87-1b x 1.39/1b\n356689 Yellow Squash\n1.87 Ib x\n356421 Medley. Potatoes\n896537 Cilantro\n856508 Broccoli Crowns\n1.63 Ib x\n356496 Beefsteak Tomatoes\n344280 Cauli Crust Pizza\n356427 Mul ti-Peppers 3pk\n356591 Pink Lady Apple\n356488 Baby Carrots\n341979 Pine/Water Spears\n356504 Blueberries\n356374 Golden Kiwi 4\n343738 Hummus Mini Cups 4\n69553 LesserEvil Popgern 2\n262747 Bananas LRW 1\n(G) 2.681b - (1) 0.01Ib\n(N) 2.67 Ib x 0.49/1b\n328752 Fruit & Grain Bars\n328752 Fruit & Grain Bars\n856609 Red Onions 2.4\n739153 Organic Chickpeas 0.99\n381343 Dark Red Kidney 0.85\n739153 Organic Chickpeas 0.99\n381343 Dark Red Kidney 0.85\n381359 Vinaigrette Drssng 2.99\n356578 Parsley each 0.95\n400462 OG Croutons f 1.99\n344583 Evryd Plate 8.5in N 5.25\n384545 NO Honey Wheat Brd F 3.37\n730325 3pk_Gel Pens 5.99\n720921 PB Toast Crackers 2.79 FA\n383548 Goat Cheese Logs 1.99 FA\n713372 Feta Crumbles 2.89 FA\n7iss29 Col lapsibleStorage 5.99 NB\n718929 Col lapsibleStorage 5.99 NB",
+  "text": [
+    {
+      "line_number": 1,
+      "text": "383212 GF Wide Pari)Bread",
+      "confidence": 64.0,
+      "source_candidate": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "support_count": 5,
+      "match_method": "sku",
+      "line_quality_score": 70.07,
+      "consensus_score": 86.07,
+      "reconstructed": true,
+      "original_consensus_text": "383212 GF fide Pan Bread",
+      "reconstruction_method": "component consensus by exact six-digit SKU",
+      "component_support": {
+        "sku": {
+          "value": "383212",
+          "support_count": 4
+        },
+        "description": {
+          "value": "GF Wide Pari)Bread",
+          "source_candidate": "grayscale_psm4",
+          "source_text": "383212 GF Wide Pari)Bread",
+          "support_count": 4,
+          "confidence": 66.25,
+          "score": 90.75
+        },
+        "price": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
+    },
+    {
+      "line_number": 2,
+      "text": "356691 Zucchini",
+      "confidence": 83.33,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 2,
+      "match_method": "backbone",
+      "line_quality_score": 88.3,
+      "consensus_score": 92.3,
+      "reconstructed": true,
+      "original_consensus_text": "356691 Zucchini ~",
+      "reconstruction_method": "component consensus by exact six-digit SKU",
+      "component_support": {
+        "sku": {
+          "value": "356691",
+          "support_count": 2
+        },
+        "description": {
+          "value": "Zucchini",
+          "source_candidate": "grayscale_psm4",
+          "source_text": "356691 Zucchini ~",
+          "support_count": 2,
+          "confidence": 83.33,
+          "score": 94.83
+        },
+        "price": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
+    },
+    {
+      "line_number": 3,
+      "text": "1.87-1b x 1.39/1b",
+      "confidence": 60.0,
+      "source_candidate": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "support_count": 5,
+      "match_method": "fuzzy",
+      "line_quality_score": 69.41,
+      "consensus_score": 85.41,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 4,
+      "text": "356689 Yellow Squash",
+      "confidence": 93.33,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 5,
+      "match_method": "backbone",
+      "line_quality_score": 98.3,
+      "consensus_score": 114.3,
+      "reconstructed": false,
+      "original_consensus_text": "356689 Yellow Squash",
+      "reconstruction_method": "component consensus by exact six-digit SKU",
+      "component_support": {
+        "sku": {
+          "value": "356689",
+          "support_count": 3
+        },
+        "description": {
+          "value": "Yellow Squash",
+          "source_candidate": "grayscale_psm4",
+          "source_text": "356689 Yellow Squash",
+          "support_count": 3,
+          "confidence": 93.33,
+          "score": 111.33
+        },
+        "price": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
+    },
+    {
+      "line_number": 5,
+      "text": "1.87 Ib x",
+      "confidence": 91.67,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 4,
+      "match_method": "fuzzy",
+      "line_quality_score": 96.98,
+      "consensus_score": 108.98,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 6,
+      "text": "356421 Medley. Potatoes",
+      "confidence": 92.33,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 6,
+      "match_method": "sku",
+      "line_quality_score": 97.3,
+      "consensus_score": 117.3,
+      "reconstructed": false,
+      "original_consensus_text": "356421 Medley. Potatoes",
+      "reconstruction_method": "component consensus by exact six-digit SKU",
+      "component_support": {
+        "sku": {
+          "value": "356421",
+          "support_count": 6
+        },
+        "description": {
+          "value": "Medley. Potatoes",
+          "source_candidate": "threshold_psm11",
+          "source_text": "356421 Medley. Potatoes",
+          "support_count": 6,
+          "confidence": 92.33,
+          "score": 125.33
+        },
+        "price": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
+    },
+    {
+      "line_number": 7,
+      "text": "896537 Cilantro",
+      "confidence": 93.0,
+      "source_candidate": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "support_count": 5,
+      "match_method": "fuzzy",
+      "line_quality_score": 97.42,
+      "consensus_score": 113.42,
+      "reconstructed": false,
+      "original_consensus_text": "896537 Cilantro",
+      "reconstruction_method": "component consensus by exact six-digit SKU",
+      "component_support": {
+        "sku": {
+          "value": "896537",
+          "support_count": 2
+        },
+        "description": {
+          "value": "Cilantro",
+          "source_candidate": "threshold_psm4",
+          "source_text": "896537 Cilantro",
+          "support_count": 2,
+          "confidence": 93.0,
+          "score": 104.5
+        },
+        "price": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
+    },
+    {
+      "line_number": 8,
+      "text": "856508 Broccoli Crowns",
+      "confidence": 95.33,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 5,
+      "match_method": "sku",
+      "line_quality_score": 100.3,
+      "consensus_score": 116.3,
+      "reconstructed": false,
+      "original_consensus_text": "856508 Broccoli Crowns",
+      "reconstruction_method": "component consensus by exact six-digit SKU",
+      "component_support": {
+        "sku": {
+          "value": "856508",
+          "support_count": 3
+        },
+        "description": {
+          "value": "Broccoli Crowns",
+          "source_candidate": "grayscale_psm11",
+          "source_text": "856508 Broccoli Crowns",
+          "support_count": 3,
+          "confidence": 95.33,
+          "score": 113.33
+        },
+        "price": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
+    },
+    {
+      "line_number": 9,
+      "text": "1.63 Ib x",
+      "confidence": 88.33,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 6,
+      "match_method": "fuzzy",
+      "line_quality_score": 93.64,
+      "consensus_score": 113.64,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 10,
+      "text": "356496 Beefsteak Tomatoes",
+      "confidence": 93.33,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 6,
+      "match_method": "backbone",
+      "line_quality_score": 98.3,
+      "consensus_score": 118.3,
+      "reconstructed": false,
+      "original_consensus_text": "356496 Beefsteak Tomatoes",
+      "reconstruction_method": "component consensus by exact six-digit SKU",
+      "component_support": {
+        "sku": {
+          "value": "356496",
+          "support_count": 6
+        },
+        "description": {
+          "value": "Beefsteak Tomatoes",
+          "source_candidate": "grayscale_psm4",
+          "source_text": "356496 Beefsteak Tomatoes",
+          "support_count": 6,
+          "confidence": 93.33,
+          "score": 126.33
+        },
+        "price": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
+    },
+    {
+      "line_number": 11,
+      "text": "344280 Cauli Crust Pizza",
+      "confidence": 94.0,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 6,
+      "match_method": "sku",
+      "line_quality_score": 99.52,
+      "consensus_score": 119.52,
+      "reconstructed": false,
+      "original_consensus_text": "344280 Cauli Crust Pizza",
+      "reconstruction_method": "component consensus by exact six-digit SKU",
+      "component_support": {
+        "sku": {
+          "value": "344280",
+          "support_count": 6
+        },
+        "description": {
+          "value": "Cauli Crust Pizza",
+          "source_candidate": "threshold_psm11",
+          "source_text": "344280 Cauli Crust Pizza",
+          "support_count": 6,
+          "confidence": 94.0,
+          "score": 128.5
+        },
+        "price": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
+    },
+    {
+      "line_number": 12,
+      "text": "356427 Mul ti-Peppers 3pk",
+      "confidence": 82.25,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 6,
+      "match_method": "backbone",
+      "line_quality_score": 87.99,
+      "consensus_score": 107.99,
+      "reconstructed": true,
+      "original_consensus_text": "356427 Mul ti-Peppers 3pk.",
+      "reconstruction_method": "component consensus by exact six-digit SKU",
+      "component_support": {
+        "sku": {
+          "value": "356427",
+          "support_count": 6
+        },
+        "description": {
+          "value": "Mul ti-Peppers 3pk",
+          "source_candidate": "grayscale_psm4",
+          "source_text": "356427 Mul ti-Peppers 3pk.",
+          "support_count": 6,
+          "confidence": 82.25,
+          "score": 116.75
+        },
+        "price": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
+    },
+    {
+      "line_number": 13,
+      "text": "356591 Pink Lady Apple",
+      "confidence": 96.0,
+      "source_candidate": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "support_count": 6,
+      "match_method": "sku",
+      "line_quality_score": 101.52,
+      "consensus_score": 121.52,
+      "reconstructed": false,
+      "original_consensus_text": "356591 Pink Lady Apple",
+      "reconstruction_method": "component consensus by exact six-digit SKU",
+      "component_support": {
+        "sku": {
+          "value": "356591",
+          "support_count": 6
+        },
+        "description": {
+          "value": "Pink Lady Apple",
+          "source_candidate": "grayscale_psm6",
+          "source_text": "356591 Pink Lady Apple",
+          "support_count": 6,
+          "confidence": 96.0,
+          "score": 130.5
+        },
+        "price": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
+    },
+    {
+      "line_number": 14,
+      "text": "356488 Baby Carrots",
+      "confidence": 95.67,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 6,
+      "match_method": "fuzzy",
+      "line_quality_score": 100.64,
+      "consensus_score": 120.64,
+      "reconstructed": false,
+      "original_consensus_text": "356488 Baby Carrots",
+      "reconstruction_method": "component consensus by exact six-digit SKU",
+      "component_support": {
+        "sku": {
+          "value": "356488",
+          "support_count": 3
+        },
+        "description": {
+          "value": "Baby Carrots",
+          "source_candidate": "threshold_psm11",
+          "source_text": "356488 Baby Carrots",
+          "support_count": 3,
+          "confidence": 95.67,
+          "score": 113.67
+        },
+        "price": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
+    },
+    {
+      "line_number": 15,
+      "text": "341979 Pine/Water Spears",
+      "confidence": 93.33,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 6,
+      "match_method": "backbone",
+      "line_quality_score": 98.3,
+      "consensus_score": 118.3,
+      "reconstructed": false,
+      "original_consensus_text": "341979 Pine/Water Spears",
+      "reconstruction_method": "component consensus by exact six-digit SKU",
+      "component_support": {
+        "sku": {
+          "value": "341979",
+          "support_count": 6
+        },
+        "description": {
+          "value": "Pine/Water Spears",
+          "source_candidate": "grayscale_psm4",
+          "source_text": "341979 Pine/Water Spears",
+          "support_count": 6,
+          "confidence": 93.33,
+          "score": 126.33
+        },
+        "price": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
+    },
+    {
+      "line_number": 16,
+      "text": "356504 Blueberries",
+      "confidence": 96.0,
+      "source_candidate": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "support_count": 6,
+      "match_method": "sku",
+      "line_quality_score": 100.42,
+      "consensus_score": 120.42,
+      "reconstructed": false,
+      "original_consensus_text": "356504 Blueberries",
+      "reconstruction_method": "component consensus by exact six-digit SKU",
+      "component_support": {
+        "sku": {
+          "value": "356504",
+          "support_count": 6
+        },
+        "description": {
+          "value": "Blueberries",
+          "source_candidate": "threshold_psm4",
+          "source_text": "356504 Blueberries",
+          "support_count": 6,
+          "confidence": 96.0,
+          "score": 127.5
+        },
+        "price": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
+    },
+    {
+      "line_number": 17,
+      "text": "356374 Golden Kiwi 4",
+      "confidence": 95.67,
+      "source_candidate": "threshold_psm6",
+      "image_variant": "threshold",
+      "psm": 6,
+      "support_count": 6,
+      "match_method": "sku",
+      "line_quality_score": 100.64,
+      "consensus_score": 120.64,
+      "reconstructed": true,
+      "original_consensus_text": "356374 Golden Kiwi",
+      "reconstruction_method": "component consensus by exact six-digit SKU",
+      "component_support": {
+        "sku": {
+          "value": "356374",
+          "support_count": 6
+        },
+        "description": {
+          "value": "Golden Kiwi 4",
+          "source_candidate": "grayscale_psm6",
+          "source_text": "356374 Golden Kiwi 4",
+          "support_count": 6,
+          "confidence": 94.75,
+          "score": 129.25
+        },
+        "price": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
+    },
+    {
+      "line_number": 18,
+      "text": "343738 Hummus Mini Cups 4",
+      "confidence": 94.4,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 6,
+      "match_method": "backbone",
+      "line_quality_score": 100.69,
+      "consensus_score": 120.69,
+      "reconstructed": false,
+      "original_consensus_text": "343738 Hummus Mini Cups 4",
+      "reconstruction_method": "component consensus by exact six-digit SKU",
+      "component_support": {
+        "sku": {
+          "value": "343738",
+          "support_count": 3
+        },
+        "description": {
+          "value": "Hummus Mini Cups 4",
+          "source_candidate": "grayscale_psm4",
+          "source_text": "343738 Hummus Mini Cups 4",
+          "support_count": 3,
+          "confidence": 94.4,
+          "score": 115.4
+        },
+        "price": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
+    },
+    {
+      "line_number": 19,
+      "text": "69553 LesserEvil Popgern 2",
+      "confidence": 83.0,
+      "source_candidate": "threshold_psm6",
+      "image_variant": "threshold",
+      "psm": 6,
+      "support_count": 4,
+      "match_method": "fuzzy",
+      "line_quality_score": 86.52,
+      "consensus_score": 98.52,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 20,
+      "text": "262747 Bananas LRW 1",
+      "confidence": 96.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 6,
+      "match_method": "sku",
+      "line_quality_score": 100.42,
+      "consensus_score": 120.42,
+      "reconstructed": true,
+      "original_consensus_text": "262747 Bananas",
+      "reconstruction_method": "component consensus by exact six-digit SKU",
+      "component_support": {
+        "sku": {
+          "value": "262747",
+          "support_count": 6
+        },
+        "description": {
+          "value": "Bananas LRW 1",
+          "source_candidate": "threshold_psm6",
+          "source_text": "262747 Bananas LRW 1",
+          "support_count": 6,
+          "confidence": 91.0,
+          "score": 125.5
+        },
+        "price": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
+    },
+    {
+      "line_number": 21,
+      "text": "(G) 2.681b - (1) 0.01Ib",
+      "confidence": 64.6,
+      "source_candidate": "threshold_psm6",
+      "image_variant": "threshold",
+      "psm": 6,
+      "support_count": 4,
+      "match_method": "fuzzy",
+      "line_quality_score": 72.11,
+      "consensus_score": 84.11,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 22,
+      "text": "(N) 2.67 Ib x 0.49/1b",
+      "confidence": 69.4,
+      "source_candidate": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "support_count": 6,
+      "match_method": "fuzzy",
+      "line_quality_score": 79.69,
+      "consensus_score": 99.69,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 23,
+      "text": "328752 Fruit & Grain Bars",
+      "confidence": 94.4,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 6,
+      "match_method": "sku",
+      "line_quality_score": 100.47,
+      "consensus_score": 120.47,
+      "reconstructed": false,
+      "original_consensus_text": "328752 Fruit & Grain Bars",
+      "reconstruction_method": "component consensus by exact six-digit SKU",
+      "component_support": {
+        "sku": {
+          "value": "328752",
+          "support_count": 6
+        },
+        "description": {
+          "value": "Fruit & Grain Bars",
+          "source_candidate": "grayscale_psm11",
+          "source_text": "328752 Fruit & Grain Bars",
+          "support_count": 11,
+          "confidence": 94.4,
+          "score": 155.4
+        },
+        "price": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
+    },
+    {
+      "line_number": 24,
+      "text": "328752 Fruit & Grain Bars",
+      "confidence": 94.4,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 6,
+      "match_method": "sku",
+      "line_quality_score": 100.47,
+      "consensus_score": 120.47,
+      "reconstructed": false,
+      "original_consensus_text": "328752 Fruit & Grain Bars",
+      "reconstruction_method": "component consensus by exact six-digit SKU",
+      "component_support": {
+        "sku": {
+          "value": "328752",
+          "support_count": 6
+        },
+        "description": {
+          "value": "Fruit & Grain Bars",
+          "source_candidate": "grayscale_psm11",
+          "source_text": "328752 Fruit & Grain Bars",
+          "support_count": 11,
+          "confidence": 94.4,
+          "score": 155.4
+        },
+        "price": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
+    },
+    {
+      "line_number": 25,
+      "text": "856609 Red Onions 2.4",
+      "confidence": 93.25,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 5,
+      "match_method": "backbone",
+      "line_quality_score": 99.21,
+      "consensus_score": 115.21,
+      "reconstructed": false,
+      "original_consensus_text": "856609 Red Onions 2.4",
+      "reconstruction_method": "component consensus by exact six-digit SKU",
+      "component_support": {
+        "sku": {
+          "value": "856609",
+          "support_count": 3
+        },
+        "description": {
+          "value": "Red Onions 2.4",
+          "source_candidate": "grayscale_psm4",
+          "source_text": "856609 Red Onions 2.4",
+          "support_count": 3,
+          "confidence": 93.25,
+          "score": 112.75
+        },
+        "price": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
+    },
+    {
+      "line_number": 26,
+      "text": "739153 Organic Chickpeas 0.99",
+      "confidence": 92.25,
+      "source_candidate": "threshold_psm6",
+      "image_variant": "threshold",
+      "psm": 6,
+      "support_count": 6,
+      "match_method": "sku",
+      "line_quality_score": 101.43,
+      "consensus_score": 121.43,
+      "reconstructed": true,
+      "original_consensus_text": "739153 “Organic Chickpeas 0.99",
+      "reconstruction_method": "component consensus by exact six-digit SKU",
+      "component_support": {
+        "sku": {
+          "value": "739153",
+          "support_count": 6
+        },
+        "description": {
+          "value": "Organic Chickpeas",
+          "source_candidate": "grayscale_psm11",
+          "source_text": "739153 Organic Chickpeas",
+          "support_count": 11,
+          "confidence": 95.33,
+          "score": 153.33
+        },
+        "price": {
+          "value": "0.99",
+          "support_count": 3,
+          "average_confidence": 89.08,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "text": "739153 Organic Chickpeas 0.99"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "text": "739153 Organic Chickpeas 0.99"
+            },
+            {
+              "candidate_id": "threshold_psm6",
+              "text": "739153 “Organic Chickpeas 0.99"
+            }
+          ]
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
+    },
+    {
+      "line_number": 27,
+      "text": "381343 Dark Red Kidney 0.85",
+      "confidence": 93.0,
+      "source_candidate": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "support_count": 6,
+      "match_method": "sku",
+      "line_quality_score": 102.73,
+      "consensus_score": 122.73,
+      "reconstructed": false,
+      "original_consensus_text": "381343 Dark Red Kidney 0.85",
+      "reconstruction_method": "component consensus by exact six-digit SKU",
+      "component_support": {
+        "sku": {
+          "value": "381343",
+          "support_count": 4
+        },
+        "description": {
+          "value": "Dark Red Kidney",
+          "source_candidate": "grayscale_psm11",
+          "source_text": "381343 Dark Red Kidney",
+          "support_count": 6,
+          "confidence": 90.75,
+          "score": 125.25
+        },
+        "price": {
+          "value": "0.85",
+          "support_count": 2,
+          "average_confidence": 94.0,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "text": "381343 Dark Red Kidney 0.85"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "text": "381343 Dark Red Kidney 0.85"
+            }
+          ]
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
+    },
+    {
+      "line_number": 28,
+      "text": "739153 Organic Chickpeas 0.99",
+      "confidence": 92.25,
+      "source_candidate": "threshold_psm6",
+      "image_variant": "threshold",
+      "psm": 6,
+      "support_count": 6,
+      "match_method": "sku",
+      "line_quality_score": 101.43,
+      "consensus_score": 121.43,
+      "reconstructed": true,
+      "original_consensus_text": "739153 “Organic Chickpeas 0.99",
+      "reconstruction_method": "component consensus by exact six-digit SKU",
+      "component_support": {
+        "sku": {
+          "value": "739153",
+          "support_count": 6
+        },
+        "description": {
+          "value": "Organic Chickpeas",
+          "source_candidate": "grayscale_psm11",
+          "source_text": "739153 Organic Chickpeas",
+          "support_count": 11,
+          "confidence": 95.33,
+          "score": 153.33
+        },
+        "price": {
+          "value": "0.99",
+          "support_count": 3,
+          "average_confidence": 89.08,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "text": "739153 Organic Chickpeas 0.99"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "text": "739153 Organic Chickpeas 0.99"
+            },
+            {
+              "candidate_id": "threshold_psm6",
+              "text": "739153 “Organic Chickpeas 0.99"
+            }
+          ]
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
+    },
+    {
+      "line_number": 29,
+      "text": "381343 Dark Red Kidney 0.85",
+      "confidence": 95.0,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 6,
+      "match_method": "backbone",
+      "line_quality_score": 104.73,
+      "consensus_score": 124.73,
+      "reconstructed": false,
+      "original_consensus_text": "381343 Dark Red Kidney 0.85",
+      "reconstruction_method": "component consensus by exact six-digit SKU",
+      "component_support": {
+        "sku": {
+          "value": "381343",
+          "support_count": 4
+        },
+        "description": {
+          "value": "Dark Red Kidney",
+          "source_candidate": "grayscale_psm11",
+          "source_text": "381343 Dark Red Kidney",
+          "support_count": 6,
+          "confidence": 90.75,
+          "score": 125.25
+        },
+        "price": {
+          "value": "0.85",
+          "support_count": 2,
+          "average_confidence": 94.0,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "text": "381343 Dark Red Kidney 0.85"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "text": "381343 Dark Red Kidney 0.85"
+            }
+          ]
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
+    },
+    {
+      "line_number": 30,
+      "text": "381359 Vinaigrette Drssng 2.99",
+      "confidence": 91.25,
+      "source_candidate": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "support_count": 4,
+      "match_method": "sku",
+      "line_quality_score": 100.43,
+      "consensus_score": 112.43,
+      "reconstructed": false,
+      "original_consensus_text": "381359 Vinaigrette Drssng 2.99",
+      "reconstruction_method": "component consensus by exact six-digit SKU",
+      "component_support": {
+        "sku": {
+          "value": "381359",
+          "support_count": 3
+        },
+        "description": {
+          "value": "Vinaigrette Drssng",
+          "source_candidate": "grayscale_psm6",
+          "source_text": "381359 Vinaigrette Drssng 2.99",
+          "support_count": 3,
+          "confidence": 91.25,
+          "score": 109.25
+        },
+        "price": {
+          "value": "2.99",
+          "support_count": 2,
+          "average_confidence": 91.12,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "text": "381359 Vinaigrette Drssng 2.99"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "text": "381359 Vinaigrette Drssng 2.99"
+            }
+          ]
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
+    },
+    {
+      "line_number": 31,
+      "text": "356578 Parsley each 0.95",
+      "confidence": 92.2,
+      "source_candidate": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "support_count": 6,
+      "match_method": "sku",
+      "line_quality_score": 101.93,
+      "consensus_score": 121.93,
+      "reconstructed": true,
+      "original_consensus_text": "356578 Parsley each 0.95 |",
+      "reconstruction_method": "component consensus by exact six-digit SKU",
+      "component_support": {
+        "sku": {
+          "value": "356578",
+          "support_count": 6
+        },
+        "description": {
+          "value": "Parsley each",
+          "source_candidate": "grayscale_psm6",
+          "source_text": "356578 Parsley each 0.95 |",
+          "support_count": 6,
+          "confidence": 92.2,
+          "score": 125.2
+        },
+        "price": {
+          "value": "0.95",
+          "support_count": 4,
+          "average_confidence": 89.84,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "text": "356578 Parsley each 0.95"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "text": "356578 Parsley each 0.95 |"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "text": "356578 Parsley each 0.95 1"
+            },
+            {
+              "candidate_id": "threshold_psm6",
+              "text": "356578 Parsley each 0.95 1"
+            }
+          ]
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
+    },
+    {
+      "line_number": 32,
+      "text": "400462 OG Croutons f 1.99",
+      "confidence": 89.4,
+      "source_candidate": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "support_count": 5,
+      "match_method": "sku",
+      "line_quality_score": 99.13,
+      "consensus_score": 115.13,
+      "reconstructed": true,
+      "original_consensus_text": "400462 OG Croutons 1.99 f",
+      "reconstruction_method": "component consensus by exact six-digit SKU",
+      "component_support": {
+        "sku": {
+          "value": "400462",
+          "support_count": 5
+        },
+        "description": {
+          "value": "OG Croutons f",
+          "source_candidate": "grayscale_psm6",
+          "source_text": "400462 OG Croutons 1.99 f",
+          "support_count": 5,
+          "confidence": 89.4,
+          "score": 118.9
+        },
+        "price": {
+          "value": "1.99",
+          "support_count": 4,
+          "average_confidence": 87.45,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "text": "400462 OG ons 1.99 f"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "text": "400462 OG Croutons 1.99 f"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "text": "400462 OG Croutons 1.99 f"
+            },
+            {
+              "candidate_id": "threshold_psm6",
+              "text": "400462 OG Croutons 1.99 f"
+            }
+          ]
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
+    },
+    {
+      "line_number": 33,
+      "text": "344583 Evryd Plate 8.5in N 5.25",
+      "confidence": 88.83,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 6,
+      "match_method": "backbone",
+      "line_quality_score": 99.55,
+      "consensus_score": 119.55,
+      "reconstructed": true,
+      "original_consensus_text": "344583 Evryd Plate 8.5in 5.25 N",
+      "reconstruction_method": "component consensus by exact six-digit SKU",
+      "component_support": {
+        "sku": {
+          "value": "344583",
+          "support_count": 5
+        },
+        "description": {
+          "value": "Evryd Plate 8.5in N",
+          "source_candidate": "grayscale_psm4",
+          "source_text": "344583 Evryd Plate 8.5in 5.25 N",
+          "support_count": 5,
+          "confidence": 88.83,
+          "score": 119.83
+        },
+        "price": {
+          "value": "5.25",
+          "support_count": 4,
+          "average_confidence": 87.5,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "text": "344583 Evryd Plate 8.5in 5.25 N"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "text": "344583 Evryd Plate 8.5in 5.25 N"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "text": "344583 Evryd Plate 8.5in 5.25 N"
+            },
+            {
+              "candidate_id": "threshold_psm6",
+              "text": "344583 Evryd Plate 8.5in 5.25 N"
+            }
+          ]
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
+    },
+    {
+      "line_number": 34,
+      "text": "384545 NO Honey Wheat Brd F 3.37",
+      "confidence": 89.57,
+      "source_candidate": "threshold_psm6",
+      "image_variant": "threshold",
+      "psm": 6,
+      "support_count": 4,
+      "match_method": "sku",
+      "line_quality_score": 100.4,
+      "consensus_score": 112.4,
+      "reconstructed": true,
+      "original_consensus_text": "384545 NO Honey Wheat Brd 3.37 F;",
+      "reconstruction_method": "component consensus by exact six-digit SKU",
+      "component_support": {
+        "sku": {
+          "value": "384545",
+          "support_count": 3
+        },
+        "description": {
+          "value": "NO Honey Wheat Brd F",
+          "source_candidate": "threshold_psm6",
+          "source_text": "384545 NO Honey Wheat Brd 3.37 F;",
+          "support_count": 3,
+          "confidence": 89.57,
+          "score": 112.07
+        },
+        "price": {
+          "value": "3.37",
+          "support_count": 3,
+          "average_confidence": 86.48,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "text": "384545 NO Honey Wheat Brd 3.37 F,"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "text": "384545 NO Honey Wheat Brd 3.37 Fi:"
+            },
+            {
+              "candidate_id": "threshold_psm6",
+              "text": "384545 NO Honey Wheat Brd 3.37 F;"
+            }
+          ]
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
+    },
+    {
+      "line_number": 35,
+      "text": "730325 3pk_Gel Pens 5.99",
+      "confidence": 85.57,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 6,
+      "match_method": "backbone",
+      "line_quality_score": 96.62,
+      "consensus_score": 116.62,
+      "reconstructed": true,
+      "original_consensus_text": "730325 3pk Gel Pens ~ 5.99 NE",
+      "reconstruction_method": "component consensus by exact six-digit SKU",
+      "component_support": {
+        "sku": {
+          "value": "730325",
+          "support_count": 6
+        },
+        "description": {
+          "value": "3pk_Gel Pens",
+          "source_candidate": "threshold_psm11",
+          "source_text": "730325 3pk_Gel Pens -",
+          "support_count": 6,
+          "confidence": 90.5,
+          "score": 123.5
+        },
+        "price": {
+          "value": "5.99",
+          "support_count": 4,
+          "average_confidence": 84.36,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "text": "730325 3pk Gel Pens ~ 5.99 NE"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "text": "730325 3pk Gel Pens ~ 5.99 NE"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "text": "730325 Spk Gel Pens - 5.99 NE"
+            },
+            {
+              "candidate_id": "threshold_psm6",
+              "text": "730325 Spk Gel Pens - 5.99 NE"
+            }
+          ]
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": []
+        }
+      }
+    },
+    {
+      "line_number": 36,
+      "text": "720921 PB Toast Crackers 2.79 FA",
+      "confidence": 93.83,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 6,
+      "match_method": "backbone",
+      "line_quality_score": 105.61,
+      "consensus_score": 125.61,
+      "reconstructed": false,
+      "original_consensus_text": "720921 PB Toast Crackers 2.79 FA",
+      "reconstruction_method": "component consensus by exact six-digit SKU",
+      "component_support": {
+        "sku": {
+          "value": "720921",
+          "support_count": 5
+        },
+        "description": {
+          "value": "PB Toast Crackers",
+          "source_candidate": "grayscale_psm4",
+          "source_text": "720921 PB Toast Crackers 2.79 FA",
+          "support_count": 4,
+          "confidence": 93.83,
+          "score": 118.33
+        },
+        "price": {
+          "value": "2.79",
+          "support_count": 3,
+          "average_confidence": 93.22,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "text": "720921 PB Toast Crackers 2.79 FA"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "text": "720921 PB Toast Crackers 2.79 FA"
+            },
+            {
+              "candidate_id": "threshold_psm6",
+              "text": "720921 PB Toast Crackers 2.79 F."
+            }
+          ]
+        },
+        "tax_code": {
+          "value": "FA",
+          "support_count": 2,
+          "average_confidence": 93.75,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "text": "720921 PB Toast Crackers 2.79 FA"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "text": "720921 PB Toast Crackers 2.79 FA"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "line_number": 37,
+      "text": "383548 Goat Cheese Logs 1.99 FA",
+      "confidence": 95.17,
+      "source_candidate": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "support_count": 5,
+      "match_method": "fuzzy",
+      "line_quality_score": 106.95,
+      "consensus_score": 122.95,
+      "reconstructed": false,
+      "original_consensus_text": "383548 Goat Cheese Logs 1.99 FA",
+      "reconstruction_method": "component consensus by exact six-digit SKU",
+      "component_support": {
+        "sku": {
+          "value": "383548",
+          "support_count": 4
+        },
+        "description": {
+          "value": "Goat Cheese Logs",
+          "source_candidate": "threshold_psm11",
+          "source_text": "383548 Goat Cheese Logs",
+          "support_count": 4,
+          "confidence": 95.25,
+          "score": 119.75
+        },
+        "price": {
+          "value": "1.99",
+          "support_count": 3,
+          "average_confidence": 95.06,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm6",
+              "text": "383548 Goat Cheese Logs 1.99 FA"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "text": "383548 Goat Cheese Logs 1.99 FA"
+            },
+            {
+              "candidate_id": "threshold_psm6",
+              "text": "383548 Goat Cheese Logs 1.99 FA"
+            }
+          ]
+        },
+        "tax_code": {
+          "value": "FA",
+          "support_count": 3,
+          "average_confidence": 95.06,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm6",
+              "text": "383548 Goat Cheese Logs 1.99 FA"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "text": "383548 Goat Cheese Logs 1.99 FA"
+            },
+            {
+              "candidate_id": "threshold_psm6",
+              "text": "383548 Goat Cheese Logs 1.99 FA"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "line_number": 38,
+      "text": "713372 Feta Crumbles 2.89 FA",
+      "confidence": 95.6,
+      "source_candidate": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "support_count": 6,
+      "match_method": "sku",
+      "line_quality_score": 106.83,
+      "consensus_score": 126.83,
+      "reconstructed": false,
+      "original_consensus_text": "713372 Feta Crumbles 2.89 FA",
+      "reconstruction_method": "component consensus by exact six-digit SKU",
+      "component_support": {
+        "sku": {
+          "value": "713372",
+          "support_count": 5
+        },
+        "description": {
+          "value": "Feta Crumbles",
+          "source_candidate": "threshold_psm4",
+          "source_text": "713372 Feta Crumbles 2.89 FA",
+          "support_count": 5,
+          "confidence": 95.6,
+          "score": 123.6
+        },
+        "price": {
+          "value": "2.89",
+          "support_count": 3,
+          "average_confidence": 92.4,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "text": "713372 Feta Crumbles — 2.89 FA"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "text": "713372 Feta Crumbles 2.89 FA"
+            },
+            {
+              "candidate_id": "threshold_psm6",
+              "text": "713372 Feta Crumbles 2.89 FA"
+            }
+          ]
+        },
+        "tax_code": {
+          "value": "FA",
+          "support_count": 3,
+          "average_confidence": 92.4,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "text": "713372 Feta Crumbles — 2.89 FA"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "text": "713372 Feta Crumbles 2.89 FA"
+            },
+            {
+              "candidate_id": "threshold_psm6",
+              "text": "713372 Feta Crumbles 2.89 FA"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "line_number": 39,
+      "text": "7iss29 Col lapsibleStorage 5.99 NB",
+      "confidence": 81.4,
+      "source_candidate": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "support_count": 4,
+      "match_method": "fuzzy",
+      "line_quality_score": 89.97,
+      "consensus_score": 101.97,
+      "reconstructed": false,
+      "reconstruction_reason": "line does not contain exactly one six-digit SKU"
+    },
+    {
+      "line_number": 40,
+      "text": "718929 Col lapsibleStorage 5.99 NB",
+      "confidence": 91.0,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 5,
+      "match_method": "sku",
+      "line_quality_score": 95.97,
+      "consensus_score": 111.97,
+      "reconstructed": true,
+      "original_consensus_text": "718929 Col lapsibleStorage",
+      "reconstruction_method": "component consensus by exact six-digit SKU",
+      "component_support": {
+        "sku": {
+          "value": "718929",
+          "support_count": 5
+        },
+        "description": {
+          "value": "Col lapsibleStorage",
+          "source_candidate": "threshold_psm11",
+          "source_text": "718929 Col lapsibleStorage",
+          "support_count": 6,
+          "confidence": 91.0,
+          "score": 124.0
+        },
+        "price": {
+          "value": "5.99",
+          "support_count": 1,
+          "average_confidence": 63.2,
+          "examples": [
+            {
+              "candidate_id": "threshold_psm4",
+              "text": "718929 Col lapsibleStorage 5.99 NB"
+            }
+          ]
+        },
+        "tax_code": {
+          "value": "NB",
+          "support_count": 2,
+          "average_confidence": 57.02,
+          "examples": [
+            {
+              "candidate_id": "threshold_psm4",
+              "text": "718929 Col lapsibleStorage 5.99 NB"
+            },
+            {
+              "candidate_id": "threshold_psm6",
+              "text": "718929 CollapsibleStorage |, 9:99 NB |"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "supported_extra_lines": [
+    {
+      "text": "356537 Cilantro",
+      "confidence": 93.5,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 4,
+      "line_quality_score": 97.92
+    },
+    {
+      "text": "856509 Red Onions",
+      "confidence": 87.0,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 4,
+      "line_quality_score": 91.97
+    },
+    {
+      "text": "396591 Zucchini",
+      "confidence": 85.5,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 4,
+      "line_quality_score": 89.92
+    },
+    {
+      "text": "883212 GF fide Pan Bread",
+      "confidence": 68.2,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 4,
+      "line_quality_score": 74.27
+    },
+    {
+      "text": "1.81°]b x 1.39/Ib,",
+      "confidence": 32.0,
+      "source_candidate": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "support_count": 4,
+      "line_quality_score": 40.97
+    },
+    {
+      "text": "5.99 NB",
+      "confidence": 95.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 3,
+      "line_quality_score": 101.26
+    },
+    {
+      "text": "369553 LesserEvil Pope",
+      "confidence": 79.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 3,
+      "line_quality_score": 83.97
+    },
+    {
+      "text": "856689 Yellow Squas.",
+      "confidence": 79.0,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 3,
+      "line_quality_score": 83.97
+    },
+    {
+      "text": "2.79 FA",
+      "confidence": 96.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 102.26
+    },
+    {
+      "text": "1.99 FA",
+      "confidence": 96.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 102.26
+    },
+    {
+      "text": "0.85",
+      "confidence": 95.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 99.21
+    },
+    {
+      "text": "2.99",
+      "confidence": 94.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 98.21
+    },
+    {
+      "text": "0.99",
+      "confidence": 93.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 97.21
+    },
+    {
+      "text": "5.25 N",
+      "confidence": 91.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 95.76
+    },
+    {
+      "text": "1.81°]b x",
+      "confidence": 86.0,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 90.76
+    },
+    {
+      "text": "(T) 0.011b",
+      "confidence": 81.5,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 83.48
+    },
+    {
+      "text": "0.49/1b",
+      "confidence": 76.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 80.43
+    },
+    {
+      "text": ".39/1b",
+      "confidence": 74.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 75.21
+    },
+    {
+      "text": "(G) 2.681b ~",
+      "confidence": 72.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 74.53
+    },
+    {
+      "text": "3813859 Vinaigrette Orssng °",
+      "confidence": 69.0,
+      "source_candidate": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "support_count": 2,
+      "line_quality_score": 72.74
+    },
+    {
+      "text": "3.37 F;",
+      "confidence": 60.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 64.76
+    },
+    {
+      "text": "8929 CollapsibleStorage -",
+      "confidence": 60.67,
+      "source_candidate": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "support_count": 2,
+      "line_quality_score": 63.2
+    },
+    {
+      "text": "d",
+      "confidence": 47.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 2,
+      "line_quality_score": 47.55
+    },
+    {
+      "text": "748929 CollapsibleStorage —_ S.99 NB —",
+      "confidence": 31.67,
+      "source_candidate": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "support_count": 2,
+      "line_quality_score": 40.23
+    }
+  ],
+  "candidate_ranking": [
+    {
+      "rank": 1,
+      "candidate_id": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 91.2035,
+        "mean_word_confidence": 82.86,
+        "recognized_word_count": 175,
+        "low_confidence_rate": 0.0971,
+        "digit_count": 295,
+        "price_like_count": 20
+      }
+    },
+    {
+      "rank": 2,
+      "candidate_id": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": 90.6205,
+        "mean_word_confidence": 82.45,
+        "recognized_word_count": 179,
+        "low_confidence_rate": 0.1173,
+        "digit_count": 296,
+        "price_like_count": 20
+      }
+    },
+    {
+      "rank": 3,
+      "candidate_id": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 89.6245,
+        "mean_word_confidence": 81.39,
+        "recognized_word_count": 171,
+        "low_confidence_rate": 0.0877,
+        "digit_count": 290,
+        "price_like_count": 19
+      }
+    },
+    {
+      "rank": 4,
+      "candidate_id": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 88.8175,
+        "mean_word_confidence": 81.64,
+        "recognized_word_count": 162,
+        "low_confidence_rate": 0.1235,
+        "digit_count": 273,
+        "price_like_count": 18
+      }
+    },
+    {
+      "rank": 5,
+      "candidate_id": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 87.032,
+        "mean_word_confidence": 79.47,
+        "recognized_word_count": 173,
+        "low_confidence_rate": 0.1272,
+        "digit_count": 284,
+        "price_like_count": 18
+      }
+    },
+    {
+      "rank": 6,
+      "candidate_id": "threshold_psm6",
+      "image_variant": "threshold",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": 85.878,
+        "mean_word_confidence": 78.06,
+        "recognized_word_count": 178,
+        "low_confidence_rate": 0.1348,
+        "digit_count": 290,
+        "price_like_count": 20
+      }
+    }
+  ],
+  "provenance": {
+    "candidates_file": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_candidates/IMG_0251_ocr_candidates.json",
+    "rule": "Product lines may be reconstructed from multiple Tesseract observations only when they share the same exact six-digit SKU. Description text is OCR-derived, and price/tax values must each appear in at least one actual OCR candidate. No spelling correction or external product lookup is performed."
+  }
+}

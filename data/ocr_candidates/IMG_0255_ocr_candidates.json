@@ -1,0 +1,6676 @@
+{
+  "source_receipt": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/current_pic/IMG_0255.JPG",
+  "candidate_count": 6,
+  "candidates": [
+    {
+      "candidate_id": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "result": {
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/IMG_0255_grayscale.png",
+        "ocr_engine": "tesseract",
+        "ocr_version": "5.5.3",
+        "ocr_config": "--psm 4",
+        "generated_at": "2026-08-27T15:46:40.297801+00:00",
+        "image": {
+          "width": 5804,
+          "height": 8086
+        },
+        "metrics": {
+          "mean_word_confidence": 42.29,
+          "recognized_word_count": 110,
+          "low_confidence_word_count": 66,
+          "low_confidence_rate": 0.6
+        },
+        "raw_text": "SALE TRANSACTION\n\" EMPIRE KOSHER GROUND. TRK $6.99\n~ EMPIRE KOSHER GROUND. TRK $6 90\nR-STRAWBERRIES 1 LB 3.99\nSTEN DIED RED PEPPERS OA\n> PASTA CHICKPEA FUSTLLI 49 99\nItems in Transaction:6\ni: $30.24\nan Mes a3 94\nrun\n4 . ——\nSS i te ieee\n“a\n5 ee erie aes aes OO AE PS LS AE EE EDL SS LOT\nT CARD PURCHASE TRANSACTION\nre CUSTOMER COPY\n< Bs i.\nin el 4\nse\na 4. ae eee\nAuth Code; 0125/0\neeaTID; © 9788216\n$30.24\n~\nyi.\na&-\now\nio. 2 .\ndie Bey\nA, | e\n— »*\n12! ~ *\ne ae) 7\nree ut\n4",
+        "text": [
+          {
+            "line_number": 1,
+            "text": "SALE TRANSACTION",
+            "confidence": 95.0
+          },
+          {
+            "line_number": 2,
+            "text": "\" EMPIRE KOSHER GROUND. TRK $6.99",
+            "confidence": 63.33
+          },
+          {
+            "line_number": 3,
+            "text": "~ EMPIRE KOSHER GROUND. TRK $6 90",
+            "confidence": 71.29
+          },
+          {
+            "line_number": 4,
+            "text": "R-STRAWBERRIES 1 LB 3.99",
+            "confidence": 63.5
+          },
+          {
+            "line_number": 5,
+            "text": "STEN DIED RED PEPPERS OA",
+            "confidence": 32.2
+          },
+          {
+            "line_number": 6,
+            "text": "> PASTA CHICKPEA FUSTLLI 49 99",
+            "confidence": 63.0
+          },
+          {
+            "line_number": 7,
+            "text": "Items in Transaction:6",
+            "confidence": 75.67
+          },
+          {
+            "line_number": 8,
+            "text": "i: $30.24",
+            "confidence": 47.0
+          },
+          {
+            "line_number": 9,
+            "text": "an Mes a3 94",
+            "confidence": 28.5
+          },
+          {
+            "line_number": 10,
+            "text": "run",
+            "confidence": 31.0
+          },
+          {
+            "line_number": 11,
+            "text": "4 . ——",
+            "confidence": 30.33
+          },
+          {
+            "line_number": 12,
+            "text": "SS i te ieee",
+            "confidence": 23.75
+          },
+          {
+            "line_number": 13,
+            "text": "“a",
+            "confidence": 9.0
+          },
+          {
+            "line_number": 14,
+            "text": "5 ee erie aes aes OO AE PS LS AE EE EDL SS LOT",
+            "confidence": 21.43
+          },
+          {
+            "line_number": 15,
+            "text": "T CARD PURCHASE TRANSACTION",
+            "confidence": 94.25
+          },
+          {
+            "line_number": 16,
+            "text": "re CUSTOMER COPY",
+            "confidence": 64.0
+          },
+          {
+            "line_number": 17,
+            "text": "< Bs i.",
+            "confidence": 34.0
+          },
+          {
+            "line_number": 18,
+            "text": "in el 4",
+            "confidence": 52.0
+          },
+          {
+            "line_number": 19,
+            "text": "se",
+            "confidence": 21.0
+          },
+          {
+            "line_number": 20,
+            "text": "a 4. ae eee",
+            "confidence": 32.75
+          },
+          {
+            "line_number": 21,
+            "text": "Auth Code; 0125/0",
+            "confidence": 52.33
+          },
+          {
+            "line_number": 22,
+            "text": "eeaTID; © 9788216",
+            "confidence": 8.33
+          },
+          {
+            "line_number": 23,
+            "text": "$30.24",
+            "confidence": 52.0
+          },
+          {
+            "line_number": 24,
+            "text": "~",
+            "confidence": 18.0
+          },
+          {
+            "line_number": 25,
+            "text": "yi.",
+            "confidence": 2.0
+          },
+          {
+            "line_number": 26,
+            "text": "a&-",
+            "confidence": 30.0
+          },
+          {
+            "line_number": 27,
+            "text": "ow",
+            "confidence": 4.0
+          },
+          {
+            "line_number": 28,
+            "text": "io. 2 .",
+            "confidence": 12.0
+          },
+          {
+            "line_number": 29,
+            "text": "die Bey",
+            "confidence": 23.5
+          },
+          {
+            "line_number": 30,
+            "text": "A, | e",
+            "confidence": 62.0
+          },
+          {
+            "line_number": 31,
+            "text": "— »*",
+            "confidence": 15.5
+          },
+          {
+            "line_number": 32,
+            "text": "12! ~ *",
+            "confidence": 34.0
+          },
+          {
+            "line_number": 33,
+            "text": "e ae) 7",
+            "confidence": 25.0
+          },
+          {
+            "line_number": 34,
+            "text": "ree ut",
+            "confidence": 10.0
+          },
+          {
+            "line_number": 35,
+            "text": "4",
+            "confidence": 65.0
+          }
+        ]
+      }
+    },
+    {
+      "candidate_id": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "result": {
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/IMG_0255_grayscale.png",
+        "ocr_engine": "tesseract",
+        "ocr_version": "5.5.3",
+        "ocr_config": "--psm 6",
+        "generated_at": "2026-08-27T15:46:45.252477+00:00",
+        "image": {
+          "width": 5804,
+          "height": 8086
+        },
+        "metrics": {
+          "mean_word_confidence": 28.34,
+          "recognized_word_count": 417,
+          "low_confidence_word_count": 349,
+          "low_confidence_rate": 0.8369
+        },
+        "raw_text": "eyes = tii |” CORN eee = OY OSE ae NEN ea: ose a A Aen es we oe Seine hat Seat pe Nanosiyas\npay as 6 ro, ay ; , ane ae 4 “4 xy, Sears phar nares\nented a 2a ae BY iF. Ao dit hla, iygkieras Pipe vbeeee\nSESE Se :~ eo Beat ‘ a y ay : ; iH os] te. .? > eet et uh. a. r . _ Ps pet Le mf peetre-\nVora , vw § » (AT DoF acd Ae! - > ,\n7% ar, Tt os eer, AAD to }\nro i tl. eAGcs: & ie\n: ‘S re ; te wl +), n .\n¢ tyne Be eee | 4\na Aor\nsa tape ° ~T\n- -weres ie\nB2771\"\"To ter Ave, Ste 101\nos ¢: Soh oh ;\nVek pone OS * foie 1 3S 3\n> “attthe wy Ve ete .\nAr ea! 74 * >\nee BSA a5 Fi Ne\nwigs oe 4\nOne S ;\n(27m\nSee . P\n4 ARF\nOeSee ,\nee We yi 6 94\nEMPIRE KUSHER GROUND IKK\nR-STRAWBERRTES | L 2:\n. . -\n3 : 2 ON)\na |\nF jon:6\nSabo y ’\naf to pa $30.24\nLL\n4 bik ~~ ~~ ae Seer\neee 5 een ae a ae te ae er ab AD erat See OEP RES Se ES a em\n, - a a ay ee\nitt OR\n> at = a: ;\n27 Se > ~}\né . yaa ’ * - ‘4 Adi * 1 4\nJish £ oe aD Ee\nSs be At ‘ ae beat -\n¢> -. Wah tee is ne + ,\n’ P| : . } Py tae\" 1 2 : -\neee oa r) Bae Sos : AEKKGZ |\n~< Thee x y Coe Bok a ‘\nwie A . as 2 P oP : a gto Wes:\nDy eeeeeeKBB107 UE\n« 4% Ses » , ¥ .\n- -\n- ’ A hy i tae i oo. PAA 4 aed. p's ae aes 2\n; _— < ¥ VSI eae Po <7. * a Voy mre re . “7 =A ee ns a\n» - a > ae. vy. “AN f Ka % - ¢ 3 va . tou < d Y. a Py - , ;\nea ff — aha Bae it a, be | SUS Via . . o .\n- at” { ; ? - > a > ‘; 7 “a,",
+        "text": [
+          {
+            "line_number": 1,
+            "text": "eyes = tii |” CORN eee = OY OSE ae NEN ea: ose a A Aen es we oe Seine hat Seat pe Nanosiyas",
+            "confidence": 21.0
+          },
+          {
+            "line_number": 2,
+            "text": "pay as 6 ro, ay ; , ane ae 4 “4 xy, Sears phar nares",
+            "confidence": 23.0
+          },
+          {
+            "line_number": 3,
+            "text": "ented a 2a ae BY iF. Ao dit hla, iygkieras Pipe vbeeee",
+            "confidence": 20.5
+          },
+          {
+            "line_number": 4,
+            "text": "SESE Se :~ eo Beat ‘ a y ay : ; iH os] te. .? > eet et uh. a. r . _ Ps pet Le mf peetre-",
+            "confidence": 21.25
+          },
+          {
+            "line_number": 5,
+            "text": "Vora , vw § » (AT DoF acd Ae! - > ,",
+            "confidence": 31.67
+          },
+          {
+            "line_number": 6,
+            "text": "7% ar, Tt os eer, AAD to }",
+            "confidence": 24.88
+          },
+          {
+            "line_number": 7,
+            "text": "ro i tl. eAGcs: & ie",
+            "confidence": 30.67
+          },
+          {
+            "line_number": 8,
+            "text": ": ‘S re ; te wl +), n .",
+            "confidence": 20.56
+          },
+          {
+            "line_number": 9,
+            "text": "¢ tyne Be eee | 4",
+            "confidence": 21.67
+          },
+          {
+            "line_number": 10,
+            "text": "a Aor",
+            "confidence": 35.5
+          },
+          {
+            "line_number": 11,
+            "text": "sa tape ° ~T",
+            "confidence": 24.75
+          },
+          {
+            "line_number": 12,
+            "text": "- -weres ie",
+            "confidence": 22.0
+          },
+          {
+            "line_number": 13,
+            "text": "B2771\"\"To ter Ave, Ste 101",
+            "confidence": 73.0
+          },
+          {
+            "line_number": 14,
+            "text": "os ¢: Soh oh ;",
+            "confidence": 14.8
+          },
+          {
+            "line_number": 15,
+            "text": "Vek pone OS * foie 1 3S 3",
+            "confidence": 23.12
+          },
+          {
+            "line_number": 16,
+            "text": "> “attthe wy Ve ete .",
+            "confidence": 31.83
+          },
+          {
+            "line_number": 17,
+            "text": "Ar ea! 74 * >",
+            "confidence": 27.0
+          },
+          {
+            "line_number": 18,
+            "text": "ee BSA a5 Fi Ne",
+            "confidence": 19.2
+          },
+          {
+            "line_number": 19,
+            "text": "wigs oe 4",
+            "confidence": 34.33
+          },
+          {
+            "line_number": 20,
+            "text": "One S ;",
+            "confidence": 31.33
+          },
+          {
+            "line_number": 21,
+            "text": "(27m",
+            "confidence": 9.0
+          },
+          {
+            "line_number": 22,
+            "text": "See . P",
+            "confidence": 36.67
+          },
+          {
+            "line_number": 23,
+            "text": "4 ARF",
+            "confidence": 32.5
+          },
+          {
+            "line_number": 24,
+            "text": "OeSee ,",
+            "confidence": 4.0
+          },
+          {
+            "line_number": 25,
+            "text": "ee We yi 6 94",
+            "confidence": 39.8
+          },
+          {
+            "line_number": 26,
+            "text": "EMPIRE KUSHER GROUND IKK",
+            "confidence": 86.25
+          },
+          {
+            "line_number": 27,
+            "text": "R-STRAWBERRTES | L 2:",
+            "confidence": 48.5
+          },
+          {
+            "line_number": 28,
+            "text": ". . -",
+            "confidence": 34.67
+          },
+          {
+            "line_number": 29,
+            "text": "3 : 2 ON)",
+            "confidence": 35.0
+          },
+          {
+            "line_number": 30,
+            "text": "a |",
+            "confidence": 43.5
+          },
+          {
+            "line_number": 31,
+            "text": "F jon:6",
+            "confidence": 30.5
+          },
+          {
+            "line_number": 32,
+            "text": "Sabo y ’",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 33,
+            "text": "af to pa $30.24",
+            "confidence": 80.0
+          },
+          {
+            "line_number": 34,
+            "text": "LL",
+            "confidence": 24.0
+          },
+          {
+            "line_number": 35,
+            "text": "4 bik ~~ ~~ ae Seer",
+            "confidence": 33.17
+          },
+          {
+            "line_number": 36,
+            "text": "eee 5 een ae a ae te ae er ab AD erat See OEP RES Se ES a em",
+            "confidence": 26.37
+          },
+          {
+            "line_number": 37,
+            "text": ", - a a ay ee",
+            "confidence": 29.33
+          },
+          {
+            "line_number": 38,
+            "text": "itt OR",
+            "confidence": 30.0
+          },
+          {
+            "line_number": 39,
+            "text": "> at = a: ;",
+            "confidence": 38.2
+          },
+          {
+            "line_number": 40,
+            "text": "27 Se > ~}",
+            "confidence": 47.75
+          },
+          {
+            "line_number": 41,
+            "text": "é . yaa ’ * - ‘4 Adi * 1 4",
+            "confidence": 23.64
+          },
+          {
+            "line_number": 42,
+            "text": "Jish £ oe aD Ee",
+            "confidence": 23.6
+          },
+          {
+            "line_number": 43,
+            "text": "Ss be At ‘ ae beat -",
+            "confidence": 25.0
+          },
+          {
+            "line_number": 44,
+            "text": "¢> -. Wah tee is ne + ,",
+            "confidence": 24.12
+          },
+          {
+            "line_number": 45,
+            "text": "’ P| : . } Py tae\" 1 2 : -",
+            "confidence": 26.45
+          },
+          {
+            "line_number": 46,
+            "text": "eee oa r) Bae Sos : AEKKGZ |",
+            "confidence": 28.5
+          },
+          {
+            "line_number": 47,
+            "text": "~< Thee x y Coe Bok a ‘",
+            "confidence": 31.12
+          },
+          {
+            "line_number": 48,
+            "text": "wie A . as 2 P oP : a gto Wes:",
+            "confidence": 38.27
+          },
+          {
+            "line_number": 49,
+            "text": "Dy eeeeeeKBB107 UE",
+            "confidence": 34.0
+          },
+          {
+            "line_number": 50,
+            "text": "« 4% Ses » , ¥ .",
+            "confidence": 23.86
+          },
+          {
+            "line_number": 51,
+            "text": "- -",
+            "confidence": 21.5
+          },
+          {
+            "line_number": 52,
+            "text": "- ’ A hy i tae i oo. PAA 4 aed. p's ae aes 2",
+            "confidence": 31.8
+          },
+          {
+            "line_number": 53,
+            "text": "; _— < ¥ VSI eae Po <7. * a Voy mre re . “7 =A ee ns a",
+            "confidence": 26.0
+          },
+          {
+            "line_number": 54,
+            "text": "» - a > ae. vy. “AN f Ka % - ¢ 3 va . tou < d Y. a Py - , ;",
+            "confidence": 30.46
+          },
+          {
+            "line_number": 55,
+            "text": "ea ff — aha Bae it a, be | SUS Via . . o .",
+            "confidence": 23.93
+          },
+          {
+            "line_number": 56,
+            "text": "- at” { ; ? - > a > ‘; 7 “a,",
+            "confidence": 23.33
+          }
+        ]
+      }
+    },
+    {
+      "candidate_id": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "result": {
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/IMG_0255_grayscale.png",
+        "ocr_engine": "tesseract",
+        "ocr_version": "5.5.3",
+        "ocr_config": "--psm 11",
+        "generated_at": "2026-08-27T15:46:52.485662+00:00",
+        "image": {
+          "width": 5804,
+          "height": 8086
+        },
+        "metrics": {
+          "mean_word_confidence": 35.9,
+          "recognized_word_count": 399,
+          "low_confidence_word_count": 284,
+          "low_confidence_rate": 0.7118
+        },
+        "raw_text": "—— —\nans\na >»\n7\n20\nae\nee\n‘to\n‘~~\na «2\nsxe)\n>\nSe, <\nae iC Bis re ALS Ke\n=<)\n=P)\nrks\nSyd XS\ndate! pO Sag Ne\nfs *ADOrk\na woos\nio\na\naie Py\nof\n= -&\n's\nvee\ndap\naay\nTAN\n“Pw,\ngs\nAS\n& oh\n5\nte, ¥\nSar\noe\nSeer\nSK\n4\nFad\nPs\nisk\nWi\n?\nrf -\ne\n¥\nwe ae\nox | @\nwah\n-_+\nas id uf ©\nTWP vs\n,* 2\na?\ni ‘\nA at a\ntiy\nery 2\n_—S. =\n~ &?\n“F\nvs\nsy,”\nroe\nSo 2\"\n~ 7\n5\n4)\nem 4\nOa\nA»,\n$.\nSey\nSERS\nte\n« ww\n«=\n+, Sw ge\nee\n4 Late\n22 1 Town Center Ave\nSte 101\n{iS A\nSi\n=\"\n>? 4\n@\nie\na\ns\n~ pms;\na ¢.\n‘5\n=\n|\nae\nMelbourne, FL 3\n* s\n=\n“%\n+=\n- _ store #0848\n321-338-3418\nRn oe”\n47)\n57 Ot\nBON «\n_\nSALE TRANSACTION\né‘-\nei.\ney\nett\nBree\nEMPIRE KOSHER GROUND Rh\n$6 99\n6.99\nEMPIRE KOSHER GROUND TRI\n,\n3,99\nSTRAWBERRIES | LB\n=e\nUFFIN BLUEBERRY GLUTEN\nba.24\nE ROASTED RED PEPPERS\ndé\n$2.99\nSTA CHICKPEA FUSILLI\nty\nCG *.\nee: E\nPd _* /\nItems in Transaction:6\nBy\na\n$30.24\nBalance to pay\n$30.24\n4\nVISA\n.\n—. - -\nfen\n— —-— =~ <-> —\" ss = = oF ~~ ETE ek ee )« 6©]—hUhe\n~\n5 ee erie aes aes OO AE PS LS AE EE EDL SS LOT\na\nARD PURCHASE TRANSACTION\nPAYMENT C\ni?\n. fase\nCUSTOMER COPY\n=\n=\nBs\n\\\nve\n4\"\nst\naie”\n7.\nOe Dd\na\na\na |\n2\nt~\n‘44>\n~¢-\n-\nas\n‘Yt\n¢\nBe:\nae eee\nbe\nat-*\nCR\n»-<\n5 «4\ngt.\n4\na\na\n0]\nAuth Code:\n‘4\nq od\né\nL\nfies 7°\nae\n/\n” Saye)\nkx\nhe* Ob\n|\n-\nsting\nPea Ti0;\n~ af\nye\nB07\n‘\n$30.24\na\n“~~\n(\nie\ni\nrf\nLe.\nXCHASE\ni\n.\n‘\n~ \"J\nir\nvis\niS “* oo &\nPy.\nfet\n+o\nP 4\n4\n‘pe\n.\n—_S\n4\nA\nGr” way\nrg\naS\no,\n4*\n- s\nhy\nee wee\ni\ncoer\n4\nBS > at\nI,\n| 7\nof\noe\nOl)\nard 10 ld\nCy\nJar |\nrificat\neo",
+        "text": [
+          {
+            "line_number": 1,
+            "text": "—— —",
+            "confidence": 67.5
+          },
+          {
+            "line_number": 2,
+            "text": "ans",
+            "confidence": 32.0
+          },
+          {
+            "line_number": 3,
+            "text": "a >»",
+            "confidence": 27.5
+          },
+          {
+            "line_number": 4,
+            "text": "7",
+            "confidence": 33.0
+          },
+          {
+            "line_number": 5,
+            "text": "20",
+            "confidence": 34.0
+          },
+          {
+            "line_number": 6,
+            "text": "ae",
+            "confidence": 25.0
+          },
+          {
+            "line_number": 7,
+            "text": "ee",
+            "confidence": 14.0
+          },
+          {
+            "line_number": 8,
+            "text": "‘to",
+            "confidence": 56.0
+          },
+          {
+            "line_number": 9,
+            "text": "‘~~",
+            "confidence": 24.0
+          },
+          {
+            "line_number": 10,
+            "text": "a «2",
+            "confidence": 5.5
+          },
+          {
+            "line_number": 11,
+            "text": "sxe)",
+            "confidence": 21.0
+          },
+          {
+            "line_number": 12,
+            "text": ">",
+            "confidence": 15.0
+          },
+          {
+            "line_number": 13,
+            "text": "Se, <",
+            "confidence": 45.5
+          },
+          {
+            "line_number": 14,
+            "text": "ae iC Bis re ALS Ke",
+            "confidence": 22.83
+          },
+          {
+            "line_number": 15,
+            "text": "=<)",
+            "confidence": 18.0
+          },
+          {
+            "line_number": 16,
+            "text": "=P)",
+            "confidence": 19.0
+          },
+          {
+            "line_number": 17,
+            "text": "rks",
+            "confidence": 50.0
+          },
+          {
+            "line_number": 18,
+            "text": "Syd XS",
+            "confidence": 21.5
+          },
+          {
+            "line_number": 19,
+            "text": "date! pO Sag Ne",
+            "confidence": 27.25
+          },
+          {
+            "line_number": 20,
+            "text": "fs *ADOrk",
+            "confidence": 15.5
+          },
+          {
+            "line_number": 21,
+            "text": "a woos",
+            "confidence": 27.0
+          },
+          {
+            "line_number": 22,
+            "text": "io",
+            "confidence": 28.0
+          },
+          {
+            "line_number": 23,
+            "text": "a",
+            "confidence": 17.0
+          },
+          {
+            "line_number": 24,
+            "text": "aie Py",
+            "confidence": 23.5
+          },
+          {
+            "line_number": 25,
+            "text": "of",
+            "confidence": 34.0
+          },
+          {
+            "line_number": 26,
+            "text": "= -&",
+            "confidence": 23.0
+          },
+          {
+            "line_number": 27,
+            "text": "'s",
+            "confidence": 38.0
+          },
+          {
+            "line_number": 28,
+            "text": "vee",
+            "confidence": 59.0
+          },
+          {
+            "line_number": 29,
+            "text": "dap",
+            "confidence": 29.0
+          },
+          {
+            "line_number": 30,
+            "text": "aay",
+            "confidence": 2.0
+          },
+          {
+            "line_number": 31,
+            "text": "TAN",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 32,
+            "text": "“Pw,",
+            "confidence": 14.0
+          },
+          {
+            "line_number": 33,
+            "text": "gs",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 34,
+            "text": "AS",
+            "confidence": 56.0
+          },
+          {
+            "line_number": 35,
+            "text": "& oh",
+            "confidence": 16.0
+          },
+          {
+            "line_number": 36,
+            "text": "5",
+            "confidence": 50.0
+          },
+          {
+            "line_number": 37,
+            "text": "te, ¥",
+            "confidence": 17.5
+          },
+          {
+            "line_number": 38,
+            "text": "Sar",
+            "confidence": 23.0
+          },
+          {
+            "line_number": 39,
+            "text": "oe",
+            "confidence": 21.0
+          },
+          {
+            "line_number": 40,
+            "text": "Seer",
+            "confidence": 24.0
+          },
+          {
+            "line_number": 41,
+            "text": "SK",
+            "confidence": 33.0
+          },
+          {
+            "line_number": 42,
+            "text": "4",
+            "confidence": 52.0
+          },
+          {
+            "line_number": 43,
+            "text": "Fad",
+            "confidence": 18.0
+          },
+          {
+            "line_number": 44,
+            "text": "Ps",
+            "confidence": 19.0
+          },
+          {
+            "line_number": 45,
+            "text": "isk",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 46,
+            "text": "Wi",
+            "confidence": 69.0
+          },
+          {
+            "line_number": 47,
+            "text": "?",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 48,
+            "text": "rf -",
+            "confidence": 41.5
+          },
+          {
+            "line_number": 49,
+            "text": "e",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 50,
+            "text": "¥",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 51,
+            "text": "we ae",
+            "confidence": 20.0
+          },
+          {
+            "line_number": 52,
+            "text": "ox | @",
+            "confidence": 41.33
+          },
+          {
+            "line_number": 53,
+            "text": "wah",
+            "confidence": 66.0
+          },
+          {
+            "line_number": 54,
+            "text": "-_+",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 55,
+            "text": "as id uf ©",
+            "confidence": 34.25
+          },
+          {
+            "line_number": 56,
+            "text": "TWP vs",
+            "confidence": 47.5
+          },
+          {
+            "line_number": 57,
+            "text": ",* 2",
+            "confidence": 17.5
+          },
+          {
+            "line_number": 58,
+            "text": "a?",
+            "confidence": 78.0
+          },
+          {
+            "line_number": 59,
+            "text": "i ‘",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 60,
+            "text": "A at a",
+            "confidence": 27.67
+          },
+          {
+            "line_number": 61,
+            "text": "tiy",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 62,
+            "text": "ery 2",
+            "confidence": 15.0
+          },
+          {
+            "line_number": 63,
+            "text": "_—S. =",
+            "confidence": 39.5
+          },
+          {
+            "line_number": 64,
+            "text": "~ &?",
+            "confidence": 51.0
+          },
+          {
+            "line_number": 65,
+            "text": "“F",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 66,
+            "text": "vs",
+            "confidence": 12.0
+          },
+          {
+            "line_number": 67,
+            "text": "sy,”",
+            "confidence": 11.0
+          },
+          {
+            "line_number": 68,
+            "text": "roe",
+            "confidence": 33.0
+          },
+          {
+            "line_number": 69,
+            "text": "So 2\"",
+            "confidence": 45.5
+          },
+          {
+            "line_number": 70,
+            "text": "~ 7",
+            "confidence": 58.5
+          },
+          {
+            "line_number": 71,
+            "text": "5",
+            "confidence": 15.0
+          },
+          {
+            "line_number": 72,
+            "text": "4)",
+            "confidence": 78.0
+          },
+          {
+            "line_number": 73,
+            "text": "em 4",
+            "confidence": 41.5
+          },
+          {
+            "line_number": 74,
+            "text": "Oa",
+            "confidence": 18.0
+          },
+          {
+            "line_number": 75,
+            "text": "A»,",
+            "confidence": 65.0
+          },
+          {
+            "line_number": 76,
+            "text": "$.",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 77,
+            "text": "Sey",
+            "confidence": 22.0
+          },
+          {
+            "line_number": 78,
+            "text": "SERS",
+            "confidence": 63.0
+          },
+          {
+            "line_number": 79,
+            "text": "te",
+            "confidence": 54.0
+          },
+          {
+            "line_number": 80,
+            "text": "« ww",
+            "confidence": 16.5
+          },
+          {
+            "line_number": 81,
+            "text": "«=",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 82,
+            "text": "+, Sw ge",
+            "confidence": 33.0
+          },
+          {
+            "line_number": 83,
+            "text": "ee",
+            "confidence": 43.0
+          },
+          {
+            "line_number": 84,
+            "text": "4 Late",
+            "confidence": 38.5
+          },
+          {
+            "line_number": 85,
+            "text": "22 1 Town Center Ave",
+            "confidence": 89.2
+          },
+          {
+            "line_number": 86,
+            "text": "Ste 101",
+            "confidence": 87.0
+          },
+          {
+            "line_number": 87,
+            "text": "{iS A",
+            "confidence": 29.0
+          },
+          {
+            "line_number": 88,
+            "text": "Si",
+            "confidence": 21.0
+          },
+          {
+            "line_number": 89,
+            "text": "=\"",
+            "confidence": 9.0
+          },
+          {
+            "line_number": 90,
+            "text": ">? 4",
+            "confidence": 37.5
+          },
+          {
+            "line_number": 91,
+            "text": "@",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 92,
+            "text": "ie",
+            "confidence": 34.0
+          },
+          {
+            "line_number": 93,
+            "text": "a",
+            "confidence": 62.0
+          },
+          {
+            "line_number": 94,
+            "text": "s",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 95,
+            "text": "~ pms;",
+            "confidence": 23.0
+          },
+          {
+            "line_number": 96,
+            "text": "a ¢.",
+            "confidence": 27.0
+          },
+          {
+            "line_number": 97,
+            "text": "‘5",
+            "confidence": 18.0
+          },
+          {
+            "line_number": 98,
+            "text": "=",
+            "confidence": 41.0
+          },
+          {
+            "line_number": 99,
+            "text": "|",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 100,
+            "text": "ae",
+            "confidence": 44.0
+          },
+          {
+            "line_number": 101,
+            "text": "Melbourne, FL 3",
+            "confidence": 91.33
+          },
+          {
+            "line_number": 102,
+            "text": "* s",
+            "confidence": 47.0
+          },
+          {
+            "line_number": 103,
+            "text": "=",
+            "confidence": 33.0
+          },
+          {
+            "line_number": 104,
+            "text": "“%",
+            "confidence": 30.0
+          },
+          {
+            "line_number": 105,
+            "text": "+=",
+            "confidence": 21.0
+          },
+          {
+            "line_number": 106,
+            "text": "- _ store #0848",
+            "confidence": 33.5
+          },
+          {
+            "line_number": 107,
+            "text": "321-338-3418",
+            "confidence": 79.0
+          },
+          {
+            "line_number": 108,
+            "text": "Rn oe”",
+            "confidence": 17.0
+          },
+          {
+            "line_number": 109,
+            "text": "47)",
+            "confidence": 19.0
+          },
+          {
+            "line_number": 110,
+            "text": "57 Ot",
+            "confidence": 26.5
+          },
+          {
+            "line_number": 111,
+            "text": "BON «",
+            "confidence": 30.0
+          },
+          {
+            "line_number": 112,
+            "text": "_",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 113,
+            "text": "SALE TRANSACTION",
+            "confidence": 95.0
+          },
+          {
+            "line_number": 114,
+            "text": "é‘-",
+            "confidence": 8.0
+          },
+          {
+            "line_number": 115,
+            "text": "ei.",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 116,
+            "text": "ey",
+            "confidence": 26.0
+          },
+          {
+            "line_number": 117,
+            "text": "ett",
+            "confidence": 30.0
+          },
+          {
+            "line_number": 118,
+            "text": "Bree",
+            "confidence": 10.0
+          },
+          {
+            "line_number": 119,
+            "text": "EMPIRE KOSHER GROUND Rh",
+            "confidence": 80.25
+          },
+          {
+            "line_number": 120,
+            "text": "$6 99",
+            "confidence": 70.0
+          },
+          {
+            "line_number": 121,
+            "text": "6.99",
+            "confidence": 67.0
+          },
+          {
+            "line_number": 122,
+            "text": "EMPIRE KOSHER GROUND TRI",
+            "confidence": 80.5
+          },
+          {
+            "line_number": 123,
+            "text": ",",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 124,
+            "text": "3,99",
+            "confidence": 89.0
+          },
+          {
+            "line_number": 125,
+            "text": "STRAWBERRIES | LB",
+            "confidence": 78.33
+          },
+          {
+            "line_number": 126,
+            "text": "=e",
+            "confidence": 17.0
+          },
+          {
+            "line_number": 127,
+            "text": "UFFIN BLUEBERRY GLUTEN",
+            "confidence": 72.33
+          },
+          {
+            "line_number": 128,
+            "text": "ba.24",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 129,
+            "text": "E ROASTED RED PEPPERS",
+            "confidence": 94.75
+          },
+          {
+            "line_number": 130,
+            "text": "dé",
+            "confidence": 23.0
+          },
+          {
+            "line_number": 131,
+            "text": "$2.99",
+            "confidence": 60.0
+          },
+          {
+            "line_number": 132,
+            "text": "STA CHICKPEA FUSILLI",
+            "confidence": 82.33
+          },
+          {
+            "line_number": 133,
+            "text": "ty",
+            "confidence": 24.0
+          },
+          {
+            "line_number": 134,
+            "text": "CG *.",
+            "confidence": 7.0
+          },
+          {
+            "line_number": 135,
+            "text": "ee: E",
+            "confidence": 16.5
+          },
+          {
+            "line_number": 136,
+            "text": "Pd _* /",
+            "confidence": 14.67
+          },
+          {
+            "line_number": 137,
+            "text": "Items in Transaction:6",
+            "confidence": 78.0
+          },
+          {
+            "line_number": 138,
+            "text": "By",
+            "confidence": 21.0
+          },
+          {
+            "line_number": 139,
+            "text": "a",
+            "confidence": 21.0
+          },
+          {
+            "line_number": 140,
+            "text": "$30.24",
+            "confidence": 52.0
+          },
+          {
+            "line_number": 141,
+            "text": "Balance to pay",
+            "confidence": 95.33
+          },
+          {
+            "line_number": 142,
+            "text": "$30.24",
+            "confidence": 80.0
+          },
+          {
+            "line_number": 143,
+            "text": "4",
+            "confidence": 91.0
+          },
+          {
+            "line_number": 144,
+            "text": "VISA",
+            "confidence": 94.0
+          },
+          {
+            "line_number": 145,
+            "text": ".",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 146,
+            "text": "—. - -",
+            "confidence": 19.0
+          },
+          {
+            "line_number": 147,
+            "text": "fen",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 148,
+            "text": "— —-— =~ <-> —\" ss = = oF ~~ ETE ek ee )« 6©]—hUhe",
+            "confidence": 31.93
+          },
+          {
+            "line_number": 149,
+            "text": "~",
+            "confidence": 18.0
+          },
+          {
+            "line_number": 150,
+            "text": "5 ee erie aes aes OO AE PS LS AE EE EDL SS LOT",
+            "confidence": 21.43
+          },
+          {
+            "line_number": 151,
+            "text": "a",
+            "confidence": 45.0
+          },
+          {
+            "line_number": 152,
+            "text": "ARD PURCHASE TRANSACTION",
+            "confidence": 94.67
+          },
+          {
+            "line_number": 153,
+            "text": "PAYMENT C",
+            "confidence": 36.5
+          },
+          {
+            "line_number": 154,
+            "text": "i?",
+            "confidence": 32.0
+          },
+          {
+            "line_number": 155,
+            "text": ". fase",
+            "confidence": 41.5
+          },
+          {
+            "line_number": 156,
+            "text": "CUSTOMER COPY",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 157,
+            "text": "=",
+            "confidence": 50.0
+          },
+          {
+            "line_number": 158,
+            "text": "=",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 159,
+            "text": "Bs",
+            "confidence": 13.0
+          },
+          {
+            "line_number": 160,
+            "text": "\\",
+            "confidence": 37.0
+          },
+          {
+            "line_number": 161,
+            "text": "ve",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 162,
+            "text": "4\"",
+            "confidence": 71.0
+          },
+          {
+            "line_number": 163,
+            "text": "st",
+            "confidence": 50.0
+          },
+          {
+            "line_number": 164,
+            "text": "aie”",
+            "confidence": 33.0
+          },
+          {
+            "line_number": 165,
+            "text": "7.",
+            "confidence": 43.0
+          },
+          {
+            "line_number": 166,
+            "text": "Oe Dd",
+            "confidence": 41.5
+          },
+          {
+            "line_number": 167,
+            "text": "a",
+            "confidence": 10.0
+          },
+          {
+            "line_number": 168,
+            "text": "a",
+            "confidence": 42.0
+          },
+          {
+            "line_number": 169,
+            "text": "a |",
+            "confidence": 36.0
+          },
+          {
+            "line_number": 170,
+            "text": "2",
+            "confidence": 74.0
+          },
+          {
+            "line_number": 171,
+            "text": "t~",
+            "confidence": 33.0
+          },
+          {
+            "line_number": 172,
+            "text": "‘44>",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 173,
+            "text": "~¢-",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 174,
+            "text": "-",
+            "confidence": 2.0
+          },
+          {
+            "line_number": 175,
+            "text": "as",
+            "confidence": 34.0
+          },
+          {
+            "line_number": 176,
+            "text": "‘Yt",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 177,
+            "text": "¢",
+            "confidence": 49.0
+          },
+          {
+            "line_number": 178,
+            "text": "Be:",
+            "confidence": 36.0
+          },
+          {
+            "line_number": 179,
+            "text": "ae eee",
+            "confidence": 23.0
+          },
+          {
+            "line_number": 180,
+            "text": "be",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 181,
+            "text": "at-*",
+            "confidence": 14.0
+          },
+          {
+            "line_number": 182,
+            "text": "CR",
+            "confidence": 92.0
+          },
+          {
+            "line_number": 183,
+            "text": "»-<",
+            "confidence": 2.0
+          },
+          {
+            "line_number": 184,
+            "text": "5 «4",
+            "confidence": 43.5
+          },
+          {
+            "line_number": 185,
+            "text": "gt.",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 186,
+            "text": "4",
+            "confidence": 42.0
+          },
+          {
+            "line_number": 187,
+            "text": "a",
+            "confidence": 29.0
+          },
+          {
+            "line_number": 188,
+            "text": "a",
+            "confidence": 27.0
+          },
+          {
+            "line_number": 189,
+            "text": "0]",
+            "confidence": 86.0
+          },
+          {
+            "line_number": 190,
+            "text": "Auth Code:",
+            "confidence": 39.5
+          },
+          {
+            "line_number": 191,
+            "text": "‘4",
+            "confidence": 34.0
+          },
+          {
+            "line_number": 192,
+            "text": "q od",
+            "confidence": 2.5
+          },
+          {
+            "line_number": 193,
+            "text": "é",
+            "confidence": 38.0
+          },
+          {
+            "line_number": 194,
+            "text": "L",
+            "confidence": 86.0
+          },
+          {
+            "line_number": 195,
+            "text": "fies 7°",
+            "confidence": 47.5
+          },
+          {
+            "line_number": 196,
+            "text": "ae",
+            "confidence": 57.0
+          },
+          {
+            "line_number": 197,
+            "text": "/",
+            "confidence": 92.0
+          },
+          {
+            "line_number": 198,
+            "text": "” Saye)",
+            "confidence": 62.5
+          },
+          {
+            "line_number": 199,
+            "text": "kx",
+            "confidence": 34.0
+          },
+          {
+            "line_number": 200,
+            "text": "he* Ob",
+            "confidence": 4.5
+          },
+          {
+            "line_number": 201,
+            "text": "|",
+            "confidence": 35.0
+          },
+          {
+            "line_number": 202,
+            "text": "-",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 203,
+            "text": "sting",
+            "confidence": 18.0
+          },
+          {
+            "line_number": 204,
+            "text": "Pea Ti0;",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 205,
+            "text": "~ af",
+            "confidence": 28.5
+          },
+          {
+            "line_number": 206,
+            "text": "ye",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 207,
+            "text": "B07",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 208,
+            "text": "‘",
+            "confidence": 76.0
+          },
+          {
+            "line_number": 209,
+            "text": "$30.24",
+            "confidence": 83.0
+          },
+          {
+            "line_number": 210,
+            "text": "a",
+            "confidence": 44.0
+          },
+          {
+            "line_number": 211,
+            "text": "“~~",
+            "confidence": 27.0
+          },
+          {
+            "line_number": 212,
+            "text": "(",
+            "confidence": 19.0
+          },
+          {
+            "line_number": 213,
+            "text": "ie",
+            "confidence": 24.0
+          },
+          {
+            "line_number": 214,
+            "text": "i",
+            "confidence": 28.0
+          },
+          {
+            "line_number": 215,
+            "text": "rf",
+            "confidence": 44.0
+          },
+          {
+            "line_number": 216,
+            "text": "Le.",
+            "confidence": 52.0
+          },
+          {
+            "line_number": 217,
+            "text": "XCHASE",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 218,
+            "text": "i",
+            "confidence": 33.0
+          },
+          {
+            "line_number": 219,
+            "text": ".",
+            "confidence": 13.0
+          },
+          {
+            "line_number": 220,
+            "text": "‘",
+            "confidence": 79.0
+          },
+          {
+            "line_number": 221,
+            "text": "~ \"J",
+            "confidence": 24.5
+          },
+          {
+            "line_number": 222,
+            "text": "ir",
+            "confidence": 19.0
+          },
+          {
+            "line_number": 223,
+            "text": "vis",
+            "confidence": 47.0
+          },
+          {
+            "line_number": 224,
+            "text": "iS “* oo &",
+            "confidence": 5.0
+          },
+          {
+            "line_number": 225,
+            "text": "Py.",
+            "confidence": 38.0
+          },
+          {
+            "line_number": 226,
+            "text": "fet",
+            "confidence": 26.0
+          },
+          {
+            "line_number": 227,
+            "text": "+o",
+            "confidence": 23.0
+          },
+          {
+            "line_number": 228,
+            "text": "P 4",
+            "confidence": 36.5
+          },
+          {
+            "line_number": 229,
+            "text": "4",
+            "confidence": 65.0
+          },
+          {
+            "line_number": 230,
+            "text": "‘pe",
+            "confidence": 44.0
+          },
+          {
+            "line_number": 231,
+            "text": ".",
+            "confidence": 63.0
+          },
+          {
+            "line_number": 232,
+            "text": "—_S",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 233,
+            "text": "4",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 234,
+            "text": "A",
+            "confidence": 17.0
+          },
+          {
+            "line_number": 235,
+            "text": "Gr” way",
+            "confidence": 26.0
+          },
+          {
+            "line_number": 236,
+            "text": "rg",
+            "confidence": 64.0
+          },
+          {
+            "line_number": 237,
+            "text": "aS",
+            "confidence": 22.0
+          },
+          {
+            "line_number": 238,
+            "text": "o,",
+            "confidence": 53.0
+          },
+          {
+            "line_number": 239,
+            "text": "4*",
+            "confidence": 20.0
+          },
+          {
+            "line_number": 240,
+            "text": "- s",
+            "confidence": 28.0
+          },
+          {
+            "line_number": 241,
+            "text": "hy",
+            "confidence": 28.0
+          },
+          {
+            "line_number": 242,
+            "text": "ee wee",
+            "confidence": 24.0
+          },
+          {
+            "line_number": 243,
+            "text": "i",
+            "confidence": 21.0
+          },
+          {
+            "line_number": 244,
+            "text": "coer",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 245,
+            "text": "4",
+            "confidence": 79.0
+          },
+          {
+            "line_number": 246,
+            "text": "BS > at",
+            "confidence": 28.0
+          },
+          {
+            "line_number": 247,
+            "text": "I,",
+            "confidence": 49.0
+          },
+          {
+            "line_number": 248,
+            "text": "| 7",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 249,
+            "text": "of",
+            "confidence": 58.0
+          },
+          {
+            "line_number": 250,
+            "text": "oe",
+            "confidence": 9.0
+          },
+          {
+            "line_number": 251,
+            "text": "Ol)",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 252,
+            "text": "ard 10 ld",
+            "confidence": 66.0
+          },
+          {
+            "line_number": 253,
+            "text": "Cy",
+            "confidence": 27.0
+          },
+          {
+            "line_number": 254,
+            "text": "Jar |",
+            "confidence": 1.0
+          },
+          {
+            "line_number": 255,
+            "text": "rificat",
+            "confidence": 52.0
+          },
+          {
+            "line_number": 256,
+            "text": "eo",
+            "confidence": 7.0
+          }
+        ]
+      }
+    },
+    {
+      "candidate_id": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "result": {
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/IMG_0255_threshold.png",
+        "ocr_engine": "tesseract",
+        "ocr_version": "5.5.3",
+        "ocr_config": "--psm 4",
+        "generated_at": "2026-08-27T15:46:57.990256+00:00",
+        "image": {
+          "width": 5804,
+          "height": 8086
+        },
+        "metrics": {
+          "mean_word_confidence": 30.87,
+          "recognized_word_count": 953,
+          "low_confidence_word_count": 753,
+          "low_confidence_rate": 0.7901
+        },
+        "raw_text": "EHP LB\noe\nHUFF\ni : OMe\n> y)\ni\n—\n[Sf\né. 4 4\n»\n~~ pp 2 cw «ow ~-\nPAY\nya i)\n| Ly atin\nA ative \\ PEA\nin fransac ack ian\neer aan a le\n| ) \\ (4 : V ( . /,\n‘ . . * it ; os Tie\n' ; , \\ — a - : ii a . A sud .\nb \\ a\n2227 Town.\nWe Ipourne\nvrare # B48 -\nf By LE I ; t\nt¢\nTRE KOS HER Gi\n1E KOSHER GROUR\nTRAG BE RIES | LL\nth rant ‘Re\n| ROR ED) a\nQ LO pay\ntd ana —~ ewt, ome - a\nee ea —_ - @ *\n(UNS Lt\n{Mit |\n7 tober taal a’ (j\nyo?\nit\nA\new.\nye\nwm SY\nMega .\nho pet\n4\nwy oo\nCenter.\nr4\nye\nj\n“So 6OB .\n\")\nWNT CARD PURCHAS\n\\\nAANS aay\nae arte Sinko Cent *\nne Poine SMU LY aM ta tye ly ate xe tens\ner ane ny Dates \"e ‘ ya! rc 4 FE 2\nre td fives. i ese Sart ;\na - . on, yy Ores . aa re ‘- +\n\\ ~toy >> > &ys ang cw\n“G - as ey -~ pe oo oes wa ween tle va »\n-\n. ,\nam .\nwre ee\ner ety\n‘ A at Boe\nsi tee sinter\nTee, va, . ee ee ire i eres Ay paket ae .\nmoe ave ; ms. rr anane a ‘doe, ar. ells ios wh ok aes & , ;\n‘ye: - a t ene et sy ‘ by uns a ee Pied he, ep ae a Var Bane CES.\n“¢ . e\n: ht a oe ea ng 7S . wr 7 Lae . oo,\nXN) eNO Garey 4 ry a eee ne 1 iow ie sod\n. ¢ \" : “6 aS . . es nk on fe a ae \\ a oe ee\na, { x “. ot 8 te Ne an a an ’ ‘ sy, a oe of . . ae aren\nol. ° » “7: . _ *\n‘ : an boo ae\nREE: 9, eae seh\n> 1 4\npeak ae) . Ss lenge att aks TN Sten - pan a ie Q\n“ ” a “er, A . “a : AL\nta + 4 aw apts Be t'\n. SY Shee eer ek PT, C0 “\n. ot ~ - a et a\n4 » ‘ ry Nery ma ‘ : cut ve te NC ach Sats bans\na +h SEO | rey) ole a rey rats he 2s\n- s “8 ¢ e oe me ey P qr ele”\nSEEN lord) SREIR OC CR POR LO ae\n. : wea Sars ie or ae\n~- > 7?) » - Cr arsX) vtset .\n. - oo aelee b he pe SOP * - lg\n- . ot ' Seye/ge ys «of wy\n{ 8 *Ce reel Se RAG C fe 7Whas\nit ar er Cre ar ore ea rerwek On ¥) ea sy\n: . w ‘> Zoe Ty ee 34) ae Breas bar,\nx’ ‘ ve fya bo oe vel yok on ~\nye Lote Sy se a yn Sy\n_ j . -? ws - {| , ty” ~a\n\\ 1 vw . oa” ve re V Yessy Cf: .\ntite 4 ' ra t SSN weet og ayeyvale\nt » ony e we oe\n. Py a, 4 TNO ee th iW) rads\n« . : = rot VU! a :*\n. . 8 at\n. .. t “. es! e\n: , - 4. .? ~ 4\n; . ‘ ‘ * cee Pays\n: ! oy . et 4 ‘,\n. vye ' £ oye . foccn ws an\n: _ ri +g 9A o a.\n. . . Cbg 4 ioe re! oe, ,\noot : : ‘oy vert, Ch a er\n. . a ; 1 tae - \", ha, ane\noi . 7 -- , 7 le\n‘ ‘ ete . . . ] fs ak \"+4\n« : .\n. . ‘ ~~ ee ’\nwe a . ; _ , . ' . . rig\n_ . . .-t ™ . ~ . - .\nor 2 - ‘ , . at ; a)\n- ' . . : A - / . , ;\nLo a | Tetons ‘ ‘\nf : . . ’\nj na! . 4\n. i. . « . ‘ . - _t\n{ ae S .\na . a 3 \\ ’\n. . .\nevils\n; ’\n-¢\ncohen ew “sam eee OH eH po tw\nyyy\nsoe tdesd ated Jeter? 7\nrely Carle:\nor ° Aes)\na : : OV\n| | | \"\none\nay LAC A LOU\n$6.9\noo\nee ace\nyW) yd ‘se ow\na i)\nwat\nmew _ oe AP Leeson: one yh et\nrR ASACTION\nreal\nOle } 2/)\n,\note ‘\n. nei. \\)\nee ee)\n‘\n/ - 4 _\nWW wd iS ; .\n‘\n.\na :\n_ o, *\n& 2+.\n=\n7 oa kt\nor an\n.\n” = yer Ce onal Cart]\nvid Ff ge a Aerts er Lane a ne wit alg\nOME oak Skier 22M ee tnetsa! Neeser\n_ ay pee or So lon = Set a att ies rant\nKe rary ets eerie “t. cA RRR las Bie Se\ncoats ae L\nae Pe PORTS Ot ae Me wht oye ‘, Lon ete\naes now EAN SoU ed CES ae PETS Ste me ae at oe . ie\nfee",
+        "text": [
+          {
+            "line_number": 1,
+            "text": "EHP LB",
+            "confidence": 24.0
+          },
+          {
+            "line_number": 2,
+            "text": "oe",
+            "confidence": 46.0
+          },
+          {
+            "line_number": 3,
+            "text": "HUFF",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 4,
+            "text": "i : OMe",
+            "confidence": 26.67
+          },
+          {
+            "line_number": 5,
+            "text": "> y)",
+            "confidence": 47.5
+          },
+          {
+            "line_number": 6,
+            "text": "i",
+            "confidence": 36.0
+          },
+          {
+            "line_number": 7,
+            "text": "—",
+            "confidence": 4.0
+          },
+          {
+            "line_number": 8,
+            "text": "[Sf",
+            "confidence": 24.0
+          },
+          {
+            "line_number": 9,
+            "text": "é. 4 4",
+            "confidence": 51.33
+          },
+          {
+            "line_number": 10,
+            "text": "»",
+            "confidence": 79.0
+          },
+          {
+            "line_number": 11,
+            "text": "~~ pp 2 cw «ow ~-",
+            "confidence": 28.83
+          },
+          {
+            "line_number": 12,
+            "text": "PAY",
+            "confidence": 41.0
+          },
+          {
+            "line_number": 13,
+            "text": "ya i)",
+            "confidence": 10.0
+          },
+          {
+            "line_number": 14,
+            "text": "| Ly atin",
+            "confidence": 21.33
+          },
+          {
+            "line_number": 15,
+            "text": "A ative \\ PEA",
+            "confidence": 38.75
+          },
+          {
+            "line_number": 16,
+            "text": "in fransac ack ian",
+            "confidence": 28.5
+          },
+          {
+            "line_number": 17,
+            "text": "eer aan a le",
+            "confidence": 32.5
+          },
+          {
+            "line_number": 18,
+            "text": "| ) \\ (4 : V ( . /,",
+            "confidence": 48.89
+          },
+          {
+            "line_number": 19,
+            "text": "‘ . . * it ; os Tie",
+            "confidence": 34.75
+          },
+          {
+            "line_number": 20,
+            "text": "' ; , \\ — a - : ii a . A sud .",
+            "confidence": 44.5
+          },
+          {
+            "line_number": 21,
+            "text": "b \\ a",
+            "confidence": 36.67
+          },
+          {
+            "line_number": 22,
+            "text": "2227 Town.",
+            "confidence": 57.0
+          },
+          {
+            "line_number": 23,
+            "text": "We Ipourne",
+            "confidence": 77.5
+          },
+          {
+            "line_number": 24,
+            "text": "vrare # B48 -",
+            "confidence": 48.75
+          },
+          {
+            "line_number": 25,
+            "text": "f By LE I ; t",
+            "confidence": 29.0
+          },
+          {
+            "line_number": 26,
+            "text": "t¢",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 27,
+            "text": "TRE KOS HER Gi",
+            "confidence": 74.75
+          },
+          {
+            "line_number": 28,
+            "text": "1E KOSHER GROUR",
+            "confidence": 29.67
+          },
+          {
+            "line_number": 29,
+            "text": "TRAG BE RIES | LL",
+            "confidence": 34.0
+          },
+          {
+            "line_number": 30,
+            "text": "th rant ‘Re",
+            "confidence": 26.33
+          },
+          {
+            "line_number": 31,
+            "text": "| ROR ED) a",
+            "confidence": 32.5
+          },
+          {
+            "line_number": 32,
+            "text": "Q LO pay",
+            "confidence": 51.0
+          },
+          {
+            "line_number": 33,
+            "text": "td ana —~ ewt, ome - a",
+            "confidence": 34.71
+          },
+          {
+            "line_number": 34,
+            "text": "ee ea —_ - @ *",
+            "confidence": 38.17
+          },
+          {
+            "line_number": 35,
+            "text": "(UNS Lt",
+            "confidence": 31.5
+          },
+          {
+            "line_number": 36,
+            "text": "{Mit |",
+            "confidence": 54.0
+          },
+          {
+            "line_number": 37,
+            "text": "7 tober taal a’ (j",
+            "confidence": 27.6
+          },
+          {
+            "line_number": 38,
+            "text": "yo?",
+            "confidence": 30.0
+          },
+          {
+            "line_number": 39,
+            "text": "it",
+            "confidence": 54.0
+          },
+          {
+            "line_number": 40,
+            "text": "A",
+            "confidence": 64.0
+          },
+          {
+            "line_number": 41,
+            "text": "ew.",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 42,
+            "text": "ye",
+            "confidence": 46.0
+          },
+          {
+            "line_number": 43,
+            "text": "wm SY",
+            "confidence": 23.0
+          },
+          {
+            "line_number": 44,
+            "text": "Mega .",
+            "confidence": 46.5
+          },
+          {
+            "line_number": 45,
+            "text": "ho pet",
+            "confidence": 28.5
+          },
+          {
+            "line_number": 46,
+            "text": "4",
+            "confidence": 96.0
+          },
+          {
+            "line_number": 47,
+            "text": "wy oo",
+            "confidence": 18.0
+          },
+          {
+            "line_number": 48,
+            "text": "Center.",
+            "confidence": 71.0
+          },
+          {
+            "line_number": 49,
+            "text": "r4",
+            "confidence": 44.0
+          },
+          {
+            "line_number": 50,
+            "text": "ye",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 51,
+            "text": "j",
+            "confidence": 41.0
+          },
+          {
+            "line_number": 52,
+            "text": "“So 6OB .",
+            "confidence": 21.33
+          },
+          {
+            "line_number": 53,
+            "text": "\")",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 54,
+            "text": "WNT CARD PURCHAS",
+            "confidence": 68.0
+          },
+          {
+            "line_number": 55,
+            "text": "\\",
+            "confidence": 48.0
+          },
+          {
+            "line_number": 56,
+            "text": "AANS aay",
+            "confidence": 20.0
+          },
+          {
+            "line_number": 57,
+            "text": "ae arte Sinko Cent *",
+            "confidence": 29.2
+          },
+          {
+            "line_number": 58,
+            "text": "ne Poine SMU LY aM ta tye ly ate xe tens",
+            "confidence": 19.82
+          },
+          {
+            "line_number": 59,
+            "text": "er ane ny Dates \"e ‘ ya! rc 4 FE 2",
+            "confidence": 30.45
+          },
+          {
+            "line_number": 60,
+            "text": "re td fives. i ese Sart ;",
+            "confidence": 36.14
+          },
+          {
+            "line_number": 61,
+            "text": "a - . on, yy Ores . aa re ‘- +",
+            "confidence": 26.64
+          },
+          {
+            "line_number": 62,
+            "text": "\\ ~toy >> > &ys ang cw",
+            "confidence": 23.86
+          },
+          {
+            "line_number": 63,
+            "text": "“G - as ey -~ pe oo oes wa ween tle va »",
+            "confidence": 23.0
+          },
+          {
+            "line_number": 64,
+            "text": "-",
+            "confidence": 31.0
+          },
+          {
+            "line_number": 65,
+            "text": ". ,",
+            "confidence": 52.5
+          },
+          {
+            "line_number": 66,
+            "text": "am .",
+            "confidence": 32.5
+          },
+          {
+            "line_number": 67,
+            "text": "wre ee",
+            "confidence": 25.5
+          },
+          {
+            "line_number": 68,
+            "text": "er ety",
+            "confidence": 33.0
+          },
+          {
+            "line_number": 69,
+            "text": "‘ A at Boe",
+            "confidence": 43.0
+          },
+          {
+            "line_number": 70,
+            "text": "si tee sinter",
+            "confidence": 40.33
+          },
+          {
+            "line_number": 71,
+            "text": "Tee, va, . ee ee ire i eres Ay paket ae .",
+            "confidence": 21.67
+          },
+          {
+            "line_number": 72,
+            "text": "moe ave ; ms. rr anane a ‘doe, ar. ells ios wh ok aes & , ;",
+            "confidence": 35.41
+          },
+          {
+            "line_number": 73,
+            "text": "‘ye: - a t ene et sy ‘ by uns a ee Pied he, ep ae a Var Bane CES.",
+            "confidence": 29.85
+          },
+          {
+            "line_number": 74,
+            "text": "“¢ . e",
+            "confidence": 17.33
+          },
+          {
+            "line_number": 75,
+            "text": ": ht a oe ea ng 7S . wr 7 Lae . oo,",
+            "confidence": 14.85
+          },
+          {
+            "line_number": 76,
+            "text": "XN) eNO Garey 4 ry a eee ne 1 iow ie sod",
+            "confidence": 23.17
+          },
+          {
+            "line_number": 77,
+            "text": ". ¢ \" : “6 aS . . es nk on fe a ae \\ a oe ee",
+            "confidence": 27.5
+          },
+          {
+            "line_number": 78,
+            "text": "a, { x “. ot 8 te Ne an a an ’ ‘ sy, a oe of . . ae aren",
+            "confidence": 25.33
+          },
+          {
+            "line_number": 79,
+            "text": "ol. ° » “7: . _ *",
+            "confidence": 30.14
+          },
+          {
+            "line_number": 80,
+            "text": "‘ : an boo ae",
+            "confidence": 10.0
+          },
+          {
+            "line_number": 81,
+            "text": "REE: 9, eae seh",
+            "confidence": 29.0
+          },
+          {
+            "line_number": 82,
+            "text": "> 1 4",
+            "confidence": 20.33
+          },
+          {
+            "line_number": 83,
+            "text": "peak ae) . Ss lenge att aks TN Sten - pan a ie Q",
+            "confidence": 22.93
+          },
+          {
+            "line_number": 84,
+            "text": "“ ” a “er, A . “a : AL",
+            "confidence": 40.67
+          },
+          {
+            "line_number": 85,
+            "text": "ta + 4 aw apts Be t'",
+            "confidence": 21.43
+          },
+          {
+            "line_number": 86,
+            "text": ". SY Shee eer ek PT, C0 “",
+            "confidence": 21.0
+          },
+          {
+            "line_number": 87,
+            "text": ". ot ~ - a et a",
+            "confidence": 42.0
+          },
+          {
+            "line_number": 88,
+            "text": "4 » ‘ ry Nery ma ‘ : cut ve te NC ach Sats bans",
+            "confidence": 43.07
+          },
+          {
+            "line_number": 89,
+            "text": "a +h SEO | rey) ole a rey rats he 2s",
+            "confidence": 28.55
+          },
+          {
+            "line_number": 90,
+            "text": "- s “8 ¢ e oe me ey P qr ele”",
+            "confidence": 28.36
+          },
+          {
+            "line_number": 91,
+            "text": "SEEN lord) SREIR OC CR POR LO ae",
+            "confidence": 26.12
+          },
+          {
+            "line_number": 92,
+            "text": ". : wea Sars ie or ae",
+            "confidence": 30.14
+          },
+          {
+            "line_number": 93,
+            "text": "~- > 7?) » - Cr arsX) vtset .",
+            "confidence": 23.89
+          },
+          {
+            "line_number": 94,
+            "text": ". - oo aelee b he pe SOP * - lg",
+            "confidence": 30.45
+          },
+          {
+            "line_number": 95,
+            "text": "- . ot ' Seye/ge ys «of wy",
+            "confidence": 30.88
+          },
+          {
+            "line_number": 96,
+            "text": "{ 8 *Ce reel Se RAG C fe 7Whas",
+            "confidence": 24.78
+          },
+          {
+            "line_number": 97,
+            "text": "it ar er Cre ar ore ea rerwek On ¥) ea sy",
+            "confidence": 20.33
+          },
+          {
+            "line_number": 98,
+            "text": ": . w ‘> Zoe Ty ee 34) ae Breas bar,",
+            "confidence": 26.91
+          },
+          {
+            "line_number": 99,
+            "text": "x’ ‘ ve fya bo oe vel yok on ~",
+            "confidence": 54.8
+          },
+          {
+            "line_number": 100,
+            "text": "ye Lote Sy se a yn Sy",
+            "confidence": 22.0
+          },
+          {
+            "line_number": 101,
+            "text": "_ j . -? ws - {| , ty” ~a",
+            "confidence": 33.7
+          },
+          {
+            "line_number": 102,
+            "text": "\\ 1 vw . oa” ve re V Yessy Cf: .",
+            "confidence": 42.27
+          },
+          {
+            "line_number": 103,
+            "text": "tite 4 ' ra t SSN weet og ayeyvale",
+            "confidence": 39.78
+          },
+          {
+            "line_number": 104,
+            "text": "t » ony e we oe",
+            "confidence": 34.67
+          },
+          {
+            "line_number": 105,
+            "text": ". Py a, 4 TNO ee th iW) rads",
+            "confidence": 31.0
+          },
+          {
+            "line_number": 106,
+            "text": "« . : = rot VU! a :*",
+            "confidence": 24.38
+          },
+          {
+            "line_number": 107,
+            "text": ". . 8 at",
+            "confidence": 36.5
+          },
+          {
+            "line_number": 108,
+            "text": ". .. t “. es! e",
+            "confidence": 36.67
+          },
+          {
+            "line_number": 109,
+            "text": ": , - 4. .? ~ 4",
+            "confidence": 25.86
+          },
+          {
+            "line_number": 110,
+            "text": "; . ‘ ‘ * cee Pays",
+            "confidence": 42.57
+          },
+          {
+            "line_number": 111,
+            "text": ": ! oy . et 4 ‘,",
+            "confidence": 42.86
+          },
+          {
+            "line_number": 112,
+            "text": ". vye ' £ oye . foccn ws an",
+            "confidence": 33.33
+          },
+          {
+            "line_number": 113,
+            "text": ": _ ri +g 9A o a.",
+            "confidence": 24.43
+          },
+          {
+            "line_number": 114,
+            "text": ". . . Cbg 4 ioe re! oe, ,",
+            "confidence": 39.78
+          },
+          {
+            "line_number": 115,
+            "text": "oot : : ‘oy vert, Ch a er",
+            "confidence": 23.88
+          },
+          {
+            "line_number": 116,
+            "text": ". . a ; 1 tae - \", ha, ane",
+            "confidence": 24.4
+          },
+          {
+            "line_number": 117,
+            "text": "oi . 7 -- , 7 le",
+            "confidence": 30.86
+          },
+          {
+            "line_number": 118,
+            "text": "‘ ‘ ete . . . ] fs ak \"+4",
+            "confidence": 34.5
+          },
+          {
+            "line_number": 119,
+            "text": "« : .",
+            "confidence": 23.33
+          },
+          {
+            "line_number": 120,
+            "text": ". . ‘ ~~ ee ’",
+            "confidence": 45.17
+          },
+          {
+            "line_number": 121,
+            "text": "we a . ; _ , . ' . . rig",
+            "confidence": 27.91
+          },
+          {
+            "line_number": 122,
+            "text": "_ . . .-t ™ . ~ . - .",
+            "confidence": 33.5
+          },
+          {
+            "line_number": 123,
+            "text": "or 2 - ‘ , . at ; a)",
+            "confidence": 18.67
+          },
+          {
+            "line_number": 124,
+            "text": "- ' . . : A - / . , ;",
+            "confidence": 32.18
+          },
+          {
+            "line_number": 125,
+            "text": "Lo a | Tetons ‘ ‘",
+            "confidence": 43.5
+          },
+          {
+            "line_number": 126,
+            "text": "f : . . ’",
+            "confidence": 28.6
+          },
+          {
+            "line_number": 127,
+            "text": "j na! . 4",
+            "confidence": 32.75
+          },
+          {
+            "line_number": 128,
+            "text": ". i. . « . ‘ . - _t",
+            "confidence": 31.89
+          },
+          {
+            "line_number": 129,
+            "text": "{ ae S .",
+            "confidence": 36.75
+          },
+          {
+            "line_number": 130,
+            "text": "a . a 3 \\ ’",
+            "confidence": 41.33
+          },
+          {
+            "line_number": 131,
+            "text": ". . .",
+            "confidence": 41.33
+          },
+          {
+            "line_number": 132,
+            "text": "evils",
+            "confidence": 25.0
+          },
+          {
+            "line_number": 133,
+            "text": "; ’",
+            "confidence": 31.5
+          },
+          {
+            "line_number": 134,
+            "text": "-¢",
+            "confidence": 16.0
+          },
+          {
+            "line_number": 135,
+            "text": "cohen ew “sam eee OH eH po tw",
+            "confidence": 42.62
+          },
+          {
+            "line_number": 136,
+            "text": "yyy",
+            "confidence": 54.0
+          },
+          {
+            "line_number": 137,
+            "text": "soe tdesd ated Jeter? 7",
+            "confidence": 21.6
+          },
+          {
+            "line_number": 138,
+            "text": "rely Carle:",
+            "confidence": 41.5
+          },
+          {
+            "line_number": 139,
+            "text": "or ° Aes)",
+            "confidence": 49.67
+          },
+          {
+            "line_number": 140,
+            "text": "a : : OV",
+            "confidence": 43.25
+          },
+          {
+            "line_number": 141,
+            "text": "| | | \"",
+            "confidence": 54.5
+          },
+          {
+            "line_number": 142,
+            "text": "one",
+            "confidence": 22.0
+          },
+          {
+            "line_number": 143,
+            "text": "ay LAC A LOU",
+            "confidence": 12.5
+          },
+          {
+            "line_number": 144,
+            "text": "$6.9",
+            "confidence": 72.0
+          },
+          {
+            "line_number": 145,
+            "text": "oo",
+            "confidence": 6.0
+          },
+          {
+            "line_number": 146,
+            "text": "ee ace",
+            "confidence": 16.0
+          },
+          {
+            "line_number": 147,
+            "text": "yW) yd ‘se ow",
+            "confidence": 27.75
+          },
+          {
+            "line_number": 148,
+            "text": "a i)",
+            "confidence": 37.0
+          },
+          {
+            "line_number": 149,
+            "text": "wat",
+            "confidence": 23.0
+          },
+          {
+            "line_number": 150,
+            "text": "mew _ oe AP Leeson: one yh et",
+            "confidence": 24.5
+          },
+          {
+            "line_number": 151,
+            "text": "rR ASACTION",
+            "confidence": 21.5
+          },
+          {
+            "line_number": 152,
+            "text": "real",
+            "confidence": 13.0
+          },
+          {
+            "line_number": 153,
+            "text": "Ole } 2/)",
+            "confidence": 24.67
+          },
+          {
+            "line_number": 154,
+            "text": ",",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 155,
+            "text": "ote ‘",
+            "confidence": 13.5
+          },
+          {
+            "line_number": 156,
+            "text": ". nei. \\)",
+            "confidence": 20.0
+          },
+          {
+            "line_number": 157,
+            "text": "ee ee)",
+            "confidence": 34.5
+          },
+          {
+            "line_number": 158,
+            "text": "‘",
+            "confidence": 81.0
+          },
+          {
+            "line_number": 159,
+            "text": "/ - 4 _",
+            "confidence": 28.0
+          },
+          {
+            "line_number": 160,
+            "text": "WW wd iS ; .",
+            "confidence": 43.8
+          },
+          {
+            "line_number": 161,
+            "text": "‘",
+            "confidence": 39.0
+          },
+          {
+            "line_number": 162,
+            "text": ".",
+            "confidence": 41.0
+          },
+          {
+            "line_number": 163,
+            "text": "a :",
+            "confidence": 50.0
+          },
+          {
+            "line_number": 164,
+            "text": "_ o, *",
+            "confidence": 12.67
+          },
+          {
+            "line_number": 165,
+            "text": "& 2+.",
+            "confidence": 30.0
+          },
+          {
+            "line_number": 166,
+            "text": "=",
+            "confidence": 8.0
+          },
+          {
+            "line_number": 167,
+            "text": "7 oa kt",
+            "confidence": 17.0
+          },
+          {
+            "line_number": 168,
+            "text": "or an",
+            "confidence": 15.0
+          },
+          {
+            "line_number": 169,
+            "text": ".",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 170,
+            "text": "” = yer Ce onal Cart]",
+            "confidence": 15.33
+          },
+          {
+            "line_number": 171,
+            "text": "vid Ff ge a Aerts er Lane a ne wit alg",
+            "confidence": 39.73
+          },
+          {
+            "line_number": 172,
+            "text": "OME oak Skier 22M ee tnetsa! Neeser",
+            "confidence": 13.29
+          },
+          {
+            "line_number": 173,
+            "text": "_ ay pee or So lon = Set a att ies rant",
+            "confidence": 29.08
+          },
+          {
+            "line_number": 174,
+            "text": "Ke rary ets eerie “t. cA RRR las Bie Se",
+            "confidence": 16.4
+          },
+          {
+            "line_number": 175,
+            "text": "coats ae L",
+            "confidence": 16.0
+          },
+          {
+            "line_number": 176,
+            "text": "ae Pe PORTS Ot ae Me wht oye ‘, Lon ete",
+            "confidence": 24.91
+          },
+          {
+            "line_number": 177,
+            "text": "aes now EAN SoU ed CES ae PETS Ste me ae at oe . ie",
+            "confidence": 20.67
+          },
+          {
+            "line_number": 178,
+            "text": "fee",
+            "confidence": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "candidate_id": "threshold_psm6",
+      "image_variant": "threshold",
+      "psm": 6,
+      "result": {
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/IMG_0255_threshold.png",
+        "ocr_engine": "tesseract",
+        "ocr_version": "5.5.3",
+        "ocr_config": "--psm 6",
+        "generated_at": "2026-08-27T15:47:03.137980+00:00",
+        "image": {
+          "width": 5804,
+          "height": 8086
+        },
+        "metrics": {
+          "mean_word_confidence": 29.24,
+          "recognized_word_count": 1594,
+          "low_confidence_word_count": 1257,
+          "low_confidence_rate": 0.7886
+        },
+        "raw_text": "aie a * the \"» -° het w Abe yoy > pee. : vee, cas iene ae pe D a7 oy gv Se rae 1° ee eae . rn 2 aap\n; . . , an - _ wane ea oe Ue See es a oom tye ee” CNP, al OO re Pg oft aa * Lrrpeeeur regione\n. . . i. . = erg | PUL Anas at rie ; AS rene vey Apres oo Oe ee CRAB aera earl hae fnyl : naive,\n7 . a oe et nr oe PENAL SOG PREETI TEE she Ee Bay PRE oP aE AER TS GS OSs Be ere ets feed\ni : 4 j ; ; a a ‘ rd a . sey \"A wo a care is e < Sau. . ren ahs ~) che ue ; ee SEAT Se USED Re ee,\n‘ . . , ‘ . ’ ‘ ~ e* 7, é va Paar) a ae ‘ - se 4 , - er’, - \\ » ~, o* -t aan -*, - . . ey 7 Se caw! . ae *. q “ ‘ 28 Tee ae\n. . . 7” ed Oat \\' ‘ Pn ee ay 4 a ar’ ie 1° face SC kerr ano aes “re LES lwo AOE te Cs ae rene Lyn\n‘ . . | . \\ ’ f] | - ” .f Ms S : Oa ~ ao Me _ . 2 hs is ae ented oe y .e ft. . -2-7 ~ . el =? 7: ’ 4. aid . Wy qe. Carnes sate. ‘ YP i3\\ {anit\n’ ‘ & 2 ‘ ’ So. : Pn .. *, Ne os eae” .. . . a ot 2 A Roeser (Fy): ‘ ihe. INS Mery igs feels =| . red asl\n: Soe he ed dy hedge TP OG EEL BES ES!\na ; - ’ Lf ; » e a” : rr nS ieee, ate yes! at Ca 4 Span toe ae . ike a ANOS\n{ . ‘ - , ee , poo a ae tie ae ae ’, ns (fo vt ws at irate’ aera oj Aes\n| oe , | ae PERRO TOt ASPRER ER ORIST AN NCR forsee,\n. - . ; . ' ' y ‘e ~ ws ss anes ny oman fee ie ey my or Mares he we see pee stot\n| . ; . Lo. ; an ' ree c . of . ean ENT ae By yey or et Ved Ning (ee ALT? A}\n: . a ’ ‘ ‘ . hey .* Je Tt 8a A ’ T tf yey, A oS ~2@ Se : oziek . , . wm yhee pte\n- ‘ ‘ ; ‘ a ‘ , : . _ tat ‘ . ers hy Dyke wats PO Aa es\n. a: vs ; ; ‘ . . vs a . ‘ , ‘ “i. ie a oe “é . , \" UY SON re . . “e? ‘s “44 an Sih aa 1\n. o [Ora . - . _ Te ‘ ' NPM ee ee ee ® Petar misyi sys\n. . Sf , Pa ' fo \" | | ; m rr. | . fad - . ‘T° etat ae a . oo an de fy oak, ar “et neg ise\ncr c . -@> 4 , Dor ays . md ; ‘ ‘ a oa . yr tee) eee Lay\n? ‘ et bd Me ] par: ‘ “ff f y | * : ‘ : wy we . z ‘ v > = , ‘ ‘4B | ‘ . , . ot ; . . . os , | Noe NS\n: nS F le ie Meant bate PUPA MEE ty) PRETAX,\n. ; . - ; . . . . . . ‘ . ; ’ . , : - . ; ; 7 ; . we : . | ; | oe ade\n. . | C oo \\ Ss a 7 . . . | ' ; | a ; co, . oo | aa te\n| . . , ; | ’ . _. ’ . . . Oo . a ¥ ef 1 . . . . . 7 > . e : ; : a ‘ > OTe\n, Ty :) , “> \\* .. ‘J 4 s } _ * : . . ’ - . . . . . . :\n| | TAI OW DSU RAR OL\n~ ‘ } am fe ’ ott & a ’ ; a | —— ST ‘ ; i. a P | ‘ . : . cs oe ' - J roe . \"he : |\n. Vs - wis 3 4 os ‘ iw, . ' “> . q ‘ol o i ’ . : a ; q ; . ; . ; : ; . + a od . . . 4 ‘ + ; . ‘ wae. - ‘ ‘\n| é .f . a7 a ; }) a ~ ~. A — | I | f . mo rn ; ; ’ ., : . J t . doc. . .\n. yo e, e \\ <¥ : y ts \\ .4 ; . re . ¥ . ’ ] 4 al ‘ , » 4 co : . ' - . tote : « 7 - . 4 os ; -! ~\n. id ° t : P ° . . . . : ._ . |\n‘ vd | \\ | » \\ “+ Saath : Diet ee be . | ar or ern :\n9 | . 1 | el. | ay . - .* ) 7’ 4 | ‘ . j , v} aie * we 7 ‘ ~ , ‘ > bal ~ . . oo vy ee ew = . . .\n. , . | _ Re 7 J r | | | pf ra 2 é at e, L ny . ; wr . ae, : mS ; . . poe . ope\nf \" . . 1 | ' nS I | . . . - . - ay . 2 ¥ a J y: a . . 7\nric. fh MPT. apes Pp Pe qe 7 _ ; yp yy _\n—_ a ; ve y t | | . ‘ t . - - t. Py AH ra | A _. 4 - _\n. , . . . - a : . . -! ‘ * - , - a : ° on 7 . 4\n. ~ , , ny . ; ' . ys ‘. 7 a 7 ot ‘ o ; - . a - . , -\n. . : . . r . . ' ; ri . . ’ . ; . ; ; oy oe . : -— :\n; BY a ‘ i ”, w Oe . . 7 . ad ( . FS 5&7. : . . ‘ : ‘ : .\n. . ha} a,” re f | 7 . | } , , | | . -. 7 . _ . | = - .\n| r ‘ f_. ohne 4 »6 .\n‘ q a ! .\n~ ’ { . , - * * C ° ‘ . ,\nny | @ | . . . a ; . . ; . 7 = -y . _ :\nLyd PAIGE ACY ee GO) OA\n| . - . ° . . 7! ”\n. . “ . : ; . o . . . . a . ; . , ° . .\n; : ; ‘ an ween we Pw 2 Bm 2 eo iow omer wit om bre .40 wad seve oe ere om ; - .\nLe we ewe ree ~ eee oe ee ~@ Sa = ~ “ees oo 1 ee «Nee POSE a ae owed —~ | ‘ | ; - . | . . ; ; | ; . .\n_, . ~ - ~~ | ; » ~< ; ~ oer ° \\ N ° _ \"7 @ 6 . ; | . ; ‘\n. | _ i | I > : ’ ' ; a . - .\n-~ ¢@ , . . * |\n4 @e * er ) A }< P . . + , . i\n. ~f.J |. . . . . . ; |\n. 7 . . ~ - oe an .\n| ree tee Lar | sve sband-oferterh chy rteas af: they ( ) )\n7 yt ) ao | re oe e ; - rears | ee\n‘ . . .¢ . , Jf : 4 a 2 sy | ;\n. } : . e qes . . : . .\n} a a é a- . nd e.4 #4 e . , Hevpirete AL ** . —— .\n‘ ‘ . : . ; { . : t . e =e.’ : J -\noy a a 1 ¢) \\) . TY\ni , at ‘.? os : ' 4, -. 4 ) ‘ ; :\n| f j { f | | \\ { | : . f \\ \\ \\ \\ ‘ . - . . . . - . . ae - : J\nfa \\ { ' tf i ‘. i , ( ¢ . a ‘ . . . 4 , aa , Cot ‘",
+        "text": [
+          {
+            "line_number": 1,
+            "text": "aie a * the \"» -° het w Abe yoy > pee. : vee, cas iene ae pe D a7 oy gv Se rae 1° ee eae . rn 2 aap",
+            "confidence": 24.29
+          },
+          {
+            "line_number": 2,
+            "text": "; . . , an - _ wane ea oe Ue See es a oom tye ee” CNP, al OO re Pg oft aa * Lrrpeeeur regione",
+            "confidence": 30.93
+          },
+          {
+            "line_number": 3,
+            "text": ". . . i. . = erg | PUL Anas at rie ; AS rene vey Apres oo Oe ee CRAB aera earl hae fnyl : naive,",
+            "confidence": 24.63
+          },
+          {
+            "line_number": 4,
+            "text": "7 . a oe et nr oe PENAL SOG PREETI TEE she Ee Bay PRE oP aE AER TS GS OSs Be ere ets feed",
+            "confidence": 23.16
+          },
+          {
+            "line_number": 5,
+            "text": "i : 4 j ; ; a a ‘ rd a . sey \"A wo a care is e < Sau. . ren ahs ~) che ue ; ee SEAT Se USED Re ee,",
+            "confidence": 24.35
+          },
+          {
+            "line_number": 6,
+            "text": "‘ . . , ‘ . ’ ‘ ~ e* 7, é va Paar) a ae ‘ - se 4 , - er’, - \\ » ~, o* -t aan -*, - . . ey 7 Se caw! . ae *. q “ ‘ 28 Tee ae",
+            "confidence": 31.62
+          },
+          {
+            "line_number": 7,
+            "text": ". . . 7” ed Oat \\' ‘ Pn ee ay 4 a ar’ ie 1° face SC kerr ano aes “re LES lwo AOE te Cs ae rene Lyn",
+            "confidence": 21.3
+          },
+          {
+            "line_number": 8,
+            "text": "‘ . . | . \\ ’ f] | - ” .f Ms S : Oa ~ ao Me _ . 2 hs is ae ented oe y .e ft. . -2-7 ~ . el =? 7: ’ 4. aid . Wy qe. Carnes sate. ‘ YP i3\\ {anit",
+            "confidence": 22.98
+          },
+          {
+            "line_number": 9,
+            "text": "’ ‘ & 2 ‘ ’ So. : Pn .. *, Ne os eae” .. . . a ot 2 A Roeser (Fy): ‘ ihe. INS Mery igs feels =| . red asl",
+            "confidence": 28.03
+          },
+          {
+            "line_number": 10,
+            "text": ": Soe he ed dy hedge TP OG EEL BES ES!",
+            "confidence": 27.0
+          },
+          {
+            "line_number": 11,
+            "text": "a ; - ’ Lf ; » e a” : rr nS ieee, ate yes! at Ca 4 Span toe ae . ike a ANOS",
+            "confidence": 19.72
+          },
+          {
+            "line_number": 12,
+            "text": "{ . ‘ - , ee , poo a ae tie ae ae ’, ns (fo vt ws at irate’ aera oj Aes",
+            "confidence": 23.22
+          },
+          {
+            "line_number": 13,
+            "text": "| oe , | ae PERRO TOt ASPRER ER ORIST AN NCR forsee,",
+            "confidence": 14.0
+          },
+          {
+            "line_number": 14,
+            "text": ". - . ; . ' ' y ‘e ~ ws ss anes ny oman fee ie ey my or Mares he we see pee stot",
+            "confidence": 23.65
+          },
+          {
+            "line_number": 15,
+            "text": "| . ; . Lo. ; an ' ree c . of . ean ENT ae By yey or et Ved Ning (ee ALT? A}",
+            "confidence": 25.04
+          },
+          {
+            "line_number": 16,
+            "text": ": . a ’ ‘ ‘ . hey .* Je Tt 8a A ’ T tf yey, A oS ~2@ Se : oziek . , . wm yhee pte",
+            "confidence": 23.31
+          },
+          {
+            "line_number": 17,
+            "text": "- ‘ ‘ ; ‘ a ‘ , : . _ tat ‘ . ers hy Dyke wats PO Aa es",
+            "confidence": 27.38
+          },
+          {
+            "line_number": 18,
+            "text": ". a: vs ; ; ‘ . . vs a . ‘ , ‘ “i. ie a oe “é . , \" UY SON re . . “e? ‘s “44 an Sih aa 1",
+            "confidence": 22.15
+          },
+          {
+            "line_number": 19,
+            "text": ". o [Ora . - . _ Te ‘ ' NPM ee ee ee ® Petar misyi sys",
+            "confidence": 31.11
+          },
+          {
+            "line_number": 20,
+            "text": ". . Sf , Pa ' fo \" | | ; m rr. | . fad - . ‘T° etat ae a . oo an de fy oak, ar “et neg ise",
+            "confidence": 31.19
+          },
+          {
+            "line_number": 21,
+            "text": "cr c . -@> 4 , Dor ays . md ; ‘ ‘ a oa . yr tee) eee Lay",
+            "confidence": 24.05
+          },
+          {
+            "line_number": 22,
+            "text": "? ‘ et bd Me ] par: ‘ “ff f y | * : ‘ : wy we . z ‘ v > = , ‘ ‘4B | ‘ . , . ot ; . . . os , | Noe NS",
+            "confidence": 27.17
+          },
+          {
+            "line_number": 23,
+            "text": ": nS F le ie Meant bate PUPA MEE ty) PRETAX,",
+            "confidence": 20.45
+          },
+          {
+            "line_number": 24,
+            "text": ". ; . - ; . . . . . . ‘ . ; ’ . , : - . ; ; 7 ; . we : . | ; | oe ade",
+            "confidence": 30.27
+          },
+          {
+            "line_number": 25,
+            "text": ". . | C oo \\ Ss a 7 . . . | ' ; | a ; co, . oo | aa te",
+            "confidence": 24.58
+          },
+          {
+            "line_number": 26,
+            "text": "| . . , ; | ’ . _. ’ . . . Oo . a ¥ ef 1 . . . . . 7 > . e : ; : a ‘ > OTe",
+            "confidence": 21.71
+          },
+          {
+            "line_number": 27,
+            "text": ", Ty :) , “> \\* .. ‘J 4 s } _ * : . . ’ - . . . . . . :",
+            "confidence": 22.56
+          },
+          {
+            "line_number": 28,
+            "text": "| | TAI OW DSU RAR OL",
+            "confidence": 23.29
+          },
+          {
+            "line_number": 29,
+            "text": "~ ‘ } am fe ’ ott & a ’ ; a | —— ST ‘ ; i. a P | ‘ . : . cs oe ' - J roe . \"he : |",
+            "confidence": 36.4
+          },
+          {
+            "line_number": 30,
+            "text": ". Vs - wis 3 4 os ‘ iw, . ' “> . q ‘ol o i ’ . : a ; q ; . ; . ; : ; . + a od . . . 4 ‘ + ; . ‘ wae. - ‘ ‘",
+            "confidence": 31.53
+          },
+          {
+            "line_number": 31,
+            "text": "| é .f . a7 a ; }) a ~ ~. A — | I | f . mo rn ; ; ’ ., : . J t . doc. . .",
+            "confidence": 31.22
+          },
+          {
+            "line_number": 32,
+            "text": ". yo e, e \\ <¥ : y ts \\ .4 ; . re . ¥ . ’ ] 4 al ‘ , » 4 co : . ' - . tote : « 7 - . 4 os ; -! ~",
+            "confidence": 32.45
+          },
+          {
+            "line_number": 33,
+            "text": ". id ° t : P ° . . . . : ._ . |",
+            "confidence": 36.93
+          },
+          {
+            "line_number": 34,
+            "text": "‘ vd | \\ | » \\ “+ Saath : Diet ee be . | ar or ern :",
+            "confidence": 30.68
+          },
+          {
+            "line_number": 35,
+            "text": "9 | . 1 | el. | ay . - .* ) 7’ 4 | ‘ . j , v} aie * we 7 ‘ ~ , ‘ > bal ~ . . oo vy ee ew = . . .",
+            "confidence": 35.76
+          },
+          {
+            "line_number": 36,
+            "text": ". , . | _ Re 7 J r | | | pf ra 2 é at e, L ny . ; wr . ae, : mS ; . . poe . ope",
+            "confidence": 38.09
+          },
+          {
+            "line_number": 37,
+            "text": "f \" . . 1 | ' nS I | . . . - . - ay . 2 ¥ a J y: a . . 7",
+            "confidence": 28.89
+          },
+          {
+            "line_number": 38,
+            "text": "ric. fh MPT. apes Pp Pe qe 7 _ ; yp yy _",
+            "confidence": 18.85
+          },
+          {
+            "line_number": 39,
+            "text": "—_ a ; ve y t | | . ‘ t . - - t. Py AH ra | A _. 4 - _",
+            "confidence": 28.62
+          },
+          {
+            "line_number": 40,
+            "text": ". , . . . - a : . . -! ‘ * - , - a : ° on 7 . 4",
+            "confidence": 25.43
+          },
+          {
+            "line_number": 41,
+            "text": ". ~ , , ny . ; ' . ys ‘. 7 a 7 ot ‘ o ; - . a - . , -",
+            "confidence": 22.48
+          },
+          {
+            "line_number": 42,
+            "text": ". . : . . r . . ' ; ri . . ’ . ; . ; ; oy oe . : -— :",
+            "confidence": 19.32
+          },
+          {
+            "line_number": 43,
+            "text": "; BY a ‘ i ”, w Oe . . 7 . ad ( . FS 5&7. : . . ‘ : ‘ : .",
+            "confidence": 39.24
+          },
+          {
+            "line_number": 44,
+            "text": ". . ha} a,” re f | 7 . | } , , | | . -. 7 . _ . | = - .",
+            "confidence": 35.44
+          },
+          {
+            "line_number": 45,
+            "text": "| r ‘ f_. ohne 4 »6 .",
+            "confidence": 41.88
+          },
+          {
+            "line_number": 46,
+            "text": "‘ q a ! .",
+            "confidence": 38.0
+          },
+          {
+            "line_number": 47,
+            "text": "~ ’ { . , - * * C ° ‘ . ,",
+            "confidence": 29.62
+          },
+          {
+            "line_number": 48,
+            "text": "ny | @ | . . . a ; . . ; . 7 = -y . _ :",
+            "confidence": 24.0
+          },
+          {
+            "line_number": 49,
+            "text": "Lyd PAIGE ACY ee GO) OA",
+            "confidence": 25.67
+          },
+          {
+            "line_number": 50,
+            "text": "| . - . ° . . 7! ”",
+            "confidence": 42.67
+          },
+          {
+            "line_number": 51,
+            "text": ". . “ . : ; . o . . . . a . ; . , ° . .",
+            "confidence": 26.9
+          },
+          {
+            "line_number": 52,
+            "text": "; : ; ‘ an ween we Pw 2 Bm 2 eo iow omer wit om bre .40 wad seve oe ere om ; - .",
+            "confidence": 29.88
+          },
+          {
+            "line_number": 53,
+            "text": "Le we ewe ree ~ eee oe ee ~@ Sa = ~ “ees oo 1 ee «Nee POSE a ae owed —~ | ‘ | ; - . | . . ; ; | ; . .",
+            "confidence": 29.0
+          },
+          {
+            "line_number": 54,
+            "text": "_, . ~ - ~~ | ; » ~< ; ~ oer ° \\ N ° _ \"7 @ 6 . ; | . ; ‘",
+            "confidence": 37.77
+          },
+          {
+            "line_number": 55,
+            "text": ". | _ i | I > : ’ ' ; a . - .",
+            "confidence": 40.8
+          },
+          {
+            "line_number": 56,
+            "text": "-~ ¢@ , . . * |",
+            "confidence": 45.57
+          },
+          {
+            "line_number": 57,
+            "text": "4 @e * er ) A }< P . . + , . i",
+            "confidence": 32.0
+          },
+          {
+            "line_number": 58,
+            "text": ". ~f.J |. . . . . . ; |",
+            "confidence": 43.3
+          },
+          {
+            "line_number": 59,
+            "text": ". 7 . . ~ - oe an .",
+            "confidence": 44.89
+          },
+          {
+            "line_number": 60,
+            "text": "| ree tee Lar | sve sband-oferterh chy rteas af: they ( ) )",
+            "confidence": 32.79
+          },
+          {
+            "line_number": 61,
+            "text": "7 yt ) ao | re oe e ; - rears | ee",
+            "confidence": 20.69
+          },
+          {
+            "line_number": 62,
+            "text": "‘ . . .¢ . , Jf : 4 a 2 sy | ;",
+            "confidence": 36.07
+          },
+          {
+            "line_number": 63,
+            "text": ". } : . e qes . . : . .",
+            "confidence": 28.82
+          },
+          {
+            "line_number": 64,
+            "text": "} a a é a- . nd e.4 #4 e . , Hevpirete AL ** . —— .",
+            "confidence": 34.94
+          },
+          {
+            "line_number": 65,
+            "text": "‘ ‘ . : . ; { . : t . e =e.’ : J -",
+            "confidence": 42.69
+          },
+          {
+            "line_number": 66,
+            "text": "oy a a 1 ¢) \\) . TY",
+            "confidence": 37.12
+          },
+          {
+            "line_number": 67,
+            "text": "i , at ‘.? os : ' 4, -. 4 ) ‘ ; :",
+            "confidence": 40.64
+          },
+          {
+            "line_number": 68,
+            "text": "| f j { f | | \\ { | : . f \\ \\ \\ \\ ‘ . - . . . . - . . ae - : J",
+            "confidence": 42.19
+          },
+          {
+            "line_number": 69,
+            "text": "fa \\ { ' tf i ‘. i , ( ¢ . a ‘ . . . 4 , aa , Cot ‘",
+            "confidence": 36.22
+          }
+        ]
+      }
+    },
+    {
+      "candidate_id": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "result": {
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/IMG_0255_threshold.png",
+        "ocr_engine": "tesseract",
+        "ocr_version": "5.5.3",
+        "ocr_config": "--psm 11",
+        "generated_at": "2026-08-27T15:47:09.721875+00:00",
+        "image": {
+          "width": 5804,
+          "height": 8086
+        },
+        "metrics": {
+          "mean_word_confidence": 33.66,
+          "recognized_word_count": 997,
+          "low_confidence_word_count": 759,
+          "low_confidence_rate": 0.7613
+        },
+        "raw_text": "ahs ~\nve\naUaaes\na * ede:\n1 Lee\na7] eer ee aS Cee\nary\neon ary\nFt?\nny\nWea ee, Sey\nve Sait\noon y\ncet abe sy,\nro!\n‘ wl\n7”\n‘« Dat\nmas\nye\n+N\ni\nyer\nrey Ve Se\nree\n= oP\nPr\nsuzle\nwets\n+,\niaveapect\nse\ncorte ae\nAs\npleas\ntg\nos\nie fives\nOy, a\nad BARA\n4 nereye\nvee HD\nTs\n”\nay\nwe\n|\n¥\nee\nae\nLO ahs)\n\\\nVr,\n° a ryod\n~~ Fe\nyr ,f\nSe\nava\nwaa\npital ah S|\nsont\nve\na “x ve ‘ae\n‘\nau\n‘\n:\n4\nObes\nte\nSANS\nai r pre\n5\n“yet\n} *\nyy\nAS : ne\nwee\nt- far\nfe!\nio Mig,\nwi A Ass\nvt\nSS aS\na AR\nBoE\nCe\n~ H\nMe,\na5 32 -\nie yt SY\n4\neA\noid)\neRe\nToot\nI Jey\nMt\n“4\na?)\nvos\naek\ntre\n{or\ni ie\nvon ie\ned;\n{\nA ES\nrk\nSenha s\nean\naii\nee\n}\nve\n~~:\nan)\n“A\nRELY, Sake\npes\n~~\nPEN\nBes\na\nd\ng 5c we we\n“ye\ner.\nLes\nSore Le\nel\nMy:\nve\nGt\nis\nwelts\nRee\nfe\n{ .\na\na 06\n~ oR\n(\". jab\naug\nNa\na t\nos an\n. 4\nof\naT\n“74\nzon ys\na\n=\nJay\nSe\nTeV\n4!\nify\nbe\ni\no Me\nCALE\n2 on\n&,,\na)\nta\ncm | Pi\n“ye\nchee\nai\nets\nsw \\'\nage\nAg\noe 4\n:\nif\nny\na *\n-!\nVL.\nwty\n‘ie\nos\nuk\naang t\n{\nbat\nere (fy\nSOM\nVosi8)\nssa\nAN\nan\nray\nfa\nat\nee\nen a ed\n~~,\n4.\nNi\nages\n\"\nmf\noA\n+o.\nyt\nara ee (eee oh eset ! es ie °\nNA\nTee)\n| an\nMe, . —-\nbee ad abs\nbee.\ntytn\n{een a\nBis uy\nt ay\naN\n7)\nog\ner\nSp. Ce\n=~. 4\ni aii k\na4,\nfis cf\nLA,\nhey\n5 HOD HY xs-\nae\nory\nce eee yf\n2,0\nce qvis vier\nwal:\nMay\naT S|\nriety\ntae\n‘543\nPd\n“at\nEE\n- =\ncoal AM 3\n“Ngee 30\nm8 Ty Nye\nar®\nqd wire\nwe\noe\n|\neres\n0f3 a\nwb\n2 Swe\nnae)\npen e\nAas\nten\nAb we\nei ruree &\nAy Se\nt; nee\nay\nas dy\nKil\nsO\nPw \\\nyay\na\n{>\nyr) Ab\nta\nDy Paes\nCG\nbe\nene\nae lw\nale”g\nSed\noh\nPo\n~_ me\ncn,\n° ip -\nws“\nwards bh,\nhe,\nes, ry\nwial\non\nwd\n“ae\nast\nofa\nte\ntp 7\n@sa-.? ay\nNe\n—a he\nos\n” 1/0\n4d\ntYee\n¢ \\\nFf\nin\nNe.\nmo\n}is\n“Nop\nwe,\nre +} x4\nyu “ab\nfat\nEste\nmars\neo?\nte\ner* rr\n“wh\nina!\nhie.\n\"35 r\nWay vat d >\nPe eyelg\nwa fa',?\niz)\ni\nSYR\npeem fares\ntoy\nvin.\nVery\nos\na\nerry\naX\nyale\n. tT\n\"4\nre ae €\nyey *,\nae Y\nSO tee\nmee\nye\noe\nal ow\neNAQr, 4\naie\nne TieyD\nAVS\noe '\nay\neel\nVor\nae\nPAT ae robe\noa\nof\nae\n4 \\ ewe\nry\nsecs\nfee\n“ire\nais\na)\nru is v\nPORE LCF\nvye\na)\nbets\nPed\n‘eS\nNORA\n7. Ir? veo Se\noe\nmem.\n«”.\n\\e\n-_t\n,¢\nOFT mae\nPee\nt=\n*, 44\n. ~’ a=)\n(a\nod\nfe\nan e\naso how\nLA\nLoe)\noye\nea J\nfy\n>\nwd\n%, as\nv sett\nea\nwe\n=\",\nas\nwee\nDed Pin &\nCenter.\nAVG |\nfe.\nfoe\n«>\n9 yearn\noe\n“7\ntown\natom\n| Town.\nad\n“y\nlam\nt ~Nee\n~~ at\nwy »\nVen Lia\nWry d7,\n‘7\nae Ate AY\nan\nae\n&,\ngj\n‘ ates Ale\nHe lpourne\nWe\n*\nae *S\n{ur\nra!\n4} F\n..)\nat ae Pi\nvwl\nan\nvn\nNd\ni a\noY\nt\na>\nkay\nSf,\nam es!\nAT\nay\nke\nte\n<\ni\na *\nseOre\nat\n. AR -\n|.\n}\nooh ye\nv4\n-\nme fe\nef\nrt\nor\noo”\n-eF\n~~\n’\n-~\nwn A S,\nve\n{| Mahe te]\n+A\nwf\n\\*\nz\nLE\n; ah\nram\n‘\nmy re\nJen\n\\\n>\nL\n{\nHy)\nwe\nt¢\noe\nfe\nim |\n).\n‘\nPTR\naos\n(05\nHER\n“lite\n(Jp\n4\n’\n6.5\nta\ny\nI\ni ;\na\ni\naf\n‘\nso.\naoe\nEME UN\na i) ‘ ny GR\n»\nod\nwa\n(\"s\nies\nee Qo”\nyn)\n|\n> bik at\niJ\nith\nbat\nt-d\n~y?7\n“ay\non\n~~\nJ\n-\n} a;\n\\:\ntt\n2s\n+®\n(\na mh\nBE\nvy\naT ait BL\nfal\nVd\n{ -/\n“1\nwy\nhee !\n*\na\n|\n4 {.\n=\nva\n~\n7\ni\n4\n4\n3,\na=\nOA\non\nVR\n-_\nAB\nJ\nors\nhi\nre\npry, “ye\nyy\n‘\nAyer\nnS\ndy\noP a\n\\)\nMw\noy?\nat\nate Levee!\na3\n4°\nal\nCHIC i PE\now |\nthd\n.\nj\n;\n| LemMe\nin\nTri sd\nf’\n> y)\nany\n6\n8 0,\n|\nANGe Lo Vv\nx 30.24\na\nmee swt _— ew 40 adsewn: owe\nPP oem\now @\n= &\n*\n~~ a>\n«Se OB s\n»\n~~ dd\ntw: «ow\nne\n~ pe\n|\n| |\n7%\nk ANSAC VION\nARO PUN HAS\nPATA IN |\n—«\n\")\nLL\n“Y) ) ne\n(UNS Lt\n\\\nba\né.\ngtoetr\n°\nste stand sPerterd eides! ‘\n4\n¥\n3858\n}\nyy ged beg? td yey: ma a?\nrae\nif\n~\n\\\nTW\n-)\nOl ) 2510\n,\né \\ ‘\nrely Barer\n[ |)\njs\nor\n( «\nWEEE\ni\npearsieal\n= ©\nx\na\n*)\n\\\n2\n}\nrier\n‘\n48\nsybaebs gl\na\nA\n¢\naf\nv\n|\n0\nPee)\nd\nu\na\nce\n»)\n«\n|\n\\\n1\nws\nul\nWit\n(ty\n\\\na\nWi\n[|\n\\§\na\nPy} ply",
+        "text": [
+          {
+            "line_number": 1,
+            "text": "ahs ~",
+            "confidence": 27.0
+          },
+          {
+            "line_number": 2,
+            "text": "ve",
+            "confidence": 59.0
+          },
+          {
+            "line_number": 3,
+            "text": "aUaaes",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 4,
+            "text": "a * ede:",
+            "confidence": 28.67
+          },
+          {
+            "line_number": 5,
+            "text": "1 Lee",
+            "confidence": 70.5
+          },
+          {
+            "line_number": 6,
+            "text": "a7] eer ee aS Cee",
+            "confidence": 18.0
+          },
+          {
+            "line_number": 7,
+            "text": "ary",
+            "confidence": 33.0
+          },
+          {
+            "line_number": 8,
+            "text": "eon ary",
+            "confidence": 21.0
+          },
+          {
+            "line_number": 9,
+            "text": "Ft?",
+            "confidence": 19.0
+          },
+          {
+            "line_number": 10,
+            "text": "ny",
+            "confidence": 41.0
+          },
+          {
+            "line_number": 11,
+            "text": "Wea ee, Sey",
+            "confidence": 7.67
+          },
+          {
+            "line_number": 12,
+            "text": "ve Sait",
+            "confidence": 18.0
+          },
+          {
+            "line_number": 13,
+            "text": "oon y",
+            "confidence": 23.5
+          },
+          {
+            "line_number": 14,
+            "text": "cet abe sy,",
+            "confidence": 10.67
+          },
+          {
+            "line_number": 15,
+            "text": "ro!",
+            "confidence": 28.0
+          },
+          {
+            "line_number": 16,
+            "text": "‘ wl",
+            "confidence": 35.5
+          },
+          {
+            "line_number": 17,
+            "text": "7”",
+            "confidence": 4.0
+          },
+          {
+            "line_number": 18,
+            "text": "‘« Dat",
+            "confidence": 28.5
+          },
+          {
+            "line_number": 19,
+            "text": "mas",
+            "confidence": 36.0
+          },
+          {
+            "line_number": 20,
+            "text": "ye",
+            "confidence": 48.0
+          },
+          {
+            "line_number": 21,
+            "text": "+N",
+            "confidence": 5.0
+          },
+          {
+            "line_number": 22,
+            "text": "i",
+            "confidence": 39.0
+          },
+          {
+            "line_number": 23,
+            "text": "yer",
+            "confidence": 13.0
+          },
+          {
+            "line_number": 24,
+            "text": "rey Ve Se",
+            "confidence": 59.33
+          },
+          {
+            "line_number": 25,
+            "text": "ree",
+            "confidence": 35.0
+          },
+          {
+            "line_number": 26,
+            "text": "= oP",
+            "confidence": 17.5
+          },
+          {
+            "line_number": 27,
+            "text": "Pr",
+            "confidence": 10.0
+          },
+          {
+            "line_number": 28,
+            "text": "suzle",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 29,
+            "text": "wets",
+            "confidence": 18.0
+          },
+          {
+            "line_number": 30,
+            "text": "+,",
+            "confidence": 34.0
+          },
+          {
+            "line_number": 31,
+            "text": "iaveapect",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 32,
+            "text": "se",
+            "confidence": 42.0
+          },
+          {
+            "line_number": 33,
+            "text": "corte ae",
+            "confidence": 30.5
+          },
+          {
+            "line_number": 34,
+            "text": "As",
+            "confidence": 20.0
+          },
+          {
+            "line_number": 35,
+            "text": "pleas",
+            "confidence": 14.0
+          },
+          {
+            "line_number": 36,
+            "text": "tg",
+            "confidence": 38.0
+          },
+          {
+            "line_number": 37,
+            "text": "os",
+            "confidence": 52.0
+          },
+          {
+            "line_number": 38,
+            "text": "ie fives",
+            "confidence": 68.0
+          },
+          {
+            "line_number": 39,
+            "text": "Oy, a",
+            "confidence": 21.0
+          },
+          {
+            "line_number": 40,
+            "text": "ad BARA",
+            "confidence": 31.5
+          },
+          {
+            "line_number": 41,
+            "text": "4 nereye",
+            "confidence": 20.5
+          },
+          {
+            "line_number": 42,
+            "text": "vee HD",
+            "confidence": 27.0
+          },
+          {
+            "line_number": 43,
+            "text": "Ts",
+            "confidence": 50.0
+          },
+          {
+            "line_number": 44,
+            "text": "”",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 45,
+            "text": "ay",
+            "confidence": 70.0
+          },
+          {
+            "line_number": 46,
+            "text": "we",
+            "confidence": 41.0
+          },
+          {
+            "line_number": 47,
+            "text": "|",
+            "confidence": 55.0
+          },
+          {
+            "line_number": 48,
+            "text": "¥",
+            "confidence": 32.0
+          },
+          {
+            "line_number": 49,
+            "text": "ee",
+            "confidence": 20.0
+          },
+          {
+            "line_number": 50,
+            "text": "ae",
+            "confidence": 11.0
+          },
+          {
+            "line_number": 51,
+            "text": "LO ahs)",
+            "confidence": 13.5
+          },
+          {
+            "line_number": 52,
+            "text": "\\",
+            "confidence": 58.0
+          },
+          {
+            "line_number": 53,
+            "text": "Vr,",
+            "confidence": 34.0
+          },
+          {
+            "line_number": 54,
+            "text": "° a ryod",
+            "confidence": 20.67
+          },
+          {
+            "line_number": 55,
+            "text": "~~ Fe",
+            "confidence": 24.0
+          },
+          {
+            "line_number": 56,
+            "text": "yr ,f",
+            "confidence": 39.0
+          },
+          {
+            "line_number": 57,
+            "text": "Se",
+            "confidence": 28.0
+          },
+          {
+            "line_number": 58,
+            "text": "ava",
+            "confidence": 42.0
+          },
+          {
+            "line_number": 59,
+            "text": "waa",
+            "confidence": 38.0
+          },
+          {
+            "line_number": 60,
+            "text": "pital ah S|",
+            "confidence": 11.0
+          },
+          {
+            "line_number": 61,
+            "text": "sont",
+            "confidence": 24.0
+          },
+          {
+            "line_number": 62,
+            "text": "ve",
+            "confidence": 90.0
+          },
+          {
+            "line_number": 63,
+            "text": "a “x ve ‘ae",
+            "confidence": 35.5
+          },
+          {
+            "line_number": 64,
+            "text": "‘",
+            "confidence": 30.0
+          },
+          {
+            "line_number": 65,
+            "text": "au",
+            "confidence": 49.0
+          },
+          {
+            "line_number": 66,
+            "text": "‘",
+            "confidence": 34.0
+          },
+          {
+            "line_number": 67,
+            "text": ":",
+            "confidence": 56.0
+          },
+          {
+            "line_number": 68,
+            "text": "4",
+            "confidence": 84.0
+          },
+          {
+            "line_number": 69,
+            "text": "Obes",
+            "confidence": 41.0
+          },
+          {
+            "line_number": 70,
+            "text": "te",
+            "confidence": 37.0
+          },
+          {
+            "line_number": 71,
+            "text": "SANS",
+            "confidence": 29.0
+          },
+          {
+            "line_number": 72,
+            "text": "ai r pre",
+            "confidence": 41.67
+          },
+          {
+            "line_number": 73,
+            "text": "5",
+            "confidence": 34.0
+          },
+          {
+            "line_number": 74,
+            "text": "“yet",
+            "confidence": 22.0
+          },
+          {
+            "line_number": 75,
+            "text": "} *",
+            "confidence": 61.5
+          },
+          {
+            "line_number": 76,
+            "text": "yy",
+            "confidence": 31.0
+          },
+          {
+            "line_number": 77,
+            "text": "AS : ne",
+            "confidence": 38.0
+          },
+          {
+            "line_number": 78,
+            "text": "wee",
+            "confidence": 41.0
+          },
+          {
+            "line_number": 79,
+            "text": "t- far",
+            "confidence": 50.5
+          },
+          {
+            "line_number": 80,
+            "text": "fe!",
+            "confidence": 28.0
+          },
+          {
+            "line_number": 81,
+            "text": "io Mig,",
+            "confidence": 32.0
+          },
+          {
+            "line_number": 82,
+            "text": "wi A Ass",
+            "confidence": 45.33
+          },
+          {
+            "line_number": 83,
+            "text": "vt",
+            "confidence": 51.0
+          },
+          {
+            "line_number": 84,
+            "text": "SS aS",
+            "confidence": 26.0
+          },
+          {
+            "line_number": 85,
+            "text": "a AR",
+            "confidence": 29.5
+          },
+          {
+            "line_number": 86,
+            "text": "BoE",
+            "confidence": 2.0
+          },
+          {
+            "line_number": 87,
+            "text": "Ce",
+            "confidence": 5.0
+          },
+          {
+            "line_number": 88,
+            "text": "~ H",
+            "confidence": 34.0
+          },
+          {
+            "line_number": 89,
+            "text": "Me,",
+            "confidence": 41.0
+          },
+          {
+            "line_number": 90,
+            "text": "a5 32 -",
+            "confidence": 36.0
+          },
+          {
+            "line_number": 91,
+            "text": "ie yt SY",
+            "confidence": 28.67
+          },
+          {
+            "line_number": 92,
+            "text": "4",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 93,
+            "text": "eA",
+            "confidence": 33.0
+          },
+          {
+            "line_number": 94,
+            "text": "oid)",
+            "confidence": 43.0
+          },
+          {
+            "line_number": 95,
+            "text": "eRe",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 96,
+            "text": "Toot",
+            "confidence": 50.0
+          },
+          {
+            "line_number": 97,
+            "text": "I Jey",
+            "confidence": 22.5
+          },
+          {
+            "line_number": 98,
+            "text": "Mt",
+            "confidence": 52.0
+          },
+          {
+            "line_number": 99,
+            "text": "“4",
+            "confidence": 45.0
+          },
+          {
+            "line_number": 100,
+            "text": "a?)",
+            "confidence": 47.0
+          },
+          {
+            "line_number": 101,
+            "text": "vos",
+            "confidence": 40.0
+          },
+          {
+            "line_number": 102,
+            "text": "aek",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 103,
+            "text": "tre",
+            "confidence": 58.0
+          },
+          {
+            "line_number": 104,
+            "text": "{or",
+            "confidence": 4.0
+          },
+          {
+            "line_number": 105,
+            "text": "i ie",
+            "confidence": 18.5
+          },
+          {
+            "line_number": 106,
+            "text": "von ie",
+            "confidence": 13.5
+          },
+          {
+            "line_number": 107,
+            "text": "ed;",
+            "confidence": 57.0
+          },
+          {
+            "line_number": 108,
+            "text": "{",
+            "confidence": 18.0
+          },
+          {
+            "line_number": 109,
+            "text": "A ES",
+            "confidence": 45.0
+          },
+          {
+            "line_number": 110,
+            "text": "rk",
+            "confidence": 42.0
+          },
+          {
+            "line_number": 111,
+            "text": "Senha s",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 112,
+            "text": "ean",
+            "confidence": 18.0
+          },
+          {
+            "line_number": 113,
+            "text": "aii",
+            "confidence": 28.0
+          },
+          {
+            "line_number": 114,
+            "text": "ee",
+            "confidence": 32.0
+          },
+          {
+            "line_number": 115,
+            "text": "}",
+            "confidence": 82.0
+          },
+          {
+            "line_number": 116,
+            "text": "ve",
+            "confidence": 84.0
+          },
+          {
+            "line_number": 117,
+            "text": "~~:",
+            "confidence": 14.0
+          },
+          {
+            "line_number": 118,
+            "text": "an)",
+            "confidence": 43.0
+          },
+          {
+            "line_number": 119,
+            "text": "“A",
+            "confidence": 23.0
+          },
+          {
+            "line_number": 120,
+            "text": "RELY, Sake",
+            "confidence": 12.0
+          },
+          {
+            "line_number": 121,
+            "text": "pes",
+            "confidence": 43.0
+          },
+          {
+            "line_number": 122,
+            "text": "~~",
+            "confidence": 32.0
+          },
+          {
+            "line_number": 123,
+            "text": "PEN",
+            "confidence": 31.0
+          },
+          {
+            "line_number": 124,
+            "text": "Bes",
+            "confidence": 14.0
+          },
+          {
+            "line_number": 125,
+            "text": "a",
+            "confidence": 45.0
+          },
+          {
+            "line_number": 126,
+            "text": "d",
+            "confidence": 61.0
+          },
+          {
+            "line_number": 127,
+            "text": "g 5c we we",
+            "confidence": 25.0
+          },
+          {
+            "line_number": 128,
+            "text": "“ye",
+            "confidence": 48.0
+          },
+          {
+            "line_number": 129,
+            "text": "er.",
+            "confidence": 25.0
+          },
+          {
+            "line_number": 130,
+            "text": "Les",
+            "confidence": 26.0
+          },
+          {
+            "line_number": 131,
+            "text": "Sore Le",
+            "confidence": 35.5
+          },
+          {
+            "line_number": 132,
+            "text": "el",
+            "confidence": 32.0
+          },
+          {
+            "line_number": 133,
+            "text": "My:",
+            "confidence": 21.0
+          },
+          {
+            "line_number": 134,
+            "text": "ve",
+            "confidence": 73.0
+          },
+          {
+            "line_number": 135,
+            "text": "Gt",
+            "confidence": 26.0
+          },
+          {
+            "line_number": 136,
+            "text": "is",
+            "confidence": 66.0
+          },
+          {
+            "line_number": 137,
+            "text": "welts",
+            "confidence": 49.0
+          },
+          {
+            "line_number": 138,
+            "text": "Ree",
+            "confidence": 1.0
+          },
+          {
+            "line_number": 139,
+            "text": "fe",
+            "confidence": 84.0
+          },
+          {
+            "line_number": 140,
+            "text": "{ .",
+            "confidence": 72.0
+          },
+          {
+            "line_number": 141,
+            "text": "a",
+            "confidence": 12.0
+          },
+          {
+            "line_number": 142,
+            "text": "a 06",
+            "confidence": 58.0
+          },
+          {
+            "line_number": 143,
+            "text": "~ oR",
+            "confidence": 31.5
+          },
+          {
+            "line_number": 144,
+            "text": "(\". jab",
+            "confidence": 18.5
+          },
+          {
+            "line_number": 145,
+            "text": "aug",
+            "confidence": 38.0
+          },
+          {
+            "line_number": 146,
+            "text": "Na",
+            "confidence": 86.0
+          },
+          {
+            "line_number": 147,
+            "text": "a t",
+            "confidence": 82.5
+          },
+          {
+            "line_number": 148,
+            "text": "os an",
+            "confidence": 22.5
+          },
+          {
+            "line_number": 149,
+            "text": ". 4",
+            "confidence": 45.0
+          },
+          {
+            "line_number": 150,
+            "text": "of",
+            "confidence": 59.0
+          },
+          {
+            "line_number": 151,
+            "text": "aT",
+            "confidence": 41.0
+          },
+          {
+            "line_number": 152,
+            "text": "“74",
+            "confidence": 56.0
+          },
+          {
+            "line_number": 153,
+            "text": "zon ys",
+            "confidence": 24.0
+          },
+          {
+            "line_number": 154,
+            "text": "a",
+            "confidence": 48.0
+          },
+          {
+            "line_number": 155,
+            "text": "=",
+            "confidence": 49.0
+          },
+          {
+            "line_number": 156,
+            "text": "Jay",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 157,
+            "text": "Se",
+            "confidence": 18.0
+          },
+          {
+            "line_number": 158,
+            "text": "TeV",
+            "confidence": 47.0
+          },
+          {
+            "line_number": 159,
+            "text": "4!",
+            "confidence": 72.0
+          },
+          {
+            "line_number": 160,
+            "text": "ify",
+            "confidence": 9.0
+          },
+          {
+            "line_number": 161,
+            "text": "be",
+            "confidence": 87.0
+          },
+          {
+            "line_number": 162,
+            "text": "i",
+            "confidence": 47.0
+          },
+          {
+            "line_number": 163,
+            "text": "o Me",
+            "confidence": 50.5
+          },
+          {
+            "line_number": 164,
+            "text": "CALE",
+            "confidence": 45.0
+          },
+          {
+            "line_number": 165,
+            "text": "2 on",
+            "confidence": 42.5
+          },
+          {
+            "line_number": 166,
+            "text": "&,,",
+            "confidence": 76.0
+          },
+          {
+            "line_number": 167,
+            "text": "a)",
+            "confidence": 20.0
+          },
+          {
+            "line_number": 168,
+            "text": "ta",
+            "confidence": 41.0
+          },
+          {
+            "line_number": 169,
+            "text": "cm | Pi",
+            "confidence": 39.0
+          },
+          {
+            "line_number": 170,
+            "text": "“ye",
+            "confidence": 36.0
+          },
+          {
+            "line_number": 171,
+            "text": "chee",
+            "confidence": 55.0
+          },
+          {
+            "line_number": 172,
+            "text": "ai",
+            "confidence": 54.0
+          },
+          {
+            "line_number": 173,
+            "text": "ets",
+            "confidence": 27.0
+          },
+          {
+            "line_number": 174,
+            "text": "sw \\'",
+            "confidence": 9.5
+          },
+          {
+            "line_number": 175,
+            "text": "age",
+            "confidence": 49.0
+          },
+          {
+            "line_number": 176,
+            "text": "Ag",
+            "confidence": 26.0
+          },
+          {
+            "line_number": 177,
+            "text": "oe 4",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 178,
+            "text": ":",
+            "confidence": 7.0
+          },
+          {
+            "line_number": 179,
+            "text": "if",
+            "confidence": 65.0
+          },
+          {
+            "line_number": 180,
+            "text": "ny",
+            "confidence": 24.0
+          },
+          {
+            "line_number": 181,
+            "text": "a *",
+            "confidence": 30.5
+          },
+          {
+            "line_number": 182,
+            "text": "-!",
+            "confidence": 48.0
+          },
+          {
+            "line_number": 183,
+            "text": "VL.",
+            "confidence": 20.0
+          },
+          {
+            "line_number": 184,
+            "text": "wty",
+            "confidence": 63.0
+          },
+          {
+            "line_number": 185,
+            "text": "‘ie",
+            "confidence": 30.0
+          },
+          {
+            "line_number": 186,
+            "text": "os",
+            "confidence": 10.0
+          },
+          {
+            "line_number": 187,
+            "text": "uk",
+            "confidence": 45.0
+          },
+          {
+            "line_number": 188,
+            "text": "aang t",
+            "confidence": 8.5
+          },
+          {
+            "line_number": 189,
+            "text": "{",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 190,
+            "text": "bat",
+            "confidence": 41.0
+          },
+          {
+            "line_number": 191,
+            "text": "ere (fy",
+            "confidence": 18.5
+          },
+          {
+            "line_number": 192,
+            "text": "SOM",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 193,
+            "text": "Vosi8)",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 194,
+            "text": "ssa",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 195,
+            "text": "AN",
+            "confidence": 46.0
+          },
+          {
+            "line_number": 196,
+            "text": "an",
+            "confidence": 14.0
+          },
+          {
+            "line_number": 197,
+            "text": "ray",
+            "confidence": 76.0
+          },
+          {
+            "line_number": 198,
+            "text": "fa",
+            "confidence": 69.0
+          },
+          {
+            "line_number": 199,
+            "text": "at",
+            "confidence": 48.0
+          },
+          {
+            "line_number": 200,
+            "text": "ee",
+            "confidence": 52.0
+          },
+          {
+            "line_number": 201,
+            "text": "en a ed",
+            "confidence": 27.67
+          },
+          {
+            "line_number": 202,
+            "text": "~~,",
+            "confidence": 36.0
+          },
+          {
+            "line_number": 203,
+            "text": "4.",
+            "confidence": 22.0
+          },
+          {
+            "line_number": 204,
+            "text": "Ni",
+            "confidence": 15.0
+          },
+          {
+            "line_number": 205,
+            "text": "ages",
+            "confidence": 16.0
+          },
+          {
+            "line_number": 206,
+            "text": "\"",
+            "confidence": 29.0
+          },
+          {
+            "line_number": 207,
+            "text": "mf",
+            "confidence": 48.0
+          },
+          {
+            "line_number": 208,
+            "text": "oA",
+            "confidence": 32.0
+          },
+          {
+            "line_number": 209,
+            "text": "+o.",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 210,
+            "text": "yt",
+            "confidence": 46.0
+          },
+          {
+            "line_number": 211,
+            "text": "ara ee (eee oh eset ! es ie °",
+            "confidence": 18.11
+          },
+          {
+            "line_number": 212,
+            "text": "NA",
+            "confidence": 57.0
+          },
+          {
+            "line_number": 213,
+            "text": "Tee)",
+            "confidence": 30.0
+          },
+          {
+            "line_number": 214,
+            "text": "| an",
+            "confidence": 47.5
+          },
+          {
+            "line_number": 215,
+            "text": "Me, . —-",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 216,
+            "text": "bee ad abs",
+            "confidence": 44.0
+          },
+          {
+            "line_number": 217,
+            "text": "bee.",
+            "confidence": 45.0
+          },
+          {
+            "line_number": 218,
+            "text": "tytn",
+            "confidence": 30.0
+          },
+          {
+            "line_number": 219,
+            "text": "{een a",
+            "confidence": 39.0
+          },
+          {
+            "line_number": 220,
+            "text": "Bis uy",
+            "confidence": 17.5
+          },
+          {
+            "line_number": 221,
+            "text": "t ay",
+            "confidence": 31.0
+          },
+          {
+            "line_number": 222,
+            "text": "aN",
+            "confidence": 27.0
+          },
+          {
+            "line_number": 223,
+            "text": "7)",
+            "confidence": 24.0
+          },
+          {
+            "line_number": 224,
+            "text": "og",
+            "confidence": 67.0
+          },
+          {
+            "line_number": 225,
+            "text": "er",
+            "confidence": 53.0
+          },
+          {
+            "line_number": 226,
+            "text": "Sp. Ce",
+            "confidence": 21.0
+          },
+          {
+            "line_number": 227,
+            "text": "=~. 4",
+            "confidence": 50.5
+          },
+          {
+            "line_number": 228,
+            "text": "i aii k",
+            "confidence": 10.67
+          },
+          {
+            "line_number": 229,
+            "text": "a4,",
+            "confidence": 14.0
+          },
+          {
+            "line_number": 230,
+            "text": "fis cf",
+            "confidence": 20.0
+          },
+          {
+            "line_number": 231,
+            "text": "LA,",
+            "confidence": 66.0
+          },
+          {
+            "line_number": 232,
+            "text": "hey",
+            "confidence": 27.0
+          },
+          {
+            "line_number": 233,
+            "text": "5 HOD HY xs-",
+            "confidence": 25.75
+          },
+          {
+            "line_number": 234,
+            "text": "ae",
+            "confidence": 50.0
+          },
+          {
+            "line_number": 235,
+            "text": "ory",
+            "confidence": 36.0
+          },
+          {
+            "line_number": 236,
+            "text": "ce eee yf",
+            "confidence": 16.0
+          },
+          {
+            "line_number": 237,
+            "text": "2,0",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 238,
+            "text": "ce qvis vier",
+            "confidence": 17.33
+          },
+          {
+            "line_number": 239,
+            "text": "wal:",
+            "confidence": 35.0
+          },
+          {
+            "line_number": 240,
+            "text": "May",
+            "confidence": 43.0
+          },
+          {
+            "line_number": 241,
+            "text": "aT S|",
+            "confidence": 17.5
+          },
+          {
+            "line_number": 242,
+            "text": "riety",
+            "confidence": 31.0
+          },
+          {
+            "line_number": 243,
+            "text": "tae",
+            "confidence": 71.0
+          },
+          {
+            "line_number": 244,
+            "text": "‘543",
+            "confidence": 21.0
+          },
+          {
+            "line_number": 245,
+            "text": "Pd",
+            "confidence": 52.0
+          },
+          {
+            "line_number": 246,
+            "text": "“at",
+            "confidence": 26.0
+          },
+          {
+            "line_number": 247,
+            "text": "EE",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 248,
+            "text": "- =",
+            "confidence": 62.0
+          },
+          {
+            "line_number": 249,
+            "text": "coal AM 3",
+            "confidence": 34.0
+          },
+          {
+            "line_number": 250,
+            "text": "“Ngee 30",
+            "confidence": 41.0
+          },
+          {
+            "line_number": 251,
+            "text": "m8 Ty Nye",
+            "confidence": 31.33
+          },
+          {
+            "line_number": 252,
+            "text": "ar®",
+            "confidence": 28.0
+          },
+          {
+            "line_number": 253,
+            "text": "qd wire",
+            "confidence": 30.0
+          },
+          {
+            "line_number": 254,
+            "text": "we",
+            "confidence": 12.0
+          },
+          {
+            "line_number": 255,
+            "text": "oe",
+            "confidence": 72.0
+          },
+          {
+            "line_number": 256,
+            "text": "|",
+            "confidence": 2.0
+          },
+          {
+            "line_number": 257,
+            "text": "eres",
+            "confidence": 46.0
+          },
+          {
+            "line_number": 258,
+            "text": "0f3 a",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 259,
+            "text": "wb",
+            "confidence": 34.0
+          },
+          {
+            "line_number": 260,
+            "text": "2 Swe",
+            "confidence": 30.0
+          },
+          {
+            "line_number": 261,
+            "text": "nae)",
+            "confidence": 10.0
+          },
+          {
+            "line_number": 262,
+            "text": "pen e",
+            "confidence": 11.5
+          },
+          {
+            "line_number": 263,
+            "text": "Aas",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 264,
+            "text": "ten",
+            "confidence": 59.0
+          },
+          {
+            "line_number": 265,
+            "text": "Ab we",
+            "confidence": 21.5
+          },
+          {
+            "line_number": 266,
+            "text": "ei ruree &",
+            "confidence": 23.67
+          },
+          {
+            "line_number": 267,
+            "text": "Ay Se",
+            "confidence": 31.5
+          },
+          {
+            "line_number": 268,
+            "text": "t; nee",
+            "confidence": 27.0
+          },
+          {
+            "line_number": 269,
+            "text": "ay",
+            "confidence": 10.0
+          },
+          {
+            "line_number": 270,
+            "text": "as dy",
+            "confidence": 55.0
+          },
+          {
+            "line_number": 271,
+            "text": "Kil",
+            "confidence": 38.0
+          },
+          {
+            "line_number": 272,
+            "text": "sO",
+            "confidence": 14.0
+          },
+          {
+            "line_number": 273,
+            "text": "Pw \\",
+            "confidence": 58.5
+          },
+          {
+            "line_number": 274,
+            "text": "yay",
+            "confidence": 38.0
+          },
+          {
+            "line_number": 275,
+            "text": "a",
+            "confidence": 26.0
+          },
+          {
+            "line_number": 276,
+            "text": "{>",
+            "confidence": 77.0
+          },
+          {
+            "line_number": 277,
+            "text": "yr) Ab",
+            "confidence": 21.5
+          },
+          {
+            "line_number": 278,
+            "text": "ta",
+            "confidence": 49.0
+          },
+          {
+            "line_number": 279,
+            "text": "Dy Paes",
+            "confidence": 28.5
+          },
+          {
+            "line_number": 280,
+            "text": "CG",
+            "confidence": 19.0
+          },
+          {
+            "line_number": 281,
+            "text": "be",
+            "confidence": 68.0
+          },
+          {
+            "line_number": 282,
+            "text": "ene",
+            "confidence": 68.0
+          },
+          {
+            "line_number": 283,
+            "text": "ae lw",
+            "confidence": 17.5
+          },
+          {
+            "line_number": 284,
+            "text": "ale”g",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 285,
+            "text": "Sed",
+            "confidence": 49.0
+          },
+          {
+            "line_number": 286,
+            "text": "oh",
+            "confidence": 53.0
+          },
+          {
+            "line_number": 287,
+            "text": "Po",
+            "confidence": 24.0
+          },
+          {
+            "line_number": 288,
+            "text": "~_ me",
+            "confidence": 30.5
+          },
+          {
+            "line_number": 289,
+            "text": "cn,",
+            "confidence": 43.0
+          },
+          {
+            "line_number": 290,
+            "text": "° ip -",
+            "confidence": 22.0
+          },
+          {
+            "line_number": 291,
+            "text": "ws“",
+            "confidence": 21.0
+          },
+          {
+            "line_number": 292,
+            "text": "wards bh,",
+            "confidence": 42.0
+          },
+          {
+            "line_number": 293,
+            "text": "he,",
+            "confidence": 35.0
+          },
+          {
+            "line_number": 294,
+            "text": "es, ry",
+            "confidence": 15.0
+          },
+          {
+            "line_number": 295,
+            "text": "wial",
+            "confidence": 26.0
+          },
+          {
+            "line_number": 296,
+            "text": "on",
+            "confidence": 59.0
+          },
+          {
+            "line_number": 297,
+            "text": "wd",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 298,
+            "text": "“ae",
+            "confidence": 4.0
+          },
+          {
+            "line_number": 299,
+            "text": "ast",
+            "confidence": 50.0
+          },
+          {
+            "line_number": 300,
+            "text": "ofa",
+            "confidence": 38.0
+          },
+          {
+            "line_number": 301,
+            "text": "te",
+            "confidence": 45.0
+          },
+          {
+            "line_number": 302,
+            "text": "tp 7",
+            "confidence": 28.0
+          },
+          {
+            "line_number": 303,
+            "text": "@sa-.? ay",
+            "confidence": 24.5
+          },
+          {
+            "line_number": 304,
+            "text": "Ne",
+            "confidence": 82.0
+          },
+          {
+            "line_number": 305,
+            "text": "—a he",
+            "confidence": 21.0
+          },
+          {
+            "line_number": 306,
+            "text": "os",
+            "confidence": 22.0
+          },
+          {
+            "line_number": 307,
+            "text": "” 1/0",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 308,
+            "text": "4d",
+            "confidence": 66.0
+          },
+          {
+            "line_number": 309,
+            "text": "tYee",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 310,
+            "text": "¢ \\",
+            "confidence": 66.5
+          },
+          {
+            "line_number": 311,
+            "text": "Ff",
+            "confidence": 20.0
+          },
+          {
+            "line_number": 312,
+            "text": "in",
+            "confidence": 37.0
+          },
+          {
+            "line_number": 313,
+            "text": "Ne.",
+            "confidence": 40.0
+          },
+          {
+            "line_number": 314,
+            "text": "mo",
+            "confidence": 56.0
+          },
+          {
+            "line_number": 315,
+            "text": "}is",
+            "confidence": 37.0
+          },
+          {
+            "line_number": 316,
+            "text": "“Nop",
+            "confidence": 49.0
+          },
+          {
+            "line_number": 317,
+            "text": "we,",
+            "confidence": 5.0
+          },
+          {
+            "line_number": 318,
+            "text": "re +} x4",
+            "confidence": 23.0
+          },
+          {
+            "line_number": 319,
+            "text": "yu “ab",
+            "confidence": 36.5
+          },
+          {
+            "line_number": 320,
+            "text": "fat",
+            "confidence": 63.0
+          },
+          {
+            "line_number": 321,
+            "text": "Este",
+            "confidence": 18.0
+          },
+          {
+            "line_number": 322,
+            "text": "mars",
+            "confidence": 14.0
+          },
+          {
+            "line_number": 323,
+            "text": "eo?",
+            "confidence": 37.0
+          },
+          {
+            "line_number": 324,
+            "text": "te",
+            "confidence": 25.0
+          },
+          {
+            "line_number": 325,
+            "text": "er* rr",
+            "confidence": 21.5
+          },
+          {
+            "line_number": 326,
+            "text": "“wh",
+            "confidence": 52.0
+          },
+          {
+            "line_number": 327,
+            "text": "ina!",
+            "confidence": 19.0
+          },
+          {
+            "line_number": 328,
+            "text": "hie.",
+            "confidence": 43.0
+          },
+          {
+            "line_number": 329,
+            "text": "\"35 r",
+            "confidence": 5.5
+          },
+          {
+            "line_number": 330,
+            "text": "Way vat d >",
+            "confidence": 35.0
+          },
+          {
+            "line_number": 331,
+            "text": "Pe eyelg",
+            "confidence": 7.5
+          },
+          {
+            "line_number": 332,
+            "text": "wa fa',?",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 333,
+            "text": "iz)",
+            "confidence": 39.0
+          },
+          {
+            "line_number": 334,
+            "text": "i",
+            "confidence": 30.0
+          },
+          {
+            "line_number": 335,
+            "text": "SYR",
+            "confidence": 23.0
+          },
+          {
+            "line_number": 336,
+            "text": "peem fares",
+            "confidence": 20.0
+          },
+          {
+            "line_number": 337,
+            "text": "toy",
+            "confidence": 39.0
+          },
+          {
+            "line_number": 338,
+            "text": "vin.",
+            "confidence": 48.0
+          },
+          {
+            "line_number": 339,
+            "text": "Very",
+            "confidence": 33.0
+          },
+          {
+            "line_number": 340,
+            "text": "os",
+            "confidence": 22.0
+          },
+          {
+            "line_number": 341,
+            "text": "a",
+            "confidence": 43.0
+          },
+          {
+            "line_number": 342,
+            "text": "erry",
+            "confidence": 6.0
+          },
+          {
+            "line_number": 343,
+            "text": "aX",
+            "confidence": 30.0
+          },
+          {
+            "line_number": 344,
+            "text": "yale",
+            "confidence": 25.0
+          },
+          {
+            "line_number": 345,
+            "text": ". tT",
+            "confidence": 10.0
+          },
+          {
+            "line_number": 346,
+            "text": "\"4",
+            "confidence": 82.0
+          },
+          {
+            "line_number": 347,
+            "text": "re ae €",
+            "confidence": 32.0
+          },
+          {
+            "line_number": 348,
+            "text": "yey *,",
+            "confidence": 20.0
+          },
+          {
+            "line_number": 349,
+            "text": "ae Y",
+            "confidence": 37.5
+          },
+          {
+            "line_number": 350,
+            "text": "SO tee",
+            "confidence": 14.0
+          },
+          {
+            "line_number": 351,
+            "text": "mee",
+            "confidence": 32.0
+          },
+          {
+            "line_number": 352,
+            "text": "ye",
+            "confidence": 48.0
+          },
+          {
+            "line_number": 353,
+            "text": "oe",
+            "confidence": 36.0
+          },
+          {
+            "line_number": 354,
+            "text": "al ow",
+            "confidence": 29.0
+          },
+          {
+            "line_number": 355,
+            "text": "eNAQr, 4",
+            "confidence": 24.5
+          },
+          {
+            "line_number": 356,
+            "text": "aie",
+            "confidence": 33.0
+          },
+          {
+            "line_number": 357,
+            "text": "ne TieyD",
+            "confidence": 26.0
+          },
+          {
+            "line_number": 358,
+            "text": "AVS",
+            "confidence": 28.0
+          },
+          {
+            "line_number": 359,
+            "text": "oe '",
+            "confidence": 13.5
+          },
+          {
+            "line_number": 360,
+            "text": "ay",
+            "confidence": 39.0
+          },
+          {
+            "line_number": 361,
+            "text": "eel",
+            "confidence": 58.0
+          },
+          {
+            "line_number": 362,
+            "text": "Vor",
+            "confidence": 48.0
+          },
+          {
+            "line_number": 363,
+            "text": "ae",
+            "confidence": 41.0
+          },
+          {
+            "line_number": 364,
+            "text": "PAT ae robe",
+            "confidence": 18.67
+          },
+          {
+            "line_number": 365,
+            "text": "oa",
+            "confidence": 26.0
+          },
+          {
+            "line_number": 366,
+            "text": "of",
+            "confidence": 92.0
+          },
+          {
+            "line_number": 367,
+            "text": "ae",
+            "confidence": 48.0
+          },
+          {
+            "line_number": 368,
+            "text": "4 \\ ewe",
+            "confidence": 62.0
+          },
+          {
+            "line_number": 369,
+            "text": "ry",
+            "confidence": 21.0
+          },
+          {
+            "line_number": 370,
+            "text": "secs",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 371,
+            "text": "fee",
+            "confidence": 47.0
+          },
+          {
+            "line_number": 372,
+            "text": "“ire",
+            "confidence": 50.0
+          },
+          {
+            "line_number": 373,
+            "text": "ais",
+            "confidence": 53.0
+          },
+          {
+            "line_number": 374,
+            "text": "a)",
+            "confidence": 59.0
+          },
+          {
+            "line_number": 375,
+            "text": "ru is v",
+            "confidence": 30.0
+          },
+          {
+            "line_number": 376,
+            "text": "PORE LCF",
+            "confidence": 5.0
+          },
+          {
+            "line_number": 377,
+            "text": "vye",
+            "confidence": 70.0
+          },
+          {
+            "line_number": 378,
+            "text": "a)",
+            "confidence": 38.0
+          },
+          {
+            "line_number": 379,
+            "text": "bets",
+            "confidence": 30.0
+          },
+          {
+            "line_number": 380,
+            "text": "Ped",
+            "confidence": 40.0
+          },
+          {
+            "line_number": 381,
+            "text": "‘eS",
+            "confidence": 39.0
+          },
+          {
+            "line_number": 382,
+            "text": "NORA",
+            "confidence": 33.0
+          },
+          {
+            "line_number": 383,
+            "text": "7. Ir? veo Se",
+            "confidence": 49.25
+          },
+          {
+            "line_number": 384,
+            "text": "oe",
+            "confidence": 52.0
+          },
+          {
+            "line_number": 385,
+            "text": "mem.",
+            "confidence": 35.0
+          },
+          {
+            "line_number": 386,
+            "text": "«”.",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 387,
+            "text": "\\e",
+            "confidence": 47.0
+          },
+          {
+            "line_number": 388,
+            "text": "-_t",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 389,
+            "text": ",¢",
+            "confidence": 26.0
+          },
+          {
+            "line_number": 390,
+            "text": "OFT mae",
+            "confidence": 10.0
+          },
+          {
+            "line_number": 391,
+            "text": "Pee",
+            "confidence": 42.0
+          },
+          {
+            "line_number": 392,
+            "text": "t=",
+            "confidence": 47.0
+          },
+          {
+            "line_number": 393,
+            "text": "*, 44",
+            "confidence": 70.0
+          },
+          {
+            "line_number": 394,
+            "text": ". ~’ a=)",
+            "confidence": 20.0
+          },
+          {
+            "line_number": 395,
+            "text": "(a",
+            "confidence": 2.0
+          },
+          {
+            "line_number": 396,
+            "text": "od",
+            "confidence": 35.0
+          },
+          {
+            "line_number": 397,
+            "text": "fe",
+            "confidence": 43.0
+          },
+          {
+            "line_number": 398,
+            "text": "an e",
+            "confidence": 65.5
+          },
+          {
+            "line_number": 399,
+            "text": "aso how",
+            "confidence": 38.0
+          },
+          {
+            "line_number": 400,
+            "text": "LA",
+            "confidence": 68.0
+          },
+          {
+            "line_number": 401,
+            "text": "Loe)",
+            "confidence": 30.0
+          },
+          {
+            "line_number": 402,
+            "text": "oye",
+            "confidence": 36.0
+          },
+          {
+            "line_number": 403,
+            "text": "ea J",
+            "confidence": 20.5
+          },
+          {
+            "line_number": 404,
+            "text": "fy",
+            "confidence": 58.0
+          },
+          {
+            "line_number": 405,
+            "text": ">",
+            "confidence": 79.0
+          },
+          {
+            "line_number": 406,
+            "text": "wd",
+            "confidence": 44.0
+          },
+          {
+            "line_number": 407,
+            "text": "%, as",
+            "confidence": 37.0
+          },
+          {
+            "line_number": 408,
+            "text": "v sett",
+            "confidence": 36.5
+          },
+          {
+            "line_number": 409,
+            "text": "ea",
+            "confidence": 40.0
+          },
+          {
+            "line_number": 410,
+            "text": "we",
+            "confidence": 22.0
+          },
+          {
+            "line_number": 411,
+            "text": "=\",",
+            "confidence": 56.0
+          },
+          {
+            "line_number": 412,
+            "text": "as",
+            "confidence": 60.0
+          },
+          {
+            "line_number": 413,
+            "text": "wee",
+            "confidence": 48.0
+          },
+          {
+            "line_number": 414,
+            "text": "Ded Pin &",
+            "confidence": 50.67
+          },
+          {
+            "line_number": 415,
+            "text": "Center.",
+            "confidence": 77.0
+          },
+          {
+            "line_number": 416,
+            "text": "AVG |",
+            "confidence": 69.0
+          },
+          {
+            "line_number": 417,
+            "text": "fe.",
+            "confidence": 44.0
+          },
+          {
+            "line_number": 418,
+            "text": "foe",
+            "confidence": 40.0
+          },
+          {
+            "line_number": 419,
+            "text": "«>",
+            "confidence": 58.0
+          },
+          {
+            "line_number": 420,
+            "text": "9 yearn",
+            "confidence": 4.0
+          },
+          {
+            "line_number": 421,
+            "text": "oe",
+            "confidence": 9.0
+          },
+          {
+            "line_number": 422,
+            "text": "“7",
+            "confidence": 30.0
+          },
+          {
+            "line_number": 423,
+            "text": "town",
+            "confidence": 35.0
+          },
+          {
+            "line_number": 424,
+            "text": "atom",
+            "confidence": 21.0
+          },
+          {
+            "line_number": 425,
+            "text": "| Town.",
+            "confidence": 80.0
+          },
+          {
+            "line_number": 426,
+            "text": "ad",
+            "confidence": 25.0
+          },
+          {
+            "line_number": 427,
+            "text": "“y",
+            "confidence": 2.0
+          },
+          {
+            "line_number": 428,
+            "text": "lam",
+            "confidence": 41.0
+          },
+          {
+            "line_number": 429,
+            "text": "t ~Nee",
+            "confidence": 38.5
+          },
+          {
+            "line_number": 430,
+            "text": "~~ at",
+            "confidence": 35.0
+          },
+          {
+            "line_number": 431,
+            "text": "wy »",
+            "confidence": 18.5
+          },
+          {
+            "line_number": 432,
+            "text": "Ven Lia",
+            "confidence": 36.0
+          },
+          {
+            "line_number": 433,
+            "text": "Wry d7,",
+            "confidence": 14.0
+          },
+          {
+            "line_number": 434,
+            "text": "‘7",
+            "confidence": 29.0
+          },
+          {
+            "line_number": 435,
+            "text": "ae Ate AY",
+            "confidence": 36.0
+          },
+          {
+            "line_number": 436,
+            "text": "an",
+            "confidence": 54.0
+          },
+          {
+            "line_number": 437,
+            "text": "ae",
+            "confidence": 41.0
+          },
+          {
+            "line_number": 438,
+            "text": "&,",
+            "confidence": 31.0
+          },
+          {
+            "line_number": 439,
+            "text": "gj",
+            "confidence": 17.0
+          },
+          {
+            "line_number": 440,
+            "text": "‘ ates Ale",
+            "confidence": 62.0
+          },
+          {
+            "line_number": 441,
+            "text": "He lpourne",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 442,
+            "text": "We",
+            "confidence": 63.0
+          },
+          {
+            "line_number": 443,
+            "text": "*",
+            "confidence": 4.0
+          },
+          {
+            "line_number": 444,
+            "text": "ae *S",
+            "confidence": 30.0
+          },
+          {
+            "line_number": 445,
+            "text": "{ur",
+            "confidence": 64.0
+          },
+          {
+            "line_number": 446,
+            "text": "ra!",
+            "confidence": 40.0
+          },
+          {
+            "line_number": 447,
+            "text": "4} F",
+            "confidence": 17.0
+          },
+          {
+            "line_number": 448,
+            "text": "..)",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 449,
+            "text": "at ae Pi",
+            "confidence": 26.67
+          },
+          {
+            "line_number": 450,
+            "text": "vwl",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 451,
+            "text": "an",
+            "confidence": 28.0
+          },
+          {
+            "line_number": 452,
+            "text": "vn",
+            "confidence": 16.0
+          },
+          {
+            "line_number": 453,
+            "text": "Nd",
+            "confidence": 38.0
+          },
+          {
+            "line_number": 454,
+            "text": "i a",
+            "confidence": 18.0
+          },
+          {
+            "line_number": 455,
+            "text": "oY",
+            "confidence": 15.0
+          },
+          {
+            "line_number": 456,
+            "text": "t",
+            "confidence": 20.0
+          },
+          {
+            "line_number": 457,
+            "text": "a>",
+            "confidence": 26.0
+          },
+          {
+            "line_number": 458,
+            "text": "kay",
+            "confidence": 44.0
+          },
+          {
+            "line_number": 459,
+            "text": "Sf,",
+            "confidence": 24.0
+          },
+          {
+            "line_number": 460,
+            "text": "am es!",
+            "confidence": 32.5
+          },
+          {
+            "line_number": 461,
+            "text": "AT",
+            "confidence": 45.0
+          },
+          {
+            "line_number": 462,
+            "text": "ay",
+            "confidence": 59.0
+          },
+          {
+            "line_number": 463,
+            "text": "ke",
+            "confidence": 73.0
+          },
+          {
+            "line_number": 464,
+            "text": "te",
+            "confidence": 32.0
+          },
+          {
+            "line_number": 465,
+            "text": "<",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 466,
+            "text": "i",
+            "confidence": 24.0
+          },
+          {
+            "line_number": 467,
+            "text": "a *",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 468,
+            "text": "seOre",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 469,
+            "text": "at",
+            "confidence": 32.0
+          },
+          {
+            "line_number": 470,
+            "text": ". AR -",
+            "confidence": 41.67
+          },
+          {
+            "line_number": 471,
+            "text": "|.",
+            "confidence": 37.0
+          },
+          {
+            "line_number": 472,
+            "text": "}",
+            "confidence": 74.0
+          },
+          {
+            "line_number": 473,
+            "text": "ooh ye",
+            "confidence": 32.0
+          },
+          {
+            "line_number": 474,
+            "text": "v4",
+            "confidence": 28.0
+          },
+          {
+            "line_number": 475,
+            "text": "-",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 476,
+            "text": "me fe",
+            "confidence": 57.5
+          },
+          {
+            "line_number": 477,
+            "text": "ef",
+            "confidence": 19.0
+          },
+          {
+            "line_number": 478,
+            "text": "rt",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 479,
+            "text": "or",
+            "confidence": 43.0
+          },
+          {
+            "line_number": 480,
+            "text": "oo”",
+            "confidence": 32.0
+          },
+          {
+            "line_number": 481,
+            "text": "-eF",
+            "confidence": 30.0
+          },
+          {
+            "line_number": 482,
+            "text": "~~",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 483,
+            "text": "’",
+            "confidence": 14.0
+          },
+          {
+            "line_number": 484,
+            "text": "-~",
+            "confidence": 13.0
+          },
+          {
+            "line_number": 485,
+            "text": "wn A S,",
+            "confidence": 31.0
+          },
+          {
+            "line_number": 486,
+            "text": "ve",
+            "confidence": 81.0
+          },
+          {
+            "line_number": 487,
+            "text": "{| Mahe te]",
+            "confidence": 25.67
+          },
+          {
+            "line_number": 488,
+            "text": "+A",
+            "confidence": 52.0
+          },
+          {
+            "line_number": 489,
+            "text": "wf",
+            "confidence": 36.0
+          },
+          {
+            "line_number": 490,
+            "text": "\\*",
+            "confidence": 63.0
+          },
+          {
+            "line_number": 491,
+            "text": "z",
+            "confidence": 32.0
+          },
+          {
+            "line_number": 492,
+            "text": "LE",
+            "confidence": 64.0
+          },
+          {
+            "line_number": 493,
+            "text": "; ah",
+            "confidence": 21.0
+          },
+          {
+            "line_number": 494,
+            "text": "ram",
+            "confidence": 22.0
+          },
+          {
+            "line_number": 495,
+            "text": "‘",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 496,
+            "text": "my re",
+            "confidence": 24.5
+          },
+          {
+            "line_number": 497,
+            "text": "Jen",
+            "confidence": 44.0
+          },
+          {
+            "line_number": 498,
+            "text": "\\",
+            "confidence": 4.0
+          },
+          {
+            "line_number": 499,
+            "text": ">",
+            "confidence": 16.0
+          },
+          {
+            "line_number": 500,
+            "text": "L",
+            "confidence": 20.0
+          },
+          {
+            "line_number": 501,
+            "text": "{",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 502,
+            "text": "Hy)",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 503,
+            "text": "we",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 504,
+            "text": "t¢",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 505,
+            "text": "oe",
+            "confidence": 19.0
+          },
+          {
+            "line_number": 506,
+            "text": "fe",
+            "confidence": 84.0
+          },
+          {
+            "line_number": 507,
+            "text": "im |",
+            "confidence": 50.0
+          },
+          {
+            "line_number": 508,
+            "text": ").",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 509,
+            "text": "‘",
+            "confidence": 39.0
+          },
+          {
+            "line_number": 510,
+            "text": "PTR",
+            "confidence": 39.0
+          },
+          {
+            "line_number": 511,
+            "text": "aos",
+            "confidence": 35.0
+          },
+          {
+            "line_number": 512,
+            "text": "(05",
+            "confidence": 66.0
+          },
+          {
+            "line_number": 513,
+            "text": "HER",
+            "confidence": 51.0
+          },
+          {
+            "line_number": 514,
+            "text": "“lite",
+            "confidence": 30.0
+          },
+          {
+            "line_number": 515,
+            "text": "(Jp",
+            "confidence": 12.0
+          },
+          {
+            "line_number": 516,
+            "text": "4",
+            "confidence": 49.0
+          },
+          {
+            "line_number": 517,
+            "text": "’",
+            "confidence": 11.0
+          },
+          {
+            "line_number": 518,
+            "text": "6.5",
+            "confidence": 38.0
+          },
+          {
+            "line_number": 519,
+            "text": "ta",
+            "confidence": 58.0
+          },
+          {
+            "line_number": 520,
+            "text": "y",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 521,
+            "text": "I",
+            "confidence": 65.0
+          },
+          {
+            "line_number": 522,
+            "text": "i ;",
+            "confidence": 12.0
+          },
+          {
+            "line_number": 523,
+            "text": "a",
+            "confidence": 18.0
+          },
+          {
+            "line_number": 524,
+            "text": "i",
+            "confidence": 62.0
+          },
+          {
+            "line_number": 525,
+            "text": "af",
+            "confidence": 76.0
+          },
+          {
+            "line_number": 526,
+            "text": "‘",
+            "confidence": 46.0
+          },
+          {
+            "line_number": 527,
+            "text": "so.",
+            "confidence": 44.0
+          },
+          {
+            "line_number": 528,
+            "text": "aoe",
+            "confidence": 63.0
+          },
+          {
+            "line_number": 529,
+            "text": "EME UN",
+            "confidence": 38.5
+          },
+          {
+            "line_number": 530,
+            "text": "a i) ‘ ny GR",
+            "confidence": 22.6
+          },
+          {
+            "line_number": 531,
+            "text": "»",
+            "confidence": 43.0
+          },
+          {
+            "line_number": 532,
+            "text": "od",
+            "confidence": 17.0
+          },
+          {
+            "line_number": 533,
+            "text": "wa",
+            "confidence": 58.0
+          },
+          {
+            "line_number": 534,
+            "text": "(\"s",
+            "confidence": 35.0
+          },
+          {
+            "line_number": 535,
+            "text": "ies",
+            "confidence": 23.0
+          },
+          {
+            "line_number": 536,
+            "text": "ee Qo”",
+            "confidence": 29.5
+          },
+          {
+            "line_number": 537,
+            "text": "yn)",
+            "confidence": 7.0
+          },
+          {
+            "line_number": 538,
+            "text": "|",
+            "confidence": 88.0
+          },
+          {
+            "line_number": 539,
+            "text": "> bik at",
+            "confidence": 44.67
+          },
+          {
+            "line_number": 540,
+            "text": "iJ",
+            "confidence": 26.0
+          },
+          {
+            "line_number": 541,
+            "text": "ith",
+            "confidence": 40.0
+          },
+          {
+            "line_number": 542,
+            "text": "bat",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 543,
+            "text": "t-d",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 544,
+            "text": "~y?7",
+            "confidence": 36.0
+          },
+          {
+            "line_number": 545,
+            "text": "“ay",
+            "confidence": 18.0
+          },
+          {
+            "line_number": 546,
+            "text": "on",
+            "confidence": 46.0
+          },
+          {
+            "line_number": 547,
+            "text": "~~",
+            "confidence": 9.0
+          },
+          {
+            "line_number": 548,
+            "text": "J",
+            "confidence": 78.0
+          },
+          {
+            "line_number": 549,
+            "text": "-",
+            "confidence": 4.0
+          },
+          {
+            "line_number": 550,
+            "text": "} a;",
+            "confidence": 39.5
+          },
+          {
+            "line_number": 551,
+            "text": "\\:",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 552,
+            "text": "tt",
+            "confidence": 43.0
+          },
+          {
+            "line_number": 553,
+            "text": "2s",
+            "confidence": 28.0
+          },
+          {
+            "line_number": 554,
+            "text": "+®",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 555,
+            "text": "(",
+            "confidence": 4.0
+          },
+          {
+            "line_number": 556,
+            "text": "a mh",
+            "confidence": 40.5
+          },
+          {
+            "line_number": 557,
+            "text": "BE",
+            "confidence": 61.0
+          },
+          {
+            "line_number": 558,
+            "text": "vy",
+            "confidence": 50.0
+          },
+          {
+            "line_number": 559,
+            "text": "aT ait BL",
+            "confidence": 32.0
+          },
+          {
+            "line_number": 560,
+            "text": "fal",
+            "confidence": 21.0
+          },
+          {
+            "line_number": 561,
+            "text": "Vd",
+            "confidence": 24.0
+          },
+          {
+            "line_number": 562,
+            "text": "{ -/",
+            "confidence": 21.0
+          },
+          {
+            "line_number": 563,
+            "text": "“1",
+            "confidence": 51.0
+          },
+          {
+            "line_number": 564,
+            "text": "wy",
+            "confidence": 57.0
+          },
+          {
+            "line_number": 565,
+            "text": "hee !",
+            "confidence": 26.5
+          },
+          {
+            "line_number": 566,
+            "text": "*",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 567,
+            "text": "a",
+            "confidence": 49.0
+          },
+          {
+            "line_number": 568,
+            "text": "|",
+            "confidence": 57.0
+          },
+          {
+            "line_number": 569,
+            "text": "4 {.",
+            "confidence": 8.0
+          },
+          {
+            "line_number": 570,
+            "text": "=",
+            "confidence": 65.0
+          },
+          {
+            "line_number": 571,
+            "text": "va",
+            "confidence": 59.0
+          },
+          {
+            "line_number": 572,
+            "text": "~",
+            "confidence": 20.0
+          },
+          {
+            "line_number": 573,
+            "text": "7",
+            "confidence": 35.0
+          },
+          {
+            "line_number": 574,
+            "text": "i",
+            "confidence": 36.0
+          },
+          {
+            "line_number": 575,
+            "text": "4",
+            "confidence": 31.0
+          },
+          {
+            "line_number": 576,
+            "text": "4",
+            "confidence": 95.0
+          },
+          {
+            "line_number": 577,
+            "text": "3,",
+            "confidence": 35.0
+          },
+          {
+            "line_number": 578,
+            "text": "a=",
+            "confidence": 32.0
+          },
+          {
+            "line_number": 579,
+            "text": "OA",
+            "confidence": 40.0
+          },
+          {
+            "line_number": 580,
+            "text": "on",
+            "confidence": 12.0
+          },
+          {
+            "line_number": 581,
+            "text": "VR",
+            "confidence": 31.0
+          },
+          {
+            "line_number": 582,
+            "text": "-_",
+            "confidence": 15.0
+          },
+          {
+            "line_number": 583,
+            "text": "AB",
+            "confidence": 70.0
+          },
+          {
+            "line_number": 584,
+            "text": "J",
+            "confidence": 52.0
+          },
+          {
+            "line_number": 585,
+            "text": "ors",
+            "confidence": 41.0
+          },
+          {
+            "line_number": 586,
+            "text": "hi",
+            "confidence": 36.0
+          },
+          {
+            "line_number": 587,
+            "text": "re",
+            "confidence": 25.0
+          },
+          {
+            "line_number": 588,
+            "text": "pry, “ye",
+            "confidence": 47.0
+          },
+          {
+            "line_number": 589,
+            "text": "yy",
+            "confidence": 33.0
+          },
+          {
+            "line_number": 590,
+            "text": "‘",
+            "confidence": 27.0
+          },
+          {
+            "line_number": 591,
+            "text": "Ayer",
+            "confidence": 48.0
+          },
+          {
+            "line_number": 592,
+            "text": "nS",
+            "confidence": 42.0
+          },
+          {
+            "line_number": 593,
+            "text": "dy",
+            "confidence": 24.0
+          },
+          {
+            "line_number": 594,
+            "text": "oP a",
+            "confidence": 50.0
+          },
+          {
+            "line_number": 595,
+            "text": "\\)",
+            "confidence": 40.0
+          },
+          {
+            "line_number": 596,
+            "text": "Mw",
+            "confidence": 39.0
+          },
+          {
+            "line_number": 597,
+            "text": "oy?",
+            "confidence": 81.0
+          },
+          {
+            "line_number": 598,
+            "text": "at",
+            "confidence": 73.0
+          },
+          {
+            "line_number": 599,
+            "text": "ate Levee!",
+            "confidence": 29.5
+          },
+          {
+            "line_number": 600,
+            "text": "a3",
+            "confidence": 31.0
+          },
+          {
+            "line_number": 601,
+            "text": "4°",
+            "confidence": 8.0
+          },
+          {
+            "line_number": 602,
+            "text": "al",
+            "confidence": 94.0
+          },
+          {
+            "line_number": 603,
+            "text": "CHIC i PE",
+            "confidence": 67.0
+          },
+          {
+            "line_number": 604,
+            "text": "ow |",
+            "confidence": 59.0
+          },
+          {
+            "line_number": 605,
+            "text": "thd",
+            "confidence": 45.0
+          },
+          {
+            "line_number": 606,
+            "text": ".",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 607,
+            "text": "j",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 608,
+            "text": ";",
+            "confidence": 2.0
+          },
+          {
+            "line_number": 609,
+            "text": "| LemMe",
+            "confidence": 10.5
+          },
+          {
+            "line_number": 610,
+            "text": "in",
+            "confidence": 73.0
+          },
+          {
+            "line_number": 611,
+            "text": "Tri sd",
+            "confidence": 52.5
+          },
+          {
+            "line_number": 612,
+            "text": "f’",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 613,
+            "text": "> y)",
+            "confidence": 47.5
+          },
+          {
+            "line_number": 614,
+            "text": "any",
+            "confidence": 45.0
+          },
+          {
+            "line_number": 615,
+            "text": "6",
+            "confidence": 63.0
+          },
+          {
+            "line_number": 616,
+            "text": "8 0,",
+            "confidence": 31.0
+          },
+          {
+            "line_number": 617,
+            "text": "|",
+            "confidence": 92.0
+          },
+          {
+            "line_number": 618,
+            "text": "ANGe Lo Vv",
+            "confidence": 47.67
+          },
+          {
+            "line_number": 619,
+            "text": "x 30.24",
+            "confidence": 67.5
+          },
+          {
+            "line_number": 620,
+            "text": "a",
+            "confidence": 45.0
+          },
+          {
+            "line_number": 621,
+            "text": "mee swt _— ew 40 adsewn: owe",
+            "confidence": 25.0
+          },
+          {
+            "line_number": 622,
+            "text": "PP oem",
+            "confidence": 45.5
+          },
+          {
+            "line_number": 623,
+            "text": "ow @",
+            "confidence": 31.0
+          },
+          {
+            "line_number": 624,
+            "text": "= &",
+            "confidence": 62.0
+          },
+          {
+            "line_number": 625,
+            "text": "*",
+            "confidence": 4.0
+          },
+          {
+            "line_number": 626,
+            "text": "~~ a>",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 627,
+            "text": "«Se OB s",
+            "confidence": 19.33
+          },
+          {
+            "line_number": 628,
+            "text": "»",
+            "confidence": 79.0
+          },
+          {
+            "line_number": 629,
+            "text": "~~ dd",
+            "confidence": 16.0
+          },
+          {
+            "line_number": 630,
+            "text": "tw: «ow",
+            "confidence": 64.0
+          },
+          {
+            "line_number": 631,
+            "text": "ne",
+            "confidence": 20.0
+          },
+          {
+            "line_number": 632,
+            "text": "~ pe",
+            "confidence": 55.0
+          },
+          {
+            "line_number": 633,
+            "text": "|",
+            "confidence": 75.0
+          },
+          {
+            "line_number": 634,
+            "text": "| |",
+            "confidence": 53.5
+          },
+          {
+            "line_number": 635,
+            "text": "7%",
+            "confidence": 46.0
+          },
+          {
+            "line_number": 636,
+            "text": "k ANSAC VION",
+            "confidence": 19.67
+          },
+          {
+            "line_number": 637,
+            "text": "ARO PUN HAS",
+            "confidence": 48.0
+          },
+          {
+            "line_number": 638,
+            "text": "PATA IN |",
+            "confidence": 40.67
+          },
+          {
+            "line_number": 639,
+            "text": "—«",
+            "confidence": 16.0
+          },
+          {
+            "line_number": 640,
+            "text": "\")",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 641,
+            "text": "LL",
+            "confidence": 31.0
+          },
+          {
+            "line_number": 642,
+            "text": "“Y) ) ne",
+            "confidence": 31.33
+          },
+          {
+            "line_number": 643,
+            "text": "(UNS Lt",
+            "confidence": 31.5
+          },
+          {
+            "line_number": 644,
+            "text": "\\",
+            "confidence": 48.0
+          },
+          {
+            "line_number": 645,
+            "text": "ba",
+            "confidence": 51.0
+          },
+          {
+            "line_number": 646,
+            "text": "é.",
+            "confidence": 28.0
+          },
+          {
+            "line_number": 647,
+            "text": "gtoetr",
+            "confidence": 32.0
+          },
+          {
+            "line_number": 648,
+            "text": "°",
+            "confidence": 82.0
+          },
+          {
+            "line_number": 649,
+            "text": "ste stand sPerterd eides! ‘",
+            "confidence": 28.2
+          },
+          {
+            "line_number": 650,
+            "text": "4",
+            "confidence": 79.0
+          },
+          {
+            "line_number": 651,
+            "text": "¥",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 652,
+            "text": "3858",
+            "confidence": 80.0
+          },
+          {
+            "line_number": 653,
+            "text": "}",
+            "confidence": 8.0
+          },
+          {
+            "line_number": 654,
+            "text": "yy ged beg? td yey: ma a?",
+            "confidence": 38.71
+          },
+          {
+            "line_number": 655,
+            "text": "rae",
+            "confidence": 44.0
+          },
+          {
+            "line_number": 656,
+            "text": "if",
+            "confidence": 28.0
+          },
+          {
+            "line_number": 657,
+            "text": "~",
+            "confidence": 68.0
+          },
+          {
+            "line_number": 658,
+            "text": "\\",
+            "confidence": 89.0
+          },
+          {
+            "line_number": 659,
+            "text": "TW",
+            "confidence": 52.0
+          },
+          {
+            "line_number": 660,
+            "text": "-)",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 661,
+            "text": "Ol ) 2510",
+            "confidence": 47.33
+          },
+          {
+            "line_number": 662,
+            "text": ",",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 663,
+            "text": "é \\ ‘",
+            "confidence": 34.67
+          },
+          {
+            "line_number": 664,
+            "text": "rely Barer",
+            "confidence": 40.0
+          },
+          {
+            "line_number": 665,
+            "text": "[ |)",
+            "confidence": 40.5
+          },
+          {
+            "line_number": 666,
+            "text": "js",
+            "confidence": 10.0
+          },
+          {
+            "line_number": 667,
+            "text": "or",
+            "confidence": 37.0
+          },
+          {
+            "line_number": 668,
+            "text": "( «",
+            "confidence": 36.0
+          },
+          {
+            "line_number": 669,
+            "text": "WEEE",
+            "confidence": 39.0
+          },
+          {
+            "line_number": 670,
+            "text": "i",
+            "confidence": 17.0
+          },
+          {
+            "line_number": 671,
+            "text": "pearsieal",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 672,
+            "text": "= ©",
+            "confidence": 56.0
+          },
+          {
+            "line_number": 673,
+            "text": "x",
+            "confidence": 68.0
+          },
+          {
+            "line_number": 674,
+            "text": "a",
+            "confidence": 92.0
+          },
+          {
+            "line_number": 675,
+            "text": "*)",
+            "confidence": 2.0
+          },
+          {
+            "line_number": 676,
+            "text": "\\",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 677,
+            "text": "2",
+            "confidence": 26.0
+          },
+          {
+            "line_number": 678,
+            "text": "}",
+            "confidence": 36.0
+          },
+          {
+            "line_number": 679,
+            "text": "rier",
+            "confidence": 29.0
+          },
+          {
+            "line_number": 680,
+            "text": "‘",
+            "confidence": 81.0
+          },
+          {
+            "line_number": 681,
+            "text": "48",
+            "confidence": 41.0
+          },
+          {
+            "line_number": 682,
+            "text": "sybaebs gl",
+            "confidence": 4.5
+          },
+          {
+            "line_number": 683,
+            "text": "a",
+            "confidence": 48.0
+          },
+          {
+            "line_number": 684,
+            "text": "A",
+            "confidence": 5.0
+          },
+          {
+            "line_number": 685,
+            "text": "¢",
+            "confidence": 86.0
+          },
+          {
+            "line_number": 686,
+            "text": "af",
+            "confidence": 56.0
+          },
+          {
+            "line_number": 687,
+            "text": "v",
+            "confidence": 28.0
+          },
+          {
+            "line_number": 688,
+            "text": "|",
+            "confidence": 84.0
+          },
+          {
+            "line_number": 689,
+            "text": "0",
+            "confidence": 45.0
+          },
+          {
+            "line_number": 690,
+            "text": "Pee)",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 691,
+            "text": "d",
+            "confidence": 26.0
+          },
+          {
+            "line_number": 692,
+            "text": "u",
+            "confidence": 57.0
+          },
+          {
+            "line_number": 693,
+            "text": "a",
+            "confidence": 46.0
+          },
+          {
+            "line_number": 694,
+            "text": "ce",
+            "confidence": 44.0
+          },
+          {
+            "line_number": 695,
+            "text": "»)",
+            "confidence": 0.0
+          },
+          {
+            "line_number": 696,
+            "text": "«",
+            "confidence": 61.0
+          },
+          {
+            "line_number": 697,
+            "text": "|",
+            "confidence": 58.0
+          },
+          {
+            "line_number": 698,
+            "text": "\\",
+            "confidence": 30.0
+          },
+          {
+            "line_number": 699,
+            "text": "1",
+            "confidence": 57.0
+          },
+          {
+            "line_number": 700,
+            "text": "ws",
+            "confidence": 20.0
+          },
+          {
+            "line_number": 701,
+            "text": "ul",
+            "confidence": 34.0
+          },
+          {
+            "line_number": 702,
+            "text": "Wit",
+            "confidence": 25.0
+          },
+          {
+            "line_number": 703,
+            "text": "(ty",
+            "confidence": 26.0
+          },
+          {
+            "line_number": 704,
+            "text": "\\",
+            "confidence": 91.0
+          },
+          {
+            "line_number": 705,
+            "text": "a",
+            "confidence": 91.0
+          },
+          {
+            "line_number": 706,
+            "text": "Wi",
+            "confidence": 29.0
+          },
+          {
+            "line_number": 707,
+            "text": "[|",
+            "confidence": 16.0
+          },
+          {
+            "line_number": 708,
+            "text": "\\§",
+            "confidence": 55.0
+          },
+          {
+            "line_number": 709,
+            "text": "a",
+            "confidence": 27.0
+          },
+          {
+            "line_number": 710,
+            "text": "Py} ply",
+            "confidence": 39.0
+          }
+        ]
+      }
+    }
+  ]
+}
