@@ -1,0 +1,934 @@
+SHOPGRAPH — STAGE 7 "REFINE JSON FILE" + DIRECT DATABASEBUILDER INTEGRATION
+
+GOAL
+
+Extend the existing ShopGraph OCR Acquisition Pipeline with a new seventh
+stage:
+
+    7. Refine Json File
+
+The OCR Acquisition Pipeline sub-task menu must become:
+
+1. Reliable Receipt Detection / Crop
+2. Perspective Correction
+3. Receipt Size Normalization
+4. Generate OCR Image Variants
+5. Run Multi-Variant / Multi-PSM OCR
+6. Compare OCR Results / Build Raw OCR JSON
+7. Refine Json File
+0. Return to Capability Sub Tasks
+
+The complete:
+
+    1. OCR Acquisition Pipeline
+
+capability must automatically execute all seven stages in order.
+
+IMPORTANT:
+
+Stage 7 is NOT merely an optional export.
+
+Its refined JSON output must plug directly into the existing DataBaseBuilder
+workflow and become the preferred source for DataBaseBuilder's initial field
+guesses.
+
+The intended flow is:
+
+    Receipt Image
+        ↓
+    OCR Stages 1-6
+        ↓
+    data/raw_ocr/<receipt>_raw_ocr.json
+        ↓
+    Stage 7 — Refine Json File
+        ↓
+    data/refined_json/<receipt>_refined.json
+        ↓
+    DataBaseBuilder
+        ↓
+    user review / correction
+        ↓
+    shopgraph_purchase_history.xlsx
+
+Keep the existing menu flow and terminal UI style as close to the attached
+codebase as possible.
+
+
+============================================================
+PART 1 — STAGE 7 OUTPUT
+============================================================
+
+Stage 7 reads:
+
+    data/raw_ocr/<receipt>_raw_ocr.json
+
+and creates:
+
+    data/refined_json/<receipt>_refined.json
+
+Do NOT overwrite the raw OCR JSON.
+
+Process EVERY Stage-6 line.
+
+Every object such as:
+
+    "line_number": 1
+
+must have exactly one corresponding refined line.
+
+Do not discard:
+
+    headers
+    addresses
+    payment lines
+    totals
+    weight lines
+    garbage OCR
+    metadata
+    unknown lines
+
+If a field does not apply, use:
+
+    "NA"
+
+Never omit required fields.
+
+
+============================================================
+REFINED LINE SCHEMA
+============================================================
+
+Every line must use this stable structure:
+
+{
+  "line_number": 1,
+  "source_text": "ALDI",
+  "classification": "store_name",
+  "confidence": 0.99,
+
+  "fields": {
+    "Total": "NA",
+    "Store": "Aldi",
+    "Six-Digit SKU": "NA",
+    "Product": "ALDI",
+    "Tax Code": "NA",
+    "Store Number": "NA",
+    "Common Name": "NA",
+    "Category": "NA",
+    "Date 1": "NA",
+    "Price 1": "NA"
+  },
+
+  "field_confidence": {
+    "Total": 0.0,
+    "Store": 0.99,
+    "Six-Digit SKU": 0.0,
+    "Product": 0.95,
+    "Tax Code": 0.0,
+    "Store Number": 0.0,
+    "Common Name": 0.0,
+    "Category": 0.0,
+    "Date 1": 0.0,
+    "Price 1": 0.0
+  },
+
+  "reasoning": {
+    "Total": "Not a purchase item.",
+    "Store": "Line identifies Aldi.",
+    "Six-Digit SKU": "No merchandise SKU on this line.",
+    "Product": "Best line-level interpretation preserves the OCR text.",
+    "Tax Code": "No tax code.",
+    "Store Number": "No store number on this line.",
+    "Common Name": "Not applicable.",
+    "Category": "Not applicable.",
+    "Date 1": "No date on this line.",
+    "Price 1": "No product price on this line."
+  }
+}
+
+IMPORTANT CHANGE FROM THE EARLIER SPECIFICATION:
+
+The "Product" field should contain the BEST GUESS for the line, even if the
+line is not ultimately a merchandise item.
+
+This is intentional because DataBaseBuilder presents every OCR line for human
+review.
+
+For example:
+
+Input:
+
+    ALDI
+
+should normally produce:
+
+    Product = "ALDI"
+
+rather than:
+
+    Product = "NA"
+
+Input:
+
+    Store #160
+
+may produce:
+
+    Product = "Store #160"
+
+unless there is a more meaningful field-specific interpretation.
+
+Input:
+
+    SUBTOTAL 106.81
+
+may produce:
+
+    Product = "SUBTOTAL"
+
+or another conservative cleaned representation.
+
+The objective is:
+
+    Give the human reviewer the best editable starting guess for each line.
+
+Do not deliberately erase useful source text merely because the line is not
+a purchase item.
+
+However, do NOT manufacture product identities.
+
+The Product field should be a clean best guess based on the line itself.
+
+
+============================================================
+WHY PRODUCT IS POPULATED FOR NON-PURCHASE LINES
+============================================================
+
+DataBaseBuilder currently reviews lines individually.
+
+When the reviewer chooses:
+
+    2. Correct Columns
+
+the existing guess should be editable directly.
+
+Therefore a source line such as:
+
+    ALDI
+
+should result in:
+
+    Current Product: ALDI
+
+    Enter corrected Product: ALDI
+
+NOT:
+
+    Current Product: NA
+
+    Enter corrected Product: NA
+
+The reviewer may then:
+
+    press Enter to keep ALDI
+    edit ALDI
+    replace ALDI
+    later choose Skip Line
+
+Stage 7 therefore provides a BEST GUESS, not merely final database-worthy
+purchase fields.
+
+
+============================================================
+PART 2 — DATABASEBUILDER MUST PREFER REFINED JSON
+============================================================
+
+Modify DataBaseBuilder so that when a receipt is opened for review it looks
+for the corresponding Stage-7 refined JSON.
+
+Example:
+
+Raw OCR:
+
+    data/raw_ocr/IMG_0251_raw_ocr.json
+
+Refined JSON:
+
+    data/refined_json/IMG_0251_refined.json
+
+If the refined JSON exists and is valid:
+
+    DataBaseBuilder MUST use the Stage-7 "fields" values as the initial
+    PurchaseRecord / review guesses.
+
+If the refined JSON does NOT exist:
+
+    preserve the current DataBaseBuilder parser behavior as fallback.
+
+This is crucial for backwards compatibility.
+
+Do not make existing raw OCR files unusable just because Stage 7 has not been
+run on them.
+
+
+============================================================
+DATA MAPPING INTO DATABASEBUILDER
+============================================================
+
+Map refined fields into the current DataBaseBuilder record approximately as:
+
+    refined["Six-Digit SKU"]
+        -> PurchaseRecord.six_digit_sku
+
+    refined["Product"]
+        -> PurchaseRecord.product
+
+    refined["Tax Code"]
+        -> PurchaseRecord.tax_code
+
+    refined["Store Number"]
+        -> PurchaseRecord.store_number
+
+    refined["Date 1"]
+        -> PurchaseRecord.date
+
+    refined["Price 1"]
+        -> PurchaseRecord.price
+
+The existing PurchaseRecord does not currently appear to include every Excel
+field such as:
+
+    Store
+    Common Name
+    Category
+    Total
+
+Do NOT awkwardly overload unrelated PurchaseRecord fields.
+
+Instead, extend the DataBaseBuilder model cleanly where required.
+
+Preferred approach:
+
+Extend PurchaseRecord to support:
+
+    store
+    common_name
+    category
+    total
+
+in addition to the existing:
+
+    six_digit_sku
+    product
+    tax_code
+    store_number
+    date
+    price
+
+Preserve existing call sites by giving new fields safe defaults such as "NA"
+where necessary.
+
+Do not break the current Aldi, Publix, Trader Joe's, or Other parsers.
+
+
+============================================================
+DATABASEBUILDER DISPLAY FIELDS
+============================================================
+
+The long-term target schema is:
+
+    Total
+    Store
+    Six-Digit SKU
+    Product
+    Tax Code
+    Store Number
+    Common Name
+    Category
+    Date 1
+    Price 1
+
+DataBaseBuilder should be able to display/correct these refined fields.
+
+However, preserve store-specific usability.
+
+For example, do not force users to edit meaningless SKU fields for Publix if
+the existing workflow intentionally hides them.
+
+Use the current parser display_fields behavior where appropriate, but extend it
+cleanly to include useful new Stage-7 fields such as:
+
+    Store
+    Common Name
+    Category
+    Total
+
+when those fields are relevant to the database schema.
+
+Do not redesign the entire review menu.
+
+
+============================================================
+CRITICAL CORRECTION INPUT REQUIREMENT
+============================================================
+
+The current codebase already has pre-populated correction inputs.
+
+PRESERVE THIS FEATURE.
+
+When the user chooses:
+
+    2. Correct Columns
+
+the editable input must already contain the CURRENT BEST GUESS.
+
+Example:
+
+Source OCR line:
+
+    ALDI
+
+Stage 7 guess:
+
+    Product = "ALDI"
+
+Review display:
+
+    Current Product: ALDI
+
+When Product is selected for correction, the terminal must display:
+
+    Enter corrected Product: ALDI
+
+where the second "ALDI" is already in the editable readline/input buffer.
+
+The user must be able to:
+
+    press Enter immediately to keep ALDI
+
+    move the cursor and edit ALDI
+
+    delete it and type something else
+
+This behavior must apply to all normal editable text fields.
+
+For example:
+
+    Current Product: Zucchini
+    Enter corrected Product: Zucchini
+
+    Current Price: 2.52
+    Enter corrected Price: 2.52
+
+    Current Store Number: 160
+    Enter corrected Store Number: 160
+
+    Current Common Name: Zucchini
+    Enter corrected Common Name: Zucchini
+
+    Current Category: Produce
+    Enter corrected Category: Produce
+
+Do NOT regress to blank correction prompts such as:
+
+    Enter corrected Product:
+
+The current codebase already documents this pre-populated behavior and it must
+remain intact.
+
+
+============================================================
+CURRENT GUESS PRIORITY
+============================================================
+
+When DataBaseBuilder constructs the initial record for a line, use this
+priority:
+
+1. Human-reviewed/corrected data already present in the current session
+2. Stage-7 refined JSON field
+3. Existing store-specific parser guess
+4. Raw OCR line
+5. "NA"
+
+Do not allow a weaker parser guess to overwrite a stronger Stage-7 value.
+
+
+============================================================
+IMPORTANT EXAMPLE
+============================================================
+
+Stage-6 input:
+
+{
+  "line_number": 1,
+  "text": "ALDI",
+  ...
+}
+
+Stage-7 output:
+
+{
+  "line_number": 1,
+  "source_text": "ALDI",
+  "classification": "store_name",
+
+  "fields": {
+    "Total": "NA",
+    "Store": "Aldi",
+    "Six-Digit SKU": "NA",
+    "Product": "ALDI",
+    "Tax Code": "NA",
+    "Store Number": "NA",
+    "Common Name": "NA",
+    "Category": "NA",
+    "Date 1": "NA",
+    "Price 1": "NA"
+  }
+}
+
+Then DataBaseBuilder displays something equivalent to:
+
+    Line 1
+    Original OCR: ALDI
+
+    1. Product: "ALDI"
+    ...
+
+When the user chooses:
+
+    2. Correct Columns
+
+and selects Product:
+
+    Current Product: ALDI
+
+    Enter corrected Product: ALDI
+
+The final ALDI must be editable and already present in the terminal input.
+
+
+============================================================
+PURCHASE ITEM EXAMPLE
+============================================================
+
+Stage-6 line:
+
+    356691 Zucchini 2.52
+
+Stage-7 guess:
+
+{
+  "Total": "2.52",
+  "Store": "Aldi",
+  "Six-Digit SKU": "356691",
+  "Product": "Zucchini",
+  "Tax Code": "NA",
+  "Store Number": "160",
+  "Common Name": "Zucchini",
+  "Category": "Produce",
+  "Date 1": "08/23/2026",
+  "Price 1": "2.52"
+}
+
+DataBaseBuilder should begin review using those values.
+
+If Product is corrected:
+
+    Current Product: Zucchini
+
+    Enter corrected Product: Zucchini
+
+If Price is corrected:
+
+    Current Price: 2.52
+
+    Enter corrected Price: 2.52
+
+
+============================================================
+STORE-SPECIFIC PARSERS
+============================================================
+
+Keep existing parsers.
+
+The current codebase already has separate:
+
+    AldiParser
+    PublixParser
+    TraderJoesParser
+    OtherParser
+
+These remain useful fallback / deterministic parsing layers.
+
+Do NOT delete them.
+
+Instead:
+
+    parser_guess = existing parser output
+    refined_guess = Stage-7 output
+
+Then merge them conservatively.
+
+If refined value != "NA":
+
+    prefer refined value
+
+If refined value == "NA":
+
+    retain a valid parser value if available
+
+This means Stage 7 improves guesses without destroying reliable deterministic
+parsing.
+
+
+============================================================
+COMMON NAME AND CATEGORY
+============================================================
+
+The current Excel schema explicitly includes:
+
+    Common Name
+    Category
+
+even though they were previously initialized to NA.
+
+Stage 7 should populate them conservatively.
+
+Examples:
+
+    Product: "GF Wide Pan Bread"
+    Common Name: "Gluten-Free Bread"
+    Category: "Bakery"
+
+    Product: "R-STRAWBERRIES 1 LB"
+    Common Name: "Strawberries"
+    Category: "Produce"
+
+    Product: "EMPIRE KOSHER GROUND TRK"
+    Common Name: "Ground Turkey"
+    Category: "Meat & Seafood"
+
+These Stage-7 guesses must also flow into DataBaseBuilder so the human can
+review/correct them before database commitment.
+
+
+============================================================
+TOTAL FIELD
+============================================================
+
+For an individual purchase observation:
+
+    Total = Price 1
+
+unless a better established ShopGraph database rule already exists.
+
+Do not use the receipt grand total as the product Total.
+
+For non-purchase lines:
+
+    Total = "NA"
+
+Total should be editable in DataBaseBuilder if it becomes part of the
+PurchaseRecord/database review model.
+
+
+============================================================
+USE OF PURCHASE HISTORY AS SUPPORTING KNOWLEDGE
+============================================================
+
+Stage 7 may read:
+
+    data/database/shopgraph_purchase_history.xlsx
+
+to improve guesses.
+
+Examples:
+
+Exact same-store SKU match:
+
+    SKU 356691
+    Store Aldi
+
+may strongly support:
+
+    Product = Zucchini
+    Common Name = Zucchini
+    Category = Produce
+
+But historical data may NEVER override current transaction-specific fields:
+
+    Price 1
+    Date 1
+
+unless the current receipt independently supports them.
+
+Never import an old price into a new receipt merely because the SKU matches.
+
+
+============================================================
+DATA LINE IDENTITY
+============================================================
+
+Preserve Stage-6 line_number throughout the process.
+
+The same number should be recognizable across:
+
+    raw OCR JSON
+    refined JSON
+    DataBaseBuilder review
+    benchmark / provenance data
+
+Do not silently renumber lines in Stage 7.
+
+This is important for debugging and later benchmarking.
+
+
+============================================================
+SOURCE TRACEABILITY
+============================================================
+
+When DataBaseBuilder loads refined JSON, retain enough metadata to know:
+
+    source raw OCR file
+    source refined JSON file
+    original line_number
+    original source_text
+    classification
+
+The reviewer should still be shown the original OCR/source text.
+
+Do not replace source_text with the normalized Product guess.
+
+
+============================================================
+WHEN USER ACCEPTS OR CORRECTS
+============================================================
+
+Once the user edits a Stage-7 guess in DataBaseBuilder, the user's current
+session correction becomes authoritative.
+
+Do NOT re-run Stage 7 over that corrected record.
+
+Priority after correction:
+
+    human correction
+        >
+    Stage-7 guess
+        >
+    parser guess
+        >
+    OCR
+
+
+============================================================
+PIPELINE INTEGRATION
+============================================================
+
+Update:
+
+    capabilities/OCRAcquisitionPipeline/main_OCRAcquisitionPipeline.py
+
+to show/run:
+
+    [1/7] Reliable Receipt Detection / Crop
+    [2/7] Perspective Correction
+    [3/7] Receipt Size Normalization
+    [4/7] Generate OCR Image Variants
+    [5/7] Run Multi-Variant / Multi-PSM OCR
+    [6/7] Compare OCR Results / Build Raw OCR JSON
+    [7/7] Refine Json File
+
+The normal capability should finish with Stage 7 completed and the refined
+JSON ready for DataBaseBuilder.
+
+
+============================================================
+SUB-TASK MENU INTEGRATION
+============================================================
+
+Update:
+
+    utils/utils_main.py
+
+so:
+
+    === OCR Acquisition Pipeline - Sub Tasks ===
+
+contains:
+
+    7. Refine Json File
+
+and:
+
+    option == "7"
+
+runs Stage 7 independently.
+
+
+============================================================
+DATABASEBUILDER INPUT RESOLUTION
+============================================================
+
+When DataBaseBuilder is asked to load a receipt:
+
+1. Locate the raw OCR JSON as currently done.
+2. Check whether a matching refined JSON exists.
+3. If yes:
+       load it
+       validate line mapping
+       use it to improve initial guesses
+4. If no:
+       continue using the current parser-only workflow
+
+Do not require the user to manually choose both raw and refined files.
+
+
+============================================================
+REFINED JSON VALIDATION
+============================================================
+
+Before DataBaseBuilder trusts a refined file, validate:
+
+    source receipt/raw OCR relationship
+    line numbers
+    required "fields" object
+    required field names
+    valid JSON structure
+
+If refined JSON is malformed:
+
+    print [ERROR] or [INFO]
+    fall back safely to existing parser guesses
+
+Do not prevent receipt review.
+
+
+============================================================
+FILES / MODULE RESPONSIBILITY
+============================================================
+
+Create a dedicated Stage-7 module such as:
+
+    capabilities/OCRAcquisitionPipeline/refine_json.py
+
+Prefer a clean API such as:
+
+    refine_json_file(...)
+    ensure_refined_json(...)
+    run_refine_json()
+
+Add:
+
+    REFINED_JSON_DIR
+
+to OCR pipeline constants.
+
+Extend session_state if needed with:
+
+    selected_refined_json_file
+
+Create a small DataBaseBuilder loader/helper if appropriate, such as:
+
+    utils/DataBaseBuilder/refined_json_loader.py
+
+Its responsibility should be:
+
+    locate matching refined JSON
+    validate it
+    map line_number -> refined line
+    merge refined guesses with parser guesses
+
+Do NOT put all this logic inside data_base_builder_main.py.
+
+
+============================================================
+PURCHASERECORD
+============================================================
+
+If necessary, extend:
+
+    utils/DataBaseBuilder/purchase_record.py
+
+from its current fields to include:
+
+    total
+    store
+    six_digit_sku
+    product
+    tax_code
+    store_number
+    common_name
+    category
+    date
+    price
+
+Maintain compatibility with existing code.
+
+Use "NA" defaults where necessary.
+
+
+============================================================
+EXCEL OUTPUT
+============================================================
+
+When an accepted DataBaseBuilder record is eventually committed to:
+
+    shopgraph_purchase_history.xlsx
+
+the corrected/refined values should feed the matching workbook columns:
+
+    Total
+    Store
+    Six-Digit SKU
+    Product
+    Tax Code
+    Store Number
+    Common Name
+    Category
+    Date 1
+    Price 1
+
+Do not create duplicate alternate fields for the same concepts.
+
+
+============================================================
+BACKWARDS COMPATIBILITY
+============================================================
+
+Preserve:
+
+    existing OCR stages
+    existing raw OCR JSON
+    store-specific parsers
+    correction workflow
+    skip/accept workflow
+    benchmark workflow
+    Excel history behavior
+    existing menu hierarchy
+    pre-populated readline correction input
+
+Do not redesign unrelated code.
+
+
+============================================================
+DELIVERABLE
+============================================================
+
+Return ALL complete files that must be added or replaced.
+
+Do not provide partial snippets.
+
+Also provide a ZIP preserving the project directory structure.
+
+Include a README explaining:
+
+1. Stage 7
+2. refined JSON schema
+3. full 1-7 OCR pipeline
+4. DataBaseBuilder integration
+5. refined-vs-parser guess priority
+6. pre-populated Correct Columns behavior
+7. Common Name / Category support
+8. fallback when refined JSON is absent or invalid
+9. files added/replaced
+10. how to test the full workflow
