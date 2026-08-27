@@ -231,30 +231,40 @@ def _migrate_old_purchase_sheet(
                 value=NA,
             )
 
-        if sheet.cell(
-            row=row,
-            column=COMMON_NAME_COLUMN,
-        ).value in (
-            None,
-            "",
+        existing_common_name = str(
+            sheet.cell(
+                row=row,
+                column=COMMON_NAME_COLUMN,
+            ).value
+            or NA
+        )
+
+        if (
+            existing_common_name == NA
+            and record.common_name != NA
         ):
             sheet.cell(
                 row=row,
                 column=COMMON_NAME_COLUMN,
-                value=NA,
+                value=record.common_name,
             )
 
-        if sheet.cell(
-            row=row,
-            column=CATEGORY_COLUMN,
-        ).value in (
-            None,
-            "",
+        existing_category = str(
+            sheet.cell(
+                row=row,
+                column=CATEGORY_COLUMN,
+            ).value
+            or NA
+        )
+
+        if (
+            existing_category == NA
+            and record.category != NA
         ):
             sheet.cell(
                 row=row,
                 column=CATEGORY_COLUMN,
-                value=NA,
+                value=record.category,
             )
 
         _ensure_total_formula(
@@ -790,7 +800,11 @@ def _append_purchase(
         sheet.cell(
             row=row,
             column=STORE_COLUMN,
-            value=store_name,
+            value=(
+                record.store
+                if record.store != NA
+                else store_name
+            ),
         )
 
         sheet.cell(
@@ -820,13 +834,13 @@ def _append_purchase(
         sheet.cell(
             row=row,
             column=COMMON_NAME_COLUMN,
-            value=NA,
+            value=record.common_name,
         )
 
         sheet.cell(
             row=row,
             column=CATEGORY_COLUMN,
-            value=NA,
+            value=record.category,
         )
 
     else:
@@ -841,14 +855,20 @@ def _append_purchase(
         # Old migrated rows may have Store=NA because the old workbook
         # did not preserve a store name. Once an authoritative receipt type
         # is available, populate the Store column.
+        incoming_store = (
+            record.store
+            if record.store != NA
+            else store_name
+        )
+
         if (
             existing_store == NA
-            and store_name
+            and incoming_store
         ):
             sheet.cell(
                 row=row,
                 column=STORE_COLUMN,
-                value=store_name,
+                value=incoming_store,
             )
 
         existing_tax = str(

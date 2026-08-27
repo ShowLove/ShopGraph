@@ -12,22 +12,31 @@ SKU_PATTERN = re.compile(r"(?<!\d)(\d{6})(?!\d)")
 
 class BaseReceiptParser(ABC):
     receipt_type = "Other"
+
     display_fields = (
+        "total",
+        "store",
         "six_digit_sku",
         "product",
         "tax_code",
-        "price",
         "store_number",
+        "common_name",
+        "category",
         "date",
+        "price",
     )
 
     field_labels = {
+        "total": "Total",
+        "store": "Store",
         "six_digit_sku": "Six-Digit SKU",
         "product": "Product",
         "tax_code": "Tax Code",
-        "price": "Price",
         "store_number": "Store Number",
-        "date": "Date",
+        "common_name": "Common Name",
+        "category": "Category",
+        "date": "Date 1",
+        "price": "Price 1",
     }
 
     @abstractmethod
@@ -75,7 +84,35 @@ class BaseReceiptParser(ABC):
 
         return working or NA
 
-    def format_record(self, record: PurchaseRecord) -> str:
+    def build_record(
+        self,
+        *,
+        six_digit_sku: str = NA,
+        product: str = NA,
+        tax_code: str = NA,
+        price: str = NA,
+        store_number: str = NA,
+        date: str = NA,
+    ) -> PurchaseRecord:
+        total = price if price != NA else NA
+
+        return PurchaseRecord(
+            total=total,
+            store=self.receipt_type,
+            six_digit_sku=six_digit_sku,
+            product=product,
+            tax_code=tax_code,
+            store_number=store_number,
+            common_name=NA,
+            category=NA,
+            date=date,
+            price=price,
+        )
+
+    def format_record(
+        self,
+        record: PurchaseRecord,
+    ) -> str:
         lines = []
 
         for index, field_name in enumerate(
@@ -84,6 +121,8 @@ class BaseReceiptParser(ABC):
         ):
             label = self.field_labels[field_name]
             value = getattr(record, field_name)
-            lines.append(f'{index}. {label}: "{value}"')
+            lines.append(
+                f'{index}. {label}: "{value}"'
+            )
 
         return "\n".join(lines)

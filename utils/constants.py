@@ -12,6 +12,7 @@ ENLARGED_DIR = DATA_DIR / "enlarged"
 OCR_VARIANTS_DIR = DATA_DIR / "ocr_variants"
 OCR_CANDIDATES_DIR = DATA_DIR / "ocr_candidates"
 RAW_OCR_DIR = DATA_DIR / "raw_ocr"
+REFINED_JSON_DIR = DATA_DIR / "refined_json"
 
 EXPORT_DIR = DATA_DIR / "exports"
 

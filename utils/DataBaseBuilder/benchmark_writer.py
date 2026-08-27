@@ -15,12 +15,16 @@ BENCHMARK_DIR = DATA_DIR / "benchmarks"
 
 def _record_fields(record: PurchaseRecord) -> dict[str, str]:
     return {
+        "total": record.total,
+        "store": record.store,
         "six_digit_sku": record.six_digit_sku,
         "product": record.product,
         "tax_code": record.tax_code,
-        "price": record.price,
         "store_number": record.store_number,
+        "common_name": record.common_name,
+        "category": record.category,
         "date": record.date,
+        "price": record.price,
     }
 
 

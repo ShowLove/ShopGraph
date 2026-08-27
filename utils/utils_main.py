@@ -19,6 +19,9 @@ from capabilities.OCRAcquisitionPipeline.run_ocr import (
 from capabilities.OCRAcquisitionPipeline.compare_ocr import (
     run_compare_ocr,
 )
+from capabilities.OCRAcquisitionPipeline.refine_json import (
+    run_refine_json,
+)
 
 from utils.export_codebase import (
     run_codebase_export,
@@ -99,6 +102,9 @@ def display_ocr_acquisition_sub_tasks_menu() -> None:
         "6. Compare OCR Results / Build Raw OCR JSON"
     )
     print(
+        "7. Refine Json File"
+    )
+    print(
         "0. Return to Capability Sub Tasks"
     )
 
@@ -123,6 +129,8 @@ def run_ocr_acquisition_sub_tasks_menu() -> None:
             run_ocr()
         elif option == "6":
             run_compare_ocr()
+        elif option == "7":
+            run_refine_json()
         elif option == "0":
             return
         else:

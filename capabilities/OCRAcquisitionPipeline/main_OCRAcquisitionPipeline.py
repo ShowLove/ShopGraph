@@ -16,47 +16,53 @@ from capabilities.OCRAcquisitionPipeline.run_ocr import (
 from capabilities.OCRAcquisitionPipeline.compare_ocr import (
     run_compare_ocr,
 )
+from capabilities.OCRAcquisitionPipeline.refine_json import (
+    run_refine_json,
+)
 
 
 def run_ocr_acquisition_pipeline() -> None:
     """
-    Run the complete OCR Acquisition Pipeline in order.
-
-    The visible six-stage flow is intentionally retained.
+    Run the complete seven-stage OCR Acquisition Pipeline in order.
     """
     print(
         "\n=== OCR Acquisition Pipeline ===\n"
     )
 
     print(
-        "[1/6] Reliable Receipt Detection / Crop"
+        "[1/7] Reliable Receipt Detection / Crop"
     )
     run_reliable_receipt_crop()
 
     print(
-        "\n[2/6] Perspective Correction"
+        "\n[2/7] Perspective Correction"
     )
     run_perspective_correction()
 
     print(
-        "\n[3/6] Receipt Size Normalization"
+        "\n[3/7] Receipt Size Normalization"
     )
     run_image_enlargement()
 
     print(
-        "\n[4/6] Generate OCR Image Variants"
+        "\n[4/7] Generate OCR Image Variants"
     )
     run_ocr_image_variants()
 
     print(
-        "\n[5/6] Run Multi-Variant / Multi-PSM OCR"
+        "\n[5/7] Run Multi-Variant / Multi-PSM OCR"
     )
     run_ocr()
 
     print(
-        "\n[6/6] Compare OCR Results / Build Raw OCR JSON"
+        "\n[6/7] Compare OCR Results / Build Raw OCR JSON"
     )
     run_compare_ocr()
+
+    print(
+        "\n[7/7] Refine Json File"
+    )
+    run_refine_json()
 
     print(
         "\n[OK] OCR Acquisition Pipeline complete."

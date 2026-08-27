@@ -15,11 +15,15 @@ PUBLIX_TAX_PATTERN = re.compile(
 class PublixParser(BaseReceiptParser):
     receipt_type = "Publix"
     display_fields = (
+        "total",
+        "store",
         "product",
         "tax_code",
-        "price",
         "store_number",
+        "common_name",
+        "category",
         "date",
+        "price",
     )
 
     def parse_line(
@@ -39,14 +43,16 @@ class PublixParser(BaseReceiptParser):
             else NA
         )
 
-        return PurchaseRecord(
+        price = self.extract_price(text)
+
+        return self.build_record(
             six_digit_sku=NA,
             product=self.clean_product_text(
                 text,
                 tax_pattern=PUBLIX_TAX_PATTERN,
             ),
             tax_code=tax_code,
-            price=self.extract_price(text),
+            price=price,
             store_number=store_number,
             date=receipt_date,
         )

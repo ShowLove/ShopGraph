@@ -17,6 +17,10 @@ from utils.DataBaseBuilder.receipt_loader import (
     load_ocr_lines,
 )
 from utils.DataBaseBuilder.receipt_session import ReceiptSession
+from utils.DataBaseBuilder.refined_json_loader import (
+    load_matching_refined_json,
+    merge_refined_guess,
+)
 
 
 PUBLIX_TAX_OPTIONS = {
@@ -57,12 +61,20 @@ def _choose_receipt_parser():
         print("\n[ERROR] Invalid option.")
 
 
-def _prompt_store_number(receipt_type: str) -> str | None:
+def _prompt_store_number(
+    receipt_type: str,
+    default_value: str = NA,
+) -> str | None:
     if receipt_type == "Publix":
         print("\nSelect store:\n")
         print("1. 1058 - Indian Harbour Place")
         print("2. Other")
         print("0. Cancel")
+
+        if default_value != NA:
+            print(
+                f"\n[INFO] Refined JSON best guess: {default_value}"
+            )
 
         while True:
             option = input("\nSelect option: ").strip()
@@ -79,19 +91,38 @@ def _prompt_store_number(receipt_type: str) -> str | None:
             print("\n[ERROR] Invalid option.")
 
     while True:
-        store_number = input("\nStore Number: ").strip()
+        prompt = "\nStore Number: "
+        value = (
+            _input_with_current_value(
+                prompt,
+                default_value,
+            )
+            if default_value != NA
+            else input(prompt).strip()
+        )
+        value = value.strip()
 
-        if store_number:
-            return store_number
+        if value:
+            return value
 
         print("\n[ERROR] Store Number cannot be blank.")
 
 
-def _prompt_receipt_date() -> str | None:
+def _prompt_receipt_date(
+    default_value: str = NA,
+) -> str | None:
     while True:
-        value = input(
-            "\nReceipt date (MM/DD/YYYY, or 0 to cancel): "
-        ).strip()
+        prompt = "\nReceipt date (MM/DD/YYYY, or 0 to cancel): "
+
+        value = (
+            _input_with_current_value(
+                prompt,
+                default_value,
+            )
+            if default_value != NA
+            else input(prompt).strip()
+        )
+        value = value.strip()
 
         if value == "0":
             return None
@@ -261,8 +292,8 @@ def _correct_field(
                 print("\n[ERROR] SKU must be exactly six digits or NA.")
                 continue
 
-        if field_name == "price" and not _valid_price(value):
-            print("\n[ERROR] Price must be a non-negative number or NA.")
+        if field_name in {"price", "total"} and not _valid_price(value):
+            print("\n[ERROR] Value must be a non-negative number or NA.")
             continue
 
         if field_name == "date" and value != NA:
@@ -360,27 +391,83 @@ def _run_receipt_import() -> None:
         print(f"\n[ERROR] {error}")
         return
 
+    refined = load_matching_refined_json(
+        source_path
+    )
+
+    if refined is None:
+        print(
+            "\n[INFO] No valid matching refined JSON was found. "
+            "Data Base Builder will use the existing parser guesses."
+        )
+        refined_line_map = {}
+        refined_context = {}
+
+    else:
+        print(
+            "\n[OK] Refined JSON loaded for improved initial guesses:"
+            f"\n{refined['path']}"
+        )
+        refined_line_map = refined["line_map"]
+        refined_context = refined["receipt_context"]
+
+        suggested_store = refined_context.get(
+            "store",
+            NA,
+        )
+
+        if suggested_store != NA:
+            print(
+                "\n[INFO] Refined store best guess: "
+                f"{suggested_store}"
+            )
+
     parser = _choose_receipt_parser()
 
     if parser is None:
         return
 
-    store_number = _prompt_store_number(parser.receipt_type)
+    refined_store_number = str(
+        refined_context.get(
+            "store_number",
+            NA,
+        )
+        or NA
+    )
+
+    store_number = _prompt_store_number(
+        parser.receipt_type,
+        default_value=refined_store_number,
+    )
 
     if store_number is None:
         return
 
-    receipt_date = _prompt_receipt_date()
+    refined_date = str(
+        refined_context.get(
+            "receipt_date",
+            NA,
+        )
+        or NA
+    )
+
+    receipt_date = _prompt_receipt_date(
+        default_value=refined_date,
+    )
 
     if receipt_date is None:
         return
 
-    starting_line = _prompt_starting_line(lines)
+    starting_line = _prompt_starting_line(
+        lines
+    )
 
     if starting_line is None:
         return
 
-    if not _confirm_duplicate_import(source_path):
+    if not _confirm_duplicate_import(
+        source_path
+    ):
         return
 
     session = ReceiptSession(
@@ -394,17 +481,42 @@ def _run_receipt_import() -> None:
     eligible_lines = [
         line
         for line in lines
-        if line["line_number"] >= starting_line
+        if line["line_number"]
+        >= starting_line
     ]
 
-    should_commit = False
-
-    for line in eligible_lines:
-        record = parser.parse_line(
+    def _initial_record(
+        line: dict,
+    ) -> PurchaseRecord:
+        parser_record = parser.parse_line(
             text=line["text"],
             store_number=store_number,
             receipt_date=receipt_date,
         )
+
+        # Store selection, Store Number, and Date have just been explicitly
+        # confirmed by the user in this session. They outrank Stage-7 guesses.
+        parser_record = parser_record.with_value(
+            "store",
+            parser.receipt_type,
+        )
+
+        return merge_refined_guess(
+            parser_record,
+            refined_line_map.get(
+                line["line_number"]
+            ),
+            protected_fields={
+                "store",
+                "store_number",
+                "date",
+            },
+        )
+
+    should_commit = False
+
+    for line in eligible_lines:
+        record = _initial_record(line)
 
         action, reviewed_record = _review_line(
             parser,
@@ -420,7 +532,9 @@ def _run_receipt_import() -> None:
             continue
 
         if action == "skip":
-            session.skip(line["line_number"])
+            session.skip(
+                line["line_number"]
+            )
             continue
 
         if action == "accept_remaining":
@@ -430,16 +544,25 @@ def _run_receipt_import() -> None:
                 status="bulk_accepted",
             )
 
-            current_index = eligible_lines.index(line)
+            current_index = (
+                eligible_lines.index(line)
+            )
 
-            for remaining_line in eligible_lines[current_index + 1:]:
-                remaining_record = parser.parse_line(
-                    text=remaining_line["text"],
-                    store_number=store_number,
-                    receipt_date=receipt_date,
+            for remaining_line in (
+                eligible_lines[
+                    current_index + 1:
+                ]
+            ):
+                remaining_record = (
+                    _initial_record(
+                        remaining_line
+                    )
                 )
+
                 session.accept(
-                    line_number=remaining_line["line_number"],
+                    line_number=remaining_line[
+                        "line_number"
+                    ],
                     purchase=remaining_record,
                     status="bulk_accepted",
                 )
@@ -457,6 +580,7 @@ def _run_receipt_import() -> None:
                 "No workbook changes were made."
             )
             return
+
     else:
         should_commit = True
 
@@ -471,35 +595,58 @@ def _run_receipt_import() -> None:
         return
 
     try:
-        summary = commit_receipt(session)
+        summary = commit_receipt(
+            session
+        )
     except (OSError, ValueError) as error:
-        print(f"\n[ERROR] Could not commit receipt: {error}")
+        print(
+            f"\n[ERROR] Could not commit receipt: {error}"
+        )
         return
 
     benchmark_path = None
 
     try:
-        benchmark_path = write_corrected_benchmark(session)
-    except (OSError, ValueError, json.JSONDecodeError) as error:
+        benchmark_path = (
+            write_corrected_benchmark(
+                session
+            )
+        )
+    except (
+        OSError,
+        ValueError,
+        json.JSONDecodeError,
+    ) as error:
         print(
             "\n[WARNING] Purchase History was committed successfully, "
             "but the corrected benchmark could not be written:"
             f"\n{error}"
         )
 
-    print("\n[OK] Receipt committed to Purchase History.")
-    print(f"\nWorkbook:\n{summary['workbook_path']}")
+    print(
+        "\n[OK] Receipt committed to Purchase History."
+    )
+    print(
+        f"\nWorkbook:\n{summary['workbook_path']}"
+    )
 
     if benchmark_path is not None:
-        print(f"\nCorrected Benchmark:\n{benchmark_path}")
+        print(
+            f"\nCorrected Benchmark:\n{benchmark_path}"
+        )
     else:
-        print("\nCorrected Benchmark:\nExisting benchmark kept unchanged.")
+        print(
+            "\nCorrected Benchmark:\n"
+            "Existing benchmark kept unchanged."
+        )
 
     print(
-        f"\nPurchases added: {summary['purchases_added']}"
+        f"\nPurchases added: "
+        f"{summary['purchases_added']}"
         f"\nExisting product histories updated: "
         f"{summary['existing_histories_updated']}"
-        f"\nNew product rows created: {summary['new_product_rows']}"
+        f"\nNew product rows created: "
+        f"{summary['new_product_rows']}"
     )
 
 

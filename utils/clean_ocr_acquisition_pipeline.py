@@ -10,6 +10,7 @@ from capabilities.OCRAcquisitionPipeline.constants import (
     OCR_VARIANTS_DIR,
     OCR_CANDIDATES_DIR,
     RAW_OCR_DIR,
+    REFINED_JSON_DIR,
 )
 from capabilities.OCRAcquisitionPipeline.session_state import (
     clear_selected_receipt,
@@ -27,6 +28,7 @@ GENERATED_DIRECTORIES = (
     OCR_VARIANTS_DIR,
     OCR_CANDIDATES_DIR,
     RAW_OCR_DIR,
+    REFINED_JSON_DIR,
 )
 
 
