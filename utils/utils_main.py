@@ -40,6 +40,9 @@ from utils.ocr_benchmark_evaluator import (
 from utils.pdf_to_jpg import (
     run_pdf_to_jpg_converter,
 )
+from utils.clean_source_data import (
+    run_source_data_cleanup,
+)
 
 
 def display_capabilities_menu() -> None:
@@ -199,6 +202,9 @@ def display_standalone_utilities_menu() -> None:
         "4. Convert PDF Files to JPG"
     )
     print(
+        "5. Clean Source Data"
+    )
+    print(
         "0. Return to Utilities Menu"
     )
 
@@ -219,6 +225,8 @@ def run_standalone_utilities_menu() -> None:
             run_benchmark_evaluator()
         elif option == "4":
             run_pdf_to_jpg_converter()
+        elif option == "5":
+            run_source_data_cleanup()
         elif option == "0":
             return
         else:
