@@ -35,6 +35,7 @@ shopping_analysis/
             __init__.py
             benchmark_writer.py
             data_base_builder_main.py
+            filename_metadata.py
             purchase_record.py
             receipt_loader.py
             receipt_session.py
@@ -51,6 +52,7 @@ shopping_analysis/
                 purchase_analytics.py
                 purchase_history.py
     README/
+        README_CAPABILITY_MODES_UPDATE.txt
         README_PDF_TO_JPG.txt
         README_UPDATE.txt
     receipt/
@@ -71,7 +73,7 @@ shopping_analysis/
 
 ================================================================================
 
-Generated: 2026-08-28 12:39:53.871393
+Generated: 2026-08-28 15:29:27.690970
 Root: /Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis
 Mode: LLM-clean export
 Excluded: receipt images, OCR JSON, datasets, databases, logs, caches
@@ -2586,75 +2588,100 @@ def run_image_enlargement() -> None:
 FILE: capabilities/OCRAcquisitionPipeline/main_OCRAcquisitionPipeline.py
 ================================================================================
 
-from capabilities.OCRAcquisitionPipeline.reliable_receipt_crop import (
-    run_reliable_receipt_crop,
-)
-from capabilities.OCRAcquisitionPipeline.perspective_correction import (
-    run_perspective_correction,
-)
-from capabilities.OCRAcquisitionPipeline.image_enlargement import (
-    run_image_enlargement,
-)
-from capabilities.OCRAcquisitionPipeline.ocr_image_variants import (
-    run_ocr_image_variants,
-)
-from capabilities.OCRAcquisitionPipeline.run_ocr import (
-    run_ocr,
-)
-from capabilities.OCRAcquisitionPipeline.compare_ocr import (
-    run_compare_ocr,
-)
-from capabilities.OCRAcquisitionPipeline.refine_json import (
-    run_refine_json,
-)
+from __future__ import annotations
+
+from pathlib import Path
+
+from capabilities.OCRAcquisitionPipeline.reliable_receipt_crop import run_reliable_receipt_crop
+from capabilities.OCRAcquisitionPipeline.perspective_correction import run_perspective_correction
+from capabilities.OCRAcquisitionPipeline.image_enlargement import run_image_enlargement
+from capabilities.OCRAcquisitionPipeline.ocr_image_variants import run_ocr_image_variants
+from capabilities.OCRAcquisitionPipeline.run_ocr import run_ocr
+from capabilities.OCRAcquisitionPipeline.compare_ocr import run_compare_ocr
+from capabilities.OCRAcquisitionPipeline.refine_json import run_refine_json
+from capabilities.OCRAcquisitionPipeline.receipt_picker import get_available_receipts
+from capabilities.OCRAcquisitionPipeline.session_state import get_selected_raw_ocr_file
 
 
-def run_ocr_acquisition_pipeline() -> None:
-    """
-    Run the complete seven-stage OCR Acquisition Pipeline in order.
-    """
-    print(
-        "\n=== OCR Acquisition Pipeline ===\n"
-    )
+def _run_stages_for_receipt(source_path: Path | None = None) -> Path | None:
+    print("\n[1/7] Reliable Receipt Detection / Crop")
+    cropped = run_reliable_receipt_crop(source_path)
+    if cropped is None:
+        return None
 
-    print(
-        "[1/7] Reliable Receipt Detection / Crop"
-    )
-    run_reliable_receipt_crop()
-
-    print(
-        "\n[2/7] Perspective Correction"
-    )
+    print("\n[2/7] Perspective Correction")
     run_perspective_correction()
 
-    print(
-        "\n[3/7] Receipt Size Normalization"
-    )
+    print("\n[3/7] Receipt Size Normalization")
     run_image_enlargement()
 
-    print(
-        "\n[4/7] Generate OCR Image Variants"
-    )
+    print("\n[4/7] Generate OCR Image Variants")
     run_ocr_image_variants()
 
-    print(
-        "\n[5/7] Run Multi-Variant / Multi-PSM OCR"
-    )
+    print("\n[5/7] Run Multi-Variant / Multi-PSM OCR")
     run_ocr()
 
-    print(
-        "\n[6/7] Compare OCR Results / Build Raw OCR JSON"
-    )
+    print("\n[6/7] Compare OCR Results / Build Raw OCR JSON")
     run_compare_ocr()
 
-    print(
-        "\n[7/7] Refine Json File"
-    )
-    run_refine_json()
+    raw_path = get_selected_raw_ocr_file()
+    if raw_path is None or not raw_path.exists():
+        print("\n[ERROR] Stage 6 did not produce a raw OCR JSON.")
+        return None
 
-    print(
-        "\n[OK] OCR Acquisition Pipeline complete."
-    )
+    print("\n[7/7] Refine Json File")
+    run_refine_json()
+    return raw_path.resolve()
+
+
+def run_ocr_acquisition_pipeline() -> list[Path]:
+    """Original behavior: choose ONE image and run Stages 1-7."""
+    print("\n=== OCR Acquisition Pipeline ===\n")
+    raw_path = _run_stages_for_receipt(None)
+    if raw_path is None:
+        return []
+    print("\n[OK] OCR Acquisition Pipeline complete.")
+    return [raw_path]
+
+
+def run_ocr_acquisition_pipeline_all_images() -> list[Path]:
+    """New behavior: process every supported image in data/current_pic/."""
+    print("\n=== OCR Acquisition Pipeline - All Images ===\n")
+    receipts = get_available_receipts()
+
+    if not receipts:
+        print("\n[ERROR] No receipt images were found in data/current_pic/.")
+        return []
+
+    print("\nAvailable receipt images:\n")
+    for index, receipt in enumerate(receipts, start=1):
+        print(f"{index}. {receipt.name}")
+
+    print(f"\n[INFO] Processing all {len(receipts)} image(s).")
+    outputs = []
+
+    for index, source_path in enumerate(receipts, start=1):
+        print("\n" + "=" * 70)
+        print(f"Receipt {index}/{len(receipts)}: {source_path.name}")
+        print("=" * 70)
+
+        try:
+            raw_path = _run_stages_for_receipt(source_path)
+        except Exception as error:
+            print(
+                "\n[ERROR] Receipt pipeline failed for "
+                f"{source_path.name}: {error}"
+            )
+            continue
+
+        if raw_path is not None:
+            outputs.append(raw_path)
+            print(f"\n[OK] Receipt {index}/{len(receipts)} complete.")
+
+    print("\n[OK] OCR Acquisition Pipeline - All Images complete.")
+    print(f"Images found: {len(receipts)}")
+    print(f"Raw OCR files completed: {len(outputs)}")
+    return outputs
 
 
 def main() -> None:
@@ -3588,7 +3615,7 @@ SUPPORTED_IMAGE_SUFFIXES = {
 }
 
 
-def _get_available_receipts() -> list[Path]:
+def get_available_receipts() -> list[Path]:
     CURRENT_PIC_DIR.mkdir(
         parents=True,
         exist_ok=True,
@@ -3603,7 +3630,7 @@ def _get_available_receipts() -> list[Path]:
 
 
 def choose_receipt_image() -> Path | None:
-    receipts = _get_available_receipts()
+    receipts = get_available_receipts()
 
     if not receipts:
         print(
@@ -5941,19 +5968,28 @@ def crop_selected_receipt(
     return cropped_path
 
 
-def run_reliable_receipt_crop() -> None:
+def run_reliable_receipt_crop(
+    source_path: str | Path | None = None,
+) -> Path | None:
     print(
         "\n=== Reliable Receipt Detection / Crop ===\n"
     )
 
-    source_path = choose_receipt_image()
-
     if source_path is None:
-        return
+        selected_source = choose_receipt_image()
+    else:
+        selected_source = Path(source_path).expanduser().resolve()
+        print(
+            "[INFO] Processing receipt image:"
+            f"\n{selected_source}"
+        )
+
+    if selected_source is None:
+        return None
 
     try:
         output_path = crop_selected_receipt(
-            source_path
+            selected_source
         )
 
         print(
@@ -5965,6 +6001,8 @@ def run_reliable_receipt_crop() -> None:
             "\nThis receipt is now selected "
             "for Image Preprocessing."
         )
+
+        return output_path
 
     except (
         FileNotFoundError,
@@ -6607,6 +6645,7 @@ from __future__ import annotations
 import shutil
 from pathlib import Path
 
+from utils.constants import DATA_DIR, EXPORT_DIR
 from capabilities.OCRAcquisitionPipeline.constants import (
     CROPPED_DIR,
     PERSPECTIVE_DIR,
@@ -6616,14 +6655,8 @@ from capabilities.OCRAcquisitionPipeline.constants import (
     RAW_OCR_DIR,
     REFINED_JSON_DIR,
 )
-from capabilities.OCRAcquisitionPipeline.session_state import (
-    clear_selected_receipt,
-)
+from capabilities.OCRAcquisitionPipeline.session_state import clear_selected_receipt
 
-
-# ---------------------------------------------------------------------------
-# OCR ACQUISITION PIPELINE GENERATED DATA
-# ---------------------------------------------------------------------------
 
 GENERATED_DIRECTORIES = (
     CROPPED_DIR,
@@ -6633,129 +6666,73 @@ GENERATED_DIRECTORIES = (
     OCR_CANDIDATES_DIR,
     RAW_OCR_DIR,
     REFINED_JSON_DIR,
+    DATA_DIR / "preprocessed",
+    EXPORT_DIR,
+)
+
+PRESERVED_DIRECTORIES = (
+    DATA_DIR / "current_pic",
+    DATA_DIR / "benchmarks",
+    DATA_DIR / "pdf_files",
+    DATA_DIR / "database",
+    DATA_DIR / "prompts",
 )
 
 
-def _clear_directory_contents(
-    directory: Path,
-) -> tuple[int, int]:
-    """
-    Delete everything inside a generated-data directory while preserving
-    the directory itself.
-
-    Returns:
-        (files_deleted, directories_deleted)
-    """
+def _clear_directory_contents(directory: Path) -> tuple[int, int]:
     files_deleted = 0
     directories_deleted = 0
 
     if not directory.exists():
-        directory.mkdir(
-            parents=True,
-            exist_ok=True,
-        )
-        return (
-            files_deleted,
-            directories_deleted,
-        )
+        directory.mkdir(parents=True, exist_ok=True)
+        return files_deleted, directories_deleted
 
     for item in directory.iterdir():
         if item.is_dir():
-            shutil.rmtree(
-                item
-            )
+            shutil.rmtree(item)
             directories_deleted += 1
-
         else:
             item.unlink()
             files_deleted += 1
 
-    return (
-        files_deleted,
-        directories_deleted,
-    )
+    return files_deleted, directories_deleted
 
 
 def clean_ocr_acquisition_pipeline_data() -> dict:
-    """
-    Remove all generated files produced by the OCR Acquisition Pipeline.
-
-    IMPORTANT:
-    data/current_pic/ is intentionally NOT touched.
-
-    The generated output directories themselves are preserved so the
-    pipeline can immediately be run again.
-    """
     total_files_deleted = 0
     total_directories_deleted = 0
-    cleaned_directories = []
 
     for directory in GENERATED_DIRECTORIES:
-        (
-            files_deleted,
-            directories_deleted,
-        ) = _clear_directory_contents(
-            directory
-        )
+        files_deleted, directories_deleted = _clear_directory_contents(directory)
+        total_files_deleted += files_deleted
+        total_directories_deleted += directories_deleted
 
-        total_files_deleted += (
-            files_deleted
-        )
-
-        total_directories_deleted += (
-            directories_deleted
-        )
-
-        cleaned_directories.append(
-            str(
-                directory.resolve()
-            )
-        )
-
-    # Prevent stale session paths from pointing to files that were deleted.
     clear_selected_receipt()
 
     return {
-        "cleaned_directories": cleaned_directories,
         "files_deleted": total_files_deleted,
         "directories_deleted": total_directories_deleted,
-        "current_pic_unchanged": True,
     }
 
 
 def run_ocr_acquisition_pipeline_cleanup() -> None:
-    print(
-        "\n=== Clean OCR Acquisition Pipeline Data ===\n"
-    )
+    print("\n=== Clean Generated Processing Data ===\n")
+    print("This removes disposable/generated ShopGraph processing files.")
+    print("\nThe following source/persistent data will NOT be changed:")
+    print("- data/current_pic/")
+    print("- data/benchmarks/")
+    print("- data/pdf_files/")
+    print("- data/database/")
+    print("- data/prompts/\n")
 
-    print(
-        "This removes generated OCR Acquisition Pipeline files."
-    )
+    result = clean_ocr_acquisition_pipeline_data()
 
-    print(
-        "data/current_pic/ will NOT be changed.\n"
-    )
-
-    result = (
-        clean_ocr_acquisition_pipeline_data()
-    )
-
-    print(
-        "[OK] OCR Acquisition Pipeline generated data cleaned."
-    )
-
-    print(
-        f"Files deleted: {result['files_deleted']}"
-    )
-
-    print(
-        "Nested directories deleted: "
-        f"{result['directories_deleted']}"
-    )
-
-    print(
-        "Current receipt images preserved: YES"
-    )
+    print("[OK] Generated ShopGraph processing data cleaned.")
+    print(f"Files deleted: {result['files_deleted']}")
+    print(f"Nested directories deleted: {result['directories_deleted']}")
+    print("Current receipt images preserved: YES")
+    print("Benchmarks preserved: YES")
+    print("Database / PDF inputs / prompts preserved: YES")
 
 
 if __name__ == "__main__":
@@ -8115,6 +8092,7 @@ FILE: utils/utils_main.py
 
 from capabilities.OCRAcquisitionPipeline.main_OCRAcquisitionPipeline import (
     run_ocr_acquisition_pipeline,
+    run_ocr_acquisition_pipeline_all_images,
 )
 from capabilities.OCRAcquisitionPipeline.reliable_receipt_crop import (
     run_reliable_receipt_crop,
@@ -8146,6 +8124,7 @@ from utils.clean_ocr_acquisition_pipeline import (
 )
 from utils.DataBaseBuilder.data_base_builder_main import (
     run_data_base_builder_menu,
+    run_receipt_import,
 )
 from utils.ocr_benchmark_evaluator import (
     run_benchmark_evaluator,
@@ -8156,33 +8135,53 @@ from utils.pdf_to_jpg import (
 
 
 def display_capabilities_menu() -> None:
+    print("\n=== ShopGraph Capabilities ===\n")
+    print("1. OCR Acquisition Pipeline")
+    print("2. OCR Acquisition Pipeline - All Images")
+    print("3. OCR Acquisition Pipeline + Data Base Builder")
+    print("4. OCR Acquisition Pipeline - All Images + Data Base Builder")
+    print("0. Return to Utilities Menu")
+
+
+def _run_database_builder_for_outputs(raw_ocr_files) -> None:
+    if not raw_ocr_files:
+        return
+
+    print("\n=== Data Base Builder ===")
     print(
-        "\n=== ShopGraph Capabilities ===\n"
+        "\n[INFO] OCR processing complete. "
+        "Continuing directly into Add Receipt to Purchase History."
     )
-    print(
-        "1. OCR Acquisition Pipeline"
-    )
-    print(
-        "0. Return to Utilities Menu"
-    )
+
+    for index, raw_ocr_file in enumerate(raw_ocr_files, start=1):
+        print("\n" + "=" * 70)
+        print(
+            f"Database Review {index}/{len(raw_ocr_files)}: "
+            f"{raw_ocr_file.name}"
+        )
+        print("=" * 70)
+        run_receipt_import(raw_ocr_file)
 
 
 def run_capabilities_menu() -> None:
     while True:
         display_capabilities_menu()
-
-        option = input(
-            "\nSelect option: "
-        ).strip()
+        option = input("\nSelect option: ").strip()
 
         if option == "1":
             run_ocr_acquisition_pipeline()
+        elif option == "2":
+            run_ocr_acquisition_pipeline_all_images()
+        elif option == "3":
+            raw_ocr_files = run_ocr_acquisition_pipeline()
+            _run_database_builder_for_outputs(raw_ocr_files)
+        elif option == "4":
+            raw_ocr_files = run_ocr_acquisition_pipeline_all_images()
+            _run_database_builder_for_outputs(raw_ocr_files)
         elif option == "0":
             return
         else:
-            print(
-                "\n[ERROR] Invalid option."
-            )
+            print("\n[ERROR] Invalid option.")
 
 
 def display_capability_sub_tasks_menu() -> None:
@@ -8283,7 +8282,7 @@ def display_standalone_utilities_menu() -> None:
         "1. Export Clean Codebase"
     )
     print(
-        "2. Clean OCR Acquisition Pipeline Data"
+        "2. Clean Generated Processing Data"
     )
     print(
         "3. Evaluate OCR Against Benchmarks"
@@ -8544,6 +8543,7 @@ FILE: utils/DataBaseBuilder/data_base_builder_main.py
 from __future__ import annotations
 
 from datetime import datetime
+from pathlib import Path
 import json
 import readline
 
@@ -8566,6 +8566,9 @@ from utils.DataBaseBuilder.receipt_session import ReceiptSession
 from utils.DataBaseBuilder.refined_json_loader import (
     load_matching_refined_json,
     merge_refined_guess,
+)
+from utils.DataBaseBuilder.filename_metadata import (
+    parse_receipt_filename_metadata,
 )
 
 
@@ -8926,17 +8929,45 @@ def _review_line(parser, line: dict, record: PurchaseRecord) -> tuple[str, Purch
         print("\n[ERROR] Invalid option.")
 
 
-def _run_receipt_import() -> None:
-    source_path = choose_raw_ocr_file()
-
+def run_receipt_import(
+    source_path: str | Path | None = None,
+) -> None:
     if source_path is None:
+        selected_source = choose_raw_ocr_file()
+    else:
+        selected_source = Path(source_path).expanduser().resolve()
+        print("\n=== Add Receipt to Purchase History ===\n")
+        print(
+            "[INFO] Using OCR file from completed capability:"
+            f"\n{selected_source}"
+        )
+
+    if selected_source is None:
         return
+
+    source_path = selected_source
 
     try:
         lines = load_ocr_lines(source_path)
     except (OSError, ValueError) as error:
         print(f"\n[ERROR] {error}")
         return
+
+    filename_metadata = parse_receipt_filename_metadata(source_path)
+
+    if filename_metadata is not None:
+        print(
+            "\n[OK] Receipt metadata detected from filename:"
+            f"\nDate: {filename_metadata.receipt_date}"
+            f"\nStore: {filename_metadata.store_name}"
+            f"\nStore Number: {filename_metadata.store_number}"
+        )
+    else:
+        print(
+            "\n[INFO] Filename metadata was not recognized."
+            "\nReceipt Type, Store Number, and Receipt Date "
+            "will be entered manually."
+        )
 
     refined = load_matching_refined_json(
         source_path
@@ -8969,10 +9000,19 @@ def _run_receipt_import() -> None:
                 f"{suggested_store}"
             )
 
-    parser = _choose_receipt_parser()
-
-    if parser is None:
-        return
+    if filename_metadata is not None:
+        parser = build_parser(filename_metadata.parser_option)
+        if parser is None:
+            print("\n[ERROR] Could not select parser from filename metadata.")
+            return
+        print(
+            "\n[INFO] Receipt parser selected automatically: "
+            f"{parser.receipt_type}"
+        )
+    else:
+        parser = _choose_receipt_parser()
+        if parser is None:
+            return
 
     refined_store_number = str(
         refined_context.get(
@@ -8982,13 +9022,19 @@ def _run_receipt_import() -> None:
         or NA
     )
 
-    store_number = _prompt_store_number(
-        parser.receipt_type,
-        default_value=refined_store_number,
-    )
-
-    if store_number is None:
-        return
+    if filename_metadata is not None:
+        store_number = filename_metadata.store_number
+        print(
+            "\n[INFO] Store Number filled from filename: "
+            f"{store_number}"
+        )
+    else:
+        store_number = _prompt_store_number(
+            parser.receipt_type,
+            default_value=refined_store_number,
+        )
+        if store_number is None:
+            return
 
     refined_date = str(
         refined_context.get(
@@ -8998,12 +9044,18 @@ def _run_receipt_import() -> None:
         or NA
     )
 
-    receipt_date = _prompt_receipt_date(
-        default_value=refined_date,
-    )
-
-    if receipt_date is None:
-        return
+    if filename_metadata is not None:
+        receipt_date = filename_metadata.receipt_date
+        print(
+            "\n[INFO] Receipt Date filled from filename: "
+            f"{receipt_date}"
+        )
+    else:
+        receipt_date = _prompt_receipt_date(
+            default_value=refined_date,
+        )
+        if receipt_date is None:
+            return
 
     starting_line = _prompt_starting_line(
         lines
@@ -9043,9 +9095,15 @@ def _run_receipt_import() -> None:
 
         # Store selection, Store Number, and Date have just been explicitly
         # confirmed by the user in this session. They outrank Stage-7 guesses.
+        confirmed_store_name = (
+            filename_metadata.store_name
+            if filename_metadata is not None
+            else parser.receipt_type
+        )
+
         parser_record = parser_record.with_value(
             "store",
-            parser.receipt_type,
+            confirmed_store_name,
         )
 
         return merge_refined_guess(
@@ -9232,7 +9290,7 @@ def run_data_base_builder_menu() -> None:
         option = input("\nSelect option: ").strip()
 
         if option == "1":
-            _run_receipt_import()
+            run_receipt_import()
 
         elif option == "2":
             _run_purchase_analytics()
@@ -9250,6 +9308,105 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
+================================================================================
+FILE: utils/DataBaseBuilder/filename_metadata.py
+================================================================================
+
+from __future__ import annotations
+
+import re
+from dataclasses import dataclass
+from datetime import datetime
+from pathlib import Path
+
+
+FILENAME_METADATA_PATTERN = re.compile(
+    r"^(?P<date>\d{6}|\d{8})_"
+    r"(?P<store>[^_]+)_"
+    r"(?P<store_number>[^_]+)"
+    r"(?:_|$)",
+    re.IGNORECASE,
+)
+
+
+@dataclass(frozen=True)
+class ReceiptFilenameMetadata:
+    receipt_date: str
+    store_name: str
+    store_number: str
+    parser_option: str
+
+
+def _normalize_store_name(value: str) -> str:
+    cleaned = re.sub(r"[-]+", " ", value.strip())
+    cleaned = re.sub(r"\s+", " ", cleaned)
+    lowered = cleaned.lower().replace("'", "")
+
+    if lowered == "publix":
+        return "Publix"
+    if lowered in {"trader joes", "trader joe", "traderjoes", "traderjoe"}:
+        return "Trader Joe's"
+    if lowered == "aldi":
+        return "Aldi"
+    if lowered == "walmart":
+        return "Walmart"
+    return cleaned.title() if cleaned.islower() else cleaned
+
+
+def _parser_option_for_store(store_name: str) -> str:
+    lowered = store_name.lower()
+    if lowered == "publix":
+        return "1"
+    if lowered == "trader joe's":
+        return "2"
+    if lowered == "aldi":
+        return "3"
+    return "4"
+
+
+def _parse_filename_date(value: str) -> str | None:
+    for format_string, expected_length in (("%m%d%y", 6), ("%m%d%Y", 8)):
+        if len(value) != expected_length:
+            continue
+        try:
+            parsed = datetime.strptime(value, format_string)
+        except ValueError:
+            continue
+        return parsed.strftime("%m/%d/%Y")
+    return None
+
+
+def parse_receipt_filename_metadata(path: str | Path) -> ReceiptFilenameMetadata | None:
+    """
+    Recognize only filenames beginning with:
+        MMDDYY_Store_StoreNumber...
+        MMDDYYYY_Store_StoreNumber...
+
+    If recognition fails, return None so DataBaseBuilder keeps its original
+    manual Receipt Type / Store Number / Receipt Date prompts.
+    """
+    match = FILENAME_METADATA_PATTERN.match(Path(path).name)
+    if match is None:
+        return None
+
+    receipt_date = _parse_filename_date(match.group("date"))
+    if receipt_date is None:
+        return None
+
+    store_name = _normalize_store_name(match.group("store"))
+    store_number = match.group("store_number").strip()
+
+    if not store_name or not store_number:
+        return None
+
+    return ReceiptFilenameMetadata(
+        receipt_date=receipt_date,
+        store_name=store_name,
+        store_number=store_number,
+        parser_option=_parser_option_for_store(store_name),
+    )
 
 
 ================================================================================
@@ -13041,6 +13198,46 @@ def commit_receipt(
             new_rows
         ),
     }
+
+
+================================================================================
+FILE: README/README_CAPABILITY_MODES_UPDATE.txt
+================================================================================
+
+ShopGraph - Clarified Capability Modes Update
+=============================================
+
+Capabilities menu:
+
+1. OCR Acquisition Pipeline
+   Original behavior: choose ONE image, run OCR Stages 1-7, return.
+
+2. OCR Acquisition Pipeline - All Images
+   New: process ALL images in data/current_pic/, then return.
+
+3. OCR Acquisition Pipeline + Data Base Builder
+   New: choose ONE image, run Stages 1-7, then continue directly into
+   Add Receipt to Purchase History.
+
+4. OCR Acquisition Pipeline - All Images + Data Base Builder
+   New: process ALL images, then review each successful result in
+   DataBaseBuilder.
+
+The standalone DataBaseBuilder menu remains unchanged.
+
+Filename metadata:
+- Auto-detect only if the raw OCR filename starts with:
+    MMDDYY_Store_StoreNumber...
+    MMDDYYYY_Store_StoreNumber...
+- If the pattern/date is invalid or absent, the ORIGINAL manual prompts remain:
+    Select receipt type
+    Store Number
+    Receipt date
+
+Cleanup:
+- Clears regeneratable processing data.
+- Preserves data/current_pic/, data/benchmarks/, data/pdf_files/,
+  data/database/, and data/prompts/.
 
 
 ================================================================================

@@ -121,8 +121,19 @@ class BaseReceiptParser(ABC):
         ):
             label = self.field_labels[field_name]
             value = getattr(record, field_name)
+
+            if field_name == "product":
+                lines.append(
+                    "-" * 32
+                )
+
             lines.append(
                 f'{index}. {label}: "{value}"'
             )
+
+            if field_name == "product":
+                lines.append(
+                    "-" * 32
+                )
 
         return "\n".join(lines)

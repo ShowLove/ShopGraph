@@ -28,6 +28,12 @@ from utils.DataBaseBuilder.refined_json_loader import (
 from utils.DataBaseBuilder.filename_metadata import (
     parse_receipt_filename_metadata,
 )
+from utils.DataBaseBuilder.skip_terms import (
+    add_skip_substring,
+    add_skip_term,
+    get_skip_terms_file,
+    match_product,
+)
 
 
 PUBLIX_TAX_OPTIONS = {
@@ -350,6 +356,73 @@ def _correct_columns(parser, record: PurchaseRecord) -> PurchaseRecord:
     return corrected
 
 
+def _skip_rule_match(
+    record: PurchaseRecord,
+):
+    return match_product(
+        store=record.store,
+        product=record.product,
+    )
+
+
+def _display_auto_skip(
+    line: dict,
+    record: PurchaseRecord,
+    match,
+) -> None:
+    rule_label = (
+        "exact term"
+        if match.match_type == "term"
+        else "sub-string"
+    )
+
+    print(
+        "\n[AUTO-SKIP] "
+        f"OCR Line {line['line_number']} skipped."
+    )
+    print(
+        f'Store: "{record.store}"'
+    )
+    print(
+        f'Product: "{record.product}"'
+    )
+    print(
+        f'Matched {rule_label}: "{match.matched_value}"'
+    )
+
+
+def _prompt_skip_substring(
+    current_product: str,
+) -> str | None:
+    print(
+        "\nEnter the Product sub-string that should "
+        "cause future lines for this store to be skipped."
+    )
+    print(
+        "The current Product is pre-populated so it can "
+        "be shortened before saving."
+    )
+
+    value = _input_with_current_value(
+        "Enter sub-string to skip forever: ",
+        current_product,
+    ).strip()
+
+    if not value:
+        print(
+            "\n[INFO] No sub-string was saved."
+        )
+        return None
+
+    if value == NA:
+        print(
+            "\n[ERROR] NA cannot be stored as a skip sub-string."
+        )
+        return None
+
+    return value
+
+
 def _review_line(parser, line: dict, record: PurchaseRecord) -> tuple[str, PurchaseRecord]:
     current = record
 
@@ -359,8 +432,10 @@ def _review_line(parser, line: dict, record: PurchaseRecord) -> tuple[str, Purch
         print("2. Correct Columns")
         print("3. Accept With NAs / Skip Corrections")
         print("4. Skip Line")
-        print("5. Finish Receipt")
-        print("6. Accept Remaining Lines")
+        print("5. Skip Term Forever")
+        print("6. Skip Sub-String Forever")
+        print("7. Finish Receipt")
+        print("8. Accept Remaining Lines")
         print("0. Cancel Receipt Import")
 
         option = input("\nSelect option: ").strip()
@@ -376,9 +451,84 @@ def _review_line(parser, line: dict, record: PurchaseRecord) -> tuple[str, Purch
             return "skip", current
 
         if option == "5":
-            return "finish", current
+            try:
+                added, path = add_skip_term(
+                    store=current.store,
+                    product=current.product,
+                )
+            except ValueError as error:
+                print(
+                    f"\n[ERROR] {error}"
+                )
+                continue
+
+            if added:
+                print(
+                    "\n[OK] Store-specific skip term saved."
+                )
+            else:
+                print(
+                    "\n[INFO] This store-specific skip term "
+                    "was already saved."
+                )
+
+            print(
+                f'Store: "{current.store}"'
+            )
+            print(
+                f'Term: "{current.product}"'
+            )
+            print(
+                f"Config:\n{path}"
+            )
+
+            return "skip", current
 
         if option == "6":
+            substring = _prompt_skip_substring(
+                current.product
+            )
+
+            if substring is None:
+                continue
+
+            try:
+                added, path = add_skip_substring(
+                    store=current.store,
+                    substring=substring,
+                )
+            except ValueError as error:
+                print(
+                    f"\n[ERROR] {error}"
+                )
+                continue
+
+            if added:
+                print(
+                    "\n[OK] Store-specific skip sub-string saved."
+                )
+            else:
+                print(
+                    "\n[INFO] This store-specific skip sub-string "
+                    "was already saved."
+                )
+
+            print(
+                f'Store: "{current.store}"'
+            )
+            print(
+                f'Sub-string: "{substring}"'
+            )
+            print(
+                f"Config:\n{path}"
+            )
+
+            return "skip", current
+
+        if option == "7":
+            return "finish", current
+
+        if option == "8":
             return "accept_remaining", current
 
         if option == "0":
@@ -581,6 +731,21 @@ def run_receipt_import(
     for line in eligible_lines:
         record = _initial_record(line)
 
+        skip_match = _skip_rule_match(
+            record
+        )
+
+        if skip_match.matched:
+            _display_auto_skip(
+                line,
+                record,
+                skip_match,
+            )
+            session.skip(
+                line["line_number"]
+            )
+            continue
+
         action, reviewed_record = _review_line(
             parser,
             line,
@@ -621,6 +786,25 @@ def run_receipt_import(
                         remaining_line
                     )
                 )
+
+                remaining_skip_match = (
+                    _skip_rule_match(
+                        remaining_record
+                    )
+                )
+
+                if remaining_skip_match.matched:
+                    _display_auto_skip(
+                        remaining_line,
+                        remaining_record,
+                        remaining_skip_match,
+                    )
+                    session.skip(
+                        remaining_line[
+                            "line_number"
+                        ]
+                    )
+                    continue
 
                 session.accept(
                     line_number=remaining_line[

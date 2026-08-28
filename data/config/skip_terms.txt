@@ -1,0 +1,25 @@
+# ShopGraph store-specific automatic skip rules
+#
+# TERMS are exact Product matches for a store.
+# SUBSTRINGS match anywhere inside Product for a store.
+# Matching is case-insensitive and whitespace-normalized.
+
+[STORE:Walmart]
+TERMS:
+Walmart Invoice
+Buyer
+Michelle Garzon
+102 Marion St, Indian Harbour Beach, FL 32937
+Unavailable
+Qty1
+Qty2
+aty1
+Qty7
+2
+Subtotal
+SUBSTRINGS:
+Order#
+$
+shopped
+www.walmart.com
+- Walmart
