@@ -35,6 +35,9 @@ from utils.DataBaseBuilder.data_base_builder_main import (
 from utils.ocr_benchmark_evaluator import (
     run_benchmark_evaluator,
 )
+from utils.pdf_to_jpg import (
+    run_pdf_to_jpg_converter,
+)
 
 
 def display_capabilities_menu() -> None:
@@ -171,6 +174,9 @@ def display_standalone_utilities_menu() -> None:
         "3. Evaluate OCR Against Benchmarks"
     )
     print(
+        "4. Convert PDF Files to JPG"
+    )
+    print(
         "0. Return to Utilities Menu"
     )
 
@@ -189,6 +195,8 @@ def run_standalone_utilities_menu() -> None:
             run_ocr_acquisition_pipeline_cleanup()
         elif option == "3":
             run_benchmark_evaluator()
+        elif option == "4":
+            run_pdf_to_jpg_converter()
         elif option == "0":
             return
         else:

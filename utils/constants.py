@@ -6,6 +6,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = PROJECT_ROOT / "data"
 
 CURRENT_PIC_DIR = DATA_DIR / "current_pic"
+PDF_FILES_DIR = DATA_DIR / "pdf_files"
 CROPPED_DIR = DATA_DIR / "cropped"
 PERSPECTIVE_DIR = DATA_DIR / "perspective_corrected"
 ENLARGED_DIR = DATA_DIR / "enlarged"
