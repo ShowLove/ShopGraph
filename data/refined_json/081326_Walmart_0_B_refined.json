@@ -1,6 +1,6 @@
 {
-  "source_raw_ocr": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/raw_ocr/walmart_aug_13_page_002_raw_ocr.json",
-  "source_receipt": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/current_pic/walmart_aug_13_page_002.jpg",
+  "source_raw_ocr": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/raw_ocr/081326_Walmart_0_B_raw_ocr.json",
+  "source_receipt": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/current_pic/081326_Walmart_0_B.jpg",
   "refinement_version": "1.0",
   "receipt_context": {
     "store": "NA",

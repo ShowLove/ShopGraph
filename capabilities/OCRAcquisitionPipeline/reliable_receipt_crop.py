@@ -558,19 +558,28 @@ def crop_selected_receipt(
     return cropped_path
 
 
-def run_reliable_receipt_crop() -> None:
+def run_reliable_receipt_crop(
+    source_path: str | Path | None = None,
+) -> Path | None:
     print(
         "\n=== Reliable Receipt Detection / Crop ===\n"
     )
 
-    source_path = choose_receipt_image()
-
     if source_path is None:
-        return
+        selected_source = choose_receipt_image()
+    else:
+        selected_source = Path(source_path).expanduser().resolve()
+        print(
+            "[INFO] Processing receipt image:"
+            f"\n{selected_source}"
+        )
+
+    if selected_source is None:
+        return None
 
     try:
         output_path = crop_selected_receipt(
-            source_path
+            selected_source
         )
 
         print(
@@ -582,6 +591,8 @@ def run_reliable_receipt_crop() -> None:
             "\nThis receipt is now selected "
             "for Image Preprocessing."
         )
+
+        return output_path
 
     except (
         FileNotFoundError,

@@ -16,7 +16,7 @@ SUPPORTED_IMAGE_SUFFIXES = {
 }
 
 
-def _get_available_receipts() -> list[Path]:
+def get_available_receipts() -> list[Path]:
     CURRENT_PIC_DIR.mkdir(
         parents=True,
         exist_ok=True,
@@ -31,7 +31,7 @@ def _get_available_receipts() -> list[Path]:
 
 
 def choose_receipt_image() -> Path | None:
-    receipts = _get_available_receipts()
+    receipts = get_available_receipts()
 
     if not receipts:
         print(

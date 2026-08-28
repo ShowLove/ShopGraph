@@ -1,5 +1,5 @@
 {
-  "source_receipt": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/current_pic/walmart_aug_13_page_001.jpg",
+  "source_receipt": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/current_pic/081326_Walmart_0.jpg",
   "candidate_count": 25,
   "full_candidate_count": 15,
   "right_column_candidate_count": 10,
@@ -11,11 +11,11 @@
       "candidate_scope": "full",
       "eligible_for_backbone": true,
       "result": {
-        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/walmart_aug_13_page_001_grayscale.png",
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/081326_Walmart_0_grayscale.png",
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 4",
-        "generated_at": "2026-08-27T23:51:12.121836+00:00",
+        "generated_at": "2026-08-28T18:04:35.337556+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -8857,11 +8857,11 @@
       "candidate_scope": "full",
       "eligible_for_backbone": true,
       "result": {
-        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/walmart_aug_13_page_001_grayscale.png",
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/081326_Walmart_0_grayscale.png",
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 6",
-        "generated_at": "2026-08-27T23:51:13.979508+00:00",
+        "generated_at": "2026-08-28T18:04:37.158519+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -17703,11 +17703,11 @@
       "candidate_scope": "full",
       "eligible_for_backbone": true,
       "result": {
-        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/walmart_aug_13_page_001_grayscale.png",
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/081326_Walmart_0_grayscale.png",
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 11",
-        "generated_at": "2026-08-27T23:51:15.951440+00:00",
+        "generated_at": "2026-08-28T18:04:39.086379+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -28957,11 +28957,11 @@
       "candidate_scope": "right_column",
       "eligible_for_backbone": false,
       "result": {
-        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/walmart_aug_13_page_001_grayscale.png",
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/081326_Walmart_0_grayscale.png",
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 6",
-        "generated_at": "2026-08-27T23:51:16.538456+00:00",
+        "generated_at": "2026-08-28T18:04:39.653068+00:00",
         "region": {
           "name": "right_column",
           "crop_fraction": [
@@ -32178,11 +32178,11 @@
       "candidate_scope": "right_column",
       "eligible_for_backbone": false,
       "result": {
-        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/walmart_aug_13_page_001_grayscale.png",
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/081326_Walmart_0_grayscale.png",
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 11",
-        "generated_at": "2026-08-27T23:51:17.171224+00:00",
+        "generated_at": "2026-08-28T18:04:40.269855+00:00",
         "region": {
           "name": "right_column",
           "crop_fraction": [
@@ -36957,11 +36957,11 @@
       "candidate_scope": "full",
       "eligible_for_backbone": true,
       "result": {
-        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/walmart_aug_13_page_001_threshold.png",
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/081326_Walmart_0_threshold.png",
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 4",
-        "generated_at": "2026-08-27T23:51:19.102718+00:00",
+        "generated_at": "2026-08-28T18:04:42.151345+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -45841,11 +45841,11 @@
       "candidate_scope": "full",
       "eligible_for_backbone": true,
       "result": {
-        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/walmart_aug_13_page_001_threshold.png",
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/081326_Walmart_0_threshold.png",
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 6",
-        "generated_at": "2026-08-27T23:51:20.993443+00:00",
+        "generated_at": "2026-08-28T18:04:44.007388+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -54687,11 +54687,11 @@
       "candidate_scope": "full",
       "eligible_for_backbone": true,
       "result": {
-        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/walmart_aug_13_page_001_threshold.png",
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/081326_Walmart_0_threshold.png",
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 11",
-        "generated_at": "2026-08-27T23:51:22.896791+00:00",
+        "generated_at": "2026-08-28T18:04:45.879505+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -66012,11 +66012,11 @@
       "candidate_scope": "right_column",
       "eligible_for_backbone": false,
       "result": {
-        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/walmart_aug_13_page_001_threshold.png",
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/081326_Walmart_0_threshold.png",
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 6",
-        "generated_at": "2026-08-27T23:51:23.480169+00:00",
+        "generated_at": "2026-08-28T18:04:46.452302+00:00",
         "region": {
           "name": "right_column",
           "crop_fraction": [
@@ -69280,11 +69280,11 @@
       "candidate_scope": "right_column",
       "eligible_for_backbone": false,
       "result": {
-        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/walmart_aug_13_page_001_threshold.png",
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/081326_Walmart_0_threshold.png",
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 11",
-        "generated_at": "2026-08-27T23:51:24.086383+00:00",
+        "generated_at": "2026-08-28T18:04:47.043627+00:00",
         "region": {
           "name": "right_column",
           "crop_fraction": [
@@ -74059,11 +74059,11 @@
       "candidate_scope": "full",
       "eligible_for_backbone": true,
       "result": {
-        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/walmart_aug_13_page_001_sharpened.png",
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/081326_Walmart_0_sharpened.png",
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 4",
-        "generated_at": "2026-08-27T23:51:25.998456+00:00",
+        "generated_at": "2026-08-28T18:04:48.917092+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -82919,11 +82919,11 @@
       "candidate_scope": "full",
       "eligible_for_backbone": true,
       "result": {
-        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/walmart_aug_13_page_001_sharpened.png",
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/081326_Walmart_0_sharpened.png",
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 6",
-        "generated_at": "2026-08-27T23:51:27.833262+00:00",
+        "generated_at": "2026-08-28T18:04:50.719949+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -91765,11 +91765,11 @@
       "candidate_scope": "full",
       "eligible_for_backbone": true,
       "result": {
-        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/walmart_aug_13_page_001_sharpened.png",
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/081326_Walmart_0_sharpened.png",
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 11",
-        "generated_at": "2026-08-27T23:51:29.776638+00:00",
+        "generated_at": "2026-08-28T18:04:52.622971+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -103005,11 +103005,11 @@
       "candidate_scope": "right_column",
       "eligible_for_backbone": false,
       "result": {
-        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/walmart_aug_13_page_001_sharpened.png",
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/081326_Walmart_0_sharpened.png",
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 6",
-        "generated_at": "2026-08-27T23:51:30.357263+00:00",
+        "generated_at": "2026-08-28T18:04:53.187931+00:00",
         "region": {
           "name": "right_column",
           "crop_fraction": [
@@ -106226,11 +106226,11 @@
       "candidate_scope": "right_column",
       "eligible_for_backbone": false,
       "result": {
-        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/walmart_aug_13_page_001_sharpened.png",
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/081326_Walmart_0_sharpened.png",
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 11",
-        "generated_at": "2026-08-27T23:51:30.980437+00:00",
+        "generated_at": "2026-08-28T18:04:53.799846+00:00",
         "region": {
           "name": "right_column",
           "crop_fraction": [
@@ -111005,11 +111005,11 @@
       "candidate_scope": "full",
       "eligible_for_backbone": true,
       "result": {
-        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/walmart_aug_13_page_001_otsu.png",
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/081326_Walmart_0_otsu.png",
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 4",
-        "generated_at": "2026-08-27T23:51:32.832687+00:00",
+        "generated_at": "2026-08-28T18:04:55.617386+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -119795,11 +119795,11 @@
       "candidate_scope": "full",
       "eligible_for_backbone": true,
       "result": {
-        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/walmart_aug_13_page_001_otsu.png",
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/081326_Walmart_0_otsu.png",
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 6",
-        "generated_at": "2026-08-27T23:51:34.614072+00:00",
+        "generated_at": "2026-08-28T18:04:57.361214+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -128599,11 +128599,11 @@
       "candidate_scope": "full",
       "eligible_for_backbone": true,
       "result": {
-        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/walmart_aug_13_page_001_otsu.png",
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/081326_Walmart_0_otsu.png",
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 11",
-        "generated_at": "2026-08-27T23:51:36.510288+00:00",
+        "generated_at": "2026-08-28T18:04:59.207315+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -139811,11 +139811,11 @@
       "candidate_scope": "right_column",
       "eligible_for_backbone": false,
       "result": {
-        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/walmart_aug_13_page_001_otsu.png",
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/081326_Walmart_0_otsu.png",
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 6",
-        "generated_at": "2026-08-27T23:51:37.071092+00:00",
+        "generated_at": "2026-08-28T18:04:59.751104+00:00",
         "region": {
           "name": "right_column",
           "crop_fraction": [
@@ -143046,11 +143046,11 @@
       "candidate_scope": "right_column",
       "eligible_for_backbone": false,
       "result": {
-        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/walmart_aug_13_page_001_otsu.png",
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/081326_Walmart_0_otsu.png",
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 11",
-        "generated_at": "2026-08-27T23:51:37.672894+00:00",
+        "generated_at": "2026-08-28T18:05:00.342554+00:00",
         "region": {
           "name": "right_column",
           "crop_fraction": [
@@ -147825,11 +147825,11 @@
       "candidate_scope": "full",
       "eligible_for_backbone": true,
       "result": {
-        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/walmart_aug_13_page_001_illumination.png",
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/081326_Walmart_0_illumination.png",
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 4",
-        "generated_at": "2026-08-27T23:51:39.587593+00:00",
+        "generated_at": "2026-08-28T18:05:02.221855+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -156751,11 +156751,11 @@
       "candidate_scope": "full",
       "eligible_for_backbone": true,
       "result": {
-        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/walmart_aug_13_page_001_illumination.png",
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/081326_Walmart_0_illumination.png",
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 6",
-        "generated_at": "2026-08-27T23:51:41.473523+00:00",
+        "generated_at": "2026-08-28T18:05:04.070646+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -165625,11 +165625,11 @@
       "candidate_scope": "full",
       "eligible_for_backbone": true,
       "result": {
-        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/walmart_aug_13_page_001_illumination.png",
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/081326_Walmart_0_illumination.png",
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 11",
-        "generated_at": "2026-08-27T23:51:43.384663+00:00",
+        "generated_at": "2026-08-28T18:05:05.941935+00:00",
         "region": {
           "name": "full",
           "crop_fraction": null
@@ -176950,11 +176950,11 @@
       "candidate_scope": "right_column",
       "eligible_for_backbone": false,
       "result": {
-        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/walmart_aug_13_page_001_illumination.png",
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/081326_Walmart_0_illumination.png",
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 6",
-        "generated_at": "2026-08-27T23:51:43.975416+00:00",
+        "generated_at": "2026-08-28T18:05:06.519325+00:00",
         "region": {
           "name": "right_column",
           "crop_fraction": [
@@ -180218,11 +180218,11 @@
       "candidate_scope": "right_column",
       "eligible_for_backbone": false,
       "result": {
-        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/walmart_aug_13_page_001_illumination.png",
+        "source_image": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_variants/081326_Walmart_0_illumination.png",
         "ocr_engine": "tesseract",
         "ocr_version": "5.5.3",
         "ocr_config": "--psm 11",
-        "generated_at": "2026-08-27T23:51:44.581895+00:00",
+        "generated_at": "2026-08-28T18:05:07.112039+00:00",
         "region": {
           "name": "right_column",
           "crop_fraction": [

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+from pathlib import Path
 import json
 import readline
 
@@ -23,6 +24,9 @@ from utils.DataBaseBuilder.receipt_session import ReceiptSession
 from utils.DataBaseBuilder.refined_json_loader import (
     load_matching_refined_json,
     merge_refined_guess,
+)
+from utils.DataBaseBuilder.filename_metadata import (
+    parse_receipt_filename_metadata,
 )
 
 
@@ -383,17 +387,45 @@ def _review_line(parser, line: dict, record: PurchaseRecord) -> tuple[str, Purch
         print("\n[ERROR] Invalid option.")
 
 
-def _run_receipt_import() -> None:
-    source_path = choose_raw_ocr_file()
-
+def run_receipt_import(
+    source_path: str | Path | None = None,
+) -> None:
     if source_path is None:
+        selected_source = choose_raw_ocr_file()
+    else:
+        selected_source = Path(source_path).expanduser().resolve()
+        print("\n=== Add Receipt to Purchase History ===\n")
+        print(
+            "[INFO] Using OCR file from completed capability:"
+            f"\n{selected_source}"
+        )
+
+    if selected_source is None:
         return
+
+    source_path = selected_source
 
     try:
         lines = load_ocr_lines(source_path)
     except (OSError, ValueError) as error:
         print(f"\n[ERROR] {error}")
         return
+
+    filename_metadata = parse_receipt_filename_metadata(source_path)
+
+    if filename_metadata is not None:
+        print(
+            "\n[OK] Receipt metadata detected from filename:"
+            f"\nDate: {filename_metadata.receipt_date}"
+            f"\nStore: {filename_metadata.store_name}"
+            f"\nStore Number: {filename_metadata.store_number}"
+        )
+    else:
+        print(
+            "\n[INFO] Filename metadata was not recognized."
+            "\nReceipt Type, Store Number, and Receipt Date "
+            "will be entered manually."
+        )
 
     refined = load_matching_refined_json(
         source_path
@@ -426,10 +458,19 @@ def _run_receipt_import() -> None:
                 f"{suggested_store}"
             )
 
-    parser = _choose_receipt_parser()
-
-    if parser is None:
-        return
+    if filename_metadata is not None:
+        parser = build_parser(filename_metadata.parser_option)
+        if parser is None:
+            print("\n[ERROR] Could not select parser from filename metadata.")
+            return
+        print(
+            "\n[INFO] Receipt parser selected automatically: "
+            f"{parser.receipt_type}"
+        )
+    else:
+        parser = _choose_receipt_parser()
+        if parser is None:
+            return
 
     refined_store_number = str(
         refined_context.get(
@@ -439,13 +480,19 @@ def _run_receipt_import() -> None:
         or NA
     )
 
-    store_number = _prompt_store_number(
-        parser.receipt_type,
-        default_value=refined_store_number,
-    )
-
-    if store_number is None:
-        return
+    if filename_metadata is not None:
+        store_number = filename_metadata.store_number
+        print(
+            "\n[INFO] Store Number filled from filename: "
+            f"{store_number}"
+        )
+    else:
+        store_number = _prompt_store_number(
+            parser.receipt_type,
+            default_value=refined_store_number,
+        )
+        if store_number is None:
+            return
 
     refined_date = str(
         refined_context.get(
@@ -455,12 +502,18 @@ def _run_receipt_import() -> None:
         or NA
     )
 
-    receipt_date = _prompt_receipt_date(
-        default_value=refined_date,
-    )
-
-    if receipt_date is None:
-        return
+    if filename_metadata is not None:
+        receipt_date = filename_metadata.receipt_date
+        print(
+            "\n[INFO] Receipt Date filled from filename: "
+            f"{receipt_date}"
+        )
+    else:
+        receipt_date = _prompt_receipt_date(
+            default_value=refined_date,
+        )
+        if receipt_date is None:
+            return
 
     starting_line = _prompt_starting_line(
         lines
@@ -500,9 +553,15 @@ def _run_receipt_import() -> None:
 
         # Store selection, Store Number, and Date have just been explicitly
         # confirmed by the user in this session. They outrank Stage-7 guesses.
+        confirmed_store_name = (
+            filename_metadata.store_name
+            if filename_metadata is not None
+            else parser.receipt_type
+        )
+
         parser_record = parser_record.with_value(
             "store",
-            parser.receipt_type,
+            confirmed_store_name,
         )
 
         return merge_refined_guess(
@@ -689,7 +748,7 @@ def run_data_base_builder_menu() -> None:
         option = input("\nSelect option: ").strip()
 
         if option == "1":
-            _run_receipt_import()
+            run_receipt_import()
 
         elif option == "2":
             _run_purchase_analytics()

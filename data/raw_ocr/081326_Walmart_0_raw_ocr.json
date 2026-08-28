@@ -1,5 +1,5 @@
 {
-  "source_receipt": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/current_pic/walmart_aug_13_page_001.jpg",
+  "source_receipt": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/current_pic/081326_Walmart_0.jpg",
   "selection_method": "conservative multi-variant receipt-row consensus: best full-receipt candidate supplies reading order; geometry must also have textual/SKU agreement; SKU is never injected into a row; price/tax additions require independent OCR support; absence is preferred to unsupported reconstruction",
   "backbone_candidate": {
     "candidate_id": "otsu_psm11",
@@ -17792,7 +17792,7 @@
     }
   ],
   "provenance": {
-    "candidates_file": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_candidates/walmart_aug_13_page_001_ocr_candidates.json",
+    "candidates_file": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_candidates/081326_Walmart_0_ocr_candidates.json",
     "rule": "All output remains OCR-derived. A full-receipt observation may join another observation only through exact SKU agreement or close physical-row geometry plus textual agreement. Right-column observations can contribute only price/tax evidence at the same narrow row position. SKU values cannot be imported into rows that lacked a SKU in the selected full-receipt observation. Components with insufficient support are omitted rather than guessed."
   }
 }

@@ -1,5 +1,6 @@
 from capabilities.OCRAcquisitionPipeline.main_OCRAcquisitionPipeline import (
     run_ocr_acquisition_pipeline,
+    run_ocr_acquisition_pipeline_all_images,
 )
 from capabilities.OCRAcquisitionPipeline.reliable_receipt_crop import (
     run_reliable_receipt_crop,
@@ -31,6 +32,7 @@ from utils.clean_ocr_acquisition_pipeline import (
 )
 from utils.DataBaseBuilder.data_base_builder_main import (
     run_data_base_builder_menu,
+    run_receipt_import,
 )
 from utils.ocr_benchmark_evaluator import (
     run_benchmark_evaluator,
@@ -41,33 +43,53 @@ from utils.pdf_to_jpg import (
 
 
 def display_capabilities_menu() -> None:
+    print("\n=== ShopGraph Capabilities ===\n")
+    print("1. OCR Acquisition Pipeline")
+    print("2. OCR Acquisition Pipeline - All Images")
+    print("3. OCR Acquisition Pipeline + Data Base Builder")
+    print("4. OCR Acquisition Pipeline - All Images + Data Base Builder")
+    print("0. Return to Utilities Menu")
+
+
+def _run_database_builder_for_outputs(raw_ocr_files) -> None:
+    if not raw_ocr_files:
+        return
+
+    print("\n=== Data Base Builder ===")
     print(
-        "\n=== ShopGraph Capabilities ===\n"
+        "\n[INFO] OCR processing complete. "
+        "Continuing directly into Add Receipt to Purchase History."
     )
-    print(
-        "1. OCR Acquisition Pipeline"
-    )
-    print(
-        "0. Return to Utilities Menu"
-    )
+
+    for index, raw_ocr_file in enumerate(raw_ocr_files, start=1):
+        print("\n" + "=" * 70)
+        print(
+            f"Database Review {index}/{len(raw_ocr_files)}: "
+            f"{raw_ocr_file.name}"
+        )
+        print("=" * 70)
+        run_receipt_import(raw_ocr_file)
 
 
 def run_capabilities_menu() -> None:
     while True:
         display_capabilities_menu()
-
-        option = input(
-            "\nSelect option: "
-        ).strip()
+        option = input("\nSelect option: ").strip()
 
         if option == "1":
             run_ocr_acquisition_pipeline()
+        elif option == "2":
+            run_ocr_acquisition_pipeline_all_images()
+        elif option == "3":
+            raw_ocr_files = run_ocr_acquisition_pipeline()
+            _run_database_builder_for_outputs(raw_ocr_files)
+        elif option == "4":
+            raw_ocr_files = run_ocr_acquisition_pipeline_all_images()
+            _run_database_builder_for_outputs(raw_ocr_files)
         elif option == "0":
             return
         else:
-            print(
-                "\n[ERROR] Invalid option."
-            )
+            print("\n[ERROR] Invalid option.")
 
 
 def display_capability_sub_tasks_menu() -> None:
@@ -168,7 +190,7 @@ def display_standalone_utilities_menu() -> None:
         "1. Export Clean Codebase"
     )
     print(
-        "2. Clean OCR Acquisition Pipeline Data"
+        "2. Clean Generated Processing Data"
     )
     print(
         "3. Evaluate OCR Against Benchmarks"
