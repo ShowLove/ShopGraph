@@ -1,0 +1,5317 @@
+{
+  "source_receipt": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/current_pic/082826_Publix_120.JPG",
+  "selection_method": "conservative multi-variant receipt-row consensus: best full-receipt candidate supplies reading order; geometry must also have textual/SKU agreement; SKU is never injected into a row; price/tax additions require independent OCR support; absence is preferred to unsupported reconstruction",
+  "backbone_candidate": {
+    "candidate_id": "threshold_psm11",
+    "image_variant": "threshold",
+    "psm": 11,
+    "comparison_metrics": {
+      "score": 96.1488,
+      "mean_word_confidence": 79.17,
+      "recognized_word_count": 154,
+      "low_confidence_rate": 0.1104,
+      "price_like_count": 27,
+      "sku_count": 0,
+      "plausible_line_count": 52,
+      "garbage_line_count": 12
+    }
+  },
+  "consensus_summary": {
+    "backbone_line_count": 66,
+    "consensus_line_count": 66,
+    "merchandise_line_count": 25,
+    "component_reconstruction_count": 24,
+    "candidate_count": 25,
+    "full_candidate_count": 15,
+    "right_column_candidate_count": 10,
+    "match_threshold": 0.72,
+    "max_row_center_distance": 0.014,
+    "minimum_component_support": 2
+  },
+  "raw_text": "Jif Nsa P/B Creamy 3.69\nF\n3,69\nKing Arth G/ Pnck Hix F 5.15\nF\n5,15\nBagged Green Beans F 2.99\n2.99\nIf\nYou saved 1.00\nvhs\nPotato Nibbles Ruby Sensa F 5.15\n5.15\n3.19\nic\nCholula Cremosa Gltro Lme F 3.19\nHY\nYou saved 1.00\n6.79\nMc Sig Evrythng Bgel Ssng F 6.79\nis\n{\\\nBanza White Cheddar Shel F 3.99\n3.99\nanza White Cheddar Shel F 3.99\n3.99\nAnnie's Dlx Shi&Chd Gf F 5.45\nF\n5.45\nAnnie's Dlx Shl&Chd Gf F 5.45\nJF\n9.45\na)\nGw Keta Salmon Fillet F 14.29\nF\n14,29\nYou saved 4.42\nBananas\n1.53\n/1b x Ib 2.36\n5,65\nDaiya Shreds Mexican Bld F 5.65\nDaiya Shreds Mexican Bld F 0.00\n0,00\nYou saved 5.65\nTf Caesar Salad Kit Chop F\n1 @3 for 10.00\n3.34\nYou saved 1.81\nTf Everything Salad Chop\n1 @3 for 10.00\n3.33\nYou saved 1.00\n$1.82\nTf Everything Salad Chop\n1@3 for 10.00\n3.33\nVou saved 1.82\nHagen David Blackberry 7.19\nT\nT 7.19\nAge Bynasse\nSubtota |\n84.50\nles Tax 73\n0,50",
+  "text": [
+    {
+      "line_number": 1,
+      "candidate_id": "sharpened_psm6",
+      "text": "Jif Nsa P/B Creamy F 3.69",
+      "confidence": 91.2,
+      "source_candidate": "sharpened_psm6",
+      "image_variant": "sharpened",
+      "psm": 6,
+      "support_count": 12,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 98.2,
+      "consensus_score": 136.7,
+      "normalized_y": 0.044894,
+      "bbox": {
+        "left": 158,
+        "top": 93,
+        "right": 1742,
+        "bottom": 198,
+        "width": 1584,
+        "height": 105
+      },
+      "reconstructed": true,
+      "original_consensus_text": "Jif Nsa P/B Creamy 3,69",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one price",
+        "family_candidate_count": 9
+      },
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
+        },
+        "description": {
+          "value": "Jif Nsa P/B Creamy",
+          "source_candidate": "threshold_psm11",
+          "source_text": "Jif Nsa P/B Creamy",
+          "support_count": 9,
+          "confidence": 91.5,
+          "similarity_to_anchor": 1.0,
+          "score": 149.3,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "3.69",
+          "support_count": 9,
+          "average_confidence": 71.89,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "Jif Nsa P/B Creamy 3,69"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "HT) HE Nea P/B Creamy FO 3,69."
+            },
+            {
+              "candidate_id": "threshold_psm6",
+              "candidate_scope": "full",
+              "text": "i} Jif Nsa P/B Creamy —*& 3.69) [."
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "Jif Nsa P/B Creamy 3,69"
+            },
+            {
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
+              "text": "Ral Jif Nsa P/B Creamy Fo 3,69"
+            },
+            {
+              "candidate_id": "grayscale_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "\" 3,69"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "3,69"
+            },
+            {
+              "candidate_id": "sharpened_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "= 3,69"
+            },
+            {
+              "candidate_id": "otsu_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "i 3,69"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": "F",
+          "support_count": 1,
+          "average_confidence": 29.0,
+          "examples": [
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "bd Jif Nsa P/B Creamy F369"
+            }
+          ],
+          "selection_reason": "evidence rejected because support was too weak"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "Jif Nsa P/B Creamy 3.69",
+      "human_review": {
+        "total": "3.69",
+        "store": "Publix",
+        "six_digit_sku": "NA",
+        "product": "Jif Nsa P/B Creamy",
+        "tax_code": "F",
+        "store_number": "120",
+        "common_name": "NA",
+        "category": "Dairy",
+        "date": "08/28/2026",
+        "price": "3.69"
+      }
+    },
+    {
+      "line_number": 2,
+      "candidate_id": "otsu_psm4",
+      "text": "F",
+      "confidence": 88.0,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 7,
+      "match_method": "fuzzy",
+      "line_quality_score": 68.1,
+      "consensus_score": 89.1,
+      "normalized_y": 0.686517,
+      "bbox": {
+        "left": 1170,
+        "top": 2189,
+        "right": 1201,
+        "bottom": 2261,
+        "width": 31,
+        "height": 72
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 3,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 3,
+      "candidate_id": "threshold_psm11",
+      "text": "3,69",
+      "confidence": 85.0,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 2,
+      "match_method": "backbone",
+      "line_quality_score": 89.6,
+      "consensus_score": 93.1,
+      "normalized_y": 0.039185,
+      "bbox": {
+        "left": 1592,
+        "top": 93,
+        "right": 1743,
+        "bottom": 161,
+        "width": 151,
+        "height": 68
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 2,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 4,
+      "candidate_id": "illumination_psm4",
+      "text": "King Arth G/ Pnck Hix F 5.15",
+      "confidence": 82.12,
+      "source_candidate": "illumination_psm4",
+      "image_variant": "illumination",
+      "psm": 4,
+      "support_count": 15,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 93.92,
+      "consensus_score": 142.92,
+      "normalized_y": 0.077754,
+      "bbox": {
+        "left": 9,
+        "top": 187,
+        "right": 1743,
+        "bottom": 317,
+        "width": 1734,
+        "height": 130
+      },
+      "reconstructed": true,
+      "original_consensus_text": "Ha King Arth G/F Pnck Mix F 0,18",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one price",
+        "family_candidate_count": 15
+      },
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
+        },
+        "description": {
+          "value": "King Arth G/ Pnck Hix",
+          "source_candidate": "illumination_psm11",
+          "source_text": "King Arth G/F Pnck Hix",
+          "support_count": 15,
+          "confidence": 88.6,
+          "similarity_to_anchor": 0.8837,
+          "score": 176.6698,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "5.15",
+          "support_count": 5,
+          "average_confidence": 82.8,
+          "examples": [
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "King Arth G/F Pnck Mix = F 5,15"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "King Arth G/F Pnck Mix = F 5,15"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "5,15"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "5,15"
+            },
+            {
+              "candidate_id": "otsu_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "5,15"
+            }
+          ],
+          "selection_reason": "alternate OCR value had materially stronger support"
+        },
+        "tax_code": {
+          "value": "F",
+          "support_count": 15,
+          "average_confidence": 91.4,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "King Arth G/F Pnck Mix = F apa"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "King Arth G/F Pnck Mix = F apa"
+            },
+            {
+              "candidate_id": "grayscale_psm11",
+              "candidate_scope": "full",
+              "text": "King Arth G/F Pnck Mix"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "“{ King Arth G/F Pnek Hix — F 6,15"
+            },
+            {
+              "candidate_id": "threshold_psm6",
+              "candidate_scope": "full",
+              "text": "“| King Arth G/F Pnek Hix — F 6,1 bY"
+            },
+            {
+              "candidate_id": "threshold_psm11",
+              "candidate_scope": "full",
+              "text": "King Arth G/F Pnck Hix"
+            },
+            {
+              "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
+              "text": "King Arth G/F Pnck Mix = F ap abe"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "King Arth G/F Pnck Mix = F ap abe"
+            },
+            {
+              "candidate_id": "sharpened_psm11",
+              "candidate_scope": "full",
+              "text": "King Arth G/F Pnok Mix"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "King Arth G/F Pnck Mix = F 5,15"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "King Arth G/F Pnck Mix = F 5,15"
+            },
+            {
+              "candidate_id": "otsu_psm11",
+              "candidate_scope": "full",
+              "text": "King Arth G/F Pnck Mix"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "Ha King Arth G/F Pnck Mix F 0,18"
+            },
+            {
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
+              "text": "HA King Arth G/F Pnck Mix — a"
+            },
+            {
+              "candidate_id": "illumination_psm11",
+              "candidate_scope": "full",
+              "text": "King Arth G/F Pnck Hix"
+            }
+          ],
+          "selection_reason": "selected from multiple independent OCR candidates"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "King Arth G/ Pnck Hix F 5.15",
+      "human_review": {
+        "total": "5.15",
+        "store": "Publix",
+        "six_digit_sku": "NA",
+        "product": "King Arth G/ Pnck Hix",
+        "tax_code": "F",
+        "store_number": "120",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "08/28/2026",
+        "price": "5.15"
+      }
+    },
+    {
+      "line_number": 5,
+      "candidate_id": "otsu_psm4",
+      "text": "F",
+      "confidence": 88.0,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 7,
+      "match_method": "fuzzy",
+      "line_quality_score": 68.1,
+      "consensus_score": 89.1,
+      "normalized_y": 0.686517,
+      "bbox": {
+        "left": 1170,
+        "top": 2189,
+        "right": 1201,
+        "bottom": 2261,
+        "width": 31,
+        "height": 72
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 3,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 6,
+      "candidate_id": "threshold_psm11",
+      "text": "5,15",
+      "confidence": 86.0,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 4,
+      "match_method": "backbone",
+      "line_quality_score": 90.6,
+      "consensus_score": 101.1,
+      "normalized_y": 0.068343,
+      "bbox": {
+        "left": 1592,
+        "top": 185,
+        "right": 1744,
+        "bottom": 258,
+        "width": 152,
+        "height": 73
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 4,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 7,
+      "candidate_id": "otsu_psm11",
+      "text": "Bagged Green Beans F 2.99",
+      "confidence": 95.67,
+      "source_candidate": "otsu_psm11",
+      "image_variant": "otsu",
+      "psm": 11,
+      "support_count": 15,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 97.47,
+      "consensus_score": 146.47,
+      "normalized_y": 0.103517,
+      "bbox": {
+        "left": 153,
+        "top": 296,
+        "right": 847,
+        "bottom": 375,
+        "width": 694,
+        "height": 79
+      },
+      "reconstructed": true,
+      "original_consensus_text": "Bagged Green Beans",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "multiple matching row observations plus independent price support",
+        "family_candidate_count": 15
+      },
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
+        },
+        "description": {
+          "value": "Bagged Green Beans",
+          "source_candidate": "otsu_psm11",
+          "source_text": "Bagged Green Beans",
+          "support_count": 15,
+          "confidence": 95.67,
+          "similarity_to_anchor": 1.0,
+          "score": 182.27,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "2.99",
+          "support_count": 18,
+          "average_confidence": 83.89,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "Bagged Green Bears aed 2.99"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "Bagged Green Beans aed 2.99"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "| Bagged Green Beans a 2.99"
+            },
+            {
+              "candidate_id": "threshold_psm6",
+              "candidate_scope": "full",
+              "text": "| Bagged Green Beans . FO 2,99 ob"
+            },
+            {
+              "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
+              "text": "Bagged Green Beans ay AP 2.99"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "Bagged Green Beans ay AP 2.99"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "Bagged Green Bearis _ #&F 2.99"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "Bagged Green Beans _ #&F 2.99"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "if Bagged Green Beans . FF 2.99"
+            },
+            {
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
+              "text": "j Bagged Green Beans _ &- 2.99 ke"
+            },
+            {
+              "candidate_id": "grayscale_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "2.99"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "2.99"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "2.99"
+            },
+            {
+              "candidate_id": "sharpened_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "2.99"
+            },
+            {
+              "candidate_id": "sharpened_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "2.99"
+            },
+            {
+              "candidate_id": "otsu_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "2.99"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "2.99"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "2.99"
+            }
+          ],
+          "selection_reason": "selected from multiple independent OCR candidates"
+        },
+        "tax_code": {
+          "value": "F",
+          "support_count": 2,
+          "average_confidence": 4.0,
+          "examples": [
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "Bagged Green Bearis _ #&F 2.99"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "Bagged Green Beans _ #&F 2.99"
+            }
+          ],
+          "selection_reason": "selected from multiple independent OCR candidates"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "Bagged Green Beans F 2.99",
+      "human_review": {
+        "total": "2.99",
+        "store": "Publix",
+        "six_digit_sku": "NA",
+        "product": "Bagged Green Beans",
+        "tax_code": "F",
+        "store_number": "120",
+        "common_name": "NA",
+        "category": "Pantry",
+        "date": "08/28/2026",
+        "price": "2.99"
+      }
+    },
+    {
+      "line_number": 8,
+      "candidate_id": "sharpened_psm11",
+      "text": "2.99",
+      "confidence": 94.0,
+      "source_candidate": "sharpened_psm11",
+      "image_variant": "sharpened",
+      "psm": 11,
+      "support_count": 5,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 98.6,
+      "consensus_score": 112.6,
+      "normalized_y": 0.097655,
+      "bbox": {
+        "left": 1594,
+        "top": 282,
+        "right": 1744,
+        "bottom": 351,
+        "width": 150,
+        "height": 69
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 5,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 9,
+      "candidate_id": "otsu_psm11",
+      "text": "If",
+      "confidence": 84.0,
+      "source_candidate": "otsu_psm11",
+      "image_variant": "otsu",
+      "psm": 11,
+      "support_count": 4,
+      "match_method": "fuzzy",
+      "line_quality_score": 72.6,
+      "consensus_score": 83.1,
+      "normalized_y": 0.687288,
+      "bbox": {
+        "left": 173,
+        "top": 2189,
+        "right": 242,
+        "bottom": 2266,
+        "width": 69,
+        "height": 77
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 3,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 10,
+      "candidate_id": "grayscale_psm4",
+      "text": "You saved 1.00",
+      "confidence": 95.67,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 15,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 101.47,
+      "consensus_score": 150.47,
+      "normalized_y": 0.131749,
+      "bbox": {
+        "left": 192,
+        "top": 388,
+        "right": 812,
+        "bottom": 466,
+        "width": 620,
+        "height": 78
+      },
+      "reconstructed": true,
+      "original_consensus_text": "You saved: $1.00",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one price",
+        "family_candidate_count": 15
+      },
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
+        },
+        "description": {
+          "value": "You saved",
+          "source_candidate": "grayscale_psm4",
+          "source_text": "You saved: $1.00",
+          "support_count": 15,
+          "confidence": 95.67,
+          "similarity_to_anchor": 1.0,
+          "score": 181.07,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "1.00",
+          "support_count": 15,
+          "average_confidence": 86.87,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "You saved: $1.00"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "You saved: $1.00"
+            },
+            {
+              "candidate_id": "grayscale_psm11",
+              "candidate_scope": "full",
+              "text": "You saved: $1.00"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "‘1 You saved: $1.00 - nn i"
+            },
+            {
+              "candidate_id": "threshold_psm6",
+              "candidate_scope": "full",
+              "text": "\") Vou saved: $1.00"
+            },
+            {
+              "candidate_id": "threshold_psm11",
+              "candidate_scope": "full",
+              "text": "You saved: $1.00"
+            },
+            {
+              "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
+              "text": "You saved: $1.00"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "You saved: $1.00"
+            },
+            {
+              "candidate_id": "sharpened_psm11",
+              "candidate_scope": "full",
+              "text": "You saved: $1.00"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "You saved: $1.00"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "You saved: $1.00"
+            },
+            {
+              "candidate_id": "otsu_psm11",
+              "candidate_scope": "full",
+              "text": "You saved: $1.00"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "Hl =You saved: $1.00 —"
+            },
+            {
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
+              "text": "He) «You saved: $1.00 © 8"
+            },
+            {
+              "candidate_id": "illumination_psm11",
+              "candidate_scope": "full",
+              "text": "Vou saved: $1.00"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        }
+      },
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 11,
+      "candidate_id": "threshold_psm11",
+      "text": "vhs",
+      "confidence": 49.0,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 1,
+      "match_method": "backbone",
+      "line_quality_score": 49.6,
+      "consensus_score": 49.6,
+      "normalized_y": 0.162758,
+      "bbox": {
+        "left": 17,
+        "top": 499,
+        "right": 71,
+        "bottom": 556,
+        "width": 54,
+        "height": 57
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 1,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 12,
+      "candidate_id": "sharpened_psm4",
+      "text": "Potato Nibbles Ruby Sensa F 5.15",
+      "confidence": 90.0,
+      "source_candidate": "sharpened_psm4",
+      "image_variant": "sharpened",
+      "psm": 4,
+      "support_count": 15,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 99.1,
+      "consensus_score": 148.1,
+      "normalized_y": 0.159673,
+      "bbox": {
+        "left": 153,
+        "top": 474,
+        "right": 1746,
+        "bottom": 561,
+        "width": 1593,
+        "height": 87
+      },
+      "reconstructed": false,
+      "original_consensus_text": "Potato Nibbles Ruby Sensa F 5.15",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one price",
+        "family_candidate_count": 15
+      },
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
+        },
+        "description": {
+          "value": "Potato Nibbles Ruby Sensa",
+          "source_candidate": "sharpened_psm4",
+          "source_text": "Potato Nibbles Ruby Sensa F 5.15",
+          "support_count": 15,
+          "confidence": 90.0,
+          "similarity_to_anchor": 1.0,
+          "score": 177.8,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "5.15",
+          "support_count": 8,
+          "average_confidence": 72.62,
+          "examples": [
+            {
+              "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
+              "text": "Potato Nibbles Ruby Sensa F 5.15"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "Potato Nibbles Ruby Sensa F 5.15"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "Potato Nibbles Ruby Sensa F 5.15"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "Potato Nibbles Ruby Sensa F 5.15"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "A’ Potato Nibbles Ruby Sensa Fo 5.15"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "5.15"
+            },
+            {
+              "candidate_id": "sharpened_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "5.15"
+            },
+            {
+              "candidate_id": "otsu_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "5,15"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": "F",
+          "support_count": 10,
+          "average_confidence": 90.0,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "Potato Nibbles Ruby Sensa F 515"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "Potato Nibbles Ruby Sensa F 515"
+            },
+            {
+              "candidate_id": "grayscale_psm11",
+              "candidate_scope": "full",
+              "text": "Potato Nibbles Ruby Sensa F"
+            },
+            {
+              "candidate_id": "threshold_psm11",
+              "candidate_scope": "full",
+              "text": "Potato Nibbles “Buby. Sensa F"
+            },
+            {
+              "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
+              "text": "Potato Nibbles Ruby Sensa F 5.15"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "Potato Nibbles Ruby Sensa F 5.15"
+            },
+            {
+              "candidate_id": "sharpened_psm11",
+              "candidate_scope": "full",
+              "text": "Potato Nibbles Ruby Sensa F"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "Potato Nibbles Ruby Sensa F 5.15"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "Potato Nibbles Ruby Sensa F 5.15"
+            },
+            {
+              "candidate_id": "otsu_psm11",
+              "candidate_scope": "full",
+              "text": "Potata Nibbles Ruby Sensa F"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "Potato Nibbles Ruby Sensa F 5.15",
+      "human_review": {
+        "total": "5.15",
+        "store": "Publix",
+        "six_digit_sku": "NA",
+        "product": "Potato Nibbles Ruby Sensa",
+        "tax_code": "F",
+        "store_number": "120",
+        "common_name": "Potato Nibbles Ruby Sensa",
+        "category": "Produce",
+        "date": "08/28/2026",
+        "price": "5.15"
+      }
+    },
+    {
+      "line_number": 13,
+      "candidate_id": "threshold_psm11",
+      "text": "5.15",
+      "confidence": 78.0,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 3,
+      "match_method": "backbone",
+      "line_quality_score": 82.6,
+      "consensus_score": 89.6,
+      "normalized_y": 0.156587,
+      "bbox": {
+        "left": 1594,
+        "top": 470,
+        "right": 1746,
+        "bottom": 545,
+        "width": 152,
+        "height": 75
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 3,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 14,
+      "candidate_id": "illumination_psm11",
+      "text": "3.19",
+      "confidence": 93.0,
+      "source_candidate": "illumination_psm11",
+      "image_variant": "illumination",
+      "psm": 11,
+      "support_count": 5,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 97.6,
+      "consensus_score": 111.6,
+      "normalized_y": 0.186979,
+      "bbox": {
+        "left": 1595,
+        "top": 571,
+        "right": 1746,
+        "bottom": 641,
+        "width": 151,
+        "height": 70
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 5,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 15,
+      "candidate_id": "illumination_psm11",
+      "text": "ic",
+      "confidence": 44.0,
+      "source_candidate": "illumination_psm11",
+      "image_variant": "illumination",
+      "psm": 11,
+      "support_count": 2,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 32.6,
+      "consensus_score": 36.1,
+      "normalized_y": 0.223388,
+      "bbox": {
+        "left": 14,
+        "top": 699,
+        "right": 62,
+        "bottom": 749,
+        "width": 48,
+        "height": 50
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 2,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 16,
+      "candidate_id": "threshold_psm11",
+      "text": "Cholula Cremosa Gltro Lme F 3.19",
+      "confidence": 89.4,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 15,
+      "match_method": "backbone",
+      "line_quality_score": 93.9,
+      "consensus_score": 142.9,
+      "normalized_y": 0.191299,
+      "bbox": {
+        "left": 158,
+        "top": 574,
+        "right": 1203,
+        "bottom": 666,
+        "width": 1045,
+        "height": 92
+      },
+      "reconstructed": true,
+      "original_consensus_text": "Cholula Cremosa Gltro Lme F",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "multiple matching row observations plus independent price support",
+        "family_candidate_count": 15
+      },
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
+        },
+        "description": {
+          "value": "Cholula Cremosa Gltro Lme",
+          "source_candidate": "threshold_psm11",
+          "source_text": "Cholula Cremosa Gltro Lme F",
+          "support_count": 15,
+          "confidence": 89.4,
+          "similarity_to_anchor": 1.0,
+          "score": 177.2,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "3.19",
+          "support_count": 13,
+          "average_confidence": 77.38,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "Cholula Cremosa Citro Lme F 3.19"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "Cholula Cremosa Citro Lme F 3.19"
+            },
+            {
+              "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
+              "text": "Cholula Cremosa Citro Lme F 3.19"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "Cholula Cremosa Citro Lme F 3.19"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "Cholula Cremosa Citro Lme F 3.19"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "Cholula Cremosa Citro Lme F 3.19"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "el Cholula Cremosa Cltro Lme Fo = 3.19"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "3.19"
+            },
+            {
+              "candidate_id": "sharpened_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "3.19"
+            },
+            {
+              "candidate_id": "sharpened_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "3.19"
+            },
+            {
+              "candidate_id": "otsu_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "3.19"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "3.19"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "3.19"
+            }
+          ],
+          "selection_reason": "selected from multiple independent OCR candidates"
+        },
+        "tax_code": {
+          "value": "F",
+          "support_count": 10,
+          "average_confidence": 91.4,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "Cholula Cremosa Citro Lme F 3.19"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "Cholula Cremosa Citro Lme F 3.19"
+            },
+            {
+              "candidate_id": "grayscale_psm11",
+              "candidate_scope": "full",
+              "text": "Cholula Cremosa Cltro Lme F"
+            },
+            {
+              "candidate_id": "threshold_psm11",
+              "candidate_scope": "full",
+              "text": "Cholula Cremosa Gltro Lme F"
+            },
+            {
+              "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
+              "text": "Cholula Cremosa Citro Lme F 3.19"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "Cholula Cremosa Citro Lme F 3.19"
+            },
+            {
+              "candidate_id": "sharpened_psm11",
+              "candidate_scope": "full",
+              "text": "Cholula Cremoga Cltro Lme F"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "Cholula Cremosa Citro Lme F 3.19"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "Cholula Cremosa Citro Lme F 3.19"
+            },
+            {
+              "candidate_id": "otsu_psm11",
+              "candidate_scope": "full",
+              "text": "Cholula Cremasa Cltro Lme F"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "Cholula Cremosa Gltro Lme F 3.19",
+      "human_review": {
+        "total": "3.19",
+        "store": "Publix",
+        "six_digit_sku": "NA",
+        "product": "Cholula Cremosa Gltro Lme",
+        "tax_code": "F",
+        "store_number": "120",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "08/28/2026",
+        "price": "3.19"
+      }
+    },
+    {
+      "line_number": 17,
+      "candidate_id": "threshold_psm11",
+      "text": "HY",
+      "confidence": 28.0,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 1,
+      "match_method": "backbone",
+      "line_quality_score": 16.6,
+      "consensus_score": 16.6,
+      "normalized_y": 0.235575,
+      "bbox": {
+        "left": 37,
+        "top": 741,
+        "right": 89,
+        "bottom": 786,
+        "width": 52,
+        "height": 45
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 1,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 18,
+      "candidate_id": "otsu_psm11",
+      "text": "You saved 1.00",
+      "confidence": 95.67,
+      "source_candidate": "otsu_psm11",
+      "image_variant": "otsu",
+      "psm": 11,
+      "support_count": 15,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 101.47,
+      "consensus_score": 150.47,
+      "normalized_y": 0.222308,
+      "bbox": {
+        "left": 202,
+        "top": 679,
+        "right": 816,
+        "bottom": 762,
+        "width": 614,
+        "height": 83
+      },
+      "reconstructed": true,
+      "original_consensus_text": "You saved: $1.00",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one price",
+        "family_candidate_count": 15
+      },
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
+        },
+        "description": {
+          "value": "You saved",
+          "source_candidate": "otsu_psm11",
+          "source_text": "You saved: $1.00",
+          "support_count": 15,
+          "confidence": 95.67,
+          "similarity_to_anchor": 1.0,
+          "score": 181.07,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "1.00",
+          "support_count": 15,
+          "average_confidence": 69.33,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "You saved: $1.00"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "You saved: $1.00"
+            },
+            {
+              "candidate_id": "grayscale_psm11",
+              "candidate_scope": "full",
+              "text": "You saved: $1.00"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "4) You saved: $1.00"
+            },
+            {
+              "candidate_id": "threshold_psm6",
+              "candidate_scope": "full",
+              "text": "ti You saved: $1.00 a"
+            },
+            {
+              "candidate_id": "threshold_psm11",
+              "candidate_scope": "full",
+              "text": "You saved: $1.00"
+            },
+            {
+              "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
+              "text": "You saved: $1.00"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "You saved: $1.00"
+            },
+            {
+              "candidate_id": "sharpened_psm11",
+              "candidate_scope": "full",
+              "text": "You saved: $1.00"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "You saved: $1.00"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "You saved: $1.00"
+            },
+            {
+              "candidate_id": "otsu_psm11",
+              "candidate_scope": "full",
+              "text": "You saved: $1.00"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "BY = You saved: $1.00 |"
+            },
+            {
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
+              "text": "a You saved: $1.00 a is"
+            },
+            {
+              "candidate_id": "illumination_psm11",
+              "candidate_scope": "full",
+              "text": "You saved: $1.00"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        }
+      },
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 19,
+      "candidate_id": "illumination_psm11",
+      "text": "6.79",
+      "confidence": 95.0,
+      "source_candidate": "illumination_psm11",
+      "image_variant": "illumination",
+      "psm": 11,
+      "support_count": 5,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 99.6,
+      "consensus_score": 113.6,
+      "normalized_y": 0.246529,
+      "bbox": {
+        "left": 1593,
+        "top": 766,
+        "right": 1744,
+        "bottom": 832,
+        "width": 151,
+        "height": 66
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 5,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 20,
+      "candidate_id": "otsu_psm11",
+      "text": "Mc Sig Evrythng Bgel Ssng F 6.79",
+      "confidence": 90.17,
+      "source_candidate": "otsu_psm11",
+      "image_variant": "otsu",
+      "psm": 11,
+      "support_count": 15,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 95.27,
+      "consensus_score": 144.27,
+      "normalized_y": 0.252237,
+      "bbox": {
+        "left": 174,
+        "top": 775,
+        "right": 1192,
+        "bottom": 860,
+        "width": 1018,
+        "height": 85
+      },
+      "reconstructed": true,
+      "original_consensus_text": "Mc Sig Evrythng Bgel Ssng F",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "multiple matching row observations plus independent price support",
+        "family_candidate_count": 15
+      },
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
+        },
+        "description": {
+          "value": "Mc Sig Evrythng Bgel Ssng",
+          "source_candidate": "illumination_psm11",
+          "source_text": "Mc Sig Evrythng Bgel Ssng",
+          "support_count": 15,
+          "confidence": 91.6,
+          "similarity_to_anchor": 1.0,
+          "score": 180.6,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "6.79",
+          "support_count": 11,
+          "average_confidence": 70.91,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "Mc Sig Evrythng Bgel Ssng F 6,79"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "Mc Sig Evrythng Bgel Ssng F 6,79"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "Hal Me Sig Evrythng Bgel Ssng Fo. 6.79 fy"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "Mc Sig Evrythng Bgel Ssng F 6.79"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "Mc Sig Evrythng Bgel Ssng F 6.79"
+            },
+            {
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
+              "text": "Bad Mc Sig Evrythng Bgel Ssng F 6.79 ]"
+            },
+            {
+              "candidate_id": "grayscale_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "6.79"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "6.79"
+            },
+            {
+              "candidate_id": "otsu_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "6.79"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "6.79"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "6.79"
+            }
+          ],
+          "selection_reason": "selected from multiple independent OCR candidates"
+        },
+        "tax_code": {
+          "value": "F",
+          "support_count": 11,
+          "average_confidence": 82.73,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "Mc Sig Evrythng Bgel Ssng F 6,79"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "Mc Sig Evrythng Bgel Ssng F 6,79"
+            },
+            {
+              "candidate_id": "grayscale_psm11",
+              "candidate_scope": "full",
+              "text": "Mc Sig Evrythng Bgel Ssng F"
+            },
+            {
+              "candidate_id": "threshold_psm11",
+              "candidate_scope": "full",
+              "text": "Mc Sig Evrythng Bgel. Ssng F"
+            },
+            {
+              "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
+              "text": "Mc Sig Evrythng Bgel Ssng F 6./9"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "Mc Sig Evrythng Bgel Ssng F 6./9"
+            },
+            {
+              "candidate_id": "sharpened_psm11",
+              "candidate_scope": "full",
+              "text": "Mc Sig Evrythng Bgel Ssng F"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "Mc Sig Evrythng Bgel Ssng F 6.79"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "Mc Sig Evrythng Bgel Ssng F 6.79"
+            },
+            {
+              "candidate_id": "otsu_psm11",
+              "candidate_scope": "full",
+              "text": "Mc Sig Evrythng Bgel Ssng F"
+            },
+            {
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
+              "text": "Bad Mc Sig Evrythng Bgel Ssng F 6.79 ]"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "Mc Sig Evrythng Bgel Ssng F 6.79",
+      "human_review": {
+        "total": "6.79",
+        "store": "Publix",
+        "six_digit_sku": "NA",
+        "product": "Mc Sig Evrythng Bgel Ssng",
+        "tax_code": "F",
+        "store_number": "120",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "08/28/2026",
+        "price": "6.79"
+      }
+    },
+    {
+      "line_number": 21,
+      "candidate_id": "threshold_psm11",
+      "text": "is",
+      "confidence": 59.0,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 1,
+      "match_method": "backbone",
+      "line_quality_score": 47.6,
+      "consensus_score": 47.6,
+      "normalized_y": 0.274607,
+      "bbox": {
+        "left": 35,
+        "top": 856,
+        "right": 78,
+        "bottom": 924,
+        "width": 43,
+        "height": 68
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 1,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 22,
+      "candidate_id": "threshold_psm11",
+      "text": "{\\",
+      "confidence": 60.0,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 2,
+      "match_method": "backbone",
+      "line_quality_score": 34.6,
+      "consensus_score": 38.1,
+      "normalized_y": 0.297748,
+      "bbox": {
+        "left": 44,
+        "top": 939,
+        "right": 68,
+        "bottom": 991,
+        "width": 24,
+        "height": 52
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 2,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 23,
+      "candidate_id": "sharpened_psm4",
+      "text": "Banza White Cheddar Shel F 3.99",
+      "confidence": 91.5,
+      "source_candidate": "sharpened_psm4",
+      "image_variant": "sharpened",
+      "psm": 4,
+      "support_count": 15,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 100.6,
+      "consensus_score": 149.6,
+      "normalized_y": 0.278155,
+      "bbox": {
+        "left": 169,
+        "top": 860,
+        "right": 1746,
+        "bottom": 943,
+        "width": 1577,
+        "height": 83
+      },
+      "reconstructed": true,
+      "original_consensus_text": "Banza White Cheddar Shell F 3.99",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one price",
+        "family_candidate_count": 15
+      },
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
+        },
+        "description": {
+          "value": "Banza White Cheddar Shel",
+          "source_candidate": "illumination_psm11",
+          "source_text": "Banza White Cheddar Shel]",
+          "support_count": 15,
+          "confidence": 92.25,
+          "similarity_to_anchor": 0.9796,
+          "score": 179.8867,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "3.99",
+          "support_count": 17,
+          "average_confidence": 84.29,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "Banza White Cheddar Shell F 3.99"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "Banza White Cheddar Shell F 3.99"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "1 Banza White Cheddar Shell Foo 3.99 he"
+            },
+            {
+              "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
+              "text": "Banza White Cheddar Shell F 3.99"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "Banza White Cheddar Shell F 3.99"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "Banza White Cheddar Shell F 3.99"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "Banza White Cheddar Shell F 3.99"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "ad Banza White Cheddar Shell F 3,99"
+            },
+            {
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
+              "text": "421 Banza White Cheddar Shell F 3.99 Fy"
+            },
+            {
+              "candidate_id": "grayscale_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "3.99"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "3.99"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "3.99"
+            },
+            {
+              "candidate_id": "sharpened_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "3,99"
+            },
+            {
+              "candidate_id": "sharpened_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "3.99"
+            },
+            {
+              "candidate_id": "otsu_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "3.99"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "3.99"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "3.99"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": "F",
+          "support_count": 9,
+          "average_confidence": 91.0,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "Banza White Cheddar Shell F 3.99"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "Banza White Cheddar Shell F 3.99"
+            },
+            {
+              "candidate_id": "threshold_psm11",
+              "candidate_scope": "full",
+              "text": "Banza White Cheddar Shel. F"
+            },
+            {
+              "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
+              "text": "Banza White Cheddar Shell F 3.99"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "Banza White Cheddar Shell F 3.99"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "Banza White Cheddar Shell F 3.99"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "Banza White Cheddar Shell F 3.99"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "ad Banza White Cheddar Shell F 3,99"
+            },
+            {
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
+              "text": "421 Banza White Cheddar Shell F 3.99 Fy"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "Banza White Cheddar Shel F 3.99",
+      "human_review": {
+        "total": "3.99",
+        "store": "Publix",
+        "six_digit_sku": "NA",
+        "product": "Banza White Cheddar Shel",
+        "tax_code": "F",
+        "store_number": "120",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "08/28/2026",
+        "price": "3.99"
+      }
+    },
+    {
+      "line_number": 24,
+      "candidate_id": "otsu_psm11",
+      "text": "3.99",
+      "confidence": 92.0,
+      "source_candidate": "otsu_psm11",
+      "image_variant": "otsu",
+      "psm": 11,
+      "support_count": 5,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 96.6,
+      "consensus_score": 110.6,
+      "normalized_y": 0.275532,
+      "bbox": {
+        "left": 1595,
+        "top": 860,
+        "right": 1746,
+        "bottom": 926,
+        "width": 151,
+        "height": 66
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 5,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 25,
+      "candidate_id": "otsu_psm4",
+      "text": "anza White Cheddar Shel F 3.99",
+      "confidence": 88.0,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 15,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 97.1,
+      "consensus_score": 146.1,
+      "normalized_y": 0.306695,
+      "bbox": {
+        "left": 165,
+        "top": 955,
+        "right": 1746,
+        "bottom": 1033,
+        "width": 1581,
+        "height": 78
+      },
+      "reconstructed": true,
+      "original_consensus_text": "Banza White Cheddar Shel] F 3.99",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one price",
+        "family_candidate_count": 15
+      },
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
+        },
+        "description": {
+          "value": "anza White Cheddar Shel",
+          "source_candidate": "illumination_psm11",
+          "source_text": "anza White Cheddar Shel]",
+          "support_count": 15,
+          "confidence": 91.5,
+          "similarity_to_anchor": 0.9787,
+          "score": 179.1298,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "3.99",
+          "support_count": 17,
+          "average_confidence": 76.59,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "Banza White Cheddar Shel) F 3,99"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "Banza White Cheddar Shel) F 3,99"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "i] Banza White Cheddar Shel] Fo. 3.99 is"
+            },
+            {
+              "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
+              "text": "Banza White Cheddar Shel] F 3,99"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "Banza White Cheddar Shel] F 3,99"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "Banza White Cheddar Shel] F 3.99"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "Banza White Cheddar Shel] F 3.99"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "Ka Banza White Cheddar Shel] F 3.99"
+            },
+            {
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
+              "text": "Rs Banza White Cheddar Shel] F 3.99 Mi"
+            },
+            {
+              "candidate_id": "grayscale_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "3.99"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "3.99"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "3.99"
+            },
+            {
+              "candidate_id": "sharpened_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "3.99"
+            },
+            {
+              "candidate_id": "sharpened_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "3.99"
+            },
+            {
+              "candidate_id": "otsu_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "3,99"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "3.99"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "3.99"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": "F",
+          "support_count": 10,
+          "average_confidence": 72.5,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "Banza White Cheddar Shel) F 3,99"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "Banza White Cheddar Shel) F 3,99"
+            },
+            {
+              "candidate_id": "threshold_psm11",
+              "candidate_scope": "full",
+              "text": "Banza White Cheddar Shel] -F"
+            },
+            {
+              "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
+              "text": "Banza White Cheddar Shel] F 3,99"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "Banza White Cheddar Shel] F 3,99"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "Banza White Cheddar Shel] F 3.99"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "Banza White Cheddar Shel] F 3.99"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "Ka Banza White Cheddar Shel] F 3.99"
+            },
+            {
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
+              "text": "Rs Banza White Cheddar Shel] F 3.99 Mi"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "=f"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "anza White Cheddar Shel F 3.99",
+      "human_review": {
+        "total": "3.99",
+        "store": "Publix",
+        "six_digit_sku": "NA",
+        "product": "anza White Cheddar Shel",
+        "tax_code": "F",
+        "store_number": "120",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "08/28/2026",
+        "price": "3.99"
+      }
+    },
+    {
+      "line_number": 26,
+      "candidate_id": "threshold_psm11",
+      "text": "3.99",
+      "confidence": 92.0,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 5,
+      "match_method": "backbone",
+      "line_quality_score": 96.6,
+      "consensus_score": 110.6,
+      "normalized_y": 0.304998,
+      "bbox": {
+        "left": 1594,
+        "top": 954,
+        "right": 1746,
+        "bottom": 1023,
+        "width": 152,
+        "height": 69
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 5,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 27,
+      "candidate_id": "illumination_psm11",
+      "text": "Annie's Dlx Shi&Chd Gf F 5.45",
+      "confidence": 84.5,
+      "source_candidate": "illumination_psm11",
+      "image_variant": "illumination",
+      "psm": 11,
+      "support_count": 15,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 86.9,
+      "consensus_score": 135.9,
+      "normalized_y": 0.33647,
+      "bbox": {
+        "left": 162,
+        "top": 1053,
+        "right": 1003,
+        "bottom": 1128,
+        "width": 841,
+        "height": 75
+      },
+      "reconstructed": true,
+      "original_consensus_text": "Annie's Dlx Shi&Chd Gf",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "multiple matching row observations plus independent price support",
+        "family_candidate_count": 15
+      },
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
+        },
+        "description": {
+          "value": "Annie's Dlx Shi&Chd Gf",
+          "source_candidate": "illumination_psm11",
+          "source_text": "Annie's Dlx Shi&Chd Gf",
+          "support_count": 15,
+          "confidence": 84.5,
+          "similarity_to_anchor": 1.0,
+          "score": 172.3,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "5.45",
+          "support_count": 15,
+          "average_confidence": 74.73,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "Annie's Dlx Shl&Chd Gf F 5.45"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "Annie's Dlx Shl&Chd Gf F 5.45"
+            },
+            {
+              "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
+              "text": "Annie's Dlx Shl&Chd Gf F 5.45"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "Annie's Dlx Shl&Chd Gf F 5.45"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "Annie's Dlx Shl&Chd Gf F 5.45"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "Annie's Dlx Shl&Chd Gf F 5.45"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "ea Annie's Olx Shl&Chd Gf =F 5.45"
+            },
+            {
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
+              "text": "sq Annie's Dlx Shiachd GF 5.45 fs"
+            },
+            {
+              "candidate_id": "grayscale_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "5.45"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "5.45"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "5.45"
+            },
+            {
+              "candidate_id": "sharpened_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "5.45"
+            },
+            {
+              "candidate_id": "sharpened_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "5.45"
+            },
+            {
+              "candidate_id": "otsu_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "5.45"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "5.45"
+            }
+          ],
+          "selection_reason": "selected from multiple independent OCR candidates"
+        },
+        "tax_code": {
+          "value": "F",
+          "support_count": 7,
+          "average_confidence": 85.57,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "Annie's Dlx Shl&Chd Gf F 5.45"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "Annie's Dlx Shl&Chd Gf F 5.45"
+            },
+            {
+              "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
+              "text": "Annie's Dlx Shl&Chd Gf F 5.45"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "Annie's Dlx Shl&Chd Gf F 5.45"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "Annie's Dlx Shl&Chd Gf F 5.45"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "Annie's Dlx Shl&Chd Gf F 5.45"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "ea Annie's Olx Shl&Chd Gf =F 5.45"
+            }
+          ],
+          "selection_reason": "selected from multiple independent OCR candidates"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "Annie's Dlx Shi&Chd Gf F 5.45",
+      "human_review": {
+        "total": "5.45",
+        "store": "Publix",
+        "six_digit_sku": "NA",
+        "product": "Annie's Dlx Shi&Chd Gf",
+        "tax_code": "F",
+        "store_number": "120",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "08/28/2026",
+        "price": "5.45"
+      }
+    },
+    {
+      "line_number": 28,
+      "candidate_id": "otsu_psm11",
+      "text": "F",
+      "confidence": 92.0,
+      "source_candidate": "otsu_psm11",
+      "image_variant": "otsu",
+      "psm": 11,
+      "support_count": 7,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 72.1,
+      "consensus_score": 93.1,
+      "normalized_y": 0.336007,
+      "bbox": {
+        "left": 1170,
+        "top": 1055,
+        "right": 1198,
+        "bottom": 1123,
+        "width": 28,
+        "height": 68
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 4,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 29,
+      "candidate_id": "sharpened_psm11",
+      "text": "5.45",
+      "confidence": 89.0,
+      "source_candidate": "sharpened_psm11",
+      "image_variant": "sharpened",
+      "psm": 11,
+      "support_count": 5,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 93.6,
+      "consensus_score": 107.6,
+      "normalized_y": 0.335082,
+      "bbox": {
+        "left": 1595,
+        "top": 1051,
+        "right": 1743,
+        "bottom": 1121,
+        "width": 148,
+        "height": 70
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 5,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 30,
+      "candidate_id": "sharpened_psm4",
+      "text": "Annie's Dlx Shl&Chd Gf F 5.45",
+      "confidence": 77.71,
+      "source_candidate": "sharpened_psm4",
+      "image_variant": "sharpened",
+      "psm": 4,
+      "support_count": 15,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 83.41,
+      "consensus_score": 132.41,
+      "normalized_y": 0.365782,
+      "bbox": {
+        "left": 163,
+        "top": 1148,
+        "right": 1742,
+        "bottom": 1223,
+        "width": 1579,
+        "height": 75
+      },
+      "reconstructed": true,
+      "original_consensus_text": "Annie’s Dlx Shl&Chd Gf F 5 45",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "multiple matching row observations plus independent price support",
+        "family_candidate_count": 15
+      },
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
+        },
+        "description": {
+          "value": "Annie's Dlx Shl&Chd Gf",
+          "source_candidate": "otsu_psm4",
+          "source_text": "Annie's Dlx Shl&Chd Gf F 5.45",
+          "support_count": 15,
+          "confidence": 74.17,
+          "similarity_to_anchor": 0.898,
+          "score": 161.1537,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "5.45",
+          "support_count": 9,
+          "average_confidence": 66.22,
+          "examples": [
+            {
+              "candidate_id": "threshold_psm6",
+              "candidate_scope": "full",
+              "text": "{j Annie's DTx Shlachd GF oF - 5.45 |"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "Annie's Dlx Shl&Chd Gf F 5.45"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "Annie's Dlx Shl&Chd Gf F 5.45"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "m4 Annie's Dlx Shi&chd Gf =F 5.45"
+            },
+            {
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
+              "text": "ea Annie's Dlx ShlaChd Gf =F 5.45 ES"
+            },
+            {
+              "candidate_id": "grayscale_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "5.45"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "5.45"
+            },
+            {
+              "candidate_id": "sharpened_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "5.45"
+            },
+            {
+              "candidate_id": "otsu_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "5.45"
+            }
+          ],
+          "selection_reason": "selected from multiple independent OCR candidates"
+        },
+        "tax_code": {
+          "value": "F",
+          "support_count": 9,
+          "average_confidence": 70.67,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "Annie's Dlx Shl&Chd Gf F 5 45"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "Annie's Dlx Shl&Chd Gf F 5 45"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "“4 Annie's Dix Shlachd Gf F.. 6.45 5"
+            },
+            {
+              "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
+              "text": "Annie’s Dlx Shl&Chd Gf F 5 45"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "Annie’s Dlx Shl&Chd Gf F 5 45"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "Annie's Dlx Shl&Chd Gf F 5.45"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "Annie's Dlx Shl&Chd Gf F 5.45"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "m4 Annie's Dlx Shi&chd Gf =F 5.45"
+            },
+            {
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
+              "text": "ea Annie's Dlx ShlaChd Gf =F 5.45 ES"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "Annie's Dlx Shl&Chd Gf F 5.45",
+      "human_review": {
+        "total": "5.45",
+        "store": "Publix",
+        "six_digit_sku": "NA",
+        "product": "Annie's Dlx Shl&Chd Gf",
+        "tax_code": "F",
+        "store_number": "120",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "08/28/2026",
+        "price": "5.45"
+      }
+    },
+    {
+      "line_number": 31,
+      "candidate_id": "threshold_psm11",
+      "text": "JF",
+      "confidence": 19.0,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 1,
+      "match_method": "backbone",
+      "line_quality_score": 7.6,
+      "consensus_score": 7.6,
+      "normalized_y": 0.367016,
+      "bbox": {
+        "left": 1115,
+        "top": 1151,
+        "right": 1266,
+        "bottom": 1228,
+        "width": 151,
+        "height": 77
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 1,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 32,
+      "candidate_id": "grayscale_psm11",
+      "text": "9.45",
+      "confidence": 76.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 5,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 80.6,
+      "consensus_score": 94.6,
+      "normalized_y": 0.364548,
+      "bbox": {
+        "left": 1594,
+        "top": 1148,
+        "right": 1742,
+        "bottom": 1215,
+        "width": 148,
+        "height": 67
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 5,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 33,
+      "candidate_id": "sharpened_psm11",
+      "text": "a)",
+      "confidence": 38.0,
+      "source_candidate": "sharpened_psm11",
+      "image_variant": "sharpened",
+      "psm": 11,
+      "support_count": 3,
+      "match_method": "fuzzy",
+      "line_quality_score": 16.6,
+      "consensus_score": 23.6,
+      "normalized_y": 0.715828,
+      "bbox": {
+        "left": 492,
+        "top": 2303,
+        "right": 527,
+        "bottom": 2337,
+        "width": 35,
+        "height": 34
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 2,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 34,
+      "candidate_id": "sharpened_psm6",
+      "text": "Gw Keta Salmon Fillet F 14.29",
+      "confidence": 88.33,
+      "source_candidate": "sharpened_psm6",
+      "image_variant": "sharpened",
+      "psm": 6,
+      "support_count": 15,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 97.43,
+      "consensus_score": 146.43,
+      "normalized_y": 0.395094,
+      "bbox": {
+        "left": 163,
+        "top": 1244,
+        "right": 1742,
+        "bottom": 1317,
+        "width": 1579,
+        "height": 73
+      },
+      "reconstructed": true,
+      "original_consensus_text": "GW Keta Salmon Fillet F 14,29",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one price",
+        "family_candidate_count": 15
+      },
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
+        },
+        "description": {
+          "value": "Gw Keta Salmon Fillet",
+          "source_candidate": "illumination_psm11",
+          "source_text": "Gw Keta Salmon Fillet",
+          "support_count": 15,
+          "confidence": 92.0,
+          "similarity_to_anchor": 1.0,
+          "score": 179.8,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "14.29",
+          "support_count": 17,
+          "average_confidence": 82.76,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "GW Keta Salmon Fillet F 14,29"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "GW Keta Salmon Fillet F 14,29"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "“4 GW Kata Salmon Fillet . op 14,29 «#7"
+            },
+            {
+              "candidate_id": "threshold_psm6",
+              "candidate_scope": "full",
+              "text": "id GW Keta Salmon Fillet Fo 14,29"
+            },
+            {
+              "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
+              "text": "GW Keta Salmon Fillet F 14,29"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "GW Keta Salmon Fillet F 14,29"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "Gw Keta Salmon Fillet F 14.29"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "Gw Keta Salmon Fillet F 14.29"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "va GW Keta Salmon Fillet =F 14,29"
+            },
+            {
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
+              "text": "Gt Gw Keta Salmon Fillet F 14,29 4"
+            },
+            {
+              "candidate_id": "grayscale_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "14,29"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "14,29"
+            },
+            {
+              "candidate_id": "sharpened_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "14,29"
+            },
+            {
+              "candidate_id": "sharpened_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "14,29"
+            },
+            {
+              "candidate_id": "otsu_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "14.29"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "14.29"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "14.29"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": "F",
+          "support_count": 8,
+          "average_confidence": 65.5,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "GW Keta Salmon Fillet F 14,29"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "GW Keta Salmon Fillet F 14,29"
+            },
+            {
+              "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
+              "text": "GW Keta Salmon Fillet F 14,29"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "GW Keta Salmon Fillet F 14,29"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "Gw Keta Salmon Fillet F 14.29"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "Gw Keta Salmon Fillet F 14.29"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "va GW Keta Salmon Fillet =F 14,29"
+            },
+            {
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
+              "text": "Gt Gw Keta Salmon Fillet F 14,29 4"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "Gw Keta Salmon Fillet F 14.29",
+      "human_review": {
+        "total": "14.29",
+        "store": "Publix",
+        "six_digit_sku": "NA",
+        "product": "Gw Keta Salmon Fillet",
+        "tax_code": "F",
+        "store_number": "120",
+        "common_name": "NA",
+        "category": "Meat & Seafood",
+        "date": "08/28/2026",
+        "price": "14.29"
+      }
+    },
+    {
+      "line_number": 35,
+      "candidate_id": "otsu_psm4",
+      "text": "F",
+      "confidence": 88.0,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 7,
+      "match_method": "fuzzy",
+      "line_quality_score": 68.1,
+      "consensus_score": 89.1,
+      "normalized_y": 0.686517,
+      "bbox": {
+        "left": 1170,
+        "top": 2189,
+        "right": 1201,
+        "bottom": 2261,
+        "width": 31,
+        "height": 72
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 3,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 36,
+      "candidate_id": "threshold_psm11",
+      "text": "14,29",
+      "confidence": 96.0,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 5,
+      "match_method": "backbone",
+      "line_quality_score": 100.6,
+      "consensus_score": 114.6,
+      "normalized_y": 0.394168,
+      "bbox": {
+        "left": 1561,
+        "top": 1242,
+        "right": 1743,
+        "bottom": 1313,
+        "width": 182,
+        "height": 71
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 5,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 37,
+      "candidate_id": "otsu_psm4",
+      "text": "You saved 4.42",
+      "confidence": 95.33,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 15,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 101.13,
+      "consensus_score": 150.13,
+      "normalized_y": 0.425332,
+      "bbox": {
+        "left": 203,
+        "top": 1339,
+        "right": 817,
+        "bottom": 1418,
+        "width": 614,
+        "height": 79
+      },
+      "reconstructed": true,
+      "original_consensus_text": "You saved: $4.42",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one price",
+        "family_candidate_count": 15
+      },
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
+        },
+        "description": {
+          "value": "You saved",
+          "source_candidate": "otsu_psm4",
+          "source_text": "You saved: $4.42",
+          "support_count": 14,
+          "confidence": 95.33,
+          "similarity_to_anchor": 1.0,
+          "score": 175.73,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "4.42",
+          "support_count": 13,
+          "average_confidence": 80.0,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "You saved: $4.42"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "You saved: $4.42"
+            },
+            {
+              "candidate_id": "grayscale_psm11",
+              "candidate_scope": "full",
+              "text": "You saved: $4.42"
+            },
+            {
+              "candidate_id": "threshold_psm6",
+              "candidate_scope": "full",
+              "text": "a4 You-saved: $4.42 00 oe Le"
+            },
+            {
+              "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
+              "text": "You saved: $4,42"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "You saved: $4,42"
+            },
+            {
+              "candidate_id": "sharpened_psm11",
+              "candidate_scope": "full",
+              "text": "You saved: $4,42"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "You saved: $4.42"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "You saved: $4.42"
+            },
+            {
+              "candidate_id": "otsu_psm11",
+              "candidate_scope": "full",
+              "text": "You saved: $4.42"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "ma You saved: $4.42"
+            },
+            {
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
+              "text": "ty You saved: $4.42 4"
+            },
+            {
+              "candidate_id": "illumination_psm11",
+              "candidate_scope": "full",
+              "text": "Vou saved: $4.42"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        }
+      },
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 38,
+      "candidate_id": "illumination_psm11",
+      "text": "Bananas",
+      "confidence": 96.0,
+      "source_candidate": "illumination_psm11",
+      "image_variant": "illumination",
+      "psm": 11,
+      "support_count": 15,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 96.6,
+      "consensus_score": 145.6,
+      "normalized_y": 0.454489,
+      "bbox": {
+        "left": 164,
+        "top": 1438,
+        "right": 431,
+        "bottom": 1508,
+        "width": 267,
+        "height": 70
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 15,
+      "review_status": "accepted",
+      "original_ocr_text": "Bananas",
+      "human_review": {
+        "total": "NA",
+        "store": "Publix",
+        "six_digit_sku": "NA",
+        "product": "Bananas",
+        "tax_code": "NA",
+        "store_number": "120",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "08/28/2026",
+        "price": "NA"
+      }
+    },
+    {
+      "line_number": 39,
+      "candidate_id": "illumination_psm11",
+      "text": "1.53",
+      "confidence": 88.0,
+      "source_candidate": "illumination_psm11",
+      "image_variant": "illumination",
+      "psm": 11,
+      "support_count": 5,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 92.6,
+      "consensus_score": 106.6,
+      "normalized_y": 0.482259,
+      "bbox": {
+        "left": 1598,
+        "top": 1529,
+        "right": 1743,
+        "bottom": 1597,
+        "width": 145,
+        "height": 68
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 5,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 40,
+      "candidate_id": "grayscale_psm4",
+      "text": "/1b x Ib 2.36",
+      "confidence": 80.0,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 14,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 95.0,
+      "consensus_score": 140.5,
+      "normalized_y": 0.483956,
+      "bbox": {
+        "left": 204,
+        "top": 1529,
+        "right": 1742,
+        "bottom": 1608,
+        "width": 1538,
+        "height": 79
+      },
+      "reconstructed": true,
+      "original_consensus_text": "$0,65/1b x 2.36 |b 1.53",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "multiple matching row observations plus independent price support",
+        "family_candidate_count": 14
+      },
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
+        },
+        "description": {
+          "value": "/1b x Ib",
+          "source_candidate": "illumination_psm11",
+          "source_text": "$0.65/1b x 2.96 Ib",
+          "support_count": 13,
+          "confidence": 81.0,
+          "similarity_to_anchor": 0.9231,
+          "score": 156.9846,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "2.36",
+          "support_count": 13,
+          "average_confidence": 87.31,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "$0,65/1b x 2.36 |b 1.53"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "$0,65/1b x 2.36 Ib 3"
+            },
+            {
+              "candidate_id": "grayscale_psm11",
+              "candidate_scope": "full",
+              "text": "$0,65/lb x 2.36 |b"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "4 $0.65/1b x 2.36 Ib ee 1 eo"
+            },
+            {
+              "candidate_id": "threshold_psm11",
+              "candidate_scope": "full",
+              "text": "$0,.65/1b x.2.36 Ib"
+            },
+            {
+              "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
+              "text": "$0,65/1b x 2.36 Ib 1.53"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "$0,65/1lb x 2.36 Ib 153"
+            },
+            {
+              "candidate_id": "sharpened_psm11",
+              "candidate_scope": "full",
+              "text": "$0,65/1b x 2.36 |b"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "$0.65/1b x 2.36 Ib 1.53"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "$0.65/lb x 2.36 Ib 1.53"
+            },
+            {
+              "candidate_id": "otsu_psm11",
+              "candidate_scope": "full",
+              "text": "$0.65/lb x 2.36 Ib"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "wa = $0.65/1b xX 2.36 Ib | 1.53"
+            },
+            {
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
+              "text": "ea $0.65/1b x 2.36 Ib | 1.53 fe"
+            }
+          ],
+          "selection_reason": "selected from multiple independent OCR candidates"
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        }
+      },
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 41,
+      "candidate_id": "threshold_psm11",
+      "text": "5,65",
+      "confidence": 83.0,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 5,
+      "match_method": "backbone",
+      "line_quality_score": 87.6,
+      "consensus_score": 101.6,
+      "normalized_y": 0.511416,
+      "bbox": {
+        "left": 1591,
+        "top": 1622,
+        "right": 1743,
+        "bottom": 1693,
+        "width": 152,
+        "height": 71
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 5,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 42,
+      "candidate_id": "sharpened_psm11",
+      "text": "Daiya Shreds Mexican Bld F 5.65",
+      "confidence": 90.75,
+      "source_candidate": "sharpened_psm11",
+      "image_variant": "sharpened",
+      "psm": 11,
+      "support_count": 15,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 93.15,
+      "consensus_score": 142.15,
+      "normalized_y": 0.513422,
+      "bbox": {
+        "left": 166,
+        "top": 1622,
+        "right": 1085,
+        "bottom": 1706,
+        "width": 919,
+        "height": 84
+      },
+      "reconstructed": true,
+      "original_consensus_text": "Daiya Shreds Mexican Bld",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "multiple matching row observations plus independent price support",
+        "family_candidate_count": 15
+      },
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
+        },
+        "description": {
+          "value": "Daiya Shreds Mexican Bld",
+          "source_candidate": "sharpened_psm11",
+          "source_text": "Daiya Shreds Mexican Bld",
+          "support_count": 15,
+          "confidence": 90.75,
+          "similarity_to_anchor": 1.0,
+          "score": 178.55,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "5.65",
+          "support_count": 15,
+          "average_confidence": 76.2,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "Daiya Shreds Mexican Bld F 5.65"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "Daiya Shreds Mexican Bld F 5.65"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "“{ Daiya Shreds Mexican Bld Fo. > 5,65"
+            },
+            {
+              "candidate_id": "threshold_psm6",
+              "candidate_scope": "full",
+              "text": "=] Daiya Shreds Mexican Bld Fo. >: 5,65"
+            },
+            {
+              "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
+              "text": "Daiya Shreds Mexican Bld F 5.65"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "Daiya Shreds Mexican Bld F 5.65"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "Daiya Shreds Mexican Bld F 5.65"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "Daiya Shreds Mexican Bld F 5.65"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "ey Dalya Shreds Mexican Bld FO 5.65"
+            },
+            {
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
+              "text": "eM] Daiya Shreds Mexican Bld Fo 5.65 a"
+            },
+            {
+              "candidate_id": "grayscale_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "5,65"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "5,65"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "5,65"
+            },
+            {
+              "candidate_id": "sharpened_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "5,65"
+            },
+            {
+              "candidate_id": "otsu_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "5.65"
+            }
+          ],
+          "selection_reason": "selected from multiple independent OCR candidates"
+        },
+        "tax_code": {
+          "value": "F",
+          "support_count": 6,
+          "average_confidence": 71.0,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "Daiya Shreds Mexican Bld F 5.65"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "Daiya Shreds Mexican Bld F 5.65"
+            },
+            {
+              "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
+              "text": "Daiya Shreds Mexican Bld F 5.65"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "Daiya Shreds Mexican Bld F 5.65"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "Daiya Shreds Mexican Bld F 5.65"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "Daiya Shreds Mexican Bld F 5.65"
+            }
+          ],
+          "selection_reason": "selected from multiple independent OCR candidates"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "Daiya Shreds Mexican Bld F 5.65",
+      "human_review": {
+        "total": "5.65",
+        "store": "Publix",
+        "six_digit_sku": "NA",
+        "product": "Daiya Shreds Mexican Bld",
+        "tax_code": "F",
+        "store_number": "120",
+        "common_name": "NA",
+        "category": "Pantry",
+        "date": "08/28/2026",
+        "price": "5.65"
+      }
+    },
+    {
+      "line_number": 43,
+      "candidate_id": "illumination_psm11",
+      "text": "Daiya Shreds Mexican Bld F 0.00",
+      "confidence": 91.5,
+      "source_candidate": "illumination_psm11",
+      "image_variant": "illumination",
+      "psm": 11,
+      "support_count": 15,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 93.9,
+      "consensus_score": 142.9,
+      "normalized_y": 0.542271,
+      "bbox": {
+        "left": 169,
+        "top": 1717,
+        "right": 1085,
+        "bottom": 1798,
+        "width": 916,
+        "height": 81
+      },
+      "reconstructed": true,
+      "original_consensus_text": "Daiya Shreds Mexican Bld",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "multiple matching row observations plus independent price support",
+        "family_candidate_count": 15
+      },
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
+        },
+        "description": {
+          "value": "Daiya Shreds Mexican Bld",
+          "source_candidate": "illumination_psm11",
+          "source_text": "Daiya Shreds Mexican Bld",
+          "support_count": 15,
+          "confidence": 91.5,
+          "similarity_to_anchor": 1.0,
+          "score": 179.3,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "0.00",
+          "support_count": 17,
+          "average_confidence": 72.29,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "Daiya Shreds Mexican Bld F 0.00"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "Daiya Shreds Mexican Bld F 0.00"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "“¥ Daiya Shreds Hexican Bld Foo. 0,00"
+            },
+            {
+              "candidate_id": "threshold_psm6",
+              "candidate_scope": "full",
+              "text": "“4 Dalya Shreds Mexican Bld Fo -ss0,00 I"
+            },
+            {
+              "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
+              "text": "Dalya Shreds Mexican Bld F 0.00"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "Dalya Shreds Mexican Bld F 0.00"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "Dalya Shreds Mexican Bld F 0.00"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "Dalya Shreds Mexican Bld F 0.00"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "asi Daiya Shreds Mexican Bld F 0,00"
+            },
+            {
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
+              "text": "es) Daiya Shreds Mexican Bld F 0.00 \"3"
+            },
+            {
+              "candidate_id": "grayscale_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "0,00"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "0,00"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "0.00"
+            },
+            {
+              "candidate_id": "sharpened_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "0,00"
+            },
+            {
+              "candidate_id": "otsu_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "0.00"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "0.00"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "0.00"
+            }
+          ],
+          "selection_reason": "selected from multiple independent OCR candidates"
+        },
+        "tax_code": {
+          "value": "F",
+          "support_count": 8,
+          "average_confidence": 79.5,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "Daiya Shreds Mexican Bld F 0.00"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "Daiya Shreds Mexican Bld F 0.00"
+            },
+            {
+              "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
+              "text": "Dalya Shreds Mexican Bld F 0.00"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "Dalya Shreds Mexican Bld F 0.00"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "Dalya Shreds Mexican Bld F 0.00"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "Dalya Shreds Mexican Bld F 0.00"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "asi Daiya Shreds Mexican Bld F 0,00"
+            },
+            {
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
+              "text": "es) Daiya Shreds Mexican Bld F 0.00 \"3"
+            }
+          ],
+          "selection_reason": "selected from multiple independent OCR candidates"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "Daiya Shreds Mexican Bld F 0.00",
+      "human_review": {
+        "total": "0.00",
+        "store": "Publix",
+        "six_digit_sku": "NA",
+        "product": "Daiya Shreds Mexican Bld",
+        "tax_code": "F",
+        "store_number": "120",
+        "common_name": "NA",
+        "category": "Pantry",
+        "date": "08/28/2026",
+        "price": "0.00"
+      }
+    },
+    {
+      "line_number": 44,
+      "candidate_id": "threshold_psm11",
+      "text": "0,00",
+      "confidence": 80.0,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 5,
+      "match_method": "backbone",
+      "line_quality_score": 84.6,
+      "consensus_score": 98.6,
+      "normalized_y": 0.540728,
+      "bbox": {
+        "left": 1592,
+        "top": 1719,
+        "right": 1742,
+        "bottom": 1786,
+        "width": 150,
+        "height": 67
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 5,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 45,
+      "candidate_id": "grayscale_psm4",
+      "text": "You saved 5.65",
+      "confidence": 96.0,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 15,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 101.8,
+      "consensus_score": 150.8,
+      "normalized_y": 0.570657,
+      "bbox": {
+        "left": 209,
+        "top": 1811,
+        "right": 822,
+        "bottom": 1888,
+        "width": 613,
+        "height": 77
+      },
+      "reconstructed": true,
+      "original_consensus_text": "You saved: $5.65",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one price",
+        "family_candidate_count": 15
+      },
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
+        },
+        "description": {
+          "value": "You saved",
+          "source_candidate": "grayscale_psm4",
+          "source_text": "You saved: $5.65",
+          "support_count": 15,
+          "confidence": 96.0,
+          "similarity_to_anchor": 1.0,
+          "score": 181.4,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "5.65",
+          "support_count": 13,
+          "average_confidence": 93.92,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "You saved: $5.65"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "You saved: $5.65"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "“A. You saved:. $5.65"
+            },
+            {
+              "candidate_id": "threshold_psm6",
+              "candidate_scope": "full",
+              "text": "“| You saved: $5.65 2 a"
+            },
+            {
+              "candidate_id": "threshold_psm11",
+              "candidate_scope": "full",
+              "text": "You saved:. $5.65"
+            },
+            {
+              "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
+              "text": "You saved: $5.65"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "You saved: $5.65"
+            },
+            {
+              "candidate_id": "sharpened_psm11",
+              "candidate_scope": "full",
+              "text": "You saved: $5.65"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "You saved: $5.65"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "You saved: $5.65"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "“4 - You saved: $5.65"
+            },
+            {
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
+              "text": "Bq You saved: $5.65 eo"
+            },
+            {
+              "candidate_id": "illumination_psm11",
+              "candidate_scope": "full",
+              "text": "You saved: $5.65"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        }
+      },
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 46,
+      "candidate_id": "otsu_psm4",
+      "text": "Tf Caesar Salad Kit Chop F",
+      "confidence": 93.17,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 15,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 99.77,
+      "consensus_score": 148.77,
+      "normalized_y": 0.599661,
+      "bbox": {
+        "left": 174,
+        "top": 1903,
+        "right": 1199,
+        "bottom": 1984,
+        "width": 1025,
+        "height": 81
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 15,
+      "review_status": "accepted",
+      "original_ocr_text": "Tf Caesar Salad Kit Chop F",
+      "human_review": {
+        "total": "NA",
+        "store": "Publix",
+        "six_digit_sku": "NA",
+        "product": "Tf Caesar Salad Kit Chop F",
+        "tax_code": "NA",
+        "store_number": "120",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "08/28/2026",
+        "price": "NA"
+      }
+    },
+    {
+      "line_number": 47,
+      "candidate_id": "otsu_psm4",
+      "text": "1 @3 for 10.00",
+      "confidence": 87.17,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 15,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 94.77,
+      "consensus_score": 143.77,
+      "normalized_y": 0.628047,
+      "bbox": {
+        "left": 216,
+        "top": 1998,
+        "right": 1743,
+        "bottom": 2073,
+        "width": 1527,
+        "height": 75
+      },
+      "reconstructed": true,
+      "original_consensus_text": "1 @ 3 for $10.00 3.34",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "multiple matching row observations plus independent price support",
+        "family_candidate_count": 15
+      },
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
+        },
+        "description": {
+          "value": "1 @3 for",
+          "source_candidate": "otsu_psm11",
+          "source_text": "1 @3 for $10.00",
+          "support_count": 14,
+          "confidence": 87.75,
+          "similarity_to_anchor": 1.0,
+          "score": 169.35,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "10.00",
+          "support_count": 15,
+          "average_confidence": 90.13,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "1 @ 3 for $10.00 3 34"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "1 @ 3 for $10.00 3 34"
+            },
+            {
+              "candidate_id": "grayscale_psm11",
+              "candidate_scope": "full",
+              "text": "1 @ 3 for $10.00"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "1 @ 3 for $10.00 . Fo 83,3400"
+            },
+            {
+              "candidate_id": "threshold_psm6",
+              "candidate_scope": "full",
+              "text": "‘41 @ 3 for $10.00 8384"
+            },
+            {
+              "candidate_id": "threshold_psm11",
+              "candidate_scope": "full",
+              "text": "1 @ 3 for $10.00"
+            },
+            {
+              "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
+              "text": "1 @ 3 for $10.00 3.34"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "1 @ 3 for $10.00 3.34"
+            },
+            {
+              "candidate_id": "sharpened_psm11",
+              "candidate_scope": "full",
+              "text": "1 @ 3 for $10.00"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "1 @ 3 for $10.00 3.34"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "1 @ 3 for $10.00 3.34"
+            },
+            {
+              "candidate_id": "otsu_psm11",
+              "candidate_scope": "full",
+              "text": "1 @3 for $10.00"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "163 for $10.00 © : 3.34"
+            },
+            {
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
+              "text": "PY 163 for $10.00 | 3.34"
+            },
+            {
+              "candidate_id": "illumination_psm11",
+              "candidate_scope": "full",
+              "text": "1 @3 for $10.00"
+            }
+          ],
+          "selection_reason": "selected from multiple independent OCR candidates"
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        }
+      },
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 48,
+      "candidate_id": "otsu_psm11",
+      "text": "3.34",
+      "confidence": 91.0,
+      "source_candidate": "otsu_psm11",
+      "image_variant": "otsu",
+      "psm": 11,
+      "support_count": 5,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 95.6,
+      "consensus_score": 109.6,
+      "normalized_y": 0.62851,
+      "bbox": {
+        "left": 1592,
+        "top": 2005,
+        "right": 1743,
+        "bottom": 2069,
+        "width": 151,
+        "height": 64
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 5,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 49,
+      "candidate_id": "otsu_psm6",
+      "text": "You saved 1.81",
+      "confidence": 96.0,
+      "source_candidate": "otsu_psm6",
+      "image_variant": "otsu",
+      "psm": 6,
+      "support_count": 15,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 101.8,
+      "consensus_score": 150.8,
+      "normalized_y": 0.656742,
+      "bbox": {
+        "left": 211,
+        "top": 2091,
+        "right": 815,
+        "bottom": 2166,
+        "width": 604,
+        "height": 75
+      },
+      "reconstructed": true,
+      "original_consensus_text": "You saved: $1.81",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one price",
+        "family_candidate_count": 15
+      },
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
+        },
+        "description": {
+          "value": "You saved",
+          "source_candidate": "otsu_psm6",
+          "source_text": "You saved: $1.81",
+          "support_count": 15,
+          "confidence": 96.0,
+          "similarity_to_anchor": 1.0,
+          "score": 181.4,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "1.81",
+          "support_count": 12,
+          "average_confidence": 91.83,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "You saved: $1.81"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "You saved: $1.81"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "You saved: $1.81 os \""
+            },
+            {
+              "candidate_id": "threshold_psm6",
+              "candidate_scope": "full",
+              "text": "You saved: $1.81 en i"
+            },
+            {
+              "candidate_id": "threshold_psm11",
+              "candidate_scope": "full",
+              "text": "You saved: $1.81"
+            },
+            {
+              "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
+              "text": "You saved: $1.81"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "You saved: $1.81"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "You saved: $1.81"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "You saved: $1.81"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "“@ You saved: $1.81 |"
+            },
+            {
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
+              "text": "q You saved: $1.81 - s"
+            },
+            {
+              "candidate_id": "illumination_psm11",
+              "candidate_scope": "full",
+              "text": "You saved: $1.81"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        }
+      },
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 50,
+      "candidate_id": "illumination_psm11",
+      "text": "Tf Everything Salad Chop TF",
+      "confidence": 95.75,
+      "source_candidate": "illumination_psm11",
+      "image_variant": "illumination",
+      "psm": 11,
+      "support_count": 12,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 99.65,
+      "consensus_score": 138.15,
+      "normalized_y": 0.686054,
+      "bbox": {
+        "left": 172,
+        "top": 2182,
+        "right": 1086,
+        "bottom": 2265,
+        "width": 914,
+        "height": 83
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 12,
+      "review_status": "accepted",
+      "original_ocr_text": "Tf Everything Salad Chop",
+      "human_review": {
+        "total": "NA",
+        "store": "Publix",
+        "six_digit_sku": "NA",
+        "product": "Tf Everything Salad Chop",
+        "tax_code": "TF",
+        "store_number": "120",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "08/28/2026",
+        "price": "NA"
+      }
+    },
+    {
+      "line_number": 51,
+      "candidate_id": "otsu_psm11",
+      "text": "1 @3 for 10.00",
+      "confidence": 87.75,
+      "source_candidate": "otsu_psm11",
+      "image_variant": "otsu",
+      "psm": 11,
+      "support_count": 15,
+      "match_method": "fuzzy",
+      "line_quality_score": 94.15,
+      "consensus_score": 143.15,
+      "normalized_y": 0.628047,
+      "bbox": {
+        "left": 216,
+        "top": 1998,
+        "right": 820,
+        "bottom": 2073,
+        "width": 604,
+        "height": 75
+      },
+      "reconstructed": true,
+      "original_consensus_text": "1 @3 for $10.00",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one price",
+        "family_candidate_count": 15
+      },
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
+        },
+        "description": {
+          "value": "1 @3 for",
+          "source_candidate": "otsu_psm11",
+          "source_text": "1 @3 for $10.00",
+          "support_count": 14,
+          "confidence": 87.75,
+          "similarity_to_anchor": 1.0,
+          "score": 169.35,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "10.00",
+          "support_count": 15,
+          "average_confidence": 90.13,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "1 @ 3 for $10.00 3 34"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "1 @ 3 for $10.00 3 34"
+            },
+            {
+              "candidate_id": "grayscale_psm11",
+              "candidate_scope": "full",
+              "text": "1 @ 3 for $10.00"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "1 @ 3 for $10.00 . Fo 83,3400"
+            },
+            {
+              "candidate_id": "threshold_psm6",
+              "candidate_scope": "full",
+              "text": "‘41 @ 3 for $10.00 8384"
+            },
+            {
+              "candidate_id": "threshold_psm11",
+              "candidate_scope": "full",
+              "text": "1 @ 3 for $10.00"
+            },
+            {
+              "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
+              "text": "1 @ 3 for $10.00 3.34"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "1 @ 3 for $10.00 3.34"
+            },
+            {
+              "candidate_id": "sharpened_psm11",
+              "candidate_scope": "full",
+              "text": "1 @ 3 for $10.00"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "1 @ 3 for $10.00 3.34"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "1 @ 3 for $10.00 3.34"
+            },
+            {
+              "candidate_id": "otsu_psm11",
+              "candidate_scope": "full",
+              "text": "1 @3 for $10.00"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "163 for $10.00 © : 3.34"
+            },
+            {
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
+              "text": "PY 163 for $10.00 | 3.34"
+            },
+            {
+              "candidate_id": "illumination_psm11",
+              "candidate_scope": "full",
+              "text": "1 @3 for $10.00"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        }
+      },
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 52,
+      "candidate_id": "otsu_psm4",
+      "text": "3.33",
+      "confidence": 82.0,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 8,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 86.6,
+      "consensus_score": 111.1,
+      "normalized_y": 0.715983,
+      "bbox": {
+        "left": 1593,
+        "top": 2286,
+        "right": 1743,
+        "bottom": 2355,
+        "width": 150,
+        "height": 69
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 7,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 53,
+      "candidate_id": "grayscale_psm4",
+      "text": "You saved 1.00",
+      "confidence": 95.67,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 15,
+      "match_method": "fuzzy",
+      "line_quality_score": 101.47,
+      "consensus_score": 150.47,
+      "normalized_y": 0.131749,
+      "bbox": {
+        "left": 192,
+        "top": 388,
+        "right": 812,
+        "bottom": 466,
+        "width": 620,
+        "height": 78
+      },
+      "reconstructed": true,
+      "original_consensus_text": "You saved: $1.00",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one price",
+        "family_candidate_count": 15
+      },
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
+        },
+        "description": {
+          "value": "You saved",
+          "source_candidate": "grayscale_psm4",
+          "source_text": "You saved: $1.00",
+          "support_count": 15,
+          "confidence": 95.67,
+          "similarity_to_anchor": 1.0,
+          "score": 181.07,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "1.00",
+          "support_count": 15,
+          "average_confidence": 86.87,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "You saved: $1.00"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "You saved: $1.00"
+            },
+            {
+              "candidate_id": "grayscale_psm11",
+              "candidate_scope": "full",
+              "text": "You saved: $1.00"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "‘1 You saved: $1.00 - nn i"
+            },
+            {
+              "candidate_id": "threshold_psm6",
+              "candidate_scope": "full",
+              "text": "\") Vou saved: $1.00"
+            },
+            {
+              "candidate_id": "threshold_psm11",
+              "candidate_scope": "full",
+              "text": "You saved: $1.00"
+            },
+            {
+              "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
+              "text": "You saved: $1.00"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "You saved: $1.00"
+            },
+            {
+              "candidate_id": "sharpened_psm11",
+              "candidate_scope": "full",
+              "text": "You saved: $1.00"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "You saved: $1.00"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "You saved: $1.00"
+            },
+            {
+              "candidate_id": "otsu_psm11",
+              "candidate_scope": "full",
+              "text": "You saved: $1.00"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "Hl =You saved: $1.00 —"
+            },
+            {
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
+              "text": "He) «You saved: $1.00 © 8"
+            },
+            {
+              "candidate_id": "illumination_psm11",
+              "candidate_scope": "full",
+              "text": "Vou saved: $1.00"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        }
+      },
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 54,
+      "candidate_id": "threshold_psm11",
+      "text": "$1.82",
+      "confidence": 85.0,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 4,
+      "match_method": "backbone",
+      "line_quality_score": 89.6,
+      "consensus_score": 100.1,
+      "normalized_y": 0.742363,
+      "bbox": {
+        "left": 638,
+        "top": 2368,
+        "right": 825,
+        "bottom": 2444,
+        "width": 187,
+        "height": 76
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 3,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 55,
+      "candidate_id": "illumination_psm11",
+      "text": "Tf Everything Salad Chop",
+      "confidence": 95.25,
+      "source_candidate": "illumination_psm11",
+      "image_variant": "illumination",
+      "psm": 11,
+      "support_count": 12,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 99.15,
+      "consensus_score": 137.65,
+      "normalized_y": 0.772293,
+      "bbox": {
+        "left": 178,
+        "top": 2458,
+        "right": 1086,
+        "bottom": 2548,
+        "width": 908,
+        "height": 90
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 12,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 56,
+      "candidate_id": "grayscale_psm11",
+      "text": "1@3 for 10.00",
+      "confidence": 87.5,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 8,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 92.7,
+      "consensus_score": 117.2,
+      "normalized_y": 0.797748,
+      "bbox": {
+        "left": 432,
+        "top": 2539,
+        "right": 824,
+        "bottom": 2632,
+        "width": 392,
+        "height": 93
+      },
+      "reconstructed": true,
+      "original_consensus_text": "for $10.00",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one price",
+        "family_candidate_count": 7
+      },
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
+        },
+        "description": {
+          "value": "1@3 for",
+          "source_candidate": "threshold_psm11",
+          "source_text": "1@3 for $",
+          "support_count": 5,
+          "confidence": 84.67,
+          "similarity_to_anchor": 0.6,
+          "score": 116.87,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "10.00",
+          "support_count": 6,
+          "average_confidence": 65.0,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm11",
+              "candidate_scope": "full",
+              "text": "for $10.00"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "1 @ 3 for $10.00 gag"
+            },
+            {
+              "candidate_id": "threshold_psm6",
+              "candidate_scope": "full",
+              "text": "1 @3 for $10.00 gag fe"
+            },
+            {
+              "candidate_id": "otsu_psm11",
+              "candidate_scope": "full",
+              "text": "sear $10.00"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "PY 1@3 for $10.00 493"
+            },
+            {
+              "candidate_id": "illumination_psm11",
+              "candidate_scope": "full",
+              "text": "1 @3 for $10,00"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        }
+      },
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 57,
+      "candidate_id": "otsu_psm11",
+      "text": "3.33",
+      "confidence": 95.0,
+      "source_candidate": "otsu_psm11",
+      "image_variant": "otsu",
+      "psm": 11,
+      "support_count": 8,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 99.6,
+      "consensus_score": 124.1,
+      "normalized_y": 0.804998,
+      "bbox": {
+        "left": 1594,
+        "top": 2574,
+        "right": 1746,
+        "bottom": 2644,
+        "width": 152,
+        "height": 70
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 8,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 58,
+      "candidate_id": "threshold_psm11",
+      "text": "Vou saved 1.82",
+      "confidence": 89.0,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 9,
+      "match_method": "backbone",
+      "line_quality_score": 94.8,
+      "consensus_score": 122.8,
+      "normalized_y": 0.829219,
+      "bbox": {
+        "left": 214,
+        "top": 2645,
+        "right": 826,
+        "bottom": 2730,
+        "width": 612,
+        "height": 85
+      },
+      "reconstructed": true,
+      "original_consensus_text": "Vou saved: $1.82",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one price",
+        "family_candidate_count": 8
+      },
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
+        },
+        "description": {
+          "value": "Vou saved",
+          "source_candidate": "threshold_psm11",
+          "source_text": "Vou saved: $1.82",
+          "support_count": 6,
+          "confidence": 89.0,
+          "similarity_to_anchor": 1.0,
+          "score": 129.4,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "1.82",
+          "support_count": 6,
+          "average_confidence": 74.17,
+          "examples": [
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "~ You saved: $1.82 ree |"
+            },
+            {
+              "candidate_id": "threshold_psm6",
+              "candidate_scope": "full",
+              "text": "— You saved: $1.82 en"
+            },
+            {
+              "candidate_id": "threshold_psm11",
+              "candidate_scope": "full",
+              "text": "Vou saved: $1.82"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "5 you save: $1.82 a"
+            },
+            {
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
+              "text": "fe) You saved: $1.82 0 2 i"
+            },
+            {
+              "candidate_id": "illumination_psm11",
+              "candidate_scope": "full",
+              "text": "Vou saved: $1.82 —"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        }
+      },
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 59,
+      "candidate_id": "illumination_psm11",
+      "text": "Hagen David Blackberry T 7.19",
+      "confidence": 89.67,
+      "source_candidate": "illumination_psm11",
+      "image_variant": "illumination",
+      "psm": 11,
+      "support_count": 11,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 91.47,
+      "consensus_score": 126.47,
+      "normalized_y": 0.863314,
+      "bbox": {
+        "left": 174,
+        "top": 2735,
+        "right": 1009,
+        "bottom": 2861,
+        "width": 835,
+        "height": 126
+      },
+      "reconstructed": true,
+      "original_consensus_text": "Mogen David Blackberry",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "multiple matching row observations plus independent price support",
+        "family_candidate_count": 11
+      },
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
+        },
+        "description": {
+          "value": "Hagen David Blackberry",
+          "source_candidate": "threshold_psm11",
+          "source_text": "Hagen David Blackberry",
+          "support_count": 9,
+          "confidence": 91.33,
+          "similarity_to_anchor": 0.9091,
+          "score": 147.2027,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "7.19",
+          "support_count": 9,
+          "average_confidence": 88.78,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "| Hagen David Blackberry 7.19"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "| Mogen David Blackherry = J 7.19"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "Biogen David Blackberry 7.19"
+            },
+            {
+              "candidate_id": "grayscale_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "7.19"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "7,19"
+            },
+            {
+              "candidate_id": "sharpened_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "7.19"
+            },
+            {
+              "candidate_id": "otsu_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "7.19"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "7,19"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "7,19"
+            }
+          ],
+          "selection_reason": "selected from multiple independent OCR candidates"
+        },
+        "tax_code": {
+          "value": "T",
+          "support_count": 1,
+          "average_confidence": 67.0,
+          "examples": [
+            {
+              "candidate_id": "illumination_psm6",
+              "candidate_scope": "full",
+              "text": "P| Mogen David Blackberry T 8 = 7.49 [i"
+            }
+          ],
+          "selection_reason": "evidence rejected because support was too weak"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "Hagen David Blackberry 7.19",
+      "human_review": {
+        "total": "7.19",
+        "store": "Publix",
+        "six_digit_sku": "NA",
+        "product": "Hagen David Blackberry",
+        "tax_code": "T",
+        "store_number": "120",
+        "common_name": "Hagen David Blackberry",
+        "category": "Produce",
+        "date": "08/28/2026",
+        "price": "7.19"
+      }
+    },
+    {
+      "line_number": 60,
+      "candidate_id": "otsu_psm11",
+      "text": "T",
+      "confidence": 77.0,
+      "source_candidate": "otsu_psm11",
+      "image_variant": "otsu",
+      "psm": 11,
+      "support_count": 4,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 57.1,
+      "consensus_score": 67.6,
+      "normalized_y": 0.861,
+      "bbox": {
+        "left": 1167,
+        "top": 2754,
+        "right": 1200,
+        "bottom": 2827,
+        "width": 33,
+        "height": 73
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 4,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 61,
+      "candidate_id": "otsu_psm4",
+      "text": "T 7.19",
+      "confidence": 88.5,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 8,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 95.2,
+      "consensus_score": 119.7,
+      "normalized_y": 0.863314,
+      "bbox": {
+        "left": 1167,
+        "top": 2754,
+        "right": 1749,
+        "bottom": 2842,
+        "width": 582,
+        "height": 88
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 8,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 62,
+      "candidate_id": "threshold_psm11",
+      "text": "Age Bynasse",
+      "confidence": 63.0,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 5,
+      "match_method": "backbone",
+      "line_quality_score": 64.2,
+      "consensus_score": 78.2,
+      "normalized_y": 0.890003,
+      "bbox": {
+        "left": 176,
+        "top": 2846,
+        "right": 599,
+        "bottom": 2923,
+        "width": 423,
+        "height": 77
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 5,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 63,
+      "candidate_id": "threshold_psm11",
+      "text": "Subtota |",
+      "confidence": 93.5,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 8,
+      "match_method": "backbone",
+      "line_quality_score": 90.7,
+      "consensus_score": 115.2,
+      "normalized_y": 0.940605,
+      "bbox": {
+        "left": 412,
+        "top": 3002,
+        "right": 703,
+        "bottom": 3095,
+        "width": 291,
+        "height": 93
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 8,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 64,
+      "candidate_id": "sharpened_psm11",
+      "text": "84.50",
+      "confidence": 78.0,
+      "source_candidate": "sharpened_psm11",
+      "image_variant": "sharpened",
+      "psm": 11,
+      "support_count": 7,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 82.6,
+      "consensus_score": 103.6,
+      "normalized_y": 0.951095,
+      "bbox": {
+        "left": 1556,
+        "top": 3046,
+        "right": 1749,
+        "bottom": 3119,
+        "width": 193,
+        "height": 73
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 7,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 65,
+      "candidate_id": "sharpened_psm11",
+      "text": "les Tax 73",
+      "confidence": 89.33,
+      "source_candidate": "sharpened_psm11",
+      "image_variant": "sharpened",
+      "psm": 11,
+      "support_count": 8,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 91.13,
+      "consensus_score": 115.63,
+      "normalized_y": 0.966831,
+      "bbox": {
+        "left": 539,
+        "top": 3095,
+        "right": 881,
+        "bottom": 3172,
+        "width": 342,
+        "height": 77
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 8,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 66,
+      "candidate_id": "grayscale_psm11",
+      "text": "0,50",
+      "confidence": 91.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 5,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 95.6,
+      "consensus_score": 109.6,
+      "normalized_y": 0.978865,
+      "bbox": {
+        "left": 1594,
+        "top": 3137,
+        "right": 1748,
+        "bottom": 3208,
+        "width": 154,
+        "height": 71
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 5,
+      "review_status": "skipped"
+    }
+  ],
+  "candidate_ranking": [
+    {
+      "rank": 1,
+      "candidate_id": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 96.1488,
+        "mean_word_confidence": 79.17,
+        "recognized_word_count": 154,
+        "low_confidence_rate": 0.1104,
+        "price_like_count": 27,
+        "sku_count": 0,
+        "plausible_line_count": 52,
+        "garbage_line_count": 12
+      }
+    },
+    {
+      "rank": 2,
+      "candidate_id": "otsu_psm6",
+      "image_variant": "otsu",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": 92.5776,
+        "mean_word_confidence": 79.48,
+        "recognized_word_count": 135,
+        "low_confidence_rate": 0.1333,
+        "price_like_count": 27,
+        "sku_count": 0,
+        "plausible_line_count": 26,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 3,
+      "candidate_id": "sharpened_psm4",
+      "image_variant": "sharpened",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 92.122,
+        "mean_word_confidence": 80.08,
+        "recognized_word_count": 125,
+        "low_confidence_rate": 0.096,
+        "price_like_count": 23,
+        "sku_count": 0,
+        "plausible_line_count": 25,
+        "garbage_line_count": 1
+      }
+    },
+    {
+      "rank": 4,
+      "candidate_id": "otsu_psm11",
+      "image_variant": "otsu",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 90.3796,
+        "mean_word_confidence": 75.21,
+        "recognized_word_count": 145,
+        "low_confidence_rate": 0.1793,
+        "price_like_count": 29,
+        "sku_count": 0,
+        "plausible_line_count": 49,
+        "garbage_line_count": 14
+      }
+    },
+    {
+      "rank": 5,
+      "candidate_id": "sharpened_psm6",
+      "image_variant": "sharpened",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": 87.9956,
+        "mean_word_confidence": 77.29,
+        "recognized_word_count": 145,
+        "low_confidence_rate": 0.1448,
+        "price_like_count": 22,
+        "sku_count": 0,
+        "plausible_line_count": 27,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 6,
+      "candidate_id": "sharpened_psm11",
+      "image_variant": "sharpened",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 87.7344,
+        "mean_word_confidence": 74.53,
+        "recognized_word_count": 141,
+        "low_confidence_rate": 0.1702,
+        "price_like_count": 25,
+        "sku_count": 0,
+        "plausible_line_count": 46,
+        "garbage_line_count": 13
+      }
+    },
+    {
+      "rank": 7,
+      "candidate_id": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": 87.3824,
+        "mean_word_confidence": 76.63,
+        "recognized_word_count": 139,
+        "low_confidence_rate": 0.1367,
+        "price_like_count": 22,
+        "sku_count": 0,
+        "plausible_line_count": 26,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 8,
+      "candidate_id": "illumination_psm11",
+      "image_variant": "illumination",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 85.9608,
+        "mean_word_confidence": 71.39,
+        "recognized_word_count": 171,
+        "low_confidence_rate": 0.2339,
+        "price_like_count": 32,
+        "sku_count": 0,
+        "plausible_line_count": 52,
+        "garbage_line_count": 22
+      }
+    },
+    {
+      "rank": 9,
+      "candidate_id": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 84.0772,
+        "mean_word_confidence": 72.15,
+        "recognized_word_count": 145,
+        "low_confidence_rate": 0.2276,
+        "price_like_count": 26,
+        "sku_count": 0,
+        "plausible_line_count": 48,
+        "garbage_line_count": 17
+      }
+    },
+    {
+      "rank": 10,
+      "candidate_id": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 80.7316,
+        "mean_word_confidence": 71.86,
+        "recognized_word_count": 154,
+        "low_confidence_rate": 0.2403,
+        "price_like_count": 26,
+        "sku_count": 0,
+        "plausible_line_count": 25,
+        "garbage_line_count": 5
+      }
+    },
+    {
+      "rank": 11,
+      "candidate_id": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 77.2236,
+        "mean_word_confidence": 69.79,
+        "recognized_word_count": 154,
+        "low_confidence_rate": 0.2338,
+        "price_like_count": 22,
+        "sku_count": 0,
+        "plausible_line_count": 26,
+        "garbage_line_count": 5
+      }
+    },
+    {
+      "rank": 12,
+      "candidate_id": "illumination_psm4",
+      "image_variant": "illumination",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 69.38,
+        "mean_word_confidence": 62.06,
+        "recognized_word_count": 200,
+        "low_confidence_rate": 0.375,
+        "price_like_count": 28,
+        "sku_count": 0,
+        "plausible_line_count": 29,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 13,
+      "candidate_id": "illumination_psm6",
+      "image_variant": "illumination",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": 62.8988,
+        "mean_word_confidence": 58.72,
+        "recognized_word_count": 201,
+        "low_confidence_rate": 0.4229,
+        "price_like_count": 26,
+        "sku_count": 0,
+        "plausible_line_count": 24,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 14,
+      "candidate_id": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 62.2224,
+        "mean_word_confidence": 57.51,
+        "recognized_word_count": 208,
+        "low_confidence_rate": 0.3942,
+        "price_like_count": 25,
+        "sku_count": 0,
+        "plausible_line_count": 25,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 15,
+      "candidate_id": "threshold_psm6",
+      "image_variant": "threshold",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": 57.1,
+        "mean_word_confidence": 56.04,
+        "recognized_word_count": 206,
+        "low_confidence_rate": 0.4175,
+        "price_like_count": 19,
+        "sku_count": 0,
+        "plausible_line_count": 24,
+        "garbage_line_count": 1
+      }
+    }
+  ],
+  "provenance": {
+    "candidates_file": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_candidates/082826_Publix_120_ocr_candidates.json",
+    "rule": "All output remains OCR-derived. A full-receipt observation may join another observation only through exact SKU agreement or close physical-row geometry plus textual agreement. Right-column observations can contribute only price/tax evidence at the same narrow row position. SKU values cannot be imported into rows that lacked a SKU in the selected full-receipt observation. Components with insufficient support are omitted rather than guessed."
+  },
+  "benchmark": {
+    "source_raw_ocr": "082826_Publix_120_raw_ocr.json",
+    "receipt_type": "Publix",
+    "store_number": "120",
+    "receipt_date": "08/28/2026",
+    "starting_line_number": 1,
+    "reviewed_line_count": 66,
+    "accepted_purchase_count": 17,
+    "skipped_line_count": 49,
+    "ground_truth": true
+  }
+}

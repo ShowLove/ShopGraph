@@ -43,6 +43,9 @@ from utils.pdf_to_jpg import (
 from utils.clean_source_data import (
     run_source_data_cleanup,
 )
+from utils.export_purchase_history_txt import (
+    run_purchase_history_txt_export,
+)
 
 
 def display_capabilities_menu() -> None:
@@ -205,6 +208,9 @@ def display_standalone_utilities_menu() -> None:
         "5. Clean Source Data"
     )
     print(
+        "6. Export Purchase History as CSV TXT"
+    )
+    print(
         "0. Return to Utilities Menu"
     )
 
@@ -227,6 +233,8 @@ def run_standalone_utilities_menu() -> None:
             run_pdf_to_jpg_converter()
         elif option == "5":
             run_source_data_cleanup()
+        elif option == "6":
+            run_purchase_history_txt_export()
         elif option == "0":
             return
         else:

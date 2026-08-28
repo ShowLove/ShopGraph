@@ -4,6 +4,47 @@
 # SUBSTRINGS match anywhere inside Product for a store.
 # Matching is case-insensitive and whitespace-normalized.
 
+[STORE:Publix]
+TERMS:
+F
+3,69
+5,15
+2.99
+If
+You saved
+vhs
+5.15
+3.19
+ic
+HY
+6.79
+is
+{\
+3.99
+5.45
+JF
+9.45
+a)
+14,29
+1.53
+/1b x Ib
+5,65
+0,00
+1 @3 for
+3.34
+3.33
+1@3 for
+Vou saved
+T
+T 7.19
+Age Bynasse
+Subtota |
+84.50
+les Tax 73
+0,50
+SUBSTRINGS:
+$
+
 [STORE:Walmart]
 TERMS:
 Walmart Invoice
