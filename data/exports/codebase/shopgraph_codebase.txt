@@ -27,6 +27,7 @@ shopping_analysis/
         codebase_bundler.py
         constants.py
         export_codebase.py
+        export_purchase_history_txt.py
         image_preprocessing.py
         main.py
         ocr_benchmark_evaluator.py
@@ -56,6 +57,7 @@ shopping_analysis/
     README/
         README_CAPABILITY_MODES_UPDATE.txt
         README_PDF_TO_JPG.txt
+        README_PURCHASE_HISTORY_CSV_TXT_EXPORT.txt
         README_SOURCE_DATA_CLEANUP.txt
         README_STORE_SPECIFIC_SKIP_TERMS.txt
         README_UPDATE.txt
@@ -66,6 +68,7 @@ shopping_analysis/
         requirements.txt
         pdf_files/
         database/
+            shopgraph_purchase_history.txt
         refined_json/
         config/
             skip_terms.txt
@@ -79,7 +82,7 @@ shopping_analysis/
 
 ================================================================================
 
-Generated: 2026-08-28 17:10:43.559577
+Generated: 2026-08-28 17:18:46.360294
 Root: /Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis
 Mode: LLM-clean export
 Excluded: receipt images, OCR JSON, datasets, databases, logs, caches
@@ -7171,6 +7174,151 @@ def run_codebase_export() -> None:
 
 
 ================================================================================
+FILE: utils/export_purchase_history_txt.py
+================================================================================
+
+from __future__ import annotations
+
+import csv
+from pathlib import Path
+
+from openpyxl import load_workbook
+
+from utils.constants import DATA_DIR
+
+
+DATABASE_DIR = DATA_DIR / "database"
+
+WORKBOOK_PATH = (
+    DATABASE_DIR
+    / "shopgraph_purchase_history.xlsx"
+)
+
+OUTPUT_PATH = (
+    DATABASE_DIR
+    / "shopgraph_purchase_history.txt"
+)
+
+PURCHASE_HISTORY_SHEET = "Purchase History"
+
+
+def _cell_to_text(value) -> str:
+    if value is None:
+        return ""
+
+    return str(value)
+
+
+def export_purchase_history_as_csv_txt() -> Path:
+    """
+    Export the Purchase History worksheet as CSV-formatted plain text.
+
+    Source:
+        data/database/shopgraph_purchase_history.xlsx
+
+    Output:
+        data/database/shopgraph_purchase_history.txt
+
+    Formula cells are preserved as formula text. This avoids silently losing
+    formula content when a cached Excel-calculated value is unavailable.
+    """
+    if not WORKBOOK_PATH.exists():
+        raise FileNotFoundError(
+            "Purchase History workbook was not found:"
+            f"\n{WORKBOOK_PATH.resolve()}"
+        )
+
+    workbook = load_workbook(
+        WORKBOOK_PATH,
+        data_only=False,
+        read_only=True,
+    )
+
+    try:
+        if PURCHASE_HISTORY_SHEET not in workbook.sheetnames:
+            raise ValueError(
+                f'Worksheet "{PURCHASE_HISTORY_SHEET}" '
+                f"was not found in {WORKBOOK_PATH.name}."
+            )
+
+        worksheet = workbook[
+            PURCHASE_HISTORY_SHEET
+        ]
+
+        DATABASE_DIR.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
+
+        with OUTPUT_PATH.open(
+            "w",
+            encoding="utf-8",
+            newline="",
+        ) as output_file:
+            writer = csv.writer(
+                output_file,
+                dialect="excel",
+                quoting=csv.QUOTE_MINIMAL,
+                lineterminator="\n",
+            )
+
+            for row in worksheet.iter_rows(
+                values_only=True,
+            ):
+                writer.writerow(
+                    [
+                        _cell_to_text(value)
+                        for value in row
+                    ]
+                )
+
+    finally:
+        workbook.close()
+
+    return OUTPUT_PATH.resolve()
+
+
+def run_purchase_history_txt_export() -> None:
+    print(
+        "\n=== Export Purchase History as CSV TXT ===\n"
+    )
+
+    try:
+        output_path = (
+            export_purchase_history_as_csv_txt()
+        )
+    except (
+        FileNotFoundError,
+        ValueError,
+        PermissionError,
+        OSError,
+    ) as error:
+        print(
+            f"[ERROR] {error}"
+        )
+        return
+
+    print(
+        "[OK] Purchase History exported "
+        "as CSV-formatted text."
+    )
+
+    print(
+        "\nSource:"
+        f"\n{WORKBOOK_PATH.resolve()}"
+    )
+
+    print(
+        "\nOutput:"
+        f"\n{output_path}"
+    )
+
+
+if __name__ == "__main__":
+    run_purchase_history_txt_export()
+
+
+================================================================================
 FILE: utils/image_preprocessing.py
 ================================================================================
 
@@ -8287,6 +8435,9 @@ from utils.pdf_to_jpg import (
 from utils.clean_source_data import (
     run_source_data_cleanup,
 )
+from utils.export_purchase_history_txt import (
+    run_purchase_history_txt_export,
+)
 
 
 def display_capabilities_menu() -> None:
@@ -8449,6 +8600,9 @@ def display_standalone_utilities_menu() -> None:
         "5. Clean Source Data"
     )
     print(
+        "6. Export Purchase History as CSV TXT"
+    )
+    print(
         "0. Return to Utilities Menu"
     )
 
@@ -8471,6 +8625,8 @@ def run_standalone_utilities_menu() -> None:
             run_pdf_to_jpg_converter()
         elif option == "5":
             run_source_data_cleanup()
+        elif option == "6":
+            run_purchase_history_txt_export()
         elif option == "0":
             return
         else:
@@ -14078,6 +14234,69 @@ TEST
 
 
 ================================================================================
+FILE: README/README_PURCHASE_HISTORY_CSV_TXT_EXPORT.txt
+================================================================================
+
+ShopGraph - Purchase History CSV TXT Export
+==========================================
+
+PURPOSE
+
+Adds a new standalone utility that converts:
+
+    data/database/shopgraph_purchase_history.xlsx
+
+to:
+
+    data/database/shopgraph_purchase_history.txt
+
+The output is a normal UTF-8 text file containing standard CSV-formatted data.
+
+MENU
+
+The existing ShopGraph Utilities menu becomes:
+
+    1. Export Clean Codebase
+    2. Clean Generated Processing Data
+    3. Evaluate OCR Against Benchmarks
+    4. Convert PDF Files to JPG
+    5. Clean Source Data
+    6. Export Purchase History as CSV TXT
+    0. Return to Utilities Menu
+
+No existing utility or capability is removed.
+
+EXPORT RULES
+
+- Reads only the "Purchase History" worksheet.
+- Does not export Analytics.
+- Does not export Imported Receipts.
+- Preserves row/column order.
+- Uses commas as separators.
+- Uses standard CSV quoting and escaping.
+- Writes UTF-8 text.
+- Writes one spreadsheet row per text line.
+- Overwrites the previous shopgraph_purchase_history.txt each time.
+
+FORMULAS
+
+The workbook is opened with data_only=False.
+
+This means formula cells are preserved as formula text rather than becoming
+blank if openpyxl does not have a cached Excel-calculated value.
+
+FILES
+
+NEW:
+    utils/export_purchase_history_txt.py
+
+UPDATED:
+    utils/utils_main.py
+
+No new dependency is required. ShopGraph already uses openpyxl.
+
+
+================================================================================
 FILE: README/README_SOURCE_DATA_CLEANUP.txt
 ================================================================================
 
@@ -14493,6 +14712,143 @@ opencv-python
 numpy
 openpyxl
 PyMuPDF
+
+
+================================================================================
+FILE: data/database/shopgraph_purchase_history.txt
+================================================================================
+
+Total,,Store,Six-Digit SKU,Product,Tax Code,Store Number,Common Name,Category,Date 1,Price 1,Date 2,Price 2,Date 3,Price 3,Date 4,Price 4,Date 5,Price 5
+"=SUM(K2,M2,O2,Q2,S2)",,Publix,NA,Stony Yobaby Pouch Peach,F,1058,"Stonyfield Organic YoBaby Yogurt Pouch, Peach",Yogurt,2026-08-25 00:00:00,7.85,,,,,,,,
+"=SUM(K3,M3,O3,Q3,S3)",,Publix,NA,Stony Yobaby Pouch Banana,F,1058,"Stonyfield Organic YoBaby Yogurt Pouch, Banana",Yogurt,2026-08-25 00:00:00,7.85,,,,,,,,
+"=SUM(K4,M4,O4,Q4,S4)",,Publix,NA,Sweet Loren's Gf Brownie,F,1058,Sweet Loren's Gluten Free Brownie Cookie Dough,Refrigerated Dough,2026-08-25 00:00:00,6.99,,,,,,,,
+"=SUM(K5,M5,O5,Q5,S5)",,Publix,NA,Vans Waffle Blueberry Gf,F,1058,Van's Gluten Free Blueberry Waffles,Frozen Breakfast,2026-08-25 00:00:00,3.89,2026-08-25 00:00:00,3.89,,,,,,
+"=SUM(K6,M6,O6,Q6,S6)",,Publix,NA,Chobani 4Pk Hero Batch,F,1058,"Chobani Greek Yogurt 4-Pack, Hero Batch",Yogurt,2026-08-25 00:00:00,5.65,,,,,,,,
+"=SUM(K7,M7,O7,Q7,S7)",,Publix,NA,Silk Soy Organic Nsa Hg,F,1058,"Silk Organic Unsweet Soymilk, Half Gallon",Plant-Based Milk,2026-08-25 00:00:00,6.19,2026-08-25 00:00:00,6.19,2026-08-25 00:00:00,6.19,,,,
+"=SUM(K8,M8,O8,Q8,S8)",,Publix,NA,Publix Half&Half Hg,F,1058,"Publix Half & Half, Half Gallon",Cream & Half-and-Half,2026-08-25 00:00:00,5.89,,,,,,,,
+"=SUM(K9,M9,O9,Q9,S9)",,Aldi,383212,GF Wide Pan Bread,NA,160,Gluten-Free Wide Pan Bread,Bread,2026-08-23 00:00:00,6.79,,,,,,,,
+"=SUM(K10,M10,O10,Q10,S10)",,Aldi,356691,Zucchini,NA,160,Zucchini,Fresh Vegetables,2026-08-23 00:00:00,2.52,,,,,,,,
+"=SUM(K11,M11,O11,Q11,S11)",,Aldi,356689,Yellow Squash,NA,160,Yellow Squash,Fresh Vegetables,2026-08-23 00:00:00,2.6,,,,,,,,
+"=SUM(K12,M12,O12,Q12,S12)",,Aldi,356421,Medley Potatoes,NA,160,Medley Potatoes,Fresh Vegetables,2026-08-23 00:00:00,3.29,,,,,,,,
+"=SUM(K13,M13,O13,Q13,S13)",,Aldi,356537,Cilantro,NA,160,Cilantro,Fresh Herbs,2026-08-23 00:00:00,0.89,,,,,,,,
+"=SUM(K14,M14,O14,Q14,S14)",,Aldi,856508,Broccoli Crowns,NA,160,Broccoli Crowns,Fresh Vegetables,2026-08-23 00:00:00,3.41,,,,,,,,
+"=SUM(K15,M15,O15,Q15,S15)",,Aldi,356496,Beefsteak Tomatoes,NA,160,Beefsteak Tomatoes,Fresh Vegetables,2026-08-23 00:00:00,2.99,,,,,,,,
+"=SUM(K16,M16,O16,Q16,S16)",,Aldi,344280,Cauli Crust Pizza,NA,160,Cauliflower Crust Pizza,Frozen Pizza,2026-08-23 00:00:00,8.29,,,,,,,,
+"=SUM(K17,M17,O17,Q17,S17)",,Aldi,356427,Multi-Peppers 3pk,NA,160,"Multi-Color Peppers, 3-Pack",Fresh Vegetables,2026-08-23 00:00:00,2.69,,,,,,,,
+"=SUM(K18,M18,O18,Q18,S18)",,Aldi,356591,Pink Lady Apple,NA,160,Pink Lady Apples,Fresh Fruit,2026-08-23 00:00:00,3.69,,,,,,,,
+"=SUM(K19,M19,O19,Q19,S19)",,Aldi,356488,Baby Carrots,NA,160,Baby Carrots,Fresh Vegetables,2026-08-23 00:00:00,1.29,,,,,,,,
+"=SUM(K20,M20,O20,Q20,S20)",,Aldi,341979,Pine/Water Spears,NA,160,Pineapple & Watermelon Spears,Fresh-Cut Fruit,2026-08-23 00:00:00,3.89,,,,,,,,
+"=SUM(K21,M21,O21,Q21,S21)",,Aldi,356504,Blueberries,NA,160,Blueberries,Fresh Fruit,2026-08-23 00:00:00,2.59,,,,,,,,
+"=SUM(K22,M22,O22,Q22,S22)",,Aldi,356374,Golden Kiwi,NA,160,Golden Kiwi,Fresh Fruit,2026-08-23 00:00:00,4.39,,,,,,,,
+"=SUM(K23,M23,O23,Q23,S23)",,Aldi,343738,Humus Mini Cups,NA,160,Hummus Mini Cups,Dips & Spreads,2026-08-23 00:00:00,3.45,,,,,,,,
+"=SUM(K24,M24,O24,Q24,S24)",,Aldi,NA,LesserEvil Popcorn,NA,160,LesserEvil Popcorn,Popcorn,2026-08-23 00:00:00,2.39,,,,,,,,
+"=SUM(K25,M25,O25,Q25,S25)",,Aldi,262747,Bananas LRW,NA,160,Bananas,Fresh Fruit,2026-08-23 00:00:00,1.31,,,,,,,,
+"=SUM(K26,M26,O26,Q26,S26)",,Aldi,328752,Fruit & Grain Bars,NA,160,Fruit & Grain Bars,Snack Bars,2026-08-23 00:00:00,1.99,2026-08-23 00:00:00,1.99,,,,,,
+"=SUM(K27,M27,O27,Q27,S27)",,Aldi,856609,Red Onions,NA,160,Red Onions,Fresh Vegetables,2026-08-23 00:00:00,2.49,,,,,,,,
+"=SUM(K28,M28,O28,Q28,S28)",,Aldi,739153,Organic Chickpeas,NA,160,Organic Chickpeas,Canned Beans & Legumes,2026-08-23 00:00:00,0.99,2026-08-23 00:00:00,0.99,,,,,,
+"=SUM(K29,M29,O29,Q29,S29)",,Aldi,381343,Dark Red Kidney,NA,160,Dark Red Kidney Beans,Canned Beans & Legumes,2026-08-23 00:00:00,0.85,2026-08-23 00:00:00,0.85,,,,,,
+"=SUM(K30,M30,O30,Q30,S30)",,Aldi,381359,Vinaigrette Drssng,NA,160,Vinaigrette Dressing,Salad Dressing,2026-08-23 00:00:00,2.99,,,,,,,,
+"=SUM(K31,M31,O31,Q31,S31)",,Aldi,356578,Parsley each,NA,160,Parsley,Fresh Herbs,2026-08-23 00:00:00,0.95,,,,,,,,
+"=SUM(K32,M32,O32,Q32,S32)",,Aldi,400462,OG Croutons,NA,160,Organic Croutons,Croutons,2026-08-23 00:00:00,1.99,,,,,,,,
+"=SUM(K33,M33,O33,Q33,S33)",,Aldi,344583,Evryd Plate 8.5in,NA,160,"Everyday Paper Plates, 8.5 Inch",Disposable Tableware,2026-08-23 00:00:00,5.25,,,,,,,,
+"=SUM(K34,M34,O34,Q34,S34)",,Aldi,384545,NO Honey Wheat Brd,NA,160,No [or possibly Nature's Own] Honey Wheat Bread,Bread,2026-08-23 00:00:00,3.37,,,,,,,,
+"=SUM(K35,M35,O35,Q35,S35)",,Aldi,730325,3pk_Gel Pens,NA,160,"Gel Pens, 3-Pack",Writing Supplies,2026-08-23 00:00:00,5.99,,,,,,,,
+"=SUM(K36,M36,O36,Q36,S36)",,Aldi,720921,PB Toast Crackers FA,NA,160,Peanut Butter Toast Crackers,Crackers,2026-08-23 00:00:00,2.79,,,,,,,,
+"=SUM(K37,M37,O37,Q37,S37)",,Aldi,383548,Goat Cheese Logs,NA,160,Goat Cheese Logs,Specialty Cheese,2026-08-23 00:00:00,1.99,,,,,,,,
+"=SUM(K38,M38,O38,Q38,S38)",,Aldi,713372,Feta Crumbles,NA,160,Feta Cheese Crumbles,Specialty Cheese,2026-08-23 00:00:00,2.89,,,,,,,,
+"=SUM(K39,M39,O39,Q39,S39)",,Aldi,NA,CollapsibleStorage,NA,160,Collapsible Storage Container/Bin,Storage & Organization,2026-08-23 00:00:00,5.99,,,,,,,,
+"=SUM(K40,M40,O40,Q40,S40)",,Trader Joe's,NA,EMPIRE KOSHER GROUND TRK,NA,0848,Empire Kosher Ground Turkey,Fresh Poultry,2026-08-24 00:00:00,6.99,2026-08-24 00:00:00,6.99,,,,,,
+"=SUM(K41,M41,O41,Q41,S41)",,Trader Joe's,NA,R-STRAWBERRIES 1 LB,NA,0848,"Strawberries, 1 lb",Fresh Fruit,2026-08-24 00:00:00,3.99,,,,,,,,
+"=SUM(K42,M42,O42,Q42,S42)",,Trader Joe's,NA,FIRE ROASTED RED PEPPERS,NA,0848,Fire Roasted Red Peppers,Jarred Vegetables,2026-08-24 00:00:00,3.29,,,,,,,,
+"=SUM(K43,M43,O43,Q43,S43)",,Trader Joe's,NA,PASTA CHICKPEA FUSILLI,NA,0848,Chickpea Fusilli Pasta,Pasta,2026-08-24 00:00:00,2.99,,,,,,,,
+"=SUM(K44,M44,O44,Q44,S44)",,Trader Joe's,NA,MUFFIN BLUEBERRY GLUTEN,NA,0848,Gluten-Free Blueberry Muffins,Muffins & Pastries,2026-08-24 00:00:00,5.99,,,,,,,,
+"=SUM(K45,M45,O45,Q45,S45)",,Honey Pineapple,NA,1 Caramel Macchiato,NA,NA,1 Caramel Macchiato,Prepared Coffee,2026-08-27 00:00:00,5.5,,,,,,,,
+"=SUM(K46,M46,O46,Q46,S46)",,Honey Pineapple,NA,1 Iced Caramel Macchiato,NA,NA,1 Iced Caramel Macchiato,Prepared Coffee,2026-08-27 00:00:00,5.5,,,,,,,,
+"=SUM(K47,M47,O47,Q47,S47)",,Honey Pineapple,NA,1 Frenchy Plate,LF,NA,1 Frenchy Plate,Prepared Meals,2026-08-27 00:00:00,14.9,,,,,,,,
+"=SUM(K48,M48,O48,Q48,S48)",,Honey Pineapple,NA,1 Chicken N French Toast,T,NA,1 Chicken N French Toast,Prepared Meals,2026-08-27 00:00:00,16.3,,,,,,,,
+"=SUM(K49,M49,O49,Q49,S49)",,Honey Pineapple,NA,Tax,NA,NA,Tax,Fees & Charges,2026-08-27 00:00:00,2.96,,,,,,,,
+"=SUM(K50,M50,O50,Q50,S50)",,Honey Pineapple,NA,Tip,NA,NA,Tip,Fees & Charges,2026-08-27 00:00:00,2.96,,,,,,,,
+"=SUM(K51,M51,O51,Q51,S51)",,Walmart,NA,"Safety 1 Soft Grip Brush & Comb, Artic Blue",NA,0,NA,NA,2026-08-06 00:00:00,4.48,2026-08-07 00:00:00,4.48,,,,,,
+"=SUM(K52,M52,O52,Q52,S52)",,Walmart,NA,The Honest Company Conditioning Detangler Sweet Cream Comfort 4 floz,NA,0,NA,Dairy,2026-08-06 00:00:00,6.96,2026-08-07 00:00:00,6.96,,,,,,
+"=SUM(K53,M53,O53,Q53,S53)",,Walmart,NA,"Nestle Toll House Organic Allergen Free Dark Chocolate Regular Baking Chips, Morsels for Baking, 9 oz Bag",NA,0,NA,Snacks,2026-08-06 00:00:00,8.37,2026-08-07 00:00:00,8.37,,,,,,
+"=SUM(K54,M54,O54,Q54,S54)",,Walmart,NA,"GHIRARDELLI Gluten Free Double Chocolate Brownie Mix, Gluten Free Baking Mix, Includes Chocolate Chips, 18 oz Box 20 shopped Qty1",NA,0,NA,Snacks,2026-08-06 00:00:00,6.67,,,,,,,,
+"=SUM(K55,M55,O55,Q55,S55)",,Walmart,NA,"Purina Tidy Cats With Glade Clear Springs Scented, Odor Control, Clumping Multi-Cat Litter 20 shopped Qty2",NA,0,NA,Pet,2026-08-06 00:00:00,23.94,2026-08-07 00:00:00,23.94,,,,,,
+"=SUM(K56,M56,O56,Q56,S56)",,Walmart,NA,"Lawry's Kosher Coarse Ground With Parsley Garlic Salt, 6.0 oz Bottle",NA,0,NA,Meat & Seafood,2026-08-06 00:00:00,3.16,2026-08-07 00:00:00,3.16,,,,,,
+"=SUM(K57,M57,O57,Q57,S57)",,Walmart,NA,"Huggies Natural Care Sensitive Baby Wipes, Unscented, 3 Flip-Top Packs, 168 Count 20 shopped Qty1",NA,0,NA,Baby,2026-08-06 00:00:00,5.82,2026-08-07 00:00:00,5.82,,,,,,
+"=SUM(K58,M58,O58,Q58,S58)",,Walmart,NA,"Pampers Swaddlers Fragrance Free Baby Diapers Size 5, 100 Count (Select for More Options) 20 shopped Qty1",NA,0,NA,Baby,2026-08-06 00:00:00,39.77,,,,,,,,
+"=SUM(K59,M59,O59,Q59,S59)",,Walmart,NA,Chobani Oatmilk Extra Creamy 52 floz Carton 20 shopped aty1,NA,0,NA,Dairy,2026-08-06 00:00:00,4.17,,,,,,,,
+"=SUM(K60,M60,O60,Q60,S60)",,Walmart,NA,"Desitin Maximum Strength Diaper Rash Cream, 40% Zinc Oxide, 4.8 oz",NA,0,NA,Dairy,2026-08-06 00:00:00,7.97,2026-08-07 00:00:00,7.97,,,,,,
+"=SUM(K61,M61,O61,Q61,S61)",,Walmart,NA,"fairlife Lactose Free Reduced Fat Chocolate Ultra Filtered Milk, 52 floz",NA,0,NA,Dairy,2026-08-06 00:00:00,5.32,2026-08-07 00:00:00,5.32,,,,,,
+"=SUM(K62,M62,O62,Q62,S62)",,Walmart,NA,"Nestle Toll House Dark Chocolate Regular Baking Chips, 10 oz Bag 20 shopped Qty1",NA,0,NA,Snacks,2026-08-06 00:00:00,4.96,,,,,,,,
+"=SUM(K63,M63,O63,Q63,S63)",,Walmart,NA,Dove Body Wash For 24hr Lotion-Soft Skin Sensitive Skin Moisturizing Skin Cleanser Gentle Hypoallergenic Formula With,NA,0,NA,NA,2026-08-06 00:00:00,4.97,2026-08-07 00:00:00,4.97,,,,,,
+"=SUM(K64,M64,O64,Q64,S64)",,Walmart,NA,"No Sulfates No Parabens, 11 Floz",NA,0,NA,NA,2026-08-06 00:00:00,4.97,2026-08-07 00:00:00,4.97,,,,,,
+"=SUM(K65,M65,O65,Q65,S65)",,Walmart,NA,Great Value Large White Eggs 36 Count 20 shopped Qty1,NA,0,NA,NA,2026-08-06 00:00:00,4.88,2026-08-07 00:00:00,4.88,,,,,,
+"=SUM(K66,M66,O66,Q66,S66)",,Walmart,NA,"Chobani 20G Protein Low-Fat Greek Yogurt Drink, Strawberries and Cream 10 fl oz Bottle, 4 Pack",NA,0,NA,Produce,2026-08-06 00:00:00,9.67,2026-08-07 00:00:00,9.67,,,,,,
+"=SUM(K67,M67,O67,Q67,S67)",,Walmart,NA,"McCormick Sea Salt Grinder, oz Bottle 20 shopped aty1",NA,0,NA,NA,2026-08-06 00:00:00,2.54,,,,,,,,
+"=SUM(K68,M68,O68,Q68,S68)",,Walmart,NA,"Fresh Mandarin Oranges, 5 lb Bag 20 shopped Qty1",NA,0,NA,Produce,2026-08-06 00:00:00,7.96,2026-08-07 00:00:00,7.96,,,,,,
+"=SUM(K69,M69,O69,Q69,S69)",,Walmart,NA,"Fresh Pink Lady Apples, 3lb Bag 20 shopped Qty1",NA,0,NA,Produce,2026-08-06 00:00:00,4.97,2026-08-07 00:00:00,4.97,,,,,,
+"=SUM(K70,M70,O70,Q70,S70)",,Walmart,NA,"Fresh Banana, Each 7 weight adjusted Qty7",NA,0,NA,Produce,2026-08-06 00:00:00,1.83,2026-08-07 00:00:00,1.83,2026-08-07 00:00:00,1.83,,,,
+"=SUM(K71,M71,O71,Q71,S71)",,Walmart,NA,CeraVe Baby Healing Ointment for Diaper Rash & Cracked Chafed Dry Skin for Baby + Toddler 3 oz,NA,0,NA,Baby,2026-08-06 00:00:00,9.98,2026-08-07 00:00:00,9.98,,,,,,
+"=SUM(K72,M72,O72,Q72,S72)",,Walmart,NA,"Fresh Banana, Each 7 weight adjusted Qty7",NA,0,NA,NA,2026-08-06 00:00:00,3.48,,,,,,,,
+"=SUM(K73,M73,O73,Q73,S73)",,Walmart,NA,Tax,NA,0,NA,NA,2026-08-06 00:00:00,3.48,2026-08-07 00:00:00,3.48,2026-08-13 00:00:00,1.76,2026-08-26 00:00:00,6.35,2026-08-26 00:00:00,6.35
+"=SUM(K74,M74,O74,Q74,S74)",,Walmart,NA,Driver tip,NA,0,NA,NA,2026-08-06 00:00:00,16.92,2026-08-13 00:00:00,17.72,2026-08-26 00:00:00,12.14,,,,
+"=SUM(K75,M75,O75,Q75,S75)",,Walmart,NA,3 hours orless,NA,0,NA,NA,2026-08-06 00:00:00,5,,,,,,,,
+"=SUM(K76,M76,O76,Q76,S76)",,Walmart,NA,diff,NA,0,NA,NA,2026-08-06 00:00:00,2.77,,,,,,,,
+"=SUM(K77,M77,O77,Q77,S77)",,Walmart,NA,"GHIRARDELLI Gluten Free Double Chocolate Brownie Mix, Gluten Free Baking Mix, Includes Chocolate Chips, 18 oz Box",NA,0,NA,Snacks,2026-08-07 00:00:00,6.67,,,,,,,,
+"=SUM(K78,M78,O78,Q78,S78)",,Walmart,NA,"Pampers Swaddlers Fragrance Free Baby Diapers Size 5, 100 Count (Select for More Options",NA,0,NA,Baby,2026-08-07 00:00:00,39.77,,,,,,,,
+"=SUM(K79,M79,O79,Q79,S79)",,Walmart,NA,Chobani Oatmitk Extra Creamy 52 floz Carton 20 shopped Qty1,NA,0,NA,Dairy,2026-08-07 00:00:00,4.17,,,,,,,,
+"=SUM(K80,M80,O80,Q80,S80)",,Walmart,NA,"Nestle Tolt House Dark Chocolate Regular Baking Chips, 10 oz Bag 20 shopped Qty1",NA,0,NA,Snacks,2026-08-07 00:00:00,4.96,,,,,,,,
+"=SUM(K81,M81,O81,Q81,S81)",,Walmart,NA,"Applegate Natural Chicken & Maple Breakfast Sausage Patties, 16 oz, GF, Resealable Bag (Frozen), About 15 Pieces per Bag",NA,0,NA,Produce,2026-08-07 00:00:00,11.76,,,,,,,,
+"=SUM(K82,M82,O82,Q82,S82)",,Walmart,NA,"McCormick Sea Salt Grinder, oz Bottle 20 shopped Qty1",NA,0,NA,NA,2026-08-07 00:00:00,2.54,,,,,,,,
+"=SUM(K83,M83,O83,Q83,S83)",,Walmart,NA,3 hours or less,NA,0,NA,NA,2026-08-07 00:00:00,5,,,,,,,,
+"=SUM(K84,M84,O84,Q84,S84)",,Walmart,NA,"Nature's Bakery Gluten Free Raspberry Fig Bars in Twin pack Box, 20z Each 36 shopped Qty1",NA,0,NA,Produce,2026-08-13 00:00:00,5.97,,,,,,,,
+"=SUM(K85,M85,O85,Q85,S85)",,Walmart,NA,"Mahatma Jasmine Rice, Thai Fragrant Long Grain Rice, Gluten Free, 80 oz Bag (5 lbs",NA,0,NA,Pantry,2026-08-13 00:00:00,6.88,,,,,,,,
+"=SUM(K86,M86,O86,Q86,S86)",,Walmart,NA,"Hillshire Farm Ultra Thin Oven Roasted Turkey Breast Lunchmeat, 16 oz Plastic Tub, Refrigerated",NA,0,NA,Meat & Seafood,2026-08-13 00:00:00,6.48,,,,,,,,
+"=SUM(K87,M87,O87,Q87,S87)",,Walmart,NA,"Hebrew National 100% Kosher Beef Franks, Hot Dogs, 10.3 oz 6 Count",NA,0,NA,Meat & Seafood,2026-08-13 00:00:00,5.74,,,,,,,,
+"=SUM(K88,M88,O88,Q88,S88)",,Walmart,NA,"Dave's Killer Bread Organic Oats & Blues Regular Size Loaf, 25 oz, USDA Organic",NA,0,NA,Bakery,2026-08-13 00:00:00,5.98,,,,,,,,
+"=SUM(K89,M89,O89,Q89,S89)",,Walmart,NA,"Birds Eye Steamfresh Sweet Peas, Frozen Vegetables, 10 oz. Bag",NA,0,NA,Frozen,2026-08-13 00:00:00,1.27,,,,,,,,
+"=SUM(K90,M90,O90,Q90,S90)",,Walmart,NA,Cabot Creamery 4 Cheese Mexican Shredded Cheddar Cheese 2 lb (Refrigerated,NA,0,NA,Dairy,2026-08-13 00:00:00,11.93,,,,,,,,
+"=SUM(K91,M91,O91,Q91,S91)",,Walmart,NA,"Ziploc Brand Slider Gallon Freezer Food Storage Bags, School Supplies, with Power Shield Technology, 40 Count",NA,0,NA,NA,2026-08-13 00:00:00,7.98,,,,,,,,
+"=SUM(K92,M92,O92,Q92,S92)",,Walmart,NA,"Ziploc Brand Freezer Food Storage Bags, School Supplies, with Grip 'n Seal Technology, Zipper, Quart, 50 Count",NA,0,NA,NA,2026-08-13 00:00:00,6.48,,,,,,,,
+"=SUM(K93,M93,O93,Q93,S93)",,Walmart,NA,"Fresh Mini Cucumbers, 16 oz",NA,0,NA,NA,2026-08-13 00:00:00,2.08,,,,,,,,
+"=SUM(K94,M94,O94,Q94,S94)",,Walmart,NA,"2 pack) Yehuda Sabbath Candles,12ct",T,0,NA,NA,2026-08-13 00:00:00,3.16,,,,,,,,
+"=SUM(K95,M95,O95,Q95,S95)",,Walmart,NA,"Fresh Yellow Squash, Each 11 weight adjusted aty1",NA,0,NA,NA,2026-08-13 00:00:00,0.42,2026-08-13 00:00:00,0.42,,,,,,
+"=SUM(K96,M96,O96,Q96,S96)",,Walmart,NA,"Fresh Zucchini, Each 11 weight adjusted aty1",NA,0,Zucchini,Produce,2026-08-13 00:00:00,0.6,2026-08-13 00:00:00,0.6,,,,,,
+"=SUM(K97,M97,O97,Q97,S97)",,Walmart,NA,"Fresh Whole Red Onion, Each",NA,0,NA,Produce,2026-08-13 00:00:00,0.88,2026-08-13 00:00:00,0.88,,,,,,
+"=SUM(K98,M98,O98,Q98,S98)",,Walmart,NA,"Fresh Tomato on the Vine, Bag (1.9 lbs/Bag Est.) 11 weight adjusted Qty1",NA,0,NA,Produce,2026-08-13 00:00:00,3.85,,,,,,,,
+"=SUM(K99,M99,O99,Q99,S99)",,Walmart,NA,"Fresh Banana, Each 11 weight adjusted Qty7",NA,0,NA,Produce,2026-08-13 00:00:00,1.76,2026-08-13 00:00:00,1.76,,,,,,
+"=SUM(K100,M100,O100,Q100,S100)",,Walmart,NA,"Command Heavy Duty Picture Hangers, Hold 20 tbs, Black, Damage-Free Hanging, 8 Pairs Adhesive Strips",NA,0,NA,NA,2026-08-26 00:00:00,28.54,,,,,,,,
+"=SUM(K101,M101,O101,Q101,S101)",,Walmart,NA,Dove Men+Care Antiperspirant Deodorant Stick 72-Hour Sweat & Odor Protection Clean Comfort Antiperspirant For Men,NA,0,NA,NA,2026-08-26 00:00:00,NA,,,,,,,,
+"=SUM(K102,M102,O102,Q102,S102)",,Walmart,NA,"Dawn Ultra 11"" Puff Glassware and Dish Cleaning Brush Wand with Sponge Head",NA,0,NA,NA,2026-08-26 00:00:00,4.46,,,,,,,,
+"=SUM(K103,M103,O103,Q103,S103)",,Walmart,NA,"Once Upon a Farm Organic Tractor Wheels Toddler Bar, Apple, Sweet Potato & Spinach, 10ct",NA,0,NA,Produce,2026-08-26 00:00:00,9.98,,,,,,,,
+"=SUM(K104,M104,O104,Q104,S104)",,Walmart,NA,"Weiman Granite & Stone Disinfectant Cleaner & Polish, 24 floz",NA,0,NA,Household,2026-08-26 00:00:00,6.24,,,,,,,,
+"=SUM(K105,M105,O105,Q105,S105)",,Walmart,NA,"Chobani Low-Fat Vanilla Greek Yogurt Mixed Berry On The Bottom, Hero Batch z 4PK",NA,0,NA,Produce,2026-08-26 00:00:00,4.67,,,,,,,,
+"=SUM(K106,M106,O106,Q106,S106)",,Walmart,NA,"Fresh Banana, Each 4 weight adjusted aty4",NA,0,NA,Produce,2026-08-26 00:00:00,0.6,2026-08-26 00:00:00,0.6,,,,,,
+"=SUM(K107,M107,O107,Q107,S107)",,Publix,NA,Jif Nsa P/B Creamy,F,120,NA,Dairy,2026-08-28 00:00:00,3.69,,,,,,,,
+"=SUM(K108,M108,O108,Q108,S108)",,Publix,NA,King Arth G/ Pnck Hix,F,120,NA,NA,2026-08-28 00:00:00,5.15,,,,,,,,
+"=SUM(K109,M109,O109,Q109,S109)",,Publix,NA,Bagged Green Beans,F,120,NA,Pantry,2026-08-28 00:00:00,2.99,,,,,,,,
+"=SUM(K110,M110,O110,Q110,S110)",,Publix,NA,Potato Nibbles Ruby Sensa,F,120,Potato Nibbles Ruby Sensa,Produce,2026-08-28 00:00:00,5.15,,,,,,,,
+"=SUM(K111,M111,O111,Q111,S111)",,Publix,NA,Cholula Cremosa Gltro Lme,F,120,NA,NA,2026-08-28 00:00:00,3.19,,,,,,,,
+"=SUM(K112,M112,O112,Q112,S112)",,Publix,NA,Mc Sig Evrythng Bgel Ssng,F,120,NA,NA,2026-08-28 00:00:00,6.79,,,,,,,,
+"=SUM(K113,M113,O113,Q113,S113)",,Publix,NA,Banza White Cheddar Shel,F,120,NA,NA,2026-08-28 00:00:00,3.99,,,,,,,,
+"=SUM(K114,M114,O114,Q114,S114)",,Publix,NA,anza White Cheddar Shel,F,120,NA,NA,2026-08-28 00:00:00,3.99,,,,,,,,
+"=SUM(K115,M115,O115,Q115,S115)",,Publix,NA,Annie's Dlx Shi&Chd Gf,F,120,NA,NA,2026-08-28 00:00:00,5.45,,,,,,,,
+"=SUM(K116,M116,O116,Q116,S116)",,Publix,NA,Annie's Dlx Shl&Chd Gf,F,120,NA,NA,2026-08-28 00:00:00,5.45,,,,,,,,
+"=SUM(K117,M117,O117,Q117,S117)",,Publix,NA,Gw Keta Salmon Fillet,F,120,NA,Meat & Seafood,2026-08-28 00:00:00,14.29,,,,,,,,
+"=SUM(K118,M118,O118,Q118,S118)",,Publix,NA,Bananas,NA,120,NA,NA,2026-08-28 00:00:00,1.53,,,,,,,,
+"=SUM(K119,M119,O119,Q119,S119)",,Publix,NA,Daiya Shreds Mexican Bld,F,120,NA,Pantry,2026-08-28 00:00:00,5.65,2026-08-28 00:00:00,0,,,,,,
+"=SUM(K120,M120,O120,Q120,S120)",,Publix,NA,Tf Caesar Salad Kit Chop F,NA,120,NA,NA,2026-08-28 00:00:00,3.33,,,,,,,,
+"=SUM(K121,M121,O121,Q121,S121)",,Publix,NA,Tf Everything Salad Chop,TF,120,NA,NA,2026-08-28 00:00:00,3.33,,,,,,,,
+"=SUM(K122,M122,O122,Q122,S122)",,Publix,NA,Hagen David Blackberry,T,120,Hagen David Blackberry,Produce,2026-08-28 00:00:00,7.19,,,,,,,,
+"=SUM(K123,M123,O123,Q123,S123)",,Publix,NA,Tax,NA,120,NA,NA,2026-08-28 00:00:00,0.5,,,,,,,,
+"=SUM(K124,M124,O124,Q124,S124)",,Publix,NA,Tf Everything Salad Chop,TF,120,NA,NA,2026-08-28 00:00:00,3.34,,,,,,,,
+"=SUM(K125,M125,O125,Q125,S125)",,,,,,,,,,,,,,,,,,
+"=SUM(K126,M126,O126,Q126,S126)",,,,,,,,,,,,,,,,,,
+"=SUM(K127,M127,O127,Q127,S127)",,,,,,,,,,,,,,,,,,
+"=SUM(K128,M128,O128,Q128,S128)",,,,,,,,,,,,,,,,,,
+"=SUM(K129,M129,O129,Q129,S129)",,,,,,,,,,,,,,,,,,
+"=SUM(K130,M130,O130,Q130,S130)",,,,,,,,,,,,,,,,,,
+"=SUM(K131,M131,O131,Q131,S131)",,,,,,,,,,,,,,,,,,
 
 
 ================================================================================
