@@ -1,0 +1,4 @@
+# ShopGraph utility configuration
+# Paths may use ~ and environment variables.
+
+code_update_import_location=~/Downloads

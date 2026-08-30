@@ -46,6 +46,9 @@ from utils.clean_source_data import (
 from utils.export_purchase_history_txt import (
     run_purchase_history_txt_export,
 )
+from utils.code_update_importer import (
+    run_code_update_importer_menu,
+)
 
 
 def display_capabilities_menu() -> None:
@@ -211,6 +214,9 @@ def display_standalone_utilities_menu() -> None:
         "6. Export Purchase History as CSV TXT"
     )
     print(
+        "7. Import Code Update ZIP"
+    )
+    print(
         "0. Return to Utilities Menu"
     )
 
@@ -235,6 +241,8 @@ def run_standalone_utilities_menu() -> None:
             run_source_data_cleanup()
         elif option == "6":
             run_purchase_history_txt_export()
+        elif option == "7":
+            run_code_update_importer_menu()
         elif option == "0":
             return
         else:
