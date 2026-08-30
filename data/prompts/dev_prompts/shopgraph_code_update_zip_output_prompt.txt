@@ -1,0 +1,136 @@
+SHOPGRAPH — CODE UPDATE ZIP OUTPUT PROMPT
+=========================================
+
+Use this prompt whenever I ask you to modify my ShopGraph codebase.
+
+I will normally provide a current ShopGraph codebase bundle such as:
+
+    shopgraph_codebase(...).txt
+
+and describe the change I want.
+
+YOUR JOB
+--------
+
+1. Inspect the CURRENT uploaded codebase before editing.
+2. Make the requested changes against that current version.
+3. Preserve unrelated existing behavior unless the request requires changing it.
+4. Test the modified Python files for syntax and, where practical, test the
+   relevant behavior.
+5. Return a ShopGraph UPDATE ZIP that can be installed with ShopGraph's
+   "Import Code Update ZIP" utility.
+
+
+ZIP FORMAT — REQUIRED
+---------------------
+
+The ZIP must be a PROJECT-RELATIVE OVERLAY, not a complete unrelated repository.
+
+Preferred structure:
+
+    ShopGraph_Descriptive_Update/
+        utils/
+            ...
+        capabilities/
+            ...
+        data/
+            ...
+        README/
+            ...
+
+Only include files that are new or must be replaced for the requested update.
+
+Do NOT include my entire database, receipt images, caches, virtual environment,
+.git directory, OCR generated data, or unrelated files.
+
+Do NOT include:
+
+    utils/config.txt
+
+because the ShopGraph updater protects that file and it contains local settings.
+
+It is also acceptable for the ZIP to begin directly with project-relative paths:
+
+    utils/
+    capabilities/
+    data/
+    README/
+
+but the single descriptive wrapper folder is preferred.
+
+
+PATH RULE
+---------
+
+Every file inside the ZIP must be located exactly where it belongs relative to
+the ShopGraph project root.
+
+Example:
+
+If the real project file is:
+
+    shopping_analysis/utils/example.py
+
+the ZIP path should be:
+
+    ShopGraph_Descriptive_Update/utils/example.py
+
+NOT:
+
+    ShopGraph_Descriptive_Update/shopping_analysis/utils/example.py
+
+and NOT an absolute macOS path.
+
+
+README
+------
+
+When useful, include a short README file under:
+
+    README/
+
+describing:
+- what changed;
+- which files were added/replaced;
+- menu changes;
+- whether any new dependency/install step is required.
+
+
+BACKWARD COMPATIBILITY AND SAFETY
+---------------------------------
+
+Prefer overlay-safe, narrowly-scoped changes.
+
+Do not delete unrelated functionality.
+
+Do not move persistent user data unless explicitly requested.
+
+If schema migration is required, make it safe and idempotent.
+
+If an update changes a write path or persistent workbook/database behavior,
+prioritize data integrity and validate before saving.
+
+
+TESTING
+-------
+
+Before returning the ZIP:
+- syntax-check all modified Python files;
+- test key behavior where practical;
+- verify the ZIP member paths match the ShopGraph overlay format;
+- verify the ZIP does not contain utils/config.txt;
+- verify no accidental absolute paths or ../ traversal exist.
+
+
+FINAL RESPONSE
+--------------
+
+Give me a direct downloadable link to the ZIP.
+
+Briefly state:
+- what the update changes;
+- the ZIP filename;
+- whether a new install/dependency is needed.
+
+Do not make me manually reconstruct files from snippets unless I explicitly ask
+for copy/paste source instead of a ZIP.

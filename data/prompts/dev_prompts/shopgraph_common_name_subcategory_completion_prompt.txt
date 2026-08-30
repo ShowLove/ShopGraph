@@ -1,0 +1,226 @@
+SHOPGRAPH — INTELLIGENT COMMON NAME + SUB-CATEGORY COMPLETION PROMPT
+=====================================================================
+
+TASK
+----
+
+Analyze the attached/exported ShopGraph file:
+
+    data/database/shopgraph_purchase_history.txt
+
+This file is a CSV-formatted export of the "Purchase History" worksheet.
+
+Your job is to intelligently complete ONLY missing Common Name and Sub-Category
+values for newly-added purchase-history rows.
+
+The existing data is the taxonomy reference and must be treated as authoritative.
+
+
+CORE RULE: PRESERVE EXISTING TAXONOMY
+-------------------------------------
+
+1. DO NOT change any existing nonblank/non-NA Common Name.
+2. DO NOT change any existing nonblank/non-NA Sub-Category.
+3. DO NOT "clean up", normalize, rename, merge, or reorganize existing values,
+   even if you think a different name would be better.
+4. Learn ShopGraph's naming style and classification habits from the existing
+   rows, then extend them consistently to new/missing rows.
+5. Existing assignments are examples of the user's intended taxonomy, not
+   suggestions to rewrite.
+
+
+WHAT COUNTS AS MISSING
+----------------------
+
+Treat either of these as missing:
+
+    blank
+    NA
+
+Analyze rows where Common Name and/or Sub-Category is missing.
+
+If Common Name already exists but Sub-Category is missing:
+    preserve the Common Name exactly and infer only Sub-Category.
+
+If Sub-Category already exists but Common Name is missing:
+    preserve the Sub-Category exactly and infer only Common Name.
+
+If both are present:
+    leave the row completely untouched.
+
+
+HOW TO INFER COMMON NAME
+------------------------
+
+Use all relevant fields in the row, especially:
+
+    Store
+    Six-Digit SKU
+    Product
+    Tax Code
+    Store Number
+    purchase history / repeated appearances
+
+Common Name should describe the real-world product in a stable, human-readable
+way rather than merely copying noisy receipt text.
+
+Prefer an existing Common Name when the new row is clearly the same product.
+
+Use SKU/store/product relationships when available. A matching SKU from the same
+retailer is strong evidence, but do not force a match when the product evidence
+conflicts.
+
+When creating a genuinely new Common Name:
+- use a concise recognizable product name;
+- remove receipt/OCR clutter;
+- keep meaningful brand/product distinctions when they matter;
+- follow the naming style already present in the file;
+- do not invent details unsupported by the row.
+
+
+HOW TO INFER SUB-CATEGORY
+-------------------------
+
+First study the complete set of existing Common Name -> Sub-Category assignments.
+
+For a new item:
+
+1. Reuse an existing Sub-Category when it is genuinely the same type of item.
+2. Prefer consistency with existing classifications over generic assumptions.
+3. Do NOT force an item into an existing Sub-Category merely because it is the
+   closest thing currently present.
+4. Create a NEW Sub-Category when the item represents a materially different
+   product type.
+
+The database may expand into completely new domains. New purchases might be:
+
+    home improvement
+    tools
+    automotive
+    electronics
+    office supplies
+    garden
+    furniture
+    pet supplies
+    clothing
+    services
+    or anything else
+
+Do not assume future purchases resemble groceries or any existing domain.
+
+A new Sub-Category should:
+- be specific enough to remain analytically useful;
+- be broad enough to contain future comparable products;
+- match the naming style and granularity of existing Sub-Categories;
+- describe WHAT the item is, not where it was purchased;
+- avoid catch-all labels such as "Miscellaneous" unless the existing taxonomy
+  clearly uses that approach.
+
+
+CONSISTENCY CHECKS
+------------------
+
+Before producing the answer:
+
+1. Build an internal reference map of existing Common Name -> Sub-Category.
+2. Check whether a new product matches an existing Common Name.
+3. Check whether the proposed Sub-Category already exists under the same concept.
+4. Avoid creating near-duplicate Sub-Categories differing only by wording,
+   capitalization, singular/plural, or minor phrasing.
+5. If a genuinely new product domain is encountered, create the needed new
+   Sub-Category instead of distorting the existing taxonomy.
+6. Apply the same reasoning consistently to repeated new products.
+7. Never overwrite existing populated taxonomy values to make the file appear
+   more consistent.
+
+
+UNCERTAINTY
+-----------
+
+Make a best evidence-based classification when reasonable.
+
+If a row is genuinely too ambiguous to classify reliably from the available
+data, use:
+
+    NA
+
+Do not fabricate a specific identity simply to avoid NA.
+
+If several new rows clearly refer to the same product, classify them consistently.
+
+
+OUTPUT FORMAT — IMPORTANT
+-------------------------
+
+The goal is easy copy/paste into the actual Excel "Purchase History" worksheet.
+
+The export's first CSV line corresponds to Excel row 1, so source line numbers
+can be used as Excel row numbers.
+
+Return TWO sections only.
+
+SECTION 1 — REVIEW TABLE
+
+Provide a compact Markdown table:
+
+| Excel Row | Store | Product | Common Name | Sub-Category | Reason |
+|---:|---|---|---|---|---|
+
+Include ONLY rows where Common Name and/or Sub-Category was missing in the input.
+
+The "Common Name" and "Sub-Category" columns must show the FINAL proposed values,
+including an existing value that is being preserved.
+
+Keep Reason brief: usually one sentence.
+
+
+SECTION 2 — COPY/PASTE BLOCKS
+
+Group missing rows into contiguous Excel row ranges.
+
+For each contiguous range, provide a label saying exactly where to paste:
+
+    Paste into H27
+
+or:
+
+    Paste into H27:I31
+
+Then provide a TAB-SEPARATED code block containing exactly two columns:
+
+    Common Name<TAB>Sub-Category
+
+in exact Excel row order.
+
+Example:
+
+Paste into H27:I29
+
+```text
+Bananas	Fresh Fruit
+16 oz Claw Hammer	Hammers
+USB-C Charging Cable	Charging Cables
+```
+
+Rules for paste blocks:
+- no header row;
+- exactly two tab-separated values per row;
+- Common Name first, Sub-Category second;
+- exact source-row order;
+- one output row per Excel row;
+- use the preserved existing value when only one of the two fields was missing;
+- do not include rows where both fields were already populated.
+
+If missing rows are noncontiguous, make separate paste blocks so pasting cannot
+overwrite existing populated rows.
+
+
+FINAL BEHAVIOR
+--------------
+
+Do not rewrite the complete Purchase History.
+Do not return replacement CSV.
+Do not suggest changes to already-populated taxonomy.
+Do not create a broad "Category" field here.
+Only complete missing Common Name and Sub-Category values and return the
+review table plus safe copy/paste blocks.
