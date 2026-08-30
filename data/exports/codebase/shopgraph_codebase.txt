@@ -59,6 +59,8 @@ shopping_analysis/
         INSTALL_HIERARCHICAL_CATEGORIES_ANALYTICS.txt
         README_CAPABILITY_MODES_UPDATE.txt
         README_CATEGORY_MANAGER.txt
+        README_CATEGORY_MANAGER_AB_FIX.txt
+        README_CATEGORY_MANAGER_PRODUCT_MAPPING_FIX.txt
         README_HIERARCHICAL_CATEGORIES_ANALYTICS.txt
         README_PDF_TO_JPG.txt
         README_PURCHASE_HISTORY_CSV_TXT_EXPORT.txt
@@ -86,7 +88,7 @@ shopping_analysis/
 
 ================================================================================
 
-Generated: 2026-08-30 11:02:22.308938
+Generated: 2026-08-30 11:40:24.708711
 Root: /Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis
 Mode: LLM-clean export
 Excluded: receipt images, OCR JSON, datasets, databases, logs, caches
@@ -15610,6 +15612,105 @@ Category Manager's Sub-Category -> Category mapping.
 
 Sub Analytics can still refresh if broad Analytics cannot be generated because
 Category Manager is incomplete.
+
+
+================================================================================
+FILE: README/README_CATEGORY_MANAGER_AB_FIX.txt
+================================================================================
+
+ShopGraph Category Manager - Category / Sub-Category A:B Fix
+
+PURPOSE
+-------
+Category Manager is the broad taxonomy mapping table.
+
+The intended layout is exactly:
+
+    Column A: Category
+    Column B: Sub-Category
+
+Column B is rebuilt from the distinct Sub-Category values currently found in
+Purchase History. Column A is the broad Category filled in by the user.
+
+Example:
+
+    Category       Sub-Category
+    Food           Fresh Fruit
+    Food           Fresh Vegetables
+    Food           Yogurt
+    Personal Care  Body Wash
+    NA             New Sub-Category
+
+CREATE / REFRESH
+----------------
+Create / Refresh uses Purchase History as the authority for the list of
+Sub-Categories.
+
+- Every distinct Purchase History Sub-Category appears once in column B.
+- Existing valid Sub-Category -> Category mappings are preserved in column A.
+- A newly encountered Sub-Category has no known broad Category, so column A is
+  set to NA.
+- Category is never inferred from the Sub-Category name, Common Name, Product,
+  OCR, or Purchase History.
+- A legacy Category Manager layout is rebuilt into this A:B taxonomy layout.
+
+APPLY / VALIDATE
+----------------
+Apply validates the taxonomy and saves a clean two-column Category Manager.
+It does not rewrite Purchase History. Purchase History remains authoritative
+for Sub-Category; Category Manager remains authoritative for the broad parent
+Category.
+
+ANALYTICS
+---------
+Broad Analytics resolves:
+
+    Purchase History Sub-Category
+        -> Category Manager column B
+        -> Category Manager column A
+
+Sub Analytics continues to use Purchase History Sub-Category directly.
+
+DATA SAFETY
+-----------
+Workbook saves use a temporary .xlsx file, verify it can be reopened, and only
+then atomically replace the live workbook.
+
+
+================================================================================
+FILE: README/README_CATEGORY_MANAGER_PRODUCT_MAPPING_FIX.txt
+================================================================================
+
+ShopGraph - Category Manager Product Mapping Fix
+===============================================
+
+PURPOSE
+-------
+Restores the intended hierarchical Category Manager layout:
+
+    A = Category
+    B = Sub-Category
+    C+ = Products / Common Names belonging to that Sub-Category
+
+Column B is rebuilt from Purchase History Sub-Category values.
+Column A remains the broad Category manually controlled by the user.
+Existing valid Sub-Category -> Category mappings are preserved on refresh.
+New Sub-Categories receive Category = NA until the user assigns one.
+
+Products are the Purchase History Common Name values and are grouped across
+Product 1, Product 2, Product 3, ... for the corresponding Sub-Category.
+
+INSTALL
+-------
+Copy the ZIP contents over the ShopGraph project root, preserving directories.
+No new package installation is required.
+
+REPLACED FILE
+-------------
+    utils/DataBaseBuilder/excel/category_manager.py
+
+The included excel/__init__.py is unchanged-compatible and is included so the
+overlay is self-contained.
 
 
 ================================================================================

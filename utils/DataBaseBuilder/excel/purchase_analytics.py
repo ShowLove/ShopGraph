@@ -2014,16 +2014,9 @@ def _broad_category_observations(
     return broad
 
 
-def generate_purchase_analytics(
-    workbook_path: Path = WORKBOOK_PATH,
-) -> dict:
-    """
-    Refresh both analytical layers.
-
-    Sub Analytics is the existing detailed dashboard and reads Sub-Category
-    directly from Purchase History. Analytics is the broad dashboard and joins
-    Purchase History Sub-Category to Category Manager's Category mapping.
-    """
+def _open_analytics_workbook(
+    workbook_path: Path,
+):
     workbook_path = Path(
         workbook_path
     ).expanduser().resolve()
@@ -2039,26 +2032,54 @@ def generate_purchase_analytics(
         data_only=False,
     )
 
-    try:
-        if PURCHASE_SHEET not in workbook.sheetnames:
-            raise PurchaseAnalyticsError(
-                f"Workbook does not contain '{PURCHASE_SHEET}'."
-            )
+    if PURCHASE_SHEET not in workbook.sheetnames:
+        workbook.close()
+        raise PurchaseAnalyticsError(
+            f"Workbook does not contain '{PURCHASE_SHEET}'."
+        )
 
-        purchase_sheet = workbook[
-            PURCHASE_SHEET
-        ]
-        _ensure_purchase_schema(
+    purchase_sheet = workbook[
+        PURCHASE_SHEET
+    ]
+    _ensure_purchase_schema(
+        purchase_sheet
+    )
+
+    observations, diagnostics = (
+        _flatten_purchase_history(
             purchase_sheet
         )
+    )
 
-        observations, diagnostics = (
-            _flatten_purchase_history(
-                purchase_sheet
-            )
-        )
+    return (
+        workbook_path,
+        workbook,
+        observations,
+        diagnostics,
+    )
 
-        sub_summary = _generate_dashboard(
+
+def generate_subcategory_purchase_analytics(
+    workbook_path: Path = WORKBOOK_PATH,
+) -> dict:
+    """
+    Refresh only the detailed Sub-Category analytics dashboard.
+
+    This preserves the existing Purchase Analytics behavior, charts, layout,
+    calculations, keys, and explanations, but uses Purchase History's
+    Sub-Category field as the classification dimension.
+    """
+    (
+        workbook_path,
+        workbook,
+        observations,
+        diagnostics,
+    ) = _open_analytics_workbook(
+        workbook_path
+    )
+
+    try:
+        summary = _generate_dashboard(
             workbook,
             observations,
             diagnostics,
@@ -2068,48 +2089,63 @@ def generate_purchase_analytics(
             dashboard_title="ShopGraph Sub Analytics",
         )
 
-        broad_summary = None
-        broad_error = None
+        _atomic_save(
+            workbook,
+            workbook_path,
+        )
 
-        try:
-            subcategory_to_category = (
-                load_category_mapping_for_analytics(
-                    workbook
-                )
-            )
-            broad_observations = (
-                _broad_category_observations(
-                    observations,
-                    subcategory_to_category,
-                )
-            )
+        return {
+            "success": True,
+            "workbook_path": workbook_path,
+            **summary,
+        }
 
-            broad_summary = _generate_dashboard(
-                workbook,
-                broad_observations,
-                diagnostics,
-                sheet_name=ANALYTICS_SHEET,
-                data_sheet_name=ANALYTICS_DATA_SHEET,
-                dimension_label="Category",
-                dashboard_title="ShopGraph Spending Analytics",
-            )
+    finally:
+        workbook.close()
 
-        except (
-            ValueError,
-            PurchaseAnalyticsError,
-        ) as error:
-            broad_error = str(error)
 
-            # Never leave a stale broad dashboard after the hierarchy becomes
-            # incomplete or invalid.
-            _delete_sheet_if_present(
-                workbook,
-                ANALYTICS_SHEET,
+def generate_category_purchase_analytics(
+    workbook_path: Path = WORKBOOK_PATH,
+) -> dict:
+    """
+    Refresh only the broad Category analytics dashboard.
+
+    Purchase observations still come from Purchase History. Their
+    Sub-Categories are mapped to broad Categories using Category Manager, then
+    the same dashboard machinery used for Sub Analytics is applied at the
+    Category level.
+    """
+    (
+        workbook_path,
+        workbook,
+        observations,
+        diagnostics,
+    ) = _open_analytics_workbook(
+        workbook_path
+    )
+
+    try:
+        subcategory_to_category = (
+            load_category_mapping_for_analytics(
+                workbook
             )
-            _delete_sheet_if_present(
-                workbook,
-                ANALYTICS_DATA_SHEET,
+        )
+        broad_observations = (
+            _broad_category_observations(
+                observations,
+                subcategory_to_category,
             )
+        )
+
+        summary = _generate_dashboard(
+            workbook,
+            broad_observations,
+            diagnostics,
+            sheet_name=ANALYTICS_SHEET,
+            data_sheet_name=ANALYTICS_DATA_SHEET,
+            dimension_label="Category",
+            dashboard_title="ShopGraph Spending Analytics",
+        )
 
         _atomic_save(
             workbook,
@@ -2117,26 +2153,57 @@ def generate_purchase_analytics(
         )
 
         return {
+            "success": True,
             "workbook_path": workbook_path,
-            "sub_analytics": {
-                "success": True,
-                **sub_summary,
-            },
-            "analytics": (
-                {
-                    "success": True,
-                    **broad_summary,
-                }
-                if broad_summary is not None
-                else {
-                    "success": False,
-                    "error": (
-                        broad_error
-                        or "Broad Analytics could not be generated."
-                    ),
-                }
-            ),
+            **summary,
         }
 
     finally:
         workbook.close()
+
+
+def generate_purchase_analytics(
+    workbook_path: Path = WORKBOOK_PATH,
+) -> dict:
+    """
+    Backwards-compatible combined analytics refresh.
+
+    New menu flows call the Sub-Category and Category generators separately.
+    This wrapper is retained so existing code that imports
+    generate_purchase_analytics continues to work.
+    """
+    sub_summary = generate_subcategory_purchase_analytics(
+        workbook_path
+    )
+
+    broad_summary = None
+    broad_error = None
+
+    try:
+        broad_summary = generate_category_purchase_analytics(
+            workbook_path
+        )
+    except (
+        FileNotFoundError,
+        OSError,
+        ValueError,
+    ) as error:
+        broad_error = str(error)
+
+    return {
+        "workbook_path": Path(
+            workbook_path
+        ).expanduser().resolve(),
+        "sub_analytics": sub_summary,
+        "analytics": (
+            broad_summary
+            if broad_summary is not None
+            else {
+                "success": False,
+                "error": (
+                    broad_error
+                    or "Broad Analytics could not be generated."
+                ),
+            }
+        ),
+    }

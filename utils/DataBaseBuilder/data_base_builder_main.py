@@ -11,7 +11,8 @@ from utils.DataBaseBuilder.excel.purchase_history import (
     source_already_imported,
 )
 from utils.DataBaseBuilder.excel.purchase_analytics import (
-    generate_purchase_analytics,
+    generate_category_purchase_analytics,
+    generate_subcategory_purchase_analytics,
 )
 from utils.DataBaseBuilder.excel.category_manager import (
     run_category_manager_menu,
@@ -52,8 +53,9 @@ PUBLIX_TAX_OPTIONS = {
 def display_data_base_builder_menu() -> None:
     print("\n=== ShopGraph Data Base Builder ===\n")
     print("1. Add Receipt to Purchase History")
-    print("2. Generate / Refresh Purchase Analytics")
-    print("3. Category Manager")
+    print("2. Generate / Refresh Purchase Analytics - Sub-Categories")
+    print("3. Generate / Refresh Purchase Analytics - Categories")
+    print("4. Category Manager")
     print("0. Return to Main")
 
 
@@ -901,54 +903,73 @@ def run_receipt_import(
     )
 
 
-def _run_purchase_analytics() -> None:
-    print("\n=== Purchase Analytics ===\n")
+def _run_subcategory_purchase_analytics() -> None:
+    print("\n=== Purchase Analytics - Sub-Categories ===\n")
 
     try:
-        summary = generate_purchase_analytics()
+        summary = generate_subcategory_purchase_analytics()
     except (
         FileNotFoundError,
         OSError,
         ValueError,
     ) as error:
         print(
-            f"\n[ERROR] Could not generate Purchase Analytics: {error}"
+            "\n[ERROR] Could not generate Purchase Analytics - "
+            f"Sub-Categories: {error}"
         )
         return
-
-    sub_summary = summary["sub_analytics"]
-    broad_summary = summary["analytics"]
 
     print(
         "[OK] Sub Analytics refreshed."
         "\nDetailed Sub-Category dashboard updated."
-        f"\nCharts created: {sub_summary['charts_created']}"
+        f"\nCharts created: {summary['charts_created']}"
         f"\nPurchase observations: "
-        f"{sub_summary['purchase_observations']}"
+        f"{summary['purchase_observations']}"
     )
 
-    if sub_summary.get("skipped_pairs", 0):
+    if summary.get("skipped_pairs", 0):
         print(
             "\n[WARNING] Sub Analytics skipped malformed/incomplete "
             "Date/Price pairs: "
-            f"{sub_summary['skipped_pairs']}"
+            f"{summary['skipped_pairs']}"
         )
 
-    if broad_summary["success"]:
+    print(
+        f"\nWorkbook:\n{summary['workbook_path']}"
+    )
+
+
+def _run_category_purchase_analytics() -> None:
+    print("\n=== Purchase Analytics - Categories ===\n")
+
+    try:
+        summary = generate_category_purchase_analytics()
+    except (
+        FileNotFoundError,
+        OSError,
+        ValueError,
+    ) as error:
         print(
-            "\n[OK] Analytics refreshed."
-            "\nBroad Category dashboard updated."
-            f"\nCharts created: {broad_summary['charts_created']}"
-            f"\nPurchase observations: "
-            f"{broad_summary['purchase_observations']}"
-        )
-    else:
-        print(
-            "\n[ERROR] Analytics could not be refreshed."
-            "\nSub Analytics was still refreshed successfully."
-            f"\n\n{broad_summary['error']}"
+            "\n[ERROR] Could not generate Purchase Analytics - "
+            f"Categories: {error}"
             "\n\nUse Category Manager to assign every current "
             "Sub-Category to exactly one Category."
+        )
+        return
+
+    print(
+        "[OK] Analytics refreshed."
+        "\nBroad Category dashboard updated."
+        f"\nCharts created: {summary['charts_created']}"
+        f"\nPurchase observations: "
+        f"{summary['purchase_observations']}"
+    )
+
+    if summary.get("skipped_pairs", 0):
+        print(
+            "\n[WARNING] Analytics skipped malformed/incomplete "
+            "Date/Price pairs: "
+            f"{summary['skipped_pairs']}"
         )
 
     print(
@@ -965,9 +986,12 @@ def run_data_base_builder_menu() -> None:
             run_receipt_import()
 
         elif option == "2":
-            _run_purchase_analytics()
+            _run_subcategory_purchase_analytics()
 
         elif option == "3":
+            _run_category_purchase_analytics()
+
+        elif option == "4":
             run_category_manager_menu()
 
         elif option == "0":

@@ -5,7 +5,9 @@ from utils.DataBaseBuilder.excel.purchase_history import (
 )
 
 from utils.DataBaseBuilder.excel.purchase_analytics import (
+    generate_category_purchase_analytics,
     generate_purchase_analytics,
+    generate_subcategory_purchase_analytics,
 )
 
 from utils.DataBaseBuilder.excel.category_manager import (
