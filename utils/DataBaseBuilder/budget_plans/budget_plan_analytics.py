@@ -6,7 +6,8 @@ from decimal import Decimal
 from pathlib import Path
 
 from openpyxl import load_workbook
-from openpyxl.chart import LineChart, Reference
+from openpyxl.chart import BarChart, Reference
+from openpyxl.chart.label import DataLabel, DataLabelList
 from openpyxl.styles import Alignment, Font, PatternFill
 
 from utils.DataBaseBuilder.budget_plans.budget_plan_config import (
@@ -35,7 +36,7 @@ from utils.DataBaseBuilder.excel.purchase_history import (
 
 CHART_WIDTH = 24
 CHART_HEIGHT = 13
-HELPER_START_COLUMN = 12  # L
+HELPER_START_COLUMN = 28  # AB; kept away from the visible chart/key area
 HEADER_FILL = "D9EAF7"
 SECTION_FILL = "E2F0D9"
 
@@ -168,6 +169,7 @@ def _write_budget_plan_sheet(
     selected_categories: set[str],
     diagnostics: dict,
     purchase_observation_count: int,
+    qualifying_observations: list[dict],
 ) -> dict:
     sheet_name = plan["worksheet_name"]
     if sheet_name in workbook.sheetnames:
@@ -224,9 +226,10 @@ def _write_budget_plan_sheet(
     for row_index in (8, 9, 12, 13):
         sheet.cell(row_index, 2).number_format = CURRENCY_FORMAT
 
-    sheet["A16"] = "Budget Burndown"
+    sheet["A16"] = "Budget vs Category Spending"
     sheet["A16"].font = Font(size=14, bold=True)
 
+    # Keep the existing daily calculations available as worksheet helper data.
     helper_col = HELPER_START_COLUMN
     helper_headers = (
         "Date",
@@ -246,46 +249,206 @@ def _write_budget_plan_sheet(
             else:
                 cell.number_format = CURRENCY_FORMAT
 
-    chart = LineChart()
-    chart.title = "Budget Burndown"
-    chart.y_axis.title = "Remaining Budget"
-    chart.x_axis.title = "Date"
-    chart.style = 10
-    chart.width = CHART_WIDTH
-    chart.height = CHART_HEIGHT
+    # Spending for the comparison bar uses the same relevant-date cutoff as the
+    # worksheet summary, so the stacked Spent bar agrees with Total Spent.
+    spending_by_category = defaultdict(float)
+    for item in qualifying_observations:
+        if item["date"] <= relevant:
+            spending_by_category[item["category"]] += float(item["price"])
 
-    data = Reference(
+    ordered_categories = sorted(selected_categories, key=str.casefold)
+
+    # Two-bar chart helper table:
+    #
+    #                Budget   1   2   3 ...
+    #   Budget       $B       0   0   0
+    #   Spent         0      $1  $2  $3
+    #
+    # Because every series shares one stacked group, Excel renders exactly two
+    # columns. The first is one solid Budget bar; the second is one stacked bar
+    # whose colored segments are the individual Categories.
+    comparison_helper_col = helper_col + 5  # Q
+    comparison_header_row = 1
+    comparison_budget_row = 2
+    comparison_spent_row = 3
+
+    sheet.cell(comparison_header_row, comparison_helper_col, "Comparison")
+    sheet.cell(comparison_header_row, comparison_helper_col + 1, "Budget")
+    sheet.cell(comparison_budget_row, comparison_helper_col, "Budget")
+    sheet.cell(comparison_spent_row, comparison_helper_col, "Spent")
+    sheet.cell(comparison_budget_row, comparison_helper_col + 1, budget)
+    sheet.cell(comparison_spent_row, comparison_helper_col + 1, 0.0)
+    sheet.cell(comparison_budget_row, comparison_helper_col + 1).number_format = CURRENCY_FORMAT
+    sheet.cell(comparison_spent_row, comparison_helper_col + 1).number_format = CURRENCY_FORMAT
+
+    for code, category in enumerate(ordered_categories, start=1):
+        column = comparison_helper_col + 1 + code
+        sheet.cell(comparison_header_row, column, str(code))
+        sheet.cell(comparison_budget_row, column, 0.0)
+        sheet.cell(
+            comparison_spent_row,
+            column,
+            spending_by_category.get(category, 0.0),
+        )
+        sheet.cell(comparison_budget_row, column).number_format = CURRENCY_FORMAT
+        sheet.cell(comparison_spent_row, column).number_format = CURRENCY_FORMAT
+
+    for column in range(
+        comparison_helper_col,
+        comparison_helper_col + 2 + len(ordered_categories),
+    ):
+        sheet.cell(comparison_header_row, column).font = Font(bold=True)
+
+    chart = BarChart()
+    chart.type = "col"
+    chart.grouping = "stacked"
+    chart.overlap = 100
+    chart.style = 12
+    chart.title = "Budget vs Category Spending"
+    chart.y_axis.title = "Amount ($)"
+    chart.x_axis.title = ""
+    chart.width = 18
+    chart.height = CHART_HEIGHT
+    chart.gapWidth = 70
+
+    chart_data = Reference(
         sheet,
-        min_col=helper_col + 1,
-        max_col=helper_col + 2,
-        min_row=1,
-        max_row=len(rows) + 1,
+        min_col=comparison_helper_col + 1,
+        max_col=comparison_helper_col + 1 + len(ordered_categories),
+        min_row=comparison_header_row,
+        max_row=comparison_spent_row,
     )
-    dates = Reference(
+    chart_categories = Reference(
         sheet,
-        min_col=helper_col,
-        min_row=2,
-        max_row=len(rows) + 1,
+        min_col=comparison_helper_col,
+        min_row=comparison_budget_row,
+        max_row=comparison_spent_row,
     )
-    chart.add_data(data, titles_from_data=True)
-    chart.set_categories(dates)
-    chart.legend.position = "b"
+    chart.add_data(chart_data, titles_from_data=True)
+    chart.set_categories(chart_categories)
+
+    # Fixed palette keeps the chart and its worksheet key synchronized. The
+    # first color is reserved for the single Budget bar. Each Category receives
+    # a stable numeric code and a distinct segment color in this worksheet.
+    budget_color = "5B9BD5"
+    category_colors = (
+        "ED7D31",
+        "70AD47",
+        "A5A5A5",
+        "FFC000",
+        "4472C4",
+        "255E91",
+        "9E480E",
+        "636363",
+        "997300",
+        "264478",
+        "43682B",
+        "8064A2",
+        "4BACC6",
+        "F79646",
+        "92A9CF",
+        "95B3D7",
+        "C0504D",
+        "9BBB59",
+        "7F7F7F",
+        "806000",
+    )
+
+    if chart.series:
+        budget_series = chart.series[0]
+        budget_series.graphicalProperties.solidFill = budget_color
+        budget_series.graphicalProperties.line.solidFill = budget_color
+
+    for index, series in enumerate(chart.series[1:], start=1):
+        color = category_colors[(index - 1) % len(category_colors)]
+        series.graphicalProperties.solidFill = color
+        series.graphicalProperties.line.solidFill = color
+
+        # Label only the Spent point (point index 1). The label is the Category
+        # number, which corresponds to the color-coded key to the right.
+        series.dLbls = DataLabelList(
+            dLbl=[
+                DataLabel(
+                    idx=1,
+                    showSerName=True,
+                    dLblPos="ctr",
+                )
+            ]
+        )
+
+    # The built-in legend would only repeat the numeric series codes. A custom
+    # worksheet key is clearer because it can show number, color, Category name,
+    # and current spend together.
+    chart.legend = None
     sheet.add_chart(chart, "A18")
 
+    key_start_row = 18
+    key_number_col = 10  # J
+    key_name_col = 11    # K
+    key_spend_col = 12   # L
+
+    sheet.cell(key_start_row, key_number_col, "Category Key")
+    sheet.cell(key_start_row, key_number_col).font = Font(size=12, bold=True)
+    sheet.merge_cells(
+        start_row=key_start_row,
+        start_column=key_number_col,
+        end_row=key_start_row,
+        end_column=key_spend_col,
+    )
+
+    sheet.cell(key_start_row + 1, key_number_col, "#")
+    sheet.cell(key_start_row + 1, key_name_col, "Category")
+    sheet.cell(key_start_row + 1, key_spend_col, "Spent")
+    for column in range(key_number_col, key_spend_col + 1):
+        sheet.cell(key_start_row + 1, column).font = Font(bold=True)
+
+    for code, category in enumerate(ordered_categories, start=1):
+        row_number = key_start_row + 1 + code
+        color = category_colors[(code - 1) % len(category_colors)]
+        number_cell = sheet.cell(row_number, key_number_col, code)
+        number_cell.fill = PatternFill("solid", fgColor=color)
+        number_cell.font = Font(bold=True, color="FFFFFF")
+        number_cell.alignment = Alignment(horizontal="center")
+
+        sheet.cell(row_number, key_name_col, category)
+        spend_cell = sheet.cell(
+            row_number,
+            key_spend_col,
+            spending_by_category.get(category, 0.0),
+        )
+        spend_cell.number_format = CURRENCY_FORMAT
+
+    # Keep the key readable and separate from the chart. Helper data starts far
+    # to the right in column AB, so the visible key can safely use J:L.
     sheet.column_dimensions["A"].width = 38
     sheet.column_dimensions["B"].width = 48
-    for column in range(helper_col, helper_col + 4):
-        sheet.column_dimensions[
-            __import__("openpyxl").utils.get_column_letter(column)
-        ].width = 22
+    sheet.column_dimensions["J"].width = 6
+    sheet.column_dimensions["K"].width = 28
+    sheet.column_dimensions["L"].width = 14
 
-    sheet["A47"] = (
-        "Interpretation: Actual Remaining above Ideal Remaining means spending "
-        "is running below the planned burn rate. Below the ideal line means "
-        "spending is running above the planned burn rate."
+    for column in range(
+        helper_col,
+        comparison_helper_col + 2 + len(ordered_categories),
+    ):
+        if column not in (key_number_col, key_name_col, key_spend_col):
+            sheet.column_dimensions[
+                __import__("openpyxl").utils.get_column_letter(column)
+            ].width = 16
+
+    note_row = max(47, key_start_row + 3 + len(ordered_categories))
+    sheet.cell(note_row, 1, (
+        "Interpretation: the chart has exactly two bars. Budget is the full "
+        "configured Budget Plan amount. Spent is one stacked bar; each colored "
+        "segment is the amount spent in one Category through the Relevant Date. "
+        "The number inside a segment matches the Category Key on the right."
+    ))
+    sheet.cell(note_row, 1).alignment = Alignment(wrap_text=True, vertical="top")
+    sheet.merge_cells(
+        start_row=note_row,
+        start_column=1,
+        end_row=note_row + 2,
+        end_column=8,
     )
-    sheet["A47"].alignment = Alignment(wrap_text=True, vertical="top")
-    sheet.merge_cells("A47:H49")
 
     return {
         "worksheet_name": sheet_name,
@@ -348,6 +511,7 @@ def generate_budget_plan(
             selected_categories,
             diagnostics,
             len(qualifying),
+            qualifying,
         )
         _atomic_save(workbook, workbook_path)
         return {
