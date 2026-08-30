@@ -34,15 +34,16 @@ IMPORT_SHEET = "Imported Receipts"
 # F  Tax Code
 # G  Store Number
 # H  Common Name
-# I  Category
+# I  Sub-Category
 # J  Date 1
 # K  Price 1
 # L  Date 2
 # M  Price 2
 # ...
 #
-# Common Name and Category are intentionally created as NA. They are reserved
-# for future ShopGraph normalization/categorization capabilities.
+# Common Name and Sub-Category occupy the same physical columns used by the
+# existing ShopGraph normalization/categorization architecture. The detailed
+# classification remains column I; only its user-facing name is Sub-Category.
 
 TOTAL_COLUMN = 1
 SPACER_COLUMN = 2
@@ -57,6 +58,18 @@ CATEGORY_COLUMN = 9
 HISTORY_START_COLUMN = 10
 
 FIXED_HEADERS = [
+    "Total",
+    "",
+    "Store",
+    "Six-Digit SKU",
+    "Product",
+    "Tax Code",
+    "Store Number",
+    "Common Name",
+    "Sub-Category",
+]
+
+PREVIOUS_FIXED_HEADERS = [
     "Total",
     "",
     "Store",
@@ -161,6 +174,23 @@ def _uses_old_schema(
     )
 
 
+def _uses_previous_schema(
+    sheet,
+) -> bool:
+    """
+    Recognize the immediately previous schema where column I was labeled
+    "Category". The underlying data is already the detailed classification;
+    migration only renames that header to "Sub-Category".
+    """
+    return (
+        _header_values(
+            sheet,
+            len(PREVIOUS_FIXED_HEADERS),
+        )
+        == PREVIOUS_FIXED_HEADERS
+    )
+
+
 def _uses_new_schema(
     sheet,
 ) -> bool:
@@ -184,7 +214,7 @@ def _migrate_old_purchase_sheet(
     into:
 
         Total | <blank> | Store | SKU | Product | Tax Code |
-        Store Number | Common Name | Category | Date 1 | Price 1 | ...
+        Store Number | Common Name | Sub-Category | Date 1 | Price 1 | ...
 
     Existing Date N / Price N history is preserved exactly.
     """
@@ -195,7 +225,7 @@ def _migrate_old_purchase_sheet(
     )
 
     # After that insertion, the original Date 1 begins at H.
-    # Insert Common Name and Category there so history begins at J.
+    # Insert Common Name and Sub-Category there so history begins at J.
     sheet.insert_cols(
         8,
         amount=2,
@@ -231,40 +261,32 @@ def _migrate_old_purchase_sheet(
                 value=NA,
             )
 
-        existing_common_name = str(
-            sheet.cell(
-                row=row,
-                column=COMMON_NAME_COLUMN,
-            ).value
-            or NA
-        )
-
-        if (
-            existing_common_name == NA
-            and record.common_name != NA
+        # The original schema did not contain Common Name or the detailed
+        # classification. Initialize both without inventing data.
+        if sheet.cell(
+            row=row,
+            column=COMMON_NAME_COLUMN,
+        ).value in (
+            None,
+            "",
         ):
             sheet.cell(
                 row=row,
                 column=COMMON_NAME_COLUMN,
-                value=record.common_name,
+                value=NA,
             )
 
-        existing_category = str(
-            sheet.cell(
-                row=row,
-                column=CATEGORY_COLUMN,
-            ).value
-            or NA
-        )
-
-        if (
-            existing_category == NA
-            and record.category != NA
+        if sheet.cell(
+            row=row,
+            column=CATEGORY_COLUMN,
+        ).value in (
+            None,
+            "",
         ):
             sheet.cell(
                 row=row,
                 column=CATEGORY_COLUMN,
-                value=record.category,
+                value=NA,
             )
 
         _ensure_total_formula(
@@ -289,6 +311,27 @@ def _ensure_purchase_schema(
             )
         return
 
+    if _uses_previous_schema(
+        sheet
+    ):
+        # The physical schema is already correct. Only the detailed
+        # classification header changes from Category to Sub-Category.
+        sheet.cell(
+            row=1,
+            column=CATEGORY_COLUMN,
+            value="Sub-Category",
+        )
+
+        for row in range(
+            2,
+            sheet.max_row + 1,
+        ):
+            _ensure_total_formula(
+                sheet,
+                row,
+            )
+        return
+
     if _uses_old_schema(
         sheet
     ):
@@ -299,8 +342,8 @@ def _ensure_purchase_schema(
 
     raise ValueError(
         "Purchase History has an unrecognized column layout. "
-        "Expected either the original ShopGraph schema or the "
-        "current ShopGraph schema."
+        "Expected the original ShopGraph schema, the previous Category "
+        "schema, or the current Sub-Category schema."
     )
 
 

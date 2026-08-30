@@ -1,7 +1,6 @@
 === SHOPGRAPH CLEAN CODEBASE FOR LLM ===
 
 shopping_analysis/
-    INSTALL.txt
     main.py
     capabilities/
         __init__.py
@@ -52,10 +51,15 @@ shopping_analysis/
                 trader_joes_parser.py
             excel/
                 __init__.py
+                category_manager.py
                 purchase_analytics.py
                 purchase_history.py
     README/
+        INSTALL.txt
+        INSTALL_HIERARCHICAL_CATEGORIES_ANALYTICS.txt
         README_CAPABILITY_MODES_UPDATE.txt
+        README_CATEGORY_MANAGER.txt
+        README_HIERARCHICAL_CATEGORIES_ANALYTICS.txt
         README_PDF_TO_JPG.txt
         README_PURCHASE_HISTORY_CSV_TXT_EXPORT.txt
         README_SOURCE_DATA_CLEANUP.txt
@@ -82,80 +86,13 @@ shopping_analysis/
 
 ================================================================================
 
-Generated: 2026-08-30 08:06:41.406719
+Generated: 2026-08-30 11:02:22.308938
 Root: /Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis
 Mode: LLM-clean export
 Excluded: receipt images, OCR JSON, datasets, databases, logs, caches
 
 ================================================================================
 
-
-
-================================================================================
-FILE: INSTALL.txt
-================================================================================
-
-ShopGraph - Pre-Populated Correction Input Update
-
-PURPOSE
-
-When using:
-
-    2. Correct Columns
-
-the correction prompt now begins with the current parser guess already
-inserted into the editable terminal input.
-
-BEFORE
-
-    Current Product: SALE TRANSACTION
-    Enter corrected Product:
-
-AFTER
-
-    Current Product: SALE TRANSACTION
-    Enter corrected Product: SALE TRANSACTION
-
-The text after the prompt is editable.
-
-The user can:
-
-- press Enter immediately to keep the current value,
-- move through/edit the existing value,
-- or replace it completely.
-
-This behavior applies to normal editable fields such as:
-
-- Product
-- Price
-- Store Number
-- Date
-- Six-Digit SKU
-
-The existing Publix Tax Code choice menu remains unchanged. If the user
-chooses its custom-value option, that custom text prompt is also pre-populated
-with the current Tax Code.
-
-IMPLEMENTATION
-
-The update uses Python's built-in readline support to insert the current value
-into the interactive terminal buffer before input() begins.
-
-No new pip dependency is required.
-
-INSTALL
-
-Replace only:
-
-    utils/DataBaseBuilder/data_base_builder_main.py
-
-No other ShopGraph files need to change.
-
-RUN
-
-    python3 main.py
-
-Then use Data Base Builder normally.
 
 
 ================================================================================
@@ -4455,7 +4392,7 @@ FIELDS = (
     "Tax Code",
     "Store Number",
     "Common Name",
-    "Category",
+    "Sub-Category",
     "Date 1",
     "Price 1",
 )
@@ -4844,28 +4781,46 @@ def _history_rows() -> list[dict]:
         "Six-Digit SKU",
         "Product",
         "Common Name",
-        "Category",
     }
 
-    if not required.issubset(headers):
+    detailed_header = (
+        "Sub-Category"
+        if "Sub-Category" in headers
+        else (
+            "Category"
+            if "Category" in headers
+            else None
+        )
+    )
+
+    if (
+        not required.issubset(headers)
+        or detailed_header is None
+    ):
         workbook.close()
         return []
 
     rows = []
 
     for row in range(2, sheet.max_row + 1):
-        rows.append(
-            {
-                key: str(
-                    sheet.cell(
-                        row=row,
-                        column=headers[key],
-                    ).value
-                    or NA
-                ).strip()
-                for key in required
-            }
-        )
+        item = {
+            key: str(
+                sheet.cell(
+                    row=row,
+                    column=headers[key],
+                ).value
+                or NA
+            ).strip()
+            for key in required
+        }
+        item["Sub-Category"] = str(
+            sheet.cell(
+                row=row,
+                column=headers[detailed_header],
+            ).value
+            or NA
+        ).strip()
+        rows.append(item)
 
     workbook.close()
     return rows
@@ -5019,11 +4974,11 @@ def _refine_line(
                     "Same-store historical product identity supports this Common Name."
                 )
 
-            if historical.get("Category", NA) != NA:
-                category = historical["Category"]
+            if historical.get("Sub-Category", NA) != NA:
+                category = historical["Sub-Category"]
                 category_confidence = 0.94
                 category_reason = (
-                    "Same-store historical product identity supports this Category."
+                    "Same-store historical product identity supports this Sub-Category."
                 )
 
         if common_name == NA:
@@ -5118,7 +5073,7 @@ def _refine_line(
             common_reason,
         )
         assign(
-            "Category",
+            "Sub-Category",
             category,
             category_confidence,
             category_reason,
@@ -5167,7 +5122,7 @@ def _refine_line(
         reasoning["Six-Digit SKU"] = "No merchandise SKU is assigned to this non-purchase line."
         reasoning["Tax Code"] = "No merchandise tax code is assigned to this non-purchase line."
         reasoning["Common Name"] = "Common Name is reserved for purchase-item normalization."
-        reasoning["Category"] = "Category is reserved for purchase-item normalization."
+        reasoning["Sub-Category"] = "Sub-Category is reserved for purchase-item normalization."
         reasoning["Price 1"] = "No product price is assigned to this non-purchase line."
 
     line_confidence = max(
@@ -5351,7 +5306,7 @@ def refine_json_file(
                 "Receipt context may propagate Store, Store Number, and Date 1 "
                 "to genuine purchase items. Product remains an editable best "
                 "guess for every source line. Historical Purchase History may "
-                "support identity/Common Name/Category but never supplies a "
+                "support identity/Common Name/Sub-Category but never supplies a "
                 "current receipt Price 1 or Date 1."
             ),
             "purchase_history_reference_used": bool(history),
@@ -8871,6 +8826,9 @@ from utils.DataBaseBuilder.excel.purchase_history import (
 from utils.DataBaseBuilder.excel.purchase_analytics import (
     generate_purchase_analytics,
 )
+from utils.DataBaseBuilder.excel.category_manager import (
+    run_category_manager_menu,
+)
 from utils.DataBaseBuilder.parsers import build_parser
 from utils.DataBaseBuilder.parsers.publix_parser import PUBLIX_TAX_PATTERN
 from utils.DataBaseBuilder.purchase_record import NA, PurchaseRecord
@@ -8908,6 +8866,7 @@ def display_data_base_builder_menu() -> None:
     print("\n=== ShopGraph Data Base Builder ===\n")
     print("1. Add Receipt to Purchase History")
     print("2. Generate / Refresh Purchase Analytics")
+    print("3. Category Manager")
     print("0. Return to Main")
 
 
@@ -9770,18 +9729,44 @@ def _run_purchase_analytics() -> None:
         )
         return
 
+    sub_summary = summary["sub_analytics"]
+    broad_summary = summary["analytics"]
+
     print(
-        "[OK] Purchase Analytics refreshed."
-        f"\n\nWorkbook:\n{summary['workbook_path']}"
-        f"\n\nCharts created: {summary['charts_created']}"
-        f"\nPurchase observations: {summary['purchase_observations']}"
+        "[OK] Sub Analytics refreshed."
+        "\nDetailed Sub-Category dashboard updated."
+        f"\nCharts created: {sub_summary['charts_created']}"
+        f"\nPurchase observations: "
+        f"{sub_summary['purchase_observations']}"
     )
 
-    if summary.get("skipped_pairs", 0):
+    if sub_summary.get("skipped_pairs", 0):
         print(
-            "\n[WARNING] Skipped malformed/incomplete Date/Price pairs: "
-            f"{summary['skipped_pairs']}"
+            "\n[WARNING] Sub Analytics skipped malformed/incomplete "
+            "Date/Price pairs: "
+            f"{sub_summary['skipped_pairs']}"
         )
+
+    if broad_summary["success"]:
+        print(
+            "\n[OK] Analytics refreshed."
+            "\nBroad Category dashboard updated."
+            f"\nCharts created: {broad_summary['charts_created']}"
+            f"\nPurchase observations: "
+            f"{broad_summary['purchase_observations']}"
+        )
+    else:
+        print(
+            "\n[ERROR] Analytics could not be refreshed."
+            "\nSub Analytics was still refreshed successfully."
+            f"\n\n{broad_summary['error']}"
+            "\n\nUse Category Manager to assign every current "
+            "Sub-Category to exactly one Category."
+        )
+
+    print(
+        f"\nWorkbook:\n{summary['workbook_path']}"
+    )
 
 
 def run_data_base_builder_menu() -> None:
@@ -9794,6 +9779,9 @@ def run_data_base_builder_menu() -> None:
 
         elif option == "2":
             _run_purchase_analytics()
+
+        elif option == "3":
+            run_category_manager_menu()
 
         elif option == "0":
             return
@@ -10118,7 +10106,6 @@ REQUIRED_FIELDS = (
     "Tax Code",
     "Store Number",
     "Common Name",
-    "Category",
     "Date 1",
     "Price 1",
 )
@@ -10131,7 +10118,6 @@ FIELD_MAP = {
     "Tax Code": "tax_code",
     "Store Number": "store_number",
     "Common Name": "common_name",
-    "Category": "category",
     "Date 1": "date",
     "Price 1": "price",
 }
@@ -10202,6 +10188,12 @@ def load_matching_refined_json(
         ):
             return None
 
+        if (
+            "Sub-Category" not in fields
+            and "Category" not in fields
+        ):
+            return None
+
         line_map[line_number] = line
 
     return {
@@ -10242,6 +10234,19 @@ def merge_refined_guess(
             and value.strip() != NA
         ):
             values[record_name] = value.strip()
+
+    if "category" not in protected:
+        detailed_value = fields.get(
+            "Sub-Category",
+            fields.get("Category", NA),
+        )
+
+        if (
+            isinstance(detailed_value, str)
+            and detailed_value.strip()
+            and detailed_value.strip() != NA
+        ):
+            values["category"] = detailed_value.strip()
 
     if not values:
         return parser_record
@@ -10702,7 +10707,7 @@ class BaseReceiptParser(ABC):
         "tax_code": "Tax Code",
         "store_number": "Store Number",
         "common_name": "Common Name",
-        "category": "Category",
+        "category": "Sub-Category",
         "date": "Date 1",
         "price": "Price 1",
     }
@@ -10960,6 +10965,1061 @@ from utils.DataBaseBuilder.excel.purchase_analytics import (
     generate_purchase_analytics,
 )
 
+from utils.DataBaseBuilder.excel.category_manager import (
+    apply_category_manager,
+    create_or_refresh_category_manager,
+    run_category_manager_menu,
+)
+
+
+================================================================================
+FILE: utils/DataBaseBuilder/excel/category_manager.py
+================================================================================
+
+from __future__ import annotations
+
+import os
+import tempfile
+from collections import defaultdict
+from pathlib import Path
+
+from openpyxl import load_workbook
+from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
+from openpyxl.utils import get_column_letter
+
+from utils.DataBaseBuilder.excel.purchase_history import (
+    CATEGORY_COLUMN,
+    COMMON_NAME_COLUMN,
+    FIXED_HEADERS,
+    PURCHASE_SHEET,
+    WORKBOOK_PATH,
+    _ensure_purchase_schema,
+)
+from utils.DataBaseBuilder.purchase_record import NA
+
+
+CATEGORY_MANAGER_SHEET = "Category Manager"
+CATEGORY_HEADER = "Category"
+SUB_CATEGORY_HEADER = "Sub-Category"
+PRODUCT_HEADER_PREFIX = "Product"
+
+HEADER_FILL = "1F4E78"
+HEADER_FONT = "FFFFFF"
+CATEGORY_FILLS = (
+    "D9EAF7",
+    "E2F0D9",
+    "FFF2CC",
+    "FCE4D6",
+    "E4DFEC",
+    "DDEBF7",
+)
+BORDER_COLOR = "B7C9D6"
+
+
+def _text(value) -> str:
+    if value is None:
+        return ""
+    return str(value).strip()
+
+
+def _normalized(value) -> str:
+    return _text(value).casefold()
+
+
+def _is_na(value) -> bool:
+    return _normalized(value) == _normalized(NA)
+
+
+def _required_purchase_headers_are_valid(sheet) -> bool:
+    actual = [
+        _text(sheet.cell(row=1, column=column).value)
+        for column in range(1, len(FIXED_HEADERS) + 1)
+    ]
+    return actual == FIXED_HEADERS
+
+
+def _load_existing_workbook(
+    workbook_path: Path = WORKBOOK_PATH,
+):
+    workbook_path = Path(workbook_path).expanduser().resolve()
+
+    if not workbook_path.exists():
+        raise FileNotFoundError(
+            "Purchase History workbook was not found:"
+            f"\n{workbook_path}"
+        )
+
+    workbook = load_workbook(workbook_path)
+
+    if PURCHASE_SHEET not in workbook.sheetnames:
+        workbook.close()
+        raise ValueError(
+            f'Workbook is missing required sheet: "{PURCHASE_SHEET}".'
+        )
+
+    purchase_sheet = workbook[PURCHASE_SHEET]
+
+    # This also performs the safe one-time Category -> Sub-Category
+    # header migration without shifting any physical columns.
+    _ensure_purchase_schema(purchase_sheet)
+
+    if not _required_purchase_headers_are_valid(purchase_sheet):
+        workbook.close()
+        raise ValueError(
+            "Purchase History has an unrecognized column layout. "
+            "Category Manager requires the current ShopGraph Purchase "
+            "History schema."
+        )
+
+    return workbook
+
+
+def _read_purchase_history(
+    purchase_sheet,
+) -> dict:
+    """
+    Read Common Name -> Sub-Category from Purchase History.
+
+    Common Name is the Category Manager product identity. Multiple Purchase
+    History rows may share one Common Name, but they must agree on the detailed
+    Sub-Category before Create / Refresh can build a deterministic manager.
+    """
+    subcategories_by_common_name: dict[str, set[str]] = defaultdict(set)
+    rows_by_common_name: dict[str, list[int]] = defaultdict(list)
+    invalid_common_name_rows = []
+
+    for row in range(2, purchase_sheet.max_row + 1):
+        common_name = _text(
+            purchase_sheet.cell(
+                row=row,
+                column=COMMON_NAME_COLUMN,
+            ).value
+        )
+        subcategory = _text(
+            purchase_sheet.cell(
+                row=row,
+                column=CATEGORY_COLUMN,
+            ).value
+        )
+
+        # Formula-only / structurally empty trailing rows are ignored.
+        product_value = _text(
+            purchase_sheet.cell(
+                row=row,
+                column=5,
+            ).value
+        )
+
+        if not common_name or _is_na(common_name):
+            if product_value:
+                invalid_common_name_rows.append(row)
+            continue
+
+        if not subcategory:
+            subcategory = NA
+
+        subcategories_by_common_name[common_name].add(subcategory)
+        rows_by_common_name[common_name].append(row)
+
+    conflicts = {}
+
+    for common_name, subcategories in subcategories_by_common_name.items():
+        if len(subcategories) > 1:
+            conflicts[common_name] = {
+                "subcategories": sorted(
+                    subcategories,
+                    key=str.casefold,
+                ),
+                "rows": rows_by_common_name[common_name],
+            }
+
+    mapping = {
+        common_name: next(iter(subcategories))
+        for common_name, subcategories
+        in subcategories_by_common_name.items()
+        if len(subcategories) == 1
+    }
+
+    return {
+        "mapping": mapping,
+        "rows_by_common_name": dict(rows_by_common_name),
+        "invalid_common_name_rows": invalid_common_name_rows,
+        "conflicts": conflicts,
+    }
+
+
+def _existing_category_mappings(workbook) -> dict[str, str]:
+    """
+    Preserve only valid Sub-Category -> Category relationships during refresh.
+
+    Legacy Category Manager sheets used:
+        Category | Product 1 | ...
+
+    In that layout the old "Category" is now a Sub-Category, so there is no
+    broad Category information to preserve. Only the new two-column hierarchy
+    is interpreted as a broad mapping.
+    """
+    if CATEGORY_MANAGER_SHEET not in workbook.sheetnames:
+        return {}
+
+    sheet = workbook[CATEGORY_MANAGER_SHEET]
+
+    if (
+        _text(sheet.cell(1, 1).value) != CATEGORY_HEADER
+        or _text(sheet.cell(1, 2).value) != SUB_CATEGORY_HEADER
+    ):
+        return {}
+
+    by_subcategory: dict[str, list[str]] = defaultdict(list)
+
+    for row in range(2, sheet.max_row + 1):
+        category = _text(sheet.cell(row, 1).value)
+        subcategory = _text(sheet.cell(row, 2).value)
+
+        if (
+            not category
+            or _is_na(category)
+            or not subcategory
+            or _is_na(subcategory)
+        ):
+            continue
+
+        by_subcategory[_normalized(subcategory)].append(category)
+
+    preserved = {}
+
+    for normalized_subcategory, categories in by_subcategory.items():
+        distinct = {
+            _normalized(category): category
+            for category in categories
+        }
+
+        if len(distinct) == 1:
+            preserved[normalized_subcategory] = next(iter(distinct.values()))
+
+    return preserved
+
+
+def _subcategory_groups(
+    common_to_subcategory: dict[str, str],
+) -> list[tuple[str, list[str]]]:
+    groups: dict[str, list[str]] = defaultdict(list)
+
+    for common_name, subcategory in common_to_subcategory.items():
+        groups[subcategory].append(common_name)
+
+    return [
+        (
+            subcategory,
+            sorted(common_names, key=str.casefold),
+        )
+        for subcategory, common_names in sorted(
+            groups.items(),
+            key=lambda item: item[0].casefold(),
+        )
+    ]
+
+
+def _delete_manager_if_present(workbook) -> None:
+    if CATEGORY_MANAGER_SHEET in workbook.sheetnames:
+        workbook.remove(workbook[CATEGORY_MANAGER_SHEET])
+
+
+def _create_manager_sheet(
+    workbook,
+    common_to_subcategory: dict[str, str],
+    subcategory_to_category: dict[str, str] | None = None,
+):
+    _delete_manager_if_present(workbook)
+
+    purchase_index = workbook.sheetnames.index(PURCHASE_SHEET)
+
+    sheet = workbook.create_sheet(
+        CATEGORY_MANAGER_SHEET,
+        purchase_index + 1,
+    )
+
+    groups = _subcategory_groups(common_to_subcategory)
+    subcategory_to_category = subcategory_to_category or {}
+
+    max_products = max(
+        (len(common_names) for _, common_names in groups),
+        default=1,
+    )
+
+    sheet.cell(row=1, column=1, value=CATEGORY_HEADER)
+    sheet.cell(row=1, column=2, value=SUB_CATEGORY_HEADER)
+
+    for product_number in range(1, max_products + 1):
+        sheet.cell(
+            row=1,
+            column=product_number + 2,
+            value=f"{PRODUCT_HEADER_PREFIX} {product_number}",
+        )
+
+    for row, (subcategory, common_names) in enumerate(groups, start=2):
+        category = subcategory_to_category.get(
+            subcategory,
+            subcategory_to_category.get(
+                _normalized(subcategory),
+                NA,
+            ),
+        )
+
+        sheet.cell(row=row, column=1, value=category or NA)
+        sheet.cell(row=row, column=2, value=subcategory)
+
+        for column, common_name in enumerate(common_names, start=3):
+            sheet.cell(
+                row=row,
+                column=column,
+                value=common_name,
+            )
+
+    _format_category_manager(sheet)
+    return sheet
+
+
+def _format_category_manager(sheet) -> None:
+    sheet.freeze_panes = "C2"
+    sheet.sheet_view.showGridLines = False
+
+    thin = Side(style="thin", color=BORDER_COLOR)
+    border = Border(left=thin, right=thin, top=thin, bottom=thin)
+
+    for cell in sheet[1]:
+        cell.font = Font(bold=True, color=HEADER_FONT)
+        cell.fill = PatternFill("solid", fgColor=HEADER_FILL)
+        cell.alignment = Alignment(
+            horizontal="center",
+            vertical="center",
+            wrap_text=True,
+        )
+        cell.border = border
+
+    for row in range(2, sheet.max_row + 1):
+        fill = PatternFill(
+            "solid",
+            fgColor=CATEGORY_FILLS[
+                (row - 2) % len(CATEGORY_FILLS)
+            ],
+        )
+
+        for column in range(1, sheet.max_column + 1):
+            cell = sheet.cell(row=row, column=column)
+            cell.fill = fill
+            cell.border = border
+            cell.alignment = Alignment(
+                vertical="top",
+                wrap_text=True,
+            )
+
+        sheet.cell(row=row, column=1).font = Font(bold=True)
+        sheet.cell(row=row, column=2).font = Font(bold=True)
+
+    sheet.column_dimensions["A"].width = 24
+    sheet.column_dimensions["B"].width = 28
+
+    for column in range(3, sheet.max_column + 1):
+        sheet.column_dimensions[
+            get_column_letter(column)
+        ].width = 34
+
+    sheet.row_dimensions[1].height = 24
+
+    for row in range(2, sheet.max_row + 1):
+        sheet.row_dimensions[row].height = 36
+
+    sheet.auto_filter.ref = sheet.dimensions
+
+
+def _manager_structure_errors(sheet) -> list[str]:
+    errors = []
+
+    if _text(sheet.cell(1, 1).value) != CATEGORY_HEADER:
+        errors.append('Cell A1 must contain "Category".')
+
+    if _text(sheet.cell(1, 2).value) != SUB_CATEGORY_HEADER:
+        errors.append('Cell B1 must contain "Sub-Category".')
+
+    if sheet.max_column < 3:
+        errors.append(
+            "Category Manager must contain at least one Product column."
+        )
+    else:
+        first_product_header = _text(sheet.cell(1, 3).value)
+        if not first_product_header.startswith(PRODUCT_HEADER_PREFIX):
+            errors.append(
+                'Cell C1 must be a Product heading such as "Product 1".'
+            )
+
+    return errors
+
+
+def _parse_manager(sheet) -> dict:
+    assignments = []
+    blank_category_rows = []
+    blank_subcategory_products = []
+    subcategory_rows: dict[str, list[dict]] = defaultdict(list)
+
+    for row in range(2, sheet.max_row + 1):
+        category = _text(sheet.cell(row, 1).value)
+        subcategory = _text(sheet.cell(row, 2).value)
+
+        products = []
+
+        for column in range(3, sheet.max_column + 1):
+            common_name = _text(sheet.cell(row, column).value)
+            if common_name:
+                products.append((common_name, column))
+
+        # Completely empty rows are intentionally ignored.
+        if not products and not category and not subcategory:
+            continue
+
+        # A row with category/subcategory but no products is an empty taxonomy
+        # row. It may be removed during successful cleanup and is ignored here.
+        if not products:
+            continue
+
+        if not subcategory or _is_na(subcategory):
+            for common_name, column in products:
+                blank_subcategory_products.append(
+                    {
+                        "common_name": common_name,
+                        "row": row,
+                        "column": column,
+                    }
+                )
+            continue
+
+        if not category or _is_na(category):
+            blank_category_rows.append(
+                {
+                    "subcategory": subcategory,
+                    "row": row,
+                }
+            )
+
+        subcategory_rows[_normalized(subcategory)].append(
+            {
+                "subcategory": subcategory,
+                "category": category,
+                "row": row,
+            }
+        )
+
+        for common_name, column in products:
+            assignments.append(
+                {
+                    "common_name": common_name,
+                    "subcategory": subcategory,
+                    "category": category,
+                    "row": row,
+                    "column": column,
+                }
+            )
+
+    return {
+        "assignments": assignments,
+        "blank_category_rows": blank_category_rows,
+        "blank_subcategory_products": blank_subcategory_products,
+        "subcategory_rows": dict(subcategory_rows),
+    }
+
+
+def _validate_manager(
+    purchase_data: dict,
+    manager_data: dict,
+    structure_errors: list[str],
+) -> dict:
+    errors = {
+        "structure": list(structure_errors),
+        "invalid_purchase_common_names": list(
+            purchase_data["invalid_common_name_rows"]
+        ),
+        "purchase_conflicts": dict(
+            purchase_data["conflicts"]
+        ),
+        "missing": [],
+        "unknown": [],
+        "duplicates": {},
+        "blank_categories": list(
+            manager_data["blank_category_rows"]
+        ),
+        "blank_subcategories": list(
+            manager_data["blank_subcategory_products"]
+        ),
+        "duplicate_subcategories": {},
+        "ambiguous_subcategories": {},
+    }
+
+    assignments = manager_data["assignments"]
+    occurrences: dict[str, list[dict]] = defaultdict(list)
+
+    for assignment in assignments:
+        occurrences[assignment["common_name"]].append(assignment)
+
+    expected = set(purchase_data["mapping"])
+    found = set(occurrences)
+
+    errors["missing"] = sorted(
+        expected - found,
+        key=str.casefold,
+    )
+    errors["unknown"] = sorted(
+        found - expected,
+        key=str.casefold,
+    )
+    errors["duplicates"] = {
+        common_name: locations
+        for common_name, locations in occurrences.items()
+        if len(locations) > 1
+    }
+
+    for normalized_subcategory, rows in manager_data[
+        "subcategory_rows"
+    ].items():
+        if len(rows) > 1:
+            display_name = rows[0]["subcategory"]
+            errors["duplicate_subcategories"][display_name] = [
+                item["row"]
+                for item in rows
+            ]
+
+            categories = {
+                _normalized(item["category"]): item["category"]
+                for item in rows
+                if item["category"] and not _is_na(item["category"])
+            }
+
+            if len(categories) > 1:
+                errors["ambiguous_subcategories"][display_name] = sorted(
+                    categories.values(),
+                    key=str.casefold,
+                )
+
+    has_errors = any(bool(value) for value in errors.values())
+
+    common_to_subcategory = {}
+    subcategory_to_category = {}
+
+    if not has_errors:
+        common_to_subcategory = {
+            assignment["common_name"]: assignment["subcategory"]
+            for assignment in assignments
+        }
+        subcategory_to_category = {
+            assignment["subcategory"]: assignment["category"]
+            for assignment in assignments
+        }
+
+    return {
+        "valid": not has_errors,
+        "errors": errors,
+        "common_to_subcategory": common_to_subcategory,
+        "subcategory_to_category": subcategory_to_category,
+    }
+
+
+def _format_validation_report(validation: dict) -> str:
+    errors = validation["errors"]
+    lines = ["[ERROR] Category Manager validation failed."]
+
+    if errors["structure"]:
+        lines.append("\nStructure errors:")
+        lines.extend(f"- {message}" for message in errors["structure"])
+
+    if errors["invalid_purchase_common_names"]:
+        lines.append(
+            "\nPurchase History rows with blank/NA Common Name:"
+        )
+        lines.extend(
+            f"- Row {row}"
+            for row in errors["invalid_purchase_common_names"]
+        )
+
+    if errors["purchase_conflicts"]:
+        lines.append(
+            "\nConflicting Purchase History Sub-Categories for one Common Name:"
+        )
+        for common_name, info in errors["purchase_conflicts"].items():
+            lines.append(f'- "{common_name}"')
+            lines.append(
+                "  Sub-Categories: "
+                + ", ".join(info["subcategories"])
+            )
+            lines.append(
+                "  Purchase History rows: "
+                + ", ".join(str(row) for row in info["rows"])
+            )
+
+    if errors["missing"]:
+        lines.append("\nMissing Common Names:")
+        lines.extend(
+            f"{index}. {common_name}"
+            for index, common_name in enumerate(
+                errors["missing"],
+                start=1,
+            )
+        )
+
+    if errors["unknown"]:
+        lines.append("\nUnknown Common Names:")
+        lines.extend(
+            f"{index}. {common_name}"
+            for index, common_name in enumerate(
+                errors["unknown"],
+                start=1,
+            )
+        )
+
+    if errors["duplicates"]:
+        lines.append("\nDuplicate Common Name assignments:")
+        for common_name, locations in errors["duplicates"].items():
+            lines.append(f'\n"{common_name}"')
+            for location in locations:
+                lines.append(
+                    f"    Row {location['row']}: "
+                    f"{location['subcategory']}"
+                )
+
+    if errors["blank_subcategories"]:
+        lines.append("\nProducts assigned to a blank/NA Sub-Category:")
+        for location in errors["blank_subcategories"]:
+            lines.append(
+                f"- {location['common_name']} "
+                f"(row {location['row']})"
+            )
+
+    if errors["blank_categories"]:
+        lines.append("\nSub-Categories without a valid Category:")
+        for location in errors["blank_categories"]:
+            lines.append(
+                f"- {location['subcategory']} "
+                f"(row {location['row']})"
+            )
+
+    if errors["duplicate_subcategories"]:
+        lines.append("\nDuplicate Sub-Category rows:")
+        for subcategory, rows in errors[
+            "duplicate_subcategories"
+        ].items():
+            lines.append(
+                f'- "{subcategory}" appears on rows: '
+                + ", ".join(str(row) for row in rows)
+            )
+
+    if errors["ambiguous_subcategories"]:
+        lines.append("\nAmbiguous Sub-Category -> Category mappings:")
+        for subcategory, categories in errors[
+            "ambiguous_subcategories"
+        ].items():
+            lines.append(
+                f'- "{subcategory}" is assigned to: '
+                + ", ".join(categories)
+            )
+
+    lines.extend(["", "Purchase History was NOT modified."])
+    return "\n".join(lines)
+
+
+def _verified_atomic_save(
+    workbook,
+    workbook_path: Path = WORKBOOK_PATH,
+) -> None:
+    workbook_path = Path(workbook_path).expanduser().resolve()
+    workbook_path.parent.mkdir(parents=True, exist_ok=True)
+
+    file_descriptor, temporary_name = tempfile.mkstemp(
+        suffix=".xlsx",
+        dir=workbook_path.parent,
+    )
+    os.close(file_descriptor)
+    temporary_path = Path(temporary_name)
+
+    try:
+        workbook.save(temporary_path)
+
+        verification = load_workbook(
+            temporary_path,
+            read_only=True,
+            data_only=False,
+        )
+
+        try:
+            required = {
+                PURCHASE_SHEET,
+                CATEGORY_MANAGER_SHEET,
+            }
+            missing = required - set(verification.sheetnames)
+
+            if missing:
+                raise ValueError(
+                    "Temporary workbook verification failed. Missing sheet(s): "
+                    + ", ".join(sorted(missing))
+                )
+
+            verification_purchase = verification[PURCHASE_SHEET]
+            if _text(
+                verification_purchase.cell(
+                    row=1,
+                    column=CATEGORY_COLUMN,
+                ).value
+            ) != "Sub-Category":
+                raise ValueError(
+                    "Temporary workbook verification failed: "
+                    'Purchase History column I is not "Sub-Category".'
+                )
+        finally:
+            verification.close()
+
+        os.replace(temporary_path, workbook_path)
+
+    finally:
+        if temporary_path.exists():
+            temporary_path.unlink()
+
+
+def create_or_refresh_category_manager(
+    workbook_path: Path = WORKBOOK_PATH,
+) -> dict:
+    workbook = _load_existing_workbook(workbook_path)
+
+    try:
+        purchase_sheet = workbook[PURCHASE_SHEET]
+        purchase_data = _read_purchase_history(purchase_sheet)
+
+        if purchase_data["invalid_common_name_rows"]:
+            rows = ", ".join(
+                str(row)
+                for row in purchase_data["invalid_common_name_rows"]
+            )
+            raise ValueError(
+                "Category Manager cannot be created because Purchase History "
+                "contains populated rows with blank/NA Common Name. "
+                f"Rows: {rows}"
+            )
+
+        if purchase_data["conflicts"]:
+            details = []
+
+            for common_name, info in purchase_data["conflicts"].items():
+                details.append(
+                    f"{common_name}: "
+                    + ", ".join(info["subcategories"])
+                )
+
+            raise ValueError(
+                "Category Manager cannot be created because the same Common "
+                "Name has conflicting Sub-Categories in Purchase History:\n- "
+                + "\n- ".join(details)
+            )
+
+        preserved_normalized = _existing_category_mappings(workbook)
+        subcategory_to_category = {}
+
+        for subcategory in set(purchase_data["mapping"].values()):
+            subcategory_to_category[subcategory] = (
+                preserved_normalized.get(
+                    _normalized(subcategory),
+                    NA,
+                )
+                if not _is_na(subcategory)
+                else NA
+            )
+
+        _create_manager_sheet(
+            workbook,
+            purchase_data["mapping"],
+            subcategory_to_category,
+        )
+
+        _verified_atomic_save(workbook, workbook_path)
+
+        assigned_category_count = len(
+            {
+                category
+                for category in subcategory_to_category.values()
+                if category and not _is_na(category)
+            }
+        )
+
+        return {
+            "workbook_path": Path(workbook_path).resolve(),
+            "category_count": assigned_category_count,
+            "subcategory_count": len(
+                set(purchase_data["mapping"].values())
+            ),
+            "product_count": len(purchase_data["mapping"]),
+        }
+
+    finally:
+        workbook.close()
+
+
+def run_create_or_refresh_category_manager() -> None:
+    print("\n=== Create / Refresh Category Manager ===\n")
+    print(
+        "[INFO] Products and Sub-Categories will be rebuilt from current "
+        "Purchase History. Existing valid Sub-Category -> Category mappings "
+        "will be preserved; other unapplied layout edits may be discarded."
+    )
+
+    try:
+        result = create_or_refresh_category_manager()
+    except (OSError, ValueError) as error:
+        print(f"\n[ERROR] {error}")
+        return
+
+    print("\n[OK] Category Manager created / refreshed.")
+    print(f"Categories assigned: {result['category_count']}")
+    print(f"Sub-Categories: {result['subcategory_count']}")
+    print(f"Common Names: {result['product_count']}")
+    print(f"Workbook:\n{result['workbook_path']}")
+
+
+def apply_category_manager(
+    workbook_path: Path = WORKBOOK_PATH,
+) -> dict:
+    workbook = _load_existing_workbook(workbook_path)
+
+    try:
+        if CATEGORY_MANAGER_SHEET not in workbook.sheetnames:
+            return {
+                "success": False,
+                "report": (
+                    "[ERROR] Category Manager validation failed.\n\n"
+                    'Worksheet "Category Manager" was not found.\n\n'
+                    "Purchase History was NOT modified."
+                ),
+            }
+
+        purchase_sheet = workbook[PURCHASE_SHEET]
+        manager_sheet = workbook[CATEGORY_MANAGER_SHEET]
+
+        purchase_data = _read_purchase_history(purchase_sheet)
+        structure_errors = _manager_structure_errors(manager_sheet)
+        manager_data = _parse_manager(manager_sheet)
+        validation = _validate_manager(
+            purchase_data,
+            manager_data,
+            structure_errors,
+        )
+
+        if not validation["valid"]:
+            return {
+                "success": False,
+                "report": _format_validation_report(validation),
+            }
+
+        common_to_subcategory = validation["common_to_subcategory"]
+        subcategory_to_category = validation["subcategory_to_category"]
+        changed_rows = 0
+
+        # Validation is complete. Only the detailed classification cells in
+        # Purchase History may now change. Column I stays physically unchanged.
+        for row in range(2, purchase_sheet.max_row + 1):
+            common_name = _text(
+                purchase_sheet.cell(
+                    row=row,
+                    column=COMMON_NAME_COLUMN,
+                ).value
+            )
+
+            if common_name not in common_to_subcategory:
+                continue
+
+            subcategory_cell = purchase_sheet.cell(
+                row=row,
+                column=CATEGORY_COLUMN,
+            )
+            selected_subcategory = common_to_subcategory[common_name]
+
+            if _text(subcategory_cell.value) != selected_subcategory:
+                subcategory_cell.value = selected_subcategory
+                changed_rows += 1
+
+        _create_manager_sheet(
+            workbook,
+            common_to_subcategory,
+            subcategory_to_category,
+        )
+
+        _verified_atomic_save(workbook, workbook_path)
+
+        return {
+            "success": True,
+            "workbook_path": Path(workbook_path).resolve(),
+            "changed_rows": changed_rows,
+            "category_count": len(
+                set(subcategory_to_category.values())
+            ),
+            "subcategory_count": len(subcategory_to_category),
+            "product_count": len(common_to_subcategory),
+        }
+
+    finally:
+        workbook.close()
+
+
+def run_apply_category_manager() -> None:
+    print("\n=== Apply Category Manager to Purchase History ===\n")
+
+    try:
+        result = apply_category_manager()
+    except (OSError, ValueError) as error:
+        print(f"\n[ERROR] {error}")
+        return
+
+    if not result["success"]:
+        print("\n" + result["report"])
+        return
+
+    print("\n[OK] Purchase History Sub-Categories updated successfully.")
+    print(f"Purchase History rows changed: {result['changed_rows']}")
+    print(f"Categories: {result['category_count']}")
+    print(f"Sub-Categories: {result['subcategory_count']}")
+    print(f"Common Names: {result['product_count']}")
+    print("Category Manager cleaned and synchronized.")
+    print(
+        "\nRun:\nGenerate / Refresh Purchase Analytics\n"
+        "to rebuild Sub Analytics and Analytics using the updated taxonomy."
+    )
+    print(f"\nWorkbook:\n{result['workbook_path']}")
+
+
+def load_category_mapping_for_analytics(
+    workbook,
+) -> dict[str, str]:
+    """
+    Return a validated Sub-Category -> Category mapping for broad Analytics.
+
+    This intentionally validates the taxonomy columns rather than product
+    placement. Broad Analytics reads purchase observations from Purchase
+    History and uses Category Manager only for the parent Category relationship.
+    """
+    if CATEGORY_MANAGER_SHEET not in workbook.sheetnames:
+        raise ValueError(
+            'Worksheet "Category Manager" was not found. '
+            "Create / Refresh Category Manager and assign every Sub-Category "
+            "to a Category before generating broad Analytics."
+        )
+
+    purchase_sheet = workbook[PURCHASE_SHEET]
+    _ensure_purchase_schema(purchase_sheet)
+
+    manager = workbook[CATEGORY_MANAGER_SHEET]
+
+    if (
+        _text(manager.cell(1, 1).value) != CATEGORY_HEADER
+        or _text(manager.cell(1, 2).value) != SUB_CATEGORY_HEADER
+    ):
+        raise ValueError(
+            'Category Manager must begin with "Category" and "Sub-Category".'
+        )
+
+    mapping_by_normalized: dict[str, list[tuple[str, str, int]]] = (
+        defaultdict(list)
+    )
+
+    for row in range(2, manager.max_row + 1):
+        category = _text(manager.cell(row, 1).value)
+        subcategory = _text(manager.cell(row, 2).value)
+
+        if not subcategory:
+            continue
+
+        mapping_by_normalized[_normalized(subcategory)].append(
+            (subcategory, category, row)
+        )
+
+    expected_subcategories = set()
+
+    for row in range(2, purchase_sheet.max_row + 1):
+        common_name = _text(
+            purchase_sheet.cell(row, COMMON_NAME_COLUMN).value
+        )
+        if not common_name or _is_na(common_name):
+            continue
+
+        subcategory = _text(
+            purchase_sheet.cell(row, CATEGORY_COLUMN).value
+        )
+
+        if not subcategory or _is_na(subcategory):
+            raise ValueError(
+                "Broad Analytics cannot be generated because Purchase "
+                f"History row {row} has no valid Sub-Category."
+            )
+
+        expected_subcategories.add(subcategory)
+
+    result = {}
+    problems = []
+
+    for subcategory in sorted(expected_subcategories, key=str.casefold):
+        matches = mapping_by_normalized.get(
+            _normalized(subcategory),
+            [],
+        )
+
+        if not matches:
+            problems.append(
+                f'- "{subcategory}" has no Category Manager row.'
+            )
+            continue
+
+        if len(matches) > 1:
+            rows = ", ".join(str(item[2]) for item in matches)
+            problems.append(
+                f'- "{subcategory}" appears on multiple Category Manager '
+                f"rows: {rows}."
+            )
+            continue
+
+        _, category, row = matches[0]
+
+        if not category or _is_na(category):
+            problems.append(
+                f'- "{subcategory}" has no valid Category '
+                f"(Category Manager row {row})."
+            )
+            continue
+
+        result[subcategory] = category
+
+    if problems:
+        raise ValueError(
+            "Broad Analytics requires every current Sub-Category to map "
+            "to exactly one Category.\n"
+            + "\n".join(problems)
+        )
+
+    return result
+
+
+def display_category_manager_menu() -> None:
+    print("\n=== ShopGraph Category Manager ===\n")
+    print("1. Create / Refresh Category Manager")
+    print("2. Apply Category Manager to Purchase History")
+    print("0. Return to Data Base Builder")
+
+
+def run_category_manager_menu() -> None:
+    while True:
+        display_category_manager_menu()
+        option = input("\nSelect option: ").strip()
+
+        if option == "1":
+            run_create_or_refresh_category_manager()
+        elif option == "2":
+            run_apply_category_manager()
+        elif option == "0":
+            return
+        else:
+            print("\n[ERROR] Invalid option.")
+
 
 ================================================================================
 FILE: utils/DataBaseBuilder/excel/purchase_analytics.py
@@ -10987,11 +12047,17 @@ from openpyxl.utils.datetime import from_excel
 from utils.DataBaseBuilder.excel.purchase_history import (
     PURCHASE_SHEET,
     WORKBOOK_PATH,
+    _ensure_purchase_schema,
+)
+from utils.DataBaseBuilder.excel.category_manager import (
+    load_category_mapping_for_analytics,
 )
 
 
 ANALYTICS_SHEET = "Analytics"
 ANALYTICS_DATA_SHEET = "_AnalyticsData"
+SUB_ANALYTICS_SHEET = "Sub Analytics"
+SUB_ANALYTICS_DATA_SHEET = "_SubAnalyticsData"
 NA = "NA"
 
 DATE_HEADER_PATTERN = re.compile(r"^Date\s+(\d+)$", re.IGNORECASE)
@@ -11183,7 +12249,7 @@ def _flatten_purchase_history(sheet) -> tuple[list[dict], dict]:
         "product": headers.get("Product"),
         "store_number": headers.get("Store Number"),
         "common_name": headers.get("Common Name"),
-        "category": headers.get("Category"),
+        "category": headers.get("Sub-Category"),
     }
 
     observations = []
@@ -11402,18 +12468,22 @@ def _delete_sheet_if_present(workbook, name: str) -> None:
         workbook.remove(workbook[name])
 
 
-def _create_output_sheets(workbook):
-    _delete_sheet_if_present(workbook, ANALYTICS_SHEET)
-    _delete_sheet_if_present(workbook, ANALYTICS_DATA_SHEET)
+def _create_output_sheets(
+    workbook,
+    sheet_name: str,
+    data_sheet_name: str,
+):
+    _delete_sheet_if_present(workbook, sheet_name)
+    _delete_sheet_if_present(workbook, data_sheet_name)
 
     purchase_index = workbook.sheetnames.index(PURCHASE_SHEET)
 
     analytics = workbook.create_sheet(
-        ANALYTICS_SHEET,
+        sheet_name,
         purchase_index + 1,
     )
     data_sheet = workbook.create_sheet(
-        ANALYTICS_DATA_SHEET,
+        data_sheet_name,
         purchase_index + 2,
     )
 
@@ -11704,9 +12774,10 @@ def _horizontal_bar_chart(
 def _doughnut_chart(
     data_sheet,
     table: dict,
+    title: str = "Spending Share by Category",
 ) -> DoughnutChart:
     chart = DoughnutChart()
-    chart.title = "Spending Share by Category"
+    chart.title = title
     chart.holeSize = 58
     chart.style = 10
     chart.height = LARGE_CHART_HEIGHT
@@ -12189,40 +13260,121 @@ def _write_chart_section(
     )
 
 
-def generate_purchase_analytics(
-    workbook_path: Path = WORKBOOK_PATH,
+def _replace_dimension_text(
+    sheet,
+    dimension_label: str,
+) -> None:
+    if dimension_label == "Category":
+        return
+
+    lower_label = dimension_label.lower()
+    plural_label = (
+        "Sub-Categories"
+        if dimension_label == "Sub-Category"
+        else f"{dimension_label}s"
+    )
+    lower_plural = plural_label.lower()
+
+    for row in sheet.iter_rows():
+        for cell in row:
+            if not isinstance(cell.value, str):
+                continue
+
+            text = cell.value
+
+            # Protect text that was already parameterized with Sub-Category so
+            # the word "Category" inside "Sub-Category" is not replaced twice.
+            text = text.replace(
+                plural_label,
+                "__SHOPGRAPH_DIMENSION_PLURAL__",
+            )
+            text = text.replace(
+                lower_plural,
+                "__shopgraph_dimension_plural__",
+            )
+            text = text.replace(
+                dimension_label,
+                "__SHOPGRAPH_DIMENSION__",
+            )
+            text = text.replace(
+                lower_label,
+                "__shopgraph_dimension__",
+            )
+
+            text = re.sub(
+                r"\bCategories\b",
+                plural_label,
+                text,
+            )
+            text = re.sub(
+                r"\bcategories\b",
+                lower_plural,
+                text,
+            )
+            text = re.sub(
+                r"\bCategory\b",
+                dimension_label,
+                text,
+            )
+            text = re.sub(
+                r"\bcategory\b",
+                lower_label,
+                text,
+            )
+
+            text = text.replace(
+                "__SHOPGRAPH_DIMENSION_PLURAL__",
+                plural_label,
+            )
+            text = text.replace(
+                "__shopgraph_dimension_plural__",
+                lower_plural,
+            )
+            text = text.replace(
+                "__SHOPGRAPH_DIMENSION__",
+                dimension_label,
+            )
+            text = text.replace(
+                "__shopgraph_dimension__",
+                lower_label,
+            )
+            cell.value = text
+
+
+def _retitle_dimension_charts(
+    analytics,
+    dimension_label: str,
+) -> None:
+    if dimension_label == "Category":
+        return
+
+    # Seven existing charts are created in a stable order.
+    dimension_titles = {
+        1: f"Spending by {dimension_label}",
+        3: f"Spending Share by {dimension_label}",
+        6: f"Purchase Frequency by {dimension_label}",
+    }
+
+    for index, chart in enumerate(analytics._charts):
+        if index in dimension_titles:
+            chart.title = dimension_titles[index]
+
+
+def _generate_dashboard(
+    workbook,
+    observations: list[dict],
+    diagnostics: dict,
+    *,
+    sheet_name: str,
+    data_sheet_name: str,
+    dimension_label: str,
+    dashboard_title: str,
 ) -> dict:
-    workbook_path = Path(
-        workbook_path
-    ).expanduser().resolve()
-
-    if not workbook_path.exists():
-        raise FileNotFoundError(
-            "Purchase History workbook does not exist: "
-            f"{workbook_path}"
-        )
-
-    workbook = load_workbook(
-        workbook_path,
-        data_only=False,
-    )
-
-    if PURCHASE_SHEET not in workbook.sheetnames:
-        raise PurchaseAnalyticsError(
-            f"Workbook does not contain '{PURCHASE_SHEET}'."
-        )
-
-    purchase_sheet = workbook[PURCHASE_SHEET]
-
-    observations, diagnostics = (
-        _flatten_purchase_history(
-            purchase_sheet
-        )
-    )
-
     analytics, data_sheet = (
         _create_output_sheets(
-            workbook
+            workbook,
+            sheet_name,
+            data_sheet_name,
         )
     )
 
@@ -12257,21 +13409,22 @@ def generate_purchase_analytics(
         )
         data_sheet.sheet_state = "hidden"
 
-        _atomic_save(
-            workbook,
-            workbook_path,
+        analytics["A1"] = dashboard_title
+        _replace_dimension_text(
+            analytics,
+            dimension_label,
+        )
+        _replace_dimension_text(
+            data_sheet,
+            dimension_label,
         )
 
         return {
-            "workbook_path": workbook_path,
             "charts_created": 0,
             "purchase_observations": 0,
-            "skipped_pairs": diagnostics[
-                "skipped_pairs"
-            ],
-            "history_pairs_found": diagnostics[
-                "history_pairs_found"
-            ],
+            "skipped_pairs": diagnostics["skipped_pairs"],
+            "history_pairs_found": diagnostics["history_pairs_found"],
+            "total_spending": 0.0,
         }
 
     aggregates = _aggregate(
@@ -12388,7 +13541,7 @@ def generate_purchase_analytics(
         data_sheet,
         start_column=5,
         start_row=1,
-        title="Spending by Category",
+        title=f"Spending by {dimension_label}",
         headers=[
             "Number",
             "Category",
@@ -12444,7 +13597,7 @@ def generate_purchase_analytics(
         data_sheet,
         start_column=21,
         start_row=1,
-        title="Purchase Frequency by Category",
+        title=f"Purchase Frequency by {dimension_label}",
         headers=[
             "Number",
             "Category",
@@ -12551,7 +13704,7 @@ def generate_purchase_analytics(
         chart = _horizontal_bar_chart(
             data_sheet,
             category_table,
-            title="Spending by Category",
+            title=f"Spending by {dimension_label}",
             x_axis_title="Spending ($)",
         )
 
@@ -12636,6 +13789,7 @@ def generate_purchase_analytics(
         chart = _doughnut_chart(
             data_sheet,
             share_table,
+            title=f"Spending Share by {dimension_label}",
         )
 
         entries = _key_entries_for_named_values(
@@ -12801,7 +13955,7 @@ def generate_purchase_analytics(
         chart = _horizontal_bar_chart(
             data_sheet,
             frequency_table,
-            title="Purchase Frequency by Category",
+            title=f"Purchase Frequency by {dimension_label}",
             x_axis_title="Purchases",
         )
 
@@ -12838,13 +13992,16 @@ def generate_purchase_analytics(
     # Keep helper data available for debugging but invisible during normal use.
     data_sheet.sheet_state = "hidden"
 
-    _atomic_save(
-        workbook,
-        workbook_path,
+    analytics["A1"] = dashboard_title
+    _replace_dimension_text(
+        analytics,
+        dimension_label,
     )
-
+    _replace_dimension_text(
+        data_sheet,
+        dimension_label,
+    )
     return {
-        "workbook_path": workbook_path,
         "charts_created": charts_created,
         "purchase_observations": aggregates[
             "observation_count"
@@ -12859,6 +14016,157 @@ def generate_purchase_analytics(
             "history_pairs_found"
         ],
     }
+
+
+def _broad_category_observations(
+    observations: list[dict],
+    subcategory_to_category: dict[str, str],
+) -> list[dict]:
+    broad = []
+
+    for observation in observations:
+        subcategory = observation["category"]
+
+        if subcategory not in subcategory_to_category:
+            raise PurchaseAnalyticsError(
+                f'Sub-Category "{subcategory}" does not have a broad Category.'
+            )
+
+        item = dict(observation)
+        item["category"] = subcategory_to_category[
+            subcategory
+        ]
+        broad.append(item)
+
+    return broad
+
+
+def generate_purchase_analytics(
+    workbook_path: Path = WORKBOOK_PATH,
+) -> dict:
+    """
+    Refresh both analytical layers.
+
+    Sub Analytics is the existing detailed dashboard and reads Sub-Category
+    directly from Purchase History. Analytics is the broad dashboard and joins
+    Purchase History Sub-Category to Category Manager's Category mapping.
+    """
+    workbook_path = Path(
+        workbook_path
+    ).expanduser().resolve()
+
+    if not workbook_path.exists():
+        raise FileNotFoundError(
+            "Purchase History workbook does not exist: "
+            f"{workbook_path}"
+        )
+
+    workbook = load_workbook(
+        workbook_path,
+        data_only=False,
+    )
+
+    try:
+        if PURCHASE_SHEET not in workbook.sheetnames:
+            raise PurchaseAnalyticsError(
+                f"Workbook does not contain '{PURCHASE_SHEET}'."
+            )
+
+        purchase_sheet = workbook[
+            PURCHASE_SHEET
+        ]
+        _ensure_purchase_schema(
+            purchase_sheet
+        )
+
+        observations, diagnostics = (
+            _flatten_purchase_history(
+                purchase_sheet
+            )
+        )
+
+        sub_summary = _generate_dashboard(
+            workbook,
+            observations,
+            diagnostics,
+            sheet_name=SUB_ANALYTICS_SHEET,
+            data_sheet_name=SUB_ANALYTICS_DATA_SHEET,
+            dimension_label="Sub-Category",
+            dashboard_title="ShopGraph Sub Analytics",
+        )
+
+        broad_summary = None
+        broad_error = None
+
+        try:
+            subcategory_to_category = (
+                load_category_mapping_for_analytics(
+                    workbook
+                )
+            )
+            broad_observations = (
+                _broad_category_observations(
+                    observations,
+                    subcategory_to_category,
+                )
+            )
+
+            broad_summary = _generate_dashboard(
+                workbook,
+                broad_observations,
+                diagnostics,
+                sheet_name=ANALYTICS_SHEET,
+                data_sheet_name=ANALYTICS_DATA_SHEET,
+                dimension_label="Category",
+                dashboard_title="ShopGraph Spending Analytics",
+            )
+
+        except (
+            ValueError,
+            PurchaseAnalyticsError,
+        ) as error:
+            broad_error = str(error)
+
+            # Never leave a stale broad dashboard after the hierarchy becomes
+            # incomplete or invalid.
+            _delete_sheet_if_present(
+                workbook,
+                ANALYTICS_SHEET,
+            )
+            _delete_sheet_if_present(
+                workbook,
+                ANALYTICS_DATA_SHEET,
+            )
+
+        _atomic_save(
+            workbook,
+            workbook_path,
+        )
+
+        return {
+            "workbook_path": workbook_path,
+            "sub_analytics": {
+                "success": True,
+                **sub_summary,
+            },
+            "analytics": (
+                {
+                    "success": True,
+                    **broad_summary,
+                }
+                if broad_summary is not None
+                else {
+                    "success": False,
+                    "error": (
+                        broad_error
+                        or "Broad Analytics could not be generated."
+                    ),
+                }
+            ),
+        }
+
+    finally:
+        workbook.close()
 
 
 ================================================================================
@@ -12901,15 +14209,16 @@ IMPORT_SHEET = "Imported Receipts"
 # F  Tax Code
 # G  Store Number
 # H  Common Name
-# I  Category
+# I  Sub-Category
 # J  Date 1
 # K  Price 1
 # L  Date 2
 # M  Price 2
 # ...
 #
-# Common Name and Category are intentionally created as NA. They are reserved
-# for future ShopGraph normalization/categorization capabilities.
+# Common Name and Sub-Category occupy the same physical columns used by the
+# existing ShopGraph normalization/categorization architecture. The detailed
+# classification remains column I; only its user-facing name is Sub-Category.
 
 TOTAL_COLUMN = 1
 SPACER_COLUMN = 2
@@ -12924,6 +14233,18 @@ CATEGORY_COLUMN = 9
 HISTORY_START_COLUMN = 10
 
 FIXED_HEADERS = [
+    "Total",
+    "",
+    "Store",
+    "Six-Digit SKU",
+    "Product",
+    "Tax Code",
+    "Store Number",
+    "Common Name",
+    "Sub-Category",
+]
+
+PREVIOUS_FIXED_HEADERS = [
     "Total",
     "",
     "Store",
@@ -13028,6 +14349,23 @@ def _uses_old_schema(
     )
 
 
+def _uses_previous_schema(
+    sheet,
+) -> bool:
+    """
+    Recognize the immediately previous schema where column I was labeled
+    "Category". The underlying data is already the detailed classification;
+    migration only renames that header to "Sub-Category".
+    """
+    return (
+        _header_values(
+            sheet,
+            len(PREVIOUS_FIXED_HEADERS),
+        )
+        == PREVIOUS_FIXED_HEADERS
+    )
+
+
 def _uses_new_schema(
     sheet,
 ) -> bool:
@@ -13051,7 +14389,7 @@ def _migrate_old_purchase_sheet(
     into:
 
         Total | <blank> | Store | SKU | Product | Tax Code |
-        Store Number | Common Name | Category | Date 1 | Price 1 | ...
+        Store Number | Common Name | Sub-Category | Date 1 | Price 1 | ...
 
     Existing Date N / Price N history is preserved exactly.
     """
@@ -13062,7 +14400,7 @@ def _migrate_old_purchase_sheet(
     )
 
     # After that insertion, the original Date 1 begins at H.
-    # Insert Common Name and Category there so history begins at J.
+    # Insert Common Name and Sub-Category there so history begins at J.
     sheet.insert_cols(
         8,
         amount=2,
@@ -13098,40 +14436,32 @@ def _migrate_old_purchase_sheet(
                 value=NA,
             )
 
-        existing_common_name = str(
-            sheet.cell(
-                row=row,
-                column=COMMON_NAME_COLUMN,
-            ).value
-            or NA
-        )
-
-        if (
-            existing_common_name == NA
-            and record.common_name != NA
+        # The original schema did not contain Common Name or the detailed
+        # classification. Initialize both without inventing data.
+        if sheet.cell(
+            row=row,
+            column=COMMON_NAME_COLUMN,
+        ).value in (
+            None,
+            "",
         ):
             sheet.cell(
                 row=row,
                 column=COMMON_NAME_COLUMN,
-                value=record.common_name,
+                value=NA,
             )
 
-        existing_category = str(
-            sheet.cell(
-                row=row,
-                column=CATEGORY_COLUMN,
-            ).value
-            or NA
-        )
-
-        if (
-            existing_category == NA
-            and record.category != NA
+        if sheet.cell(
+            row=row,
+            column=CATEGORY_COLUMN,
+        ).value in (
+            None,
+            "",
         ):
             sheet.cell(
                 row=row,
                 column=CATEGORY_COLUMN,
-                value=record.category,
+                value=NA,
             )
 
         _ensure_total_formula(
@@ -13156,6 +14486,27 @@ def _ensure_purchase_schema(
             )
         return
 
+    if _uses_previous_schema(
+        sheet
+    ):
+        # The physical schema is already correct. Only the detailed
+        # classification header changes from Category to Sub-Category.
+        sheet.cell(
+            row=1,
+            column=CATEGORY_COLUMN,
+            value="Sub-Category",
+        )
+
+        for row in range(
+            2,
+            sheet.max_row + 1,
+        ):
+            _ensure_total_formula(
+                sheet,
+                row,
+            )
+        return
+
     if _uses_old_schema(
         sheet
     ):
@@ -13166,8 +14517,8 @@ def _ensure_purchase_schema(
 
     raise ValueError(
         "Purchase History has an unrecognized column layout. "
-        "Expected either the original ShopGraph schema or the "
-        "current ShopGraph schema."
+        "Expected the original ShopGraph schema, the previous Category "
+        "schema, or the current Sub-Category schema."
     )
 
 
@@ -14050,6 +15401,96 @@ def commit_receipt(
 
 
 ================================================================================
+FILE: README/INSTALL.txt
+================================================================================
+
+ShopGraph - Pre-Populated Correction Input Update
+
+PURPOSE
+
+When using:
+
+    2. Correct Columns
+
+the correction prompt now begins with the current parser guess already
+inserted into the editable terminal input.
+
+BEFORE
+
+    Current Product: SALE TRANSACTION
+    Enter corrected Product:
+
+AFTER
+
+    Current Product: SALE TRANSACTION
+    Enter corrected Product: SALE TRANSACTION
+
+The text after the prompt is editable.
+
+The user can:
+
+- press Enter immediately to keep the current value,
+- move through/edit the existing value,
+- or replace it completely.
+
+This behavior applies to normal editable fields such as:
+
+- Product
+- Price
+- Store Number
+- Date
+- Six-Digit SKU
+
+The existing Publix Tax Code choice menu remains unchanged. If the user
+chooses its custom-value option, that custom text prompt is also pre-populated
+with the current Tax Code.
+
+IMPLEMENTATION
+
+The update uses Python's built-in readline support to insert the current value
+into the interactive terminal buffer before input() begins.
+
+No new pip dependency is required.
+
+INSTALL
+
+Replace only:
+
+    utils/DataBaseBuilder/data_base_builder_main.py
+
+No other ShopGraph files need to change.
+
+RUN
+
+    python3 main.py
+
+Then use Data Base Builder normally.
+
+
+================================================================================
+FILE: README/INSTALL_HIERARCHICAL_CATEGORIES_ANALYTICS.txt
+================================================================================
+
+ShopGraph - Hierarchical Category / Sub-Category + Analytics Update
+
+Replace/add the files in this ZIP while preserving the shopping_analysis directory structure.
+
+This update:
+- renames Purchase History column I from Category to Sub-Category without shifting columns;
+- preserves existing detailed categorization behavior;
+- extends Category Manager to Category | Sub-Category | Product N;
+- preserves valid Sub-Category -> Category mappings across refresh;
+- preserves the existing analytics dashboard as Sub Analytics;
+- adds a new broad Category-level Analytics dashboard;
+- keeps broad Category out of Purchase History and receipt/OCR processing.
+
+Run normally with:
+    python3 main.py
+
+Existing workbooks using the prior Category header are migrated safely on use.
+
+
+================================================================================
 FILE: README/README_CAPABILITY_MODES_UPDATE.txt
 ================================================================================
 
@@ -14087,6 +15528,143 @@ Cleanup:
 - Clears regeneratable processing data.
 - Preserves data/current_pic/, data/benchmarks/, data/pdf_files/,
   data/database/, and data/prompts/.
+
+
+================================================================================
+FILE: README/README_CATEGORY_MANAGER.txt
+================================================================================
+
+ShopGraph Category Manager - Hierarchical Category / Sub-Category Update
+
+PURPOSE
+-------
+ShopGraph now uses a three-level product taxonomy:
+
+    Common Name -> Sub-Category -> Category
+
+Purchase History stores the detailed Sub-Category only.
+Category Manager stores the broad Sub-Category -> Category relationship.
+
+PURCHASE HISTORY
+----------------
+The existing Purchase History column formerly labeled "Category" is now
+"Sub-Category". It remains in the same physical column (I). Date 1 remains J,
+Price 1 remains K, and all later Date/Price history stays in place.
+
+Existing workbooks using the old "Category" header are migrated by renaming
+that header only. No Purchase History columns are inserted or shifted.
+
+CATEGORY MANAGER LAYOUT
+-----------------------
+    Category | Sub-Category | Product 1 | Product 2 | ...
+
+Products are Common Name values.
+
+CREATE / REFRESH
+----------------
+Create / Refresh rebuilds Common Name -> Sub-Category membership from the
+current Purchase History.
+
+Existing valid Sub-Category -> Category mappings are preserved because
+Category Manager is the authoritative storage location for broad Category.
+Product placement, gaps, order, and other unapplied layout edits do not need
+to survive refresh.
+
+New Sub-Categories appear with Category = NA until the user assigns them.
+
+APPLY
+-----
+Apply validates the entire manager before changing Purchase History.
+
+Required integrity includes:
+- every current Common Name exactly once;
+- no unknown Common Names;
+- no duplicate Common Names;
+- every product assigned to a valid Sub-Category;
+- every Sub-Category represented by one row;
+- every Sub-Category assigned to exactly one non-NA Category.
+
+Multiple Sub-Categories may share the same Category.
+
+After successful validation, only Purchase History Sub-Category values may be
+changed. Broad Category is never written to Purchase History.
+
+The manager is then compacted and reformatted.
+
+DATA SAFETY
+-----------
+Validation failure saves nothing and leaves Purchase History unchanged.
+
+Successful Apply uses a temporary workbook, reopens it for verification, and
+only then atomically replaces the live workbook.
+
+No audit/version backup system is added by this update.
+
+ANALYTICS
+---------
+Sub Analytics is the existing detailed analytics system, now driven by
+Purchase History Sub-Category.
+
+Analytics is the broad dashboard. It joins Purchase History Sub-Category to
+Category Manager's Sub-Category -> Category mapping.
+
+Sub Analytics can still refresh if broad Analytics cannot be generated because
+Category Manager is incomplete.
+
+
+================================================================================
+FILE: README/README_HIERARCHICAL_CATEGORIES_ANALYTICS.txt
+================================================================================
+
+ShopGraph Hierarchical Categories and Analytics
+
+FINAL MODEL
+-----------
+Receipt/refinement:
+    Product -> Common Name -> Sub-Category
+
+Category Manager:
+    Category -> Sub-Category -> Common Names
+
+Sub Analytics:
+    Purchase History -> Sub-Category -> detailed dashboard
+
+Analytics:
+    Purchase History + Category Manager -> Category -> broad dashboard
+
+SUB ANALYTICS
+-------------
+The prior Analytics implementation is preserved as closely as practical and
+renamed "Sub Analytics".
+
+Its category-oriented charts are now:
+- Spending by Sub-Category
+- Spending Share by Sub-Category
+- Purchase Frequency by Sub-Category
+
+Monthly, store, product, key, explanation, accessible chart layout, and
+no-"Other"-bucket behavior remain consistent with the existing dashboard.
+
+ANALYTICS
+---------
+The new "Analytics" sheet provides the broad Category view using Category
+Manager's Sub-Category -> Category mapping.
+
+If Category Manager is missing or incomplete, ShopGraph still refreshes
+Sub Analytics and reports why broad Analytics could not be refreshed.
+A stale broad Analytics sheet is removed rather than left behind.
+
+COMPATIBILITY
+-------------
+Internal receipt records may continue using the existing Python attribute name
+"category" where changing it would add regression risk. User-facing detailed
+classification is Sub-Category.
+
+Stage-7 refined JSON now uses "Sub-Category"; the Data Base Builder loader also
+accepts older refined JSON containing "Category".
+
+The Purchase History TXT/CSV export needs no new broad Category field because
+broad Category is not stored in Purchase History.
 
 
 ================================================================================
@@ -14768,80 +16346,80 @@ Total,,Store,Six-Digit SKU,Product,Tax Code,Store Number,Common Name,Category,Da
 "=SUM(K48,M48,O48,Q48,S48)",,Honey Pineapple,NA,1 Chicken N French Toast,T,NA,1 Chicken N French Toast,Prepared Meals,2026-08-27 00:00:00,16.3,,,,,,,,
 "=SUM(K49,M49,O49,Q49,S49)",,Honey Pineapple,NA,Tax,NA,NA,Tax,Fees & Charges,2026-08-27 00:00:00,2.96,,,,,,,,
 "=SUM(K50,M50,O50,Q50,S50)",,Honey Pineapple,NA,Tip,NA,NA,Tip,Fees & Charges,2026-08-27 00:00:00,2.96,,,,,,,,
-"=SUM(K51,M51,O51,Q51,S51)",,Walmart,NA,"Safety 1 Soft Grip Brush & Comb, Artic Blue",NA,0,NA,NA,2026-08-06 00:00:00,4.48,2026-08-07 00:00:00,4.48,,,,,,
-"=SUM(K52,M52,O52,Q52,S52)",,Walmart,NA,The Honest Company Conditioning Detangler Sweet Cream Comfort 4 floz,NA,0,NA,Dairy,2026-08-06 00:00:00,6.96,2026-08-07 00:00:00,6.96,,,,,,
-"=SUM(K53,M53,O53,Q53,S53)",,Walmart,NA,"Nestle Toll House Organic Allergen Free Dark Chocolate Regular Baking Chips, Morsels for Baking, 9 oz Bag",NA,0,NA,Snacks,2026-08-06 00:00:00,8.37,2026-08-07 00:00:00,8.37,,,,,,
-"=SUM(K54,M54,O54,Q54,S54)",,Walmart,NA,"GHIRARDELLI Gluten Free Double Chocolate Brownie Mix, Gluten Free Baking Mix, Includes Chocolate Chips, 18 oz Box 20 shopped Qty1",NA,0,NA,Snacks,2026-08-06 00:00:00,6.67,,,,,,,,
-"=SUM(K55,M55,O55,Q55,S55)",,Walmart,NA,"Purina Tidy Cats With Glade Clear Springs Scented, Odor Control, Clumping Multi-Cat Litter 20 shopped Qty2",NA,0,NA,Pet,2026-08-06 00:00:00,23.94,2026-08-07 00:00:00,23.94,,,,,,
-"=SUM(K56,M56,O56,Q56,S56)",,Walmart,NA,"Lawry's Kosher Coarse Ground With Parsley Garlic Salt, 6.0 oz Bottle",NA,0,NA,Meat & Seafood,2026-08-06 00:00:00,3.16,2026-08-07 00:00:00,3.16,,,,,,
-"=SUM(K57,M57,O57,Q57,S57)",,Walmart,NA,"Huggies Natural Care Sensitive Baby Wipes, Unscented, 3 Flip-Top Packs, 168 Count 20 shopped Qty1",NA,0,NA,Baby,2026-08-06 00:00:00,5.82,2026-08-07 00:00:00,5.82,,,,,,
-"=SUM(K58,M58,O58,Q58,S58)",,Walmart,NA,"Pampers Swaddlers Fragrance Free Baby Diapers Size 5, 100 Count (Select for More Options) 20 shopped Qty1",NA,0,NA,Baby,2026-08-06 00:00:00,39.77,,,,,,,,
-"=SUM(K59,M59,O59,Q59,S59)",,Walmart,NA,Chobani Oatmilk Extra Creamy 52 floz Carton 20 shopped aty1,NA,0,NA,Dairy,2026-08-06 00:00:00,4.17,,,,,,,,
-"=SUM(K60,M60,O60,Q60,S60)",,Walmart,NA,"Desitin Maximum Strength Diaper Rash Cream, 40% Zinc Oxide, 4.8 oz",NA,0,NA,Dairy,2026-08-06 00:00:00,7.97,2026-08-07 00:00:00,7.97,,,,,,
-"=SUM(K61,M61,O61,Q61,S61)",,Walmart,NA,"fairlife Lactose Free Reduced Fat Chocolate Ultra Filtered Milk, 52 floz",NA,0,NA,Dairy,2026-08-06 00:00:00,5.32,2026-08-07 00:00:00,5.32,,,,,,
-"=SUM(K62,M62,O62,Q62,S62)",,Walmart,NA,"Nestle Toll House Dark Chocolate Regular Baking Chips, 10 oz Bag 20 shopped Qty1",NA,0,NA,Snacks,2026-08-06 00:00:00,4.96,,,,,,,,
-"=SUM(K63,M63,O63,Q63,S63)",,Walmart,NA,Dove Body Wash For 24hr Lotion-Soft Skin Sensitive Skin Moisturizing Skin Cleanser Gentle Hypoallergenic Formula With,NA,0,NA,NA,2026-08-06 00:00:00,4.97,2026-08-07 00:00:00,4.97,,,,,,
-"=SUM(K64,M64,O64,Q64,S64)",,Walmart,NA,"No Sulfates No Parabens, 11 Floz",NA,0,NA,NA,2026-08-06 00:00:00,4.97,2026-08-07 00:00:00,4.97,,,,,,
-"=SUM(K65,M65,O65,Q65,S65)",,Walmart,NA,Great Value Large White Eggs 36 Count 20 shopped Qty1,NA,0,NA,NA,2026-08-06 00:00:00,4.88,2026-08-07 00:00:00,4.88,,,,,,
-"=SUM(K66,M66,O66,Q66,S66)",,Walmart,NA,"Chobani 20G Protein Low-Fat Greek Yogurt Drink, Strawberries and Cream 10 fl oz Bottle, 4 Pack",NA,0,NA,Produce,2026-08-06 00:00:00,9.67,2026-08-07 00:00:00,9.67,,,,,,
-"=SUM(K67,M67,O67,Q67,S67)",,Walmart,NA,"McCormick Sea Salt Grinder, oz Bottle 20 shopped aty1",NA,0,NA,NA,2026-08-06 00:00:00,2.54,,,,,,,,
-"=SUM(K68,M68,O68,Q68,S68)",,Walmart,NA,"Fresh Mandarin Oranges, 5 lb Bag 20 shopped Qty1",NA,0,NA,Produce,2026-08-06 00:00:00,7.96,2026-08-07 00:00:00,7.96,,,,,,
-"=SUM(K69,M69,O69,Q69,S69)",,Walmart,NA,"Fresh Pink Lady Apples, 3lb Bag 20 shopped Qty1",NA,0,NA,Produce,2026-08-06 00:00:00,4.97,2026-08-07 00:00:00,4.97,,,,,,
-"=SUM(K70,M70,O70,Q70,S70)",,Walmart,NA,"Fresh Banana, Each 7 weight adjusted Qty7",NA,0,NA,Produce,2026-08-06 00:00:00,1.83,2026-08-07 00:00:00,1.83,2026-08-07 00:00:00,1.83,,,,
-"=SUM(K71,M71,O71,Q71,S71)",,Walmart,NA,CeraVe Baby Healing Ointment for Diaper Rash & Cracked Chafed Dry Skin for Baby + Toddler 3 oz,NA,0,NA,Baby,2026-08-06 00:00:00,9.98,2026-08-07 00:00:00,9.98,,,,,,
-"=SUM(K72,M72,O72,Q72,S72)",,Walmart,NA,"Fresh Banana, Each 7 weight adjusted Qty7",NA,0,NA,NA,2026-08-06 00:00:00,3.48,,,,,,,,
-"=SUM(K73,M73,O73,Q73,S73)",,Walmart,NA,Tax,NA,0,NA,NA,2026-08-06 00:00:00,3.48,2026-08-07 00:00:00,3.48,2026-08-13 00:00:00,1.76,2026-08-26 00:00:00,6.35,2026-08-26 00:00:00,6.35
-"=SUM(K74,M74,O74,Q74,S74)",,Walmart,NA,Driver tip,NA,0,NA,NA,2026-08-06 00:00:00,16.92,2026-08-13 00:00:00,17.72,2026-08-26 00:00:00,12.14,,,,
-"=SUM(K75,M75,O75,Q75,S75)",,Walmart,NA,3 hours orless,NA,0,NA,NA,2026-08-06 00:00:00,5,,,,,,,,
-"=SUM(K76,M76,O76,Q76,S76)",,Walmart,NA,diff,NA,0,NA,NA,2026-08-06 00:00:00,2.77,,,,,,,,
-"=SUM(K77,M77,O77,Q77,S77)",,Walmart,NA,"GHIRARDELLI Gluten Free Double Chocolate Brownie Mix, Gluten Free Baking Mix, Includes Chocolate Chips, 18 oz Box",NA,0,NA,Snacks,2026-08-07 00:00:00,6.67,,,,,,,,
-"=SUM(K78,M78,O78,Q78,S78)",,Walmart,NA,"Pampers Swaddlers Fragrance Free Baby Diapers Size 5, 100 Count (Select for More Options",NA,0,NA,Baby,2026-08-07 00:00:00,39.77,,,,,,,,
-"=SUM(K79,M79,O79,Q79,S79)",,Walmart,NA,Chobani Oatmitk Extra Creamy 52 floz Carton 20 shopped Qty1,NA,0,NA,Dairy,2026-08-07 00:00:00,4.17,,,,,,,,
-"=SUM(K80,M80,O80,Q80,S80)",,Walmart,NA,"Nestle Tolt House Dark Chocolate Regular Baking Chips, 10 oz Bag 20 shopped Qty1",NA,0,NA,Snacks,2026-08-07 00:00:00,4.96,,,,,,,,
-"=SUM(K81,M81,O81,Q81,S81)",,Walmart,NA,"Applegate Natural Chicken & Maple Breakfast Sausage Patties, 16 oz, GF, Resealable Bag (Frozen), About 15 Pieces per Bag",NA,0,NA,Produce,2026-08-07 00:00:00,11.76,,,,,,,,
-"=SUM(K82,M82,O82,Q82,S82)",,Walmart,NA,"McCormick Sea Salt Grinder, oz Bottle 20 shopped Qty1",NA,0,NA,NA,2026-08-07 00:00:00,2.54,,,,,,,,
-"=SUM(K83,M83,O83,Q83,S83)",,Walmart,NA,3 hours or less,NA,0,NA,NA,2026-08-07 00:00:00,5,,,,,,,,
-"=SUM(K84,M84,O84,Q84,S84)",,Walmart,NA,"Nature's Bakery Gluten Free Raspberry Fig Bars in Twin pack Box, 20z Each 36 shopped Qty1",NA,0,NA,Produce,2026-08-13 00:00:00,5.97,,,,,,,,
-"=SUM(K85,M85,O85,Q85,S85)",,Walmart,NA,"Mahatma Jasmine Rice, Thai Fragrant Long Grain Rice, Gluten Free, 80 oz Bag (5 lbs",NA,0,NA,Pantry,2026-08-13 00:00:00,6.88,,,,,,,,
-"=SUM(K86,M86,O86,Q86,S86)",,Walmart,NA,"Hillshire Farm Ultra Thin Oven Roasted Turkey Breast Lunchmeat, 16 oz Plastic Tub, Refrigerated",NA,0,NA,Meat & Seafood,2026-08-13 00:00:00,6.48,,,,,,,,
-"=SUM(K87,M87,O87,Q87,S87)",,Walmart,NA,"Hebrew National 100% Kosher Beef Franks, Hot Dogs, 10.3 oz 6 Count",NA,0,NA,Meat & Seafood,2026-08-13 00:00:00,5.74,,,,,,,,
-"=SUM(K88,M88,O88,Q88,S88)",,Walmart,NA,"Dave's Killer Bread Organic Oats & Blues Regular Size Loaf, 25 oz, USDA Organic",NA,0,NA,Bakery,2026-08-13 00:00:00,5.98,,,,,,,,
-"=SUM(K89,M89,O89,Q89,S89)",,Walmart,NA,"Birds Eye Steamfresh Sweet Peas, Frozen Vegetables, 10 oz. Bag",NA,0,NA,Frozen,2026-08-13 00:00:00,1.27,,,,,,,,
-"=SUM(K90,M90,O90,Q90,S90)",,Walmart,NA,Cabot Creamery 4 Cheese Mexican Shredded Cheddar Cheese 2 lb (Refrigerated,NA,0,NA,Dairy,2026-08-13 00:00:00,11.93,,,,,,,,
-"=SUM(K91,M91,O91,Q91,S91)",,Walmart,NA,"Ziploc Brand Slider Gallon Freezer Food Storage Bags, School Supplies, with Power Shield Technology, 40 Count",NA,0,NA,NA,2026-08-13 00:00:00,7.98,,,,,,,,
-"=SUM(K92,M92,O92,Q92,S92)",,Walmart,NA,"Ziploc Brand Freezer Food Storage Bags, School Supplies, with Grip 'n Seal Technology, Zipper, Quart, 50 Count",NA,0,NA,NA,2026-08-13 00:00:00,6.48,,,,,,,,
-"=SUM(K93,M93,O93,Q93,S93)",,Walmart,NA,"Fresh Mini Cucumbers, 16 oz",NA,0,NA,NA,2026-08-13 00:00:00,2.08,,,,,,,,
-"=SUM(K94,M94,O94,Q94,S94)",,Walmart,NA,"2 pack) Yehuda Sabbath Candles,12ct",T,0,NA,NA,2026-08-13 00:00:00,3.16,,,,,,,,
-"=SUM(K95,M95,O95,Q95,S95)",,Walmart,NA,"Fresh Yellow Squash, Each 11 weight adjusted aty1",NA,0,NA,NA,2026-08-13 00:00:00,0.42,2026-08-13 00:00:00,0.42,,,,,,
-"=SUM(K96,M96,O96,Q96,S96)",,Walmart,NA,"Fresh Zucchini, Each 11 weight adjusted aty1",NA,0,NA,Produce,2026-08-13 00:00:00,0.6,2026-08-13 00:00:00,0.6,,,,,,
-"=SUM(K97,M97,O97,Q97,S97)",,Walmart,NA,"Fresh Whole Red Onion, Each",NA,0,NA,Produce,2026-08-13 00:00:00,0.88,2026-08-13 00:00:00,0.88,,,,,,
-"=SUM(K98,M98,O98,Q98,S98)",,Walmart,NA,"Fresh Tomato on the Vine, Bag (1.9 lbs/Bag Est.) 11 weight adjusted Qty1",NA,0,NA,Produce,2026-08-13 00:00:00,3.85,,,,,,,,
-"=SUM(K99,M99,O99,Q99,S99)",,Walmart,NA,"Fresh Banana, Each 11 weight adjusted Qty7",NA,0,NA,Produce,2026-08-13 00:00:00,1.76,2026-08-13 00:00:00,1.76,,,,,,
-"=SUM(K100,M100,O100,Q100,S100)",,Walmart,NA,"Command Heavy Duty Picture Hangers, Hold 20 tbs, Black, Damage-Free Hanging, 8 Pairs Adhesive Strips",NA,0,NA,NA,2026-08-26 00:00:00,28.54,,,,,,,,
-"=SUM(K101,M101,O101,Q101,S101)",,Walmart,NA,Dove Men+Care Antiperspirant Deodorant Stick 72-Hour Sweat & Odor Protection Clean Comfort Antiperspirant For Men,NA,0,NA,NA,2026-08-26 00:00:00,NA,,,,,,,,
-"=SUM(K102,M102,O102,Q102,S102)",,Walmart,NA,"Dawn Ultra 11"" Puff Glassware and Dish Cleaning Brush Wand with Sponge Head",NA,0,NA,NA,2026-08-26 00:00:00,4.46,,,,,,,,
-"=SUM(K103,M103,O103,Q103,S103)",,Walmart,NA,"Once Upon a Farm Organic Tractor Wheels Toddler Bar, Apple, Sweet Potato & Spinach, 10ct",NA,0,NA,Produce,2026-08-26 00:00:00,9.98,,,,,,,,
-"=SUM(K104,M104,O104,Q104,S104)",,Walmart,NA,"Weiman Granite & Stone Disinfectant Cleaner & Polish, 24 floz",NA,0,NA,Household,2026-08-26 00:00:00,6.24,,,,,,,,
-"=SUM(K105,M105,O105,Q105,S105)",,Walmart,NA,"Chobani Low-Fat Vanilla Greek Yogurt Mixed Berry On The Bottom, Hero Batch z 4PK",NA,0,NA,Produce,2026-08-26 00:00:00,4.67,,,,,,,,
-"=SUM(K106,M106,O106,Q106,S106)",,Walmart,NA,"Fresh Banana, Each 4 weight adjusted aty4",NA,0,NA,Produce,2026-08-26 00:00:00,0.6,2026-08-26 00:00:00,0.6,,,,,,
-"=SUM(K107,M107,O107,Q107,S107)",,Publix,NA,Jif Nsa P/B Creamy,F,120,NA,Dairy,2026-08-28 00:00:00,3.69,,,,,,,,
-"=SUM(K108,M108,O108,Q108,S108)",,Publix,NA,King Arth G/ Pnck Hix,F,120,NA,NA,2026-08-28 00:00:00,5.15,,,,,,,,
-"=SUM(K109,M109,O109,Q109,S109)",,Publix,NA,Bagged Green Beans,F,120,NA,Pantry,2026-08-28 00:00:00,2.99,,,,,,,,
-"=SUM(K110,M110,O110,Q110,S110)",,Publix,NA,Potato Nibbles Ruby Sensa,F,120,NA,Produce,2026-08-28 00:00:00,5.15,,,,,,,,
-"=SUM(K111,M111,O111,Q111,S111)",,Publix,NA,Cholula Cremosa Gltro Lme,F,120,NA,NA,2026-08-28 00:00:00,3.19,,,,,,,,
-"=SUM(K112,M112,O112,Q112,S112)",,Publix,NA,Mc Sig Evrythng Bgel Ssng,F,120,NA,NA,2026-08-28 00:00:00,6.79,,,,,,,,
-"=SUM(K113,M113,O113,Q113,S113)",,Publix,NA,Banza White Cheddar Shel,F,120,NA,NA,2026-08-28 00:00:00,3.99,,,,,,,,
-"=SUM(K114,M114,O114,Q114,S114)",,Publix,NA,anza White Cheddar Shel,F,120,NA,NA,2026-08-28 00:00:00,3.99,,,,,,,,
-"=SUM(K115,M115,O115,Q115,S115)",,Publix,NA,Annie's Dlx Shi&Chd Gf,F,120,NA,NA,2026-08-28 00:00:00,5.45,,,,,,,,
-"=SUM(K116,M116,O116,Q116,S116)",,Publix,NA,Annie's Dlx Shl&Chd Gf,F,120,NA,NA,2026-08-28 00:00:00,5.45,,,,,,,,
-"=SUM(K117,M117,O117,Q117,S117)",,Publix,NA,Gw Keta Salmon Fillet,F,120,NA,Meat & Seafood,2026-08-28 00:00:00,14.29,,,,,,,,
-"=SUM(K118,M118,O118,Q118,S118)",,Publix,NA,Bananas,NA,120,NA,NA,2026-08-28 00:00:00,1.53,,,,,,,,
-"=SUM(K119,M119,O119,Q119,S119)",,Publix,NA,Daiya Shreds Mexican Bld,F,120,NA,Pantry,2026-08-28 00:00:00,5.65,2026-08-28 00:00:00,0,,,,,,
-"=SUM(K120,M120,O120,Q120,S120)",,Publix,NA,Tf Caesar Salad Kit Chop F,NA,120,NA,NA,2026-08-28 00:00:00,3.33,,,,,,,,
-"=SUM(K121,M121,O121,Q121,S121)",,Publix,NA,Tf Everything Salad Chop,TF,120,NA,NA,2026-08-28 00:00:00,3.33,,,,,,,,
-"=SUM(K122,M122,O122,Q122,S122)",,Publix,NA,Hagen David Blackberry,T,120,NA,Produce,2026-08-28 00:00:00,7.19,,,,,,,,
-"=SUM(K123,M123,O123,Q123,S123)",,Publix,NA,Tax,NA,120,NA,NA,2026-08-28 00:00:00,0.5,,,,,,,,
-"=SUM(K124,M124,O124,Q124,S124)",,Publix,NA,Tf Everything Salad Chop,TF,120,NA,NA,2026-08-28 00:00:00,3.34,,,,,,,,
+"=SUM(K51,M51,O51,Q51,S51)",,Walmart,NA,"Safety 1 Soft Grip Brush & Comb, Artic Blue",NA,0,Safety 1st Soft Grip Brush & Comb,Baby Care,2026-08-06 00:00:00,4.48,2026-08-07 00:00:00,4.48,,,,,,
+"=SUM(K52,M52,O52,Q52,S52)",,Walmart,NA,The Honest Company Conditioning Detangler Sweet Cream Comfort 4 floz,NA,0,Honest Company Conditioning Detangler,Hair Care,2026-08-06 00:00:00,6.96,2026-08-07 00:00:00,6.96,,,,,,
+"=SUM(K53,M53,O53,Q53,S53)",,Walmart,NA,"Nestle Toll House Organic Allergen Free Dark Chocolate Regular Baking Chips, Morsels for Baking, 9 oz Bag",NA,0,Nestle Toll House Allergen-Free Dark Chocolate Baking Chips,Baking Ingredients,2026-08-06 00:00:00,8.37,2026-08-07 00:00:00,8.37,,,,,,
+"=SUM(K54,M54,O54,Q54,S54)",,Walmart,NA,"GHIRARDELLI Gluten Free Double Chocolate Brownie Mix, Gluten Free Baking Mix, Includes Chocolate Chips, 18 oz Box 20 shopped Qty1",NA,0,Ghirardelli Gluten-Free Double Chocolate Brownie Mix,Baking Mixes,2026-08-06 00:00:00,6.67,,,,,,,,
+"=SUM(K55,M55,O55,Q55,S55)",,Walmart,NA,"Purina Tidy Cats With Glade Clear Springs Scented, Odor Control, Clumping Multi-Cat Litter 20 shopped Qty2",NA,0,Purina Tidy Cats Clumping Cat Litter,Cat Litter,2026-08-06 00:00:00,23.94,2026-08-07 00:00:00,23.94,,,,,,
+"=SUM(K56,M56,O56,Q56,S56)",,Walmart,NA,"Lawry's Kosher Coarse Ground With Parsley Garlic Salt, 6.0 oz Bottle",NA,0,Lawry's Garlic Salt,Seasonings & Spices,2026-08-06 00:00:00,3.16,2026-08-07 00:00:00,3.16,,,,,,
+"=SUM(K57,M57,O57,Q57,S57)",,Walmart,NA,"Huggies Natural Care Sensitive Baby Wipes, Unscented, 3 Flip-Top Packs, 168 Count 20 shopped Qty1",NA,0,Huggies Natural Care Baby Wipes,Baby Care,2026-08-06 00:00:00,5.82,2026-08-07 00:00:00,5.82,,,,,,
+"=SUM(K58,M58,O58,Q58,S58)",,Walmart,NA,"Pampers Swaddlers Fragrance Free Baby Diapers Size 5, 100 Count (Select for More Options) 20 shopped Qty1",NA,0,Pampers Swaddlers Size 5 Diapers,Baby Care,2026-08-06 00:00:00,39.77,,,,,,,,
+"=SUM(K59,M59,O59,Q59,S59)",,Walmart,NA,Chobani Oatmilk Extra Creamy 52 floz Carton 20 shopped aty1,NA,0,Chobani Extra Creamy Oatmilk,Plant-Based Milk,2026-08-06 00:00:00,4.17,,,,,,,,
+"=SUM(K60,M60,O60,Q60,S60)",,Walmart,NA,"Desitin Maximum Strength Diaper Rash Cream, 40% Zinc Oxide, 4.8 oz",NA,0,Desitin Maximum Strength Diaper Rash Cream,Baby Care,2026-08-06 00:00:00,7.97,2026-08-07 00:00:00,7.97,,,,,,
+"=SUM(K61,M61,O61,Q61,S61)",,Walmart,NA,"fairlife Lactose Free Reduced Fat Chocolate Ultra Filtered Milk, 52 floz",NA,0,Fairlife Chocolate Milk,Milk,2026-08-06 00:00:00,5.32,2026-08-07 00:00:00,5.32,,,,,,
+"=SUM(K62,M62,O62,Q62,S62)",,Walmart,NA,"Nestle Toll House Dark Chocolate Regular Baking Chips, 10 oz Bag 20 shopped Qty1",NA,0,Nestle Toll House Dark Chocolate Baking Chips,Baking Ingredients,2026-08-06 00:00:00,4.96,,,,,,,,
+"=SUM(K63,M63,O63,Q63,S63)",,Walmart,NA,Dove Body Wash For 24hr Lotion-Soft Skin Sensitive Skin Moisturizing Skin Cleanser Gentle Hypoallergenic Formula With,NA,0,Dove Sensitive Skin Body Wash,Body Wash,2026-08-06 00:00:00,4.97,2026-08-07 00:00:00,4.97,,,,,,
+"=SUM(K64,M64,O64,Q64,S64)",,Walmart,NA,"No Sulfates No Parabens, 11 Floz",NA,0,Dove Sensitive Skin Body Wash,Body Wash,2026-08-06 00:00:00,4.97,2026-08-07 00:00:00,4.97,,,,,,
+"=SUM(K65,M65,O65,Q65,S65)",,Walmart,NA,Great Value Large White Eggs 36 Count 20 shopped Qty1,NA,0,Great Value Large White Eggs,Eggs,2026-08-06 00:00:00,4.88,2026-08-07 00:00:00,4.88,,,,,,
+"=SUM(K66,M66,O66,Q66,S66)",,Walmart,NA,"Chobani 20G Protein Low-Fat Greek Yogurt Drink, Strawberries and Cream 10 fl oz Bottle, 4 Pack",NA,0,"Chobani Protein Greek Yogurt Drink, Strawberries & Cream",Yogurt,2026-08-06 00:00:00,9.67,2026-08-07 00:00:00,9.67,,,,,,
+"=SUM(K67,M67,O67,Q67,S67)",,Walmart,NA,"McCormick Sea Salt Grinder, oz Bottle 20 shopped aty1",NA,0,McCormick Sea Salt Grinder,Seasonings & Spices,2026-08-06 00:00:00,2.54,,,,,,,,
+"=SUM(K68,M68,O68,Q68,S68)",,Walmart,NA,"Fresh Mandarin Oranges, 5 lb Bag 20 shopped Qty1",NA,0,Mandarin Oranges,Fresh Fruit,2026-08-06 00:00:00,7.96,2026-08-07 00:00:00,7.96,,,,,,
+"=SUM(K69,M69,O69,Q69,S69)",,Walmart,NA,"Fresh Pink Lady Apples, 3lb Bag 20 shopped Qty1",NA,0,Pink Lady Apples,Fresh Fruit,2026-08-06 00:00:00,4.97,2026-08-07 00:00:00,4.97,,,,,,
+"=SUM(K70,M70,O70,Q70,S70)",,Walmart,NA,"Fresh Banana, Each 7 weight adjusted Qty7",NA,0,Bananas,Fresh Fruit,2026-08-06 00:00:00,1.83,2026-08-07 00:00:00,1.83,2026-08-07 00:00:00,1.83,,,,
+"=SUM(K71,M71,O71,Q71,S71)",,Walmart,NA,CeraVe Baby Healing Ointment for Diaper Rash & Cracked Chafed Dry Skin for Baby + Toddler 3 oz,NA,0,CeraVe Baby Healing Ointment,Baby Care,2026-08-06 00:00:00,9.98,2026-08-07 00:00:00,9.98,,,,,,
+"=SUM(K72,M72,O72,Q72,S72)",,Walmart,NA,"Fresh Banana, Each 7 weight adjusted Qty7",NA,0,Bananas,Fresh Fruit,2026-08-06 00:00:00,3.48,,,,,,,,
+"=SUM(K73,M73,O73,Q73,S73)",,Walmart,NA,Tax,NA,0,Tax,Fees & Charges,2026-08-06 00:00:00,3.48,2026-08-07 00:00:00,3.48,2026-08-13 00:00:00,1.76,2026-08-26 00:00:00,6.35,2026-08-26 00:00:00,6.35
+"=SUM(K74,M74,O74,Q74,S74)",,Walmart,NA,Driver tip,NA,0,Driver Tip,Fees & Charges,2026-08-06 00:00:00,16.92,2026-08-13 00:00:00,17.72,2026-08-26 00:00:00,12.14,,,,
+"=SUM(K75,M75,O75,Q75,S75)",,Walmart,NA,3 hours orless,NA,0,Express Delivery Fee,Fees & Charges,2026-08-06 00:00:00,5,,,,,,,,
+"=SUM(K76,M76,O76,Q76,S76)",,Walmart,NA,diff,NA,0,Price Adjustment,Fees & Charges,2026-08-06 00:00:00,2.77,,,,,,,,
+"=SUM(K77,M77,O77,Q77,S77)",,Walmart,NA,"GHIRARDELLI Gluten Free Double Chocolate Brownie Mix, Gluten Free Baking Mix, Includes Chocolate Chips, 18 oz Box",NA,0,Ghirardelli Gluten-Free Double Chocolate Brownie Mix,Baking Mixes,2026-08-07 00:00:00,6.67,,,,,,,,
+"=SUM(K78,M78,O78,Q78,S78)",,Walmart,NA,"Pampers Swaddlers Fragrance Free Baby Diapers Size 5, 100 Count (Select for More Options",NA,0,Pampers Swaddlers Size 5 Diapers,Baby Care,2026-08-07 00:00:00,39.77,,,,,,,,
+"=SUM(K79,M79,O79,Q79,S79)",,Walmart,NA,Chobani Oatmitk Extra Creamy 52 floz Carton 20 shopped Qty1,NA,0,Chobani Extra Creamy Oatmilk,Plant-Based Milk,2026-08-07 00:00:00,4.17,,,,,,,,
+"=SUM(K80,M80,O80,Q80,S80)",,Walmart,NA,"Nestle Tolt House Dark Chocolate Regular Baking Chips, 10 oz Bag 20 shopped Qty1",NA,0,Nestle Toll House Dark Chocolate Baking Chips,Baking Ingredients,2026-08-07 00:00:00,4.96,,,,,,,,
+"=SUM(K81,M81,O81,Q81,S81)",,Walmart,NA,"Applegate Natural Chicken & Maple Breakfast Sausage Patties, 16 oz, GF, Resealable Bag (Frozen), About 15 Pieces per Bag",NA,0,Applegate Chicken & Maple Breakfast Sausage,Frozen Meat,2026-08-07 00:00:00,11.76,,,,,,,,
+"=SUM(K82,M82,O82,Q82,S82)",,Walmart,NA,"McCormick Sea Salt Grinder, oz Bottle 20 shopped Qty1",NA,0,McCormick Sea Salt Grinder,Seasonings & Spices,2026-08-07 00:00:00,2.54,,,,,,,,
+"=SUM(K83,M83,O83,Q83,S83)",,Walmart,NA,3 hours or less,NA,0,Express Delivery Fee,Fees & Charges,2026-08-07 00:00:00,5,,,,,,,,
+"=SUM(K84,M84,O84,Q84,S84)",,Walmart,NA,"Nature's Bakery Gluten Free Raspberry Fig Bars in Twin pack Box, 20z Each 36 shopped Qty1",NA,0,Nature's Bakery Gluten-Free Raspberry Fig Bars,Snack Bars,2026-08-13 00:00:00,5.97,,,,,,,,
+"=SUM(K85,M85,O85,Q85,S85)",,Walmart,NA,"Mahatma Jasmine Rice, Thai Fragrant Long Grain Rice, Gluten Free, 80 oz Bag (5 lbs",NA,0,Mahatma Jasmine Rice,Rice & Grains,2026-08-13 00:00:00,6.88,,,,,,,,
+"=SUM(K86,M86,O86,Q86,S86)",,Walmart,NA,"Hillshire Farm Ultra Thin Oven Roasted Turkey Breast Lunchmeat, 16 oz Plastic Tub, Refrigerated",NA,0,Hillshire Farm Oven Roasted Turkey Breast,Deli Meat,2026-08-13 00:00:00,6.48,,,,,,,,
+"=SUM(K87,M87,O87,Q87,S87)",,Walmart,NA,"Hebrew National 100% Kosher Beef Franks, Hot Dogs, 10.3 oz 6 Count",NA,0,Hebrew National Beef Franks,Hot Dogs & Sausages,2026-08-13 00:00:00,5.74,,,,,,,,
+"=SUM(K88,M88,O88,Q88,S88)",,Walmart,NA,"Dave's Killer Bread Organic Oats & Blues Regular Size Loaf, 25 oz, USDA Organic",NA,0,Dave's Killer Bread Oats & Blues,Bread,2026-08-13 00:00:00,5.98,,,,,,,,
+"=SUM(K89,M89,O89,Q89,S89)",,Walmart,NA,"Birds Eye Steamfresh Sweet Peas, Frozen Vegetables, 10 oz. Bag",NA,0,Birds Eye Steamfresh Sweet Peas,Frozen Vegetables,2026-08-13 00:00:00,1.27,,,,,,,,
+"=SUM(K90,M90,O90,Q90,S90)",,Walmart,NA,Cabot Creamery 4 Cheese Mexican Shredded Cheddar Cheese 2 lb (Refrigerated,NA,0,Cabot Mexican Shredded Cheese,Cheese,2026-08-13 00:00:00,11.93,,,,,,,,
+"=SUM(K91,M91,O91,Q91,S91)",,Walmart,NA,"Ziploc Brand Slider Gallon Freezer Food Storage Bags, School Supplies, with Power Shield Technology, 40 Count",NA,0,Ziploc Gallon Freezer Bags,Food Storage,2026-08-13 00:00:00,7.98,,,,,,,,
+"=SUM(K92,M92,O92,Q92,S92)",,Walmart,NA,"Ziploc Brand Freezer Food Storage Bags, School Supplies, with Grip 'n Seal Technology, Zipper, Quart, 50 Count",NA,0,Ziploc Quart Freezer Bags,Food Storage,2026-08-13 00:00:00,6.48,,,,,,,,
+"=SUM(K93,M93,O93,Q93,S93)",,Walmart,NA,"Fresh Mini Cucumbers, 16 oz",NA,0,Mini Cucumbers,Fresh Vegetables,2026-08-13 00:00:00,2.08,,,,,,,,
+"=SUM(K94,M94,O94,Q94,S94)",,Walmart,NA,"2 pack) Yehuda Sabbath Candles,12ct",T,0,Yehuda Sabbath Candles,Judaica,2026-08-13 00:00:00,3.16,,,,,,,,
+"=SUM(K95,M95,O95,Q95,S95)",,Walmart,NA,"Fresh Yellow Squash, Each 11 weight adjusted aty1",NA,0,Yellow Squash,Fresh Vegetables,2026-08-13 00:00:00,0.42,2026-08-13 00:00:00,0.42,,,,,,
+"=SUM(K96,M96,O96,Q96,S96)",,Walmart,NA,"Fresh Zucchini, Each 11 weight adjusted aty1",NA,0,Zucchini,Fresh Vegetables,2026-08-13 00:00:00,0.6,2026-08-13 00:00:00,0.6,,,,,,
+"=SUM(K97,M97,O97,Q97,S97)",,Walmart,NA,"Fresh Whole Red Onion, Each",NA,0,Red Onion,Fresh Vegetables,2026-08-13 00:00:00,0.88,2026-08-13 00:00:00,0.88,,,,,,
+"=SUM(K98,M98,O98,Q98,S98)",,Walmart,NA,"Fresh Tomato on the Vine, Bag (1.9 lbs/Bag Est.) 11 weight adjusted Qty1",NA,0,Tomatoes on the Vine,Fresh Vegetables,2026-08-13 00:00:00,3.85,,,,,,,,
+"=SUM(K99,M99,O99,Q99,S99)",,Walmart,NA,"Fresh Banana, Each 11 weight adjusted Qty7",NA,0,Bananas,Fresh Fruit,2026-08-13 00:00:00,1.76,2026-08-13 00:00:00,1.76,,,,,,
+"=SUM(K100,M100,O100,Q100,S100)",,Walmart,NA,"Command Heavy Duty Picture Hangers, Hold 20 tbs, Black, Damage-Free Hanging, 8 Pairs Adhesive Strips",NA,0,Command Heavy Duty Picture Hangers,Home Improvement,2026-08-26 00:00:00,28.54,,,,,,,,
+"=SUM(K101,M101,O101,Q101,S101)",,Walmart,NA,Dove Men+Care Antiperspirant Deodorant Stick 72-Hour Sweat & Odor Protection Clean Comfort Antiperspirant For Men,NA,0,Dove Men+Care Antiperspirant,Deodorant,2026-08-26 00:00:00,NA,,,,,,,,
+"=SUM(K102,M102,O102,Q102,S102)",,Walmart,NA,"Dawn Ultra 11"" Puff Glassware and Dish Cleaning Brush Wand with Sponge Head",NA,0,Dawn Dish Cleaning Brush Wand,Dishwashing Supplies,2026-08-26 00:00:00,4.46,,,,,,,,
+"=SUM(K103,M103,O103,Q103,S103)",,Walmart,NA,"Once Upon a Farm Organic Tractor Wheels Toddler Bar, Apple, Sweet Potato & Spinach, 10ct",NA,0,Once Upon a Farm Tractor Wheels Toddler Bars,Baby & Toddler Food,2026-08-26 00:00:00,9.98,,,,,,,,
+"=SUM(K104,M104,O104,Q104,S104)",,Walmart,NA,"Weiman Granite & Stone Disinfectant Cleaner & Polish, 24 floz",NA,0,Weiman Granite & Stone Cleaner & Polish,Household Cleaners,2026-08-26 00:00:00,6.24,,,,,,,,
+"=SUM(K105,M105,O105,Q105,S105)",,Walmart,NA,"Chobani Low-Fat Vanilla Greek Yogurt Mixed Berry On The Bottom, Hero Batch z 4PK",NA,0,Chobani Vanilla Mixed Berry Greek Yogurt,Yogurt,2026-08-26 00:00:00,4.67,,,,,,,,
+"=SUM(K106,M106,O106,Q106,S106)",,Walmart,NA,"Fresh Banana, Each 4 weight adjusted aty4",NA,0,Bananas,Fresh Fruit,2026-08-26 00:00:00,0.6,2026-08-26 00:00:00,0.6,,,,,,
+"=SUM(K107,M107,O107,Q107,S107)",,Publix,NA,Jif Nsa P/B Creamy,F,120,Jif No Sugar Added Creamy Peanut Butter,Peanut Butter,2026-08-28 00:00:00,3.69,,,,,,,,
+"=SUM(K108,M108,O108,Q108,S108)",,Publix,NA,King Arth G/ Pnck Hix,F,120,King Arthur Gluten-Free Pancake Mix,Baking Mixes,2026-08-28 00:00:00,5.15,,,,,,,,
+"=SUM(K109,M109,O109,Q109,S109)",,Publix,NA,Bagged Green Beans,F,120,Green Beans,Fresh Vegetables,2026-08-28 00:00:00,2.99,,,,,,,,
+"=SUM(K110,M110,O110,Q110,S110)",,Publix,NA,Potato Nibbles Ruby Sensa,F,120,Ruby Sensation Potato Nibbles,Fresh Vegetables,2026-08-28 00:00:00,5.15,,,,,,,,
+"=SUM(K111,M111,O111,Q111,S111)",,Publix,NA,Cholula Cremosa Gltro Lme,F,120,Cholula Cremosa Cilantro Lime Sauce,Sauces & Condiments,2026-08-28 00:00:00,3.19,,,,,,,,
+"=SUM(K112,M112,O112,Q112,S112)",,Publix,NA,Mc Sig Evrythng Bgel Ssng,F,120,McCormick Everything Bagel Seasoning,Seasonings & Spices,2026-08-28 00:00:00,6.79,,,,,,,,
+"=SUM(K113,M113,O113,Q113,S113)",,Publix,NA,Banza White Cheddar Shel,F,120,Banza White Cheddar Shells,Macaroni & Cheese,2026-08-28 00:00:00,3.99,,,,,,,,
+"=SUM(K114,M114,O114,Q114,S114)",,Publix,NA,anza White Cheddar Shel,F,120,Banza White Cheddar Shells,Macaroni & Cheese,2026-08-28 00:00:00,3.99,,,,,,,,
+"=SUM(K115,M115,O115,Q115,S115)",,Publix,NA,Annie's Dlx Shi&Chd Gf,F,120,Annie's Gluten-Free Deluxe Shells & Cheddar,Macaroni & Cheese,2026-08-28 00:00:00,5.45,,,,,,,,
+"=SUM(K116,M116,O116,Q116,S116)",,Publix,NA,Annie's Dlx Shl&Chd Gf,F,120,Annie's Gluten-Free Deluxe Shells & Cheddar,Macaroni & Cheese,2026-08-28 00:00:00,5.45,,,,,,,,
+"=SUM(K117,M117,O117,Q117,S117)",,Publix,NA,Gw Keta Salmon Fillet,F,120,GreenWise Keta Salmon Fillet,Fresh Seafood,2026-08-28 00:00:00,14.29,,,,,,,,
+"=SUM(K118,M118,O118,Q118,S118)",,Publix,NA,Bananas,NA,120,Bananas,Fresh Fruit,2026-08-28 00:00:00,1.53,,,,,,,,
+"=SUM(K119,M119,O119,Q119,S119)",,Publix,NA,Daiya Shreds Mexican Bld,F,120,Daiya Mexican Blend Shreds,Plant-Based Cheese,2026-08-28 00:00:00,5.65,2026-08-28 00:00:00,0,,,,,,
+"=SUM(K120,M120,O120,Q120,S120)",,Publix,NA,Tf Caesar Salad Kit Chop F,NA,120,Taylor Farms Chopped Caesar Salad Kit,Salad Kits,2026-08-28 00:00:00,3.33,,,,,,,,
+"=SUM(K121,M121,O121,Q121,S121)",,Publix,NA,Tf Everything Salad Chop,TF,120,Taylor Farms Everything Chopped Salad Kit,Salad Kits,2026-08-28 00:00:00,3.33,,,,,,,,
+"=SUM(K122,M122,O122,Q122,S122)",,Publix,NA,Hagen David Blackberry,T,120,Häagen-Dazs Blackberry Ice Cream,Ice Cream,2026-08-28 00:00:00,7.19,,,,,,,,
+"=SUM(K123,M123,O123,Q123,S123)",,Publix,NA,Tax,NA,120,Tax,Fees & Charges,2026-08-28 00:00:00,0.5,,,,,,,,
+"=SUM(K124,M124,O124,Q124,S124)",,Publix,NA,Tf Everything Salad Chop,TF,120,Taylor Farms Everything Chopped Salad Kit,Salad Kits,2026-08-28 00:00:00,3.34,,,,,,,,
 "=SUM(K125,M125,O125,Q125,S125)",,,,,,,,,,,,,,,,,,
 "=SUM(K126,M126,O126,Q126,S126)",,,,,,,,,,,,,,,,,,
 "=SUM(K127,M127,O127,Q127,S127)",,,,,,,,,,,,,,,,,,

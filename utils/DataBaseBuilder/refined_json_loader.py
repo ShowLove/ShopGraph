@@ -16,7 +16,6 @@ REQUIRED_FIELDS = (
     "Tax Code",
     "Store Number",
     "Common Name",
-    "Category",
     "Date 1",
     "Price 1",
 )
@@ -29,7 +28,6 @@ FIELD_MAP = {
     "Tax Code": "tax_code",
     "Store Number": "store_number",
     "Common Name": "common_name",
-    "Category": "category",
     "Date 1": "date",
     "Price 1": "price",
 }
@@ -100,6 +98,12 @@ def load_matching_refined_json(
         ):
             return None
 
+        if (
+            "Sub-Category" not in fields
+            and "Category" not in fields
+        ):
+            return None
+
         line_map[line_number] = line
 
     return {
@@ -140,6 +144,19 @@ def merge_refined_guess(
             and value.strip() != NA
         ):
             values[record_name] = value.strip()
+
+    if "category" not in protected:
+        detailed_value = fields.get(
+            "Sub-Category",
+            fields.get("Category", NA),
+        )
+
+        if (
+            isinstance(detailed_value, str)
+            and detailed_value.strip()
+            and detailed_value.strip() != NA
+        ):
+            values["category"] = detailed_value.strip()
 
     if not values:
         return parser_record

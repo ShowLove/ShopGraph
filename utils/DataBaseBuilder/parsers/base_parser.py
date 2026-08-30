@@ -34,7 +34,7 @@ class BaseReceiptParser(ABC):
         "tax_code": "Tax Code",
         "store_number": "Store Number",
         "common_name": "Common Name",
-        "category": "Category",
+        "category": "Sub-Category",
         "date": "Date 1",
         "price": "Price 1",
     }

@@ -28,7 +28,7 @@ FIELDS = (
     "Tax Code",
     "Store Number",
     "Common Name",
-    "Category",
+    "Sub-Category",
     "Date 1",
     "Price 1",
 )
@@ -417,28 +417,46 @@ def _history_rows() -> list[dict]:
         "Six-Digit SKU",
         "Product",
         "Common Name",
-        "Category",
     }
 
-    if not required.issubset(headers):
+    detailed_header = (
+        "Sub-Category"
+        if "Sub-Category" in headers
+        else (
+            "Category"
+            if "Category" in headers
+            else None
+        )
+    )
+
+    if (
+        not required.issubset(headers)
+        or detailed_header is None
+    ):
         workbook.close()
         return []
 
     rows = []
 
     for row in range(2, sheet.max_row + 1):
-        rows.append(
-            {
-                key: str(
-                    sheet.cell(
-                        row=row,
-                        column=headers[key],
-                    ).value
-                    or NA
-                ).strip()
-                for key in required
-            }
-        )
+        item = {
+            key: str(
+                sheet.cell(
+                    row=row,
+                    column=headers[key],
+                ).value
+                or NA
+            ).strip()
+            for key in required
+        }
+        item["Sub-Category"] = str(
+            sheet.cell(
+                row=row,
+                column=headers[detailed_header],
+            ).value
+            or NA
+        ).strip()
+        rows.append(item)
 
     workbook.close()
     return rows
@@ -592,11 +610,11 @@ def _refine_line(
                     "Same-store historical product identity supports this Common Name."
                 )
 
-            if historical.get("Category", NA) != NA:
-                category = historical["Category"]
+            if historical.get("Sub-Category", NA) != NA:
+                category = historical["Sub-Category"]
                 category_confidence = 0.94
                 category_reason = (
-                    "Same-store historical product identity supports this Category."
+                    "Same-store historical product identity supports this Sub-Category."
                 )
 
         if common_name == NA:
@@ -691,7 +709,7 @@ def _refine_line(
             common_reason,
         )
         assign(
-            "Category",
+            "Sub-Category",
             category,
             category_confidence,
             category_reason,
@@ -740,7 +758,7 @@ def _refine_line(
         reasoning["Six-Digit SKU"] = "No merchandise SKU is assigned to this non-purchase line."
         reasoning["Tax Code"] = "No merchandise tax code is assigned to this non-purchase line."
         reasoning["Common Name"] = "Common Name is reserved for purchase-item normalization."
-        reasoning["Category"] = "Category is reserved for purchase-item normalization."
+        reasoning["Sub-Category"] = "Sub-Category is reserved for purchase-item normalization."
         reasoning["Price 1"] = "No product price is assigned to this non-purchase line."
 
     line_confidence = max(
@@ -924,7 +942,7 @@ def refine_json_file(
                 "Receipt context may propagate Store, Store Number, and Date 1 "
                 "to genuine purchase items. Product remains an editable best "
                 "guess for every source line. Historical Purchase History may "
-                "support identity/Common Name/Category but never supplies a "
+                "support identity/Common Name/Sub-Category but never supplies a "
                 "current receipt Price 1 or Date 1."
             ),
             "purchase_history_reference_used": bool(history),

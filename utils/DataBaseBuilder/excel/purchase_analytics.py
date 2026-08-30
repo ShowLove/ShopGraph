@@ -20,11 +20,17 @@ from openpyxl.utils.datetime import from_excel
 from utils.DataBaseBuilder.excel.purchase_history import (
     PURCHASE_SHEET,
     WORKBOOK_PATH,
+    _ensure_purchase_schema,
+)
+from utils.DataBaseBuilder.excel.category_manager import (
+    load_category_mapping_for_analytics,
 )
 
 
 ANALYTICS_SHEET = "Analytics"
 ANALYTICS_DATA_SHEET = "_AnalyticsData"
+SUB_ANALYTICS_SHEET = "Sub Analytics"
+SUB_ANALYTICS_DATA_SHEET = "_SubAnalyticsData"
 NA = "NA"
 
 DATE_HEADER_PATTERN = re.compile(r"^Date\s+(\d+)$", re.IGNORECASE)
@@ -216,7 +222,7 @@ def _flatten_purchase_history(sheet) -> tuple[list[dict], dict]:
         "product": headers.get("Product"),
         "store_number": headers.get("Store Number"),
         "common_name": headers.get("Common Name"),
-        "category": headers.get("Category"),
+        "category": headers.get("Sub-Category"),
     }
 
     observations = []
@@ -435,18 +441,22 @@ def _delete_sheet_if_present(workbook, name: str) -> None:
         workbook.remove(workbook[name])
 
 
-def _create_output_sheets(workbook):
-    _delete_sheet_if_present(workbook, ANALYTICS_SHEET)
-    _delete_sheet_if_present(workbook, ANALYTICS_DATA_SHEET)
+def _create_output_sheets(
+    workbook,
+    sheet_name: str,
+    data_sheet_name: str,
+):
+    _delete_sheet_if_present(workbook, sheet_name)
+    _delete_sheet_if_present(workbook, data_sheet_name)
 
     purchase_index = workbook.sheetnames.index(PURCHASE_SHEET)
 
     analytics = workbook.create_sheet(
-        ANALYTICS_SHEET,
+        sheet_name,
         purchase_index + 1,
     )
     data_sheet = workbook.create_sheet(
-        ANALYTICS_DATA_SHEET,
+        data_sheet_name,
         purchase_index + 2,
     )
 
@@ -737,9 +747,10 @@ def _horizontal_bar_chart(
 def _doughnut_chart(
     data_sheet,
     table: dict,
+    title: str = "Spending Share by Category",
 ) -> DoughnutChart:
     chart = DoughnutChart()
-    chart.title = "Spending Share by Category"
+    chart.title = title
     chart.holeSize = 58
     chart.style = 10
     chart.height = LARGE_CHART_HEIGHT
@@ -1222,40 +1233,121 @@ def _write_chart_section(
     )
 
 
-def generate_purchase_analytics(
-    workbook_path: Path = WORKBOOK_PATH,
+def _replace_dimension_text(
+    sheet,
+    dimension_label: str,
+) -> None:
+    if dimension_label == "Category":
+        return
+
+    lower_label = dimension_label.lower()
+    plural_label = (
+        "Sub-Categories"
+        if dimension_label == "Sub-Category"
+        else f"{dimension_label}s"
+    )
+    lower_plural = plural_label.lower()
+
+    for row in sheet.iter_rows():
+        for cell in row:
+            if not isinstance(cell.value, str):
+                continue
+
+            text = cell.value
+
+            # Protect text that was already parameterized with Sub-Category so
+            # the word "Category" inside "Sub-Category" is not replaced twice.
+            text = text.replace(
+                plural_label,
+                "__SHOPGRAPH_DIMENSION_PLURAL__",
+            )
+            text = text.replace(
+                lower_plural,
+                "__shopgraph_dimension_plural__",
+            )
+            text = text.replace(
+                dimension_label,
+                "__SHOPGRAPH_DIMENSION__",
+            )
+            text = text.replace(
+                lower_label,
+                "__shopgraph_dimension__",
+            )
+
+            text = re.sub(
+                r"\bCategories\b",
+                plural_label,
+                text,
+            )
+            text = re.sub(
+                r"\bcategories\b",
+                lower_plural,
+                text,
+            )
+            text = re.sub(
+                r"\bCategory\b",
+                dimension_label,
+                text,
+            )
+            text = re.sub(
+                r"\bcategory\b",
+                lower_label,
+                text,
+            )
+
+            text = text.replace(
+                "__SHOPGRAPH_DIMENSION_PLURAL__",
+                plural_label,
+            )
+            text = text.replace(
+                "__shopgraph_dimension_plural__",
+                lower_plural,
+            )
+            text = text.replace(
+                "__SHOPGRAPH_DIMENSION__",
+                dimension_label,
+            )
+            text = text.replace(
+                "__shopgraph_dimension__",
+                lower_label,
+            )
+            cell.value = text
+
+
+def _retitle_dimension_charts(
+    analytics,
+    dimension_label: str,
+) -> None:
+    if dimension_label == "Category":
+        return
+
+    # Seven existing charts are created in a stable order.
+    dimension_titles = {
+        1: f"Spending by {dimension_label}",
+        3: f"Spending Share by {dimension_label}",
+        6: f"Purchase Frequency by {dimension_label}",
+    }
+
+    for index, chart in enumerate(analytics._charts):
+        if index in dimension_titles:
+            chart.title = dimension_titles[index]
+
+
+def _generate_dashboard(
+    workbook,
+    observations: list[dict],
+    diagnostics: dict,
+    *,
+    sheet_name: str,
+    data_sheet_name: str,
+    dimension_label: str,
+    dashboard_title: str,
 ) -> dict:
-    workbook_path = Path(
-        workbook_path
-    ).expanduser().resolve()
-
-    if not workbook_path.exists():
-        raise FileNotFoundError(
-            "Purchase History workbook does not exist: "
-            f"{workbook_path}"
-        )
-
-    workbook = load_workbook(
-        workbook_path,
-        data_only=False,
-    )
-
-    if PURCHASE_SHEET not in workbook.sheetnames:
-        raise PurchaseAnalyticsError(
-            f"Workbook does not contain '{PURCHASE_SHEET}'."
-        )
-
-    purchase_sheet = workbook[PURCHASE_SHEET]
-
-    observations, diagnostics = (
-        _flatten_purchase_history(
-            purchase_sheet
-        )
-    )
-
     analytics, data_sheet = (
         _create_output_sheets(
-            workbook
+            workbook,
+            sheet_name,
+            data_sheet_name,
         )
     )
 
@@ -1290,21 +1382,22 @@ def generate_purchase_analytics(
         )
         data_sheet.sheet_state = "hidden"
 
-        _atomic_save(
-            workbook,
-            workbook_path,
+        analytics["A1"] = dashboard_title
+        _replace_dimension_text(
+            analytics,
+            dimension_label,
+        )
+        _replace_dimension_text(
+            data_sheet,
+            dimension_label,
         )
 
         return {
-            "workbook_path": workbook_path,
             "charts_created": 0,
             "purchase_observations": 0,
-            "skipped_pairs": diagnostics[
-                "skipped_pairs"
-            ],
-            "history_pairs_found": diagnostics[
-                "history_pairs_found"
-            ],
+            "skipped_pairs": diagnostics["skipped_pairs"],
+            "history_pairs_found": diagnostics["history_pairs_found"],
+            "total_spending": 0.0,
         }
 
     aggregates = _aggregate(
@@ -1421,7 +1514,7 @@ def generate_purchase_analytics(
         data_sheet,
         start_column=5,
         start_row=1,
-        title="Spending by Category",
+        title=f"Spending by {dimension_label}",
         headers=[
             "Number",
             "Category",
@@ -1477,7 +1570,7 @@ def generate_purchase_analytics(
         data_sheet,
         start_column=21,
         start_row=1,
-        title="Purchase Frequency by Category",
+        title=f"Purchase Frequency by {dimension_label}",
         headers=[
             "Number",
             "Category",
@@ -1584,7 +1677,7 @@ def generate_purchase_analytics(
         chart = _horizontal_bar_chart(
             data_sheet,
             category_table,
-            title="Spending by Category",
+            title=f"Spending by {dimension_label}",
             x_axis_title="Spending ($)",
         )
 
@@ -1669,6 +1762,7 @@ def generate_purchase_analytics(
         chart = _doughnut_chart(
             data_sheet,
             share_table,
+            title=f"Spending Share by {dimension_label}",
         )
 
         entries = _key_entries_for_named_values(
@@ -1834,7 +1928,7 @@ def generate_purchase_analytics(
         chart = _horizontal_bar_chart(
             data_sheet,
             frequency_table,
-            title="Purchase Frequency by Category",
+            title=f"Purchase Frequency by {dimension_label}",
             x_axis_title="Purchases",
         )
 
@@ -1871,13 +1965,16 @@ def generate_purchase_analytics(
     # Keep helper data available for debugging but invisible during normal use.
     data_sheet.sheet_state = "hidden"
 
-    _atomic_save(
-        workbook,
-        workbook_path,
+    analytics["A1"] = dashboard_title
+    _replace_dimension_text(
+        analytics,
+        dimension_label,
     )
-
+    _replace_dimension_text(
+        data_sheet,
+        dimension_label,
+    )
     return {
-        "workbook_path": workbook_path,
         "charts_created": charts_created,
         "purchase_observations": aggregates[
             "observation_count"
@@ -1892,3 +1989,154 @@ def generate_purchase_analytics(
             "history_pairs_found"
         ],
     }
+
+
+def _broad_category_observations(
+    observations: list[dict],
+    subcategory_to_category: dict[str, str],
+) -> list[dict]:
+    broad = []
+
+    for observation in observations:
+        subcategory = observation["category"]
+
+        if subcategory not in subcategory_to_category:
+            raise PurchaseAnalyticsError(
+                f'Sub-Category "{subcategory}" does not have a broad Category.'
+            )
+
+        item = dict(observation)
+        item["category"] = subcategory_to_category[
+            subcategory
+        ]
+        broad.append(item)
+
+    return broad
+
+
+def generate_purchase_analytics(
+    workbook_path: Path = WORKBOOK_PATH,
+) -> dict:
+    """
+    Refresh both analytical layers.
+
+    Sub Analytics is the existing detailed dashboard and reads Sub-Category
+    directly from Purchase History. Analytics is the broad dashboard and joins
+    Purchase History Sub-Category to Category Manager's Category mapping.
+    """
+    workbook_path = Path(
+        workbook_path
+    ).expanduser().resolve()
+
+    if not workbook_path.exists():
+        raise FileNotFoundError(
+            "Purchase History workbook does not exist: "
+            f"{workbook_path}"
+        )
+
+    workbook = load_workbook(
+        workbook_path,
+        data_only=False,
+    )
+
+    try:
+        if PURCHASE_SHEET not in workbook.sheetnames:
+            raise PurchaseAnalyticsError(
+                f"Workbook does not contain '{PURCHASE_SHEET}'."
+            )
+
+        purchase_sheet = workbook[
+            PURCHASE_SHEET
+        ]
+        _ensure_purchase_schema(
+            purchase_sheet
+        )
+
+        observations, diagnostics = (
+            _flatten_purchase_history(
+                purchase_sheet
+            )
+        )
+
+        sub_summary = _generate_dashboard(
+            workbook,
+            observations,
+            diagnostics,
+            sheet_name=SUB_ANALYTICS_SHEET,
+            data_sheet_name=SUB_ANALYTICS_DATA_SHEET,
+            dimension_label="Sub-Category",
+            dashboard_title="ShopGraph Sub Analytics",
+        )
+
+        broad_summary = None
+        broad_error = None
+
+        try:
+            subcategory_to_category = (
+                load_category_mapping_for_analytics(
+                    workbook
+                )
+            )
+            broad_observations = (
+                _broad_category_observations(
+                    observations,
+                    subcategory_to_category,
+                )
+            )
+
+            broad_summary = _generate_dashboard(
+                workbook,
+                broad_observations,
+                diagnostics,
+                sheet_name=ANALYTICS_SHEET,
+                data_sheet_name=ANALYTICS_DATA_SHEET,
+                dimension_label="Category",
+                dashboard_title="ShopGraph Spending Analytics",
+            )
+
+        except (
+            ValueError,
+            PurchaseAnalyticsError,
+        ) as error:
+            broad_error = str(error)
+
+            # Never leave a stale broad dashboard after the hierarchy becomes
+            # incomplete or invalid.
+            _delete_sheet_if_present(
+                workbook,
+                ANALYTICS_SHEET,
+            )
+            _delete_sheet_if_present(
+                workbook,
+                ANALYTICS_DATA_SHEET,
+            )
+
+        _atomic_save(
+            workbook,
+            workbook_path,
+        )
+
+        return {
+            "workbook_path": workbook_path,
+            "sub_analytics": {
+                "success": True,
+                **sub_summary,
+            },
+            "analytics": (
+                {
+                    "success": True,
+                    **broad_summary,
+                }
+                if broad_summary is not None
+                else {
+                    "success": False,
+                    "error": (
+                        broad_error
+                        or "Broad Analytics could not be generated."
+                    ),
+                }
+            ),
+        }
+
+    finally:
+        workbook.close()

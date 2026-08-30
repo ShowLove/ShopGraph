@@ -1,143 +1,76 @@
-ShopGraph - Category Manager
-============================
+ShopGraph Category Manager - Hierarchical Category / Sub-Category Update
 
 PURPOSE
 -------
-Category Manager gives the user direct control over the Common Name -> Category
-taxonomy used by Purchase History and therefore by ShopGraph's category-based
-Analytics.
+ShopGraph now uses a three-level product taxonomy:
 
-MENU
-----
-Data Base Builder now contains:
+    Common Name -> Sub-Category -> Category
 
-    1. Add Receipt to Purchase History
-    2. Generate / Refresh Purchase Analytics
-    3. Category Manager
-    0. Return to Main
+Purchase History stores the detailed Sub-Category only.
+Category Manager stores the broad Sub-Category -> Category relationship.
 
-Category Manager contains:
+PURCHASE HISTORY
+----------------
+The existing Purchase History column formerly labeled "Category" is now
+"Sub-Category". It remains in the same physical column (I). Date 1 remains J,
+Price 1 remains K, and all later Date/Price history stays in place.
 
-    1. Create / Refresh Category Manager
-    2. Apply Category Manager to Purchase History
-    0. Return to Data Base Builder
+Existing workbooks using the old "Category" header are migrated by renaming
+that header only. No Purchase History columns are inserted or shifted.
+
+CATEGORY MANAGER LAYOUT
+-----------------------
+    Category | Sub-Category | Product 1 | Product 2 | ...
+
+Products are Common Name values.
 
 CREATE / REFRESH
 ----------------
-Create / Refresh treats Purchase History as authoritative and completely
-rebuilds the "Category Manager" worksheet from the CURRENT Purchase History.
+Create / Refresh rebuilds Common Name -> Sub-Category membership from the
+current Purchase History.
 
-Column A contains one category per row. Starting in column B, every unique
-Common Name assigned to that category is written across the row.
+Existing valid Sub-Category -> Category mappings are preserved because
+Category Manager is the authoritative storage location for broad Category.
+Product placement, gaps, order, and other unapplied layout edits do not need
+to survive refresh.
 
-Example:
-
-    Category      Product 1      Product 2      Product 3
-    Fresh Fruit   Bananas        Apples         Kiwi
-    Yogurt        Chobani        YoBaby
-
-Create / Refresh may destroy unapplied manual edits in Category Manager. This
-is intentional. Newly imported Common Names automatically appear the next time
-Create / Refresh is run.
-
-COMMON NAME IDENTITY
---------------------
-Category Manager uses Common Name as its product identity. Raw Product text is
-not used for category assignment.
-
-Do not rename Common Names in Category Manager. If "Bananas" is changed to
-"Banana", Apply treats that as one missing known Common Name and one unknown
-Common Name and refuses to update Purchase History.
-
-MANUAL EDITING
---------------
-The user may:
-
-- move Common Names between categories;
-- reorder products;
-- reorder category rows;
-- rename categories;
-- create new categories;
-- eliminate old categories after moving their products;
-- leave blank cells between products;
-- place products in different product columns.
-
-Blank cells, product order, category order, and original product column position
-do not matter.
-
-EXACT-ONCE ACCOUNTING
----------------------
-Before Apply may change Purchase History, every unique valid Common Name in
-Purchase History must appear exactly once in Category Manager and belong to one
-nonblank category.
-
-Apply detects:
-
-- missing Common Names;
-- duplicate Common Names;
-- unknown Common Names;
-- products under blank categories;
-- duplicate category rows;
-- blank/NA Purchase History Common Names;
-- conflicting Purchase History categories for the same Common Name;
-- malformed required worksheet structure.
-
-If validation fails, Purchase History is not modified, the workbook is not
-saved, and Category Manager is not cleaned/rebuilt.
+New Sub-Categories appear with Category = NA until the user assigns them.
 
 APPLY
 -----
-After successful validation, Apply builds:
+Apply validates the entire manager before changing Purchase History.
 
-    Common Name -> Category
+Required integrity includes:
+- every current Common Name exactly once;
+- no unknown Common Names;
+- no duplicate Common Names;
+- every product assigned to a valid Sub-Category;
+- every Sub-Category represented by one row;
+- every Sub-Category assigned to exactly one non-NA Category.
 
-and updates ONLY the Category column in Purchase History.
+Multiple Sub-Categories may share the same Category.
 
-It does not recreate Purchase History and does not alter Store, SKU, Product,
-Tax Code, Store Number, Common Name, Total formulas, Date N / Price N history,
-Imported Receipts, Analytics, or other unrelated workbook data.
+After successful validation, only Purchase History Sub-Category values may be
+changed. Broad Category is never written to Purchase History.
 
-If the same Common Name appears on multiple Purchase History rows, every row is
-assigned the selected Category.
-
-CATEGORY MANAGER CLEANUP
-------------------------
-After a successful Apply, Category Manager is rebuilt from the newly applied
-mapping. Each category has one row, Common Names are contiguous beginning in
-column B, empty rows/gaps are removed, and formatting is restored.
+The manager is then compacted and reformatted.
 
 DATA SAFETY
 -----------
-Category Manager uses a verified atomic-save process:
+Validation failure saves nothing and leaves Purchase History unchanged.
 
-1. Load workbook.
-2. Parse Purchase History and Category Manager.
-3. Validate everything.
-4. On any validation failure: modify nothing and save nothing.
-5. On success: change only Category values in memory.
-6. Rebuild Category Manager in memory.
-7. Save to a temporary XLSX.
-8. Reopen the temporary XLSX and verify required worksheets exist.
-9. Atomically replace the original workbook only after verification succeeds.
+Successful Apply uses a temporary workbook, reopens it for verification, and
+only then atomically replaces the live workbook.
 
-This version intentionally does NOT create audit backups, timestamped backups,
-version history, or backup-retention files.
+No audit/version backup system is added by this update.
 
 ANALYTICS
 ---------
-Analytics continues to read Category from Purchase History exactly as before.
-After a successful Apply, run the existing:
+Sub Analytics is the existing detailed analytics system, now driven by
+Purchase History Sub-Category.
 
-    Generate / Refresh Purchase Analytics
+Analytics is the broad dashboard. It joins Purchase History Sub-Category to
+Category Manager's Sub-Category -> Category mapping.
 
-to rebuild Analytics using the new taxonomy.
-
-FILES
------
-NEW:
-    utils/DataBaseBuilder/excel/category_manager.py
-    README/README_CATEGORY_MANAGER.txt
-
-UPDATED:
-    utils/DataBaseBuilder/data_base_builder_main.py
-    utils/DataBaseBuilder/excel/__init__.py
+Sub Analytics can still refresh if broad Analytics cannot be generated because
+Category Manager is incomplete.

@@ -1,0 +1,17 @@
+ShopGraph - Hierarchical Category / Sub-Category + Analytics Update
+
+Replace/add the files in this ZIP while preserving the shopping_analysis directory structure.
+
+This update:
+- renames Purchase History column I from Category to Sub-Category without shifting columns;
+- preserves existing detailed categorization behavior;
+- extends Category Manager to Category | Sub-Category | Product N;
+- preserves valid Sub-Category -> Category mappings across refresh;
+- preserves the existing analytics dashboard as Sub Analytics;
+- adds a new broad Category-level Analytics dashboard;
+- keeps broad Category out of Purchase History and receipt/OCR processing.
+
+Run normally with:
+    python3 main.py
+
+Existing workbooks using the prior Category header are migrated safely on use.

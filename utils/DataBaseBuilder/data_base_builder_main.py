@@ -916,18 +916,44 @@ def _run_purchase_analytics() -> None:
         )
         return
 
+    sub_summary = summary["sub_analytics"]
+    broad_summary = summary["analytics"]
+
     print(
-        "[OK] Purchase Analytics refreshed."
-        f"\n\nWorkbook:\n{summary['workbook_path']}"
-        f"\n\nCharts created: {summary['charts_created']}"
-        f"\nPurchase observations: {summary['purchase_observations']}"
+        "[OK] Sub Analytics refreshed."
+        "\nDetailed Sub-Category dashboard updated."
+        f"\nCharts created: {sub_summary['charts_created']}"
+        f"\nPurchase observations: "
+        f"{sub_summary['purchase_observations']}"
     )
 
-    if summary.get("skipped_pairs", 0):
+    if sub_summary.get("skipped_pairs", 0):
         print(
-            "\n[WARNING] Skipped malformed/incomplete Date/Price pairs: "
-            f"{summary['skipped_pairs']}"
+            "\n[WARNING] Sub Analytics skipped malformed/incomplete "
+            "Date/Price pairs: "
+            f"{sub_summary['skipped_pairs']}"
         )
+
+    if broad_summary["success"]:
+        print(
+            "\n[OK] Analytics refreshed."
+            "\nBroad Category dashboard updated."
+            f"\nCharts created: {broad_summary['charts_created']}"
+            f"\nPurchase observations: "
+            f"{broad_summary['purchase_observations']}"
+        )
+    else:
+        print(
+            "\n[ERROR] Analytics could not be refreshed."
+            "\nSub Analytics was still refreshed successfully."
+            f"\n\n{broad_summary['error']}"
+            "\n\nUse Category Manager to assign every current "
+            "Sub-Category to exactly one Category."
+        )
+
+    print(
+        f"\nWorkbook:\n{summary['workbook_path']}"
+    )
 
 
 def run_data_base_builder_menu() -> None:
