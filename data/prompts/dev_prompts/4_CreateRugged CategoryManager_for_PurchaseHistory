@@ -1,0 +1,49 @@
+This was great but it made me realize a need. 
+Currently shopgraph_purchase_history.xlsx in the worksheet "Purchase History"
+it has the following headers. 
+Total		Store	Six-Digit SKU	Product	Tax Code	Store Number	Common Name	Category	Date 1	Price 1 ...
+
+I'm realizing what's currently named "Category" is actually a list of sub-categories. 
+I want to keep this because it gives me a refined look at things. 
+However it's to detailed for the big picture. 
+Therefore I want to add a category. 
+what's currently "Category" I want to become Sub-Category. 
+The onlything that I want to change in this is the name the code functionality of "Sub-Category" stays the same. 
+Also the the flow and feel of user input output stays the same. 
+With this in mind "Category" actually becomes a "NEW" column. 
+So it would look like this. 
+
+Total		Store	Six-Digit SKU	Product	Tax Code	Store Number	Common Name	Category Sub-Category	Date 1	Price 1 ...
+
+Again what's currently "Category" will all move to "Sub-Category"
+And "Category" will be a new column. 
+From a functionality point of view "Category" only comes into play with 
+
+2. Generate / Refresh Purchase Analytics
+3. Category Manager
+
+The way it is now works great so I want to keep that and add the following functionality. 
+
+Curently the headers are 
+
+Category	Product 1	Product 2 ..
+
+I want it to be like this. 
+
+Category Sub-Category	Product 1	Product 2
+
+So what's currently under "Category" under this new design will move to "Sub-Category"
+In the "Category Column" The user will add categories that the "Sub-Category" can fit under. 
+
+Also the code and flow related to "Analytics" stays the same but the name changes to "Sub Analytics", that's the only thing that changes. 
+We will add a new category of "Analytics" that analyzes according to "Category" as opposed to "Sub-Category" 
+
+The other problem is that the current headers are woven into the architecture
+
+Total		Store	Six-Digit SKU	Product	Tax Code	Store Number	Common Name	Category	Date 1	Price 1 ...
+
+So I don't want to introduce bugs with this so make sure when making the updates 
+we keep in mind the things that used to work and keep that. 
+In certain ways it should be simple because we're just adding a column and checking that the code accounts for that in all the other code. 
+
+Let me know if there's anything I'm missing logically that might cause bugs with this new design, do that at the top, eveything you think is solid below. the next step will be to make a copy/paste prompt after I've looked over your suggestions. 

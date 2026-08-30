@@ -82,7 +82,7 @@ shopping_analysis/
 
 ================================================================================
 
-Generated: 2026-08-28 17:18:46.360294
+Generated: 2026-08-30 08:06:41.406719
 Root: /Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis
 Mode: LLM-clean export
 Excluded: receipt images, OCR JSON, datasets, databases, logs, caches
@@ -14813,7 +14813,7 @@ Total,,Store,Six-Digit SKU,Product,Tax Code,Store Number,Common Name,Category,Da
 "=SUM(K93,M93,O93,Q93,S93)",,Walmart,NA,"Fresh Mini Cucumbers, 16 oz",NA,0,NA,NA,2026-08-13 00:00:00,2.08,,,,,,,,
 "=SUM(K94,M94,O94,Q94,S94)",,Walmart,NA,"2 pack) Yehuda Sabbath Candles,12ct",T,0,NA,NA,2026-08-13 00:00:00,3.16,,,,,,,,
 "=SUM(K95,M95,O95,Q95,S95)",,Walmart,NA,"Fresh Yellow Squash, Each 11 weight adjusted aty1",NA,0,NA,NA,2026-08-13 00:00:00,0.42,2026-08-13 00:00:00,0.42,,,,,,
-"=SUM(K96,M96,O96,Q96,S96)",,Walmart,NA,"Fresh Zucchini, Each 11 weight adjusted aty1",NA,0,Zucchini,Produce,2026-08-13 00:00:00,0.6,2026-08-13 00:00:00,0.6,,,,,,
+"=SUM(K96,M96,O96,Q96,S96)",,Walmart,NA,"Fresh Zucchini, Each 11 weight adjusted aty1",NA,0,NA,Produce,2026-08-13 00:00:00,0.6,2026-08-13 00:00:00,0.6,,,,,,
 "=SUM(K97,M97,O97,Q97,S97)",,Walmart,NA,"Fresh Whole Red Onion, Each",NA,0,NA,Produce,2026-08-13 00:00:00,0.88,2026-08-13 00:00:00,0.88,,,,,,
 "=SUM(K98,M98,O98,Q98,S98)",,Walmart,NA,"Fresh Tomato on the Vine, Bag (1.9 lbs/Bag Est.) 11 weight adjusted Qty1",NA,0,NA,Produce,2026-08-13 00:00:00,3.85,,,,,,,,
 "=SUM(K99,M99,O99,Q99,S99)",,Walmart,NA,"Fresh Banana, Each 11 weight adjusted Qty7",NA,0,NA,Produce,2026-08-13 00:00:00,1.76,2026-08-13 00:00:00,1.76,,,,,,
@@ -14827,7 +14827,7 @@ Total,,Store,Six-Digit SKU,Product,Tax Code,Store Number,Common Name,Category,Da
 "=SUM(K107,M107,O107,Q107,S107)",,Publix,NA,Jif Nsa P/B Creamy,F,120,NA,Dairy,2026-08-28 00:00:00,3.69,,,,,,,,
 "=SUM(K108,M108,O108,Q108,S108)",,Publix,NA,King Arth G/ Pnck Hix,F,120,NA,NA,2026-08-28 00:00:00,5.15,,,,,,,,
 "=SUM(K109,M109,O109,Q109,S109)",,Publix,NA,Bagged Green Beans,F,120,NA,Pantry,2026-08-28 00:00:00,2.99,,,,,,,,
-"=SUM(K110,M110,O110,Q110,S110)",,Publix,NA,Potato Nibbles Ruby Sensa,F,120,Potato Nibbles Ruby Sensa,Produce,2026-08-28 00:00:00,5.15,,,,,,,,
+"=SUM(K110,M110,O110,Q110,S110)",,Publix,NA,Potato Nibbles Ruby Sensa,F,120,NA,Produce,2026-08-28 00:00:00,5.15,,,,,,,,
 "=SUM(K111,M111,O111,Q111,S111)",,Publix,NA,Cholula Cremosa Gltro Lme,F,120,NA,NA,2026-08-28 00:00:00,3.19,,,,,,,,
 "=SUM(K112,M112,O112,Q112,S112)",,Publix,NA,Mc Sig Evrythng Bgel Ssng,F,120,NA,NA,2026-08-28 00:00:00,6.79,,,,,,,,
 "=SUM(K113,M113,O113,Q113,S113)",,Publix,NA,Banza White Cheddar Shel,F,120,NA,NA,2026-08-28 00:00:00,3.99,,,,,,,,
@@ -14839,7 +14839,7 @@ Total,,Store,Six-Digit SKU,Product,Tax Code,Store Number,Common Name,Category,Da
 "=SUM(K119,M119,O119,Q119,S119)",,Publix,NA,Daiya Shreds Mexican Bld,F,120,NA,Pantry,2026-08-28 00:00:00,5.65,2026-08-28 00:00:00,0,,,,,,
 "=SUM(K120,M120,O120,Q120,S120)",,Publix,NA,Tf Caesar Salad Kit Chop F,NA,120,NA,NA,2026-08-28 00:00:00,3.33,,,,,,,,
 "=SUM(K121,M121,O121,Q121,S121)",,Publix,NA,Tf Everything Salad Chop,TF,120,NA,NA,2026-08-28 00:00:00,3.33,,,,,,,,
-"=SUM(K122,M122,O122,Q122,S122)",,Publix,NA,Hagen David Blackberry,T,120,Hagen David Blackberry,Produce,2026-08-28 00:00:00,7.19,,,,,,,,
+"=SUM(K122,M122,O122,Q122,S122)",,Publix,NA,Hagen David Blackberry,T,120,NA,Produce,2026-08-28 00:00:00,7.19,,,,,,,,
 "=SUM(K123,M123,O123,Q123,S123)",,Publix,NA,Tax,NA,120,NA,NA,2026-08-28 00:00:00,0.5,,,,,,,,
 "=SUM(K124,M124,O124,Q124,S124)",,Publix,NA,Tf Everything Salad Chop,TF,120,NA,NA,2026-08-28 00:00:00,3.34,,,,,,,,
 "=SUM(K125,M125,O125,Q125,S125)",,,,,,,,,,,,,,,,,,

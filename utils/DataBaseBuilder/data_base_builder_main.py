@@ -13,6 +13,9 @@ from utils.DataBaseBuilder.excel.purchase_history import (
 from utils.DataBaseBuilder.excel.purchase_analytics import (
     generate_purchase_analytics,
 )
+from utils.DataBaseBuilder.excel.category_manager import (
+    run_category_manager_menu,
+)
 from utils.DataBaseBuilder.parsers import build_parser
 from utils.DataBaseBuilder.parsers.publix_parser import PUBLIX_TAX_PATTERN
 from utils.DataBaseBuilder.purchase_record import NA, PurchaseRecord
@@ -50,6 +53,7 @@ def display_data_base_builder_menu() -> None:
     print("\n=== ShopGraph Data Base Builder ===\n")
     print("1. Add Receipt to Purchase History")
     print("2. Generate / Refresh Purchase Analytics")
+    print("3. Category Manager")
     print("0. Return to Main")
 
 
@@ -936,6 +940,9 @@ def run_data_base_builder_menu() -> None:
 
         elif option == "2":
             _run_purchase_analytics()
+
+        elif option == "3":
+            run_category_manager_menu()
 
         elif option == "0":
             return
