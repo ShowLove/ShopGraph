@@ -49,6 +49,9 @@ from utils.export_purchase_history_txt import (
 from utils.code_update_importer import (
     run_code_update_importer_menu,
 )
+from utils.purchase_history_backup import (
+    run_purchase_history_backup,
+)
 
 
 def display_capabilities_menu() -> None:
@@ -217,6 +220,9 @@ def display_standalone_utilities_menu() -> None:
         "7. Import Code Update ZIP"
     )
     print(
+        "8. Update Purchase History Copy"
+    )
+    print(
         "0. Return to Utilities Menu"
     )
 
@@ -243,6 +249,8 @@ def run_standalone_utilities_menu() -> None:
             run_purchase_history_txt_export()
         elif option == "7":
             run_code_update_importer_menu()
+        elif option == "8":
+            run_purchase_history_backup()
         elif option == "0":
             return
         else:

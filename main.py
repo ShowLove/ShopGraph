@@ -1,3 +1,4 @@
+from utils.program_exit import install_global_exit_option
 from utils.utils_main import run_utils_menu
 
 
@@ -8,6 +9,15 @@ def display_menu() -> None:
 
 
 def main() -> None:
+    install_global_exit_option()
+
+    try:
+        _run_main_loop()
+    except SystemExit:
+        print("\nGoodbye.")
+
+
+def _run_main_loop() -> None:
     while True:
         display_menu()
 
