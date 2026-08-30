@@ -1,0 +1,1065 @@
+SHOPGRAPH — BUDGET PLANS + BUDGET BURN CHART
+=============================================
+
+I am providing the CURRENT ShopGraph codebase bundle.
+
+Modify the current codebase to add a reusable "Budget Plans" system.
+
+Inspect the CURRENT uploaded codebase before making changes. Reuse existing
+Purchase History, Category Manager, analytics, configuration, workbook-save,
+menu, and global -1 exit architecture wherever appropriate. Preserve unrelated
+existing behavior.
+
+============================================================
+CORE CONCEPT
+============================================================
+
+Use the term:
+
+    Budget Plan
+
+Do NOT use "classification" for this feature.
+
+A Budget Plan represents:
+
+    1. A user-supplied plan name
+    2. Start Date
+    3. End Date
+    4. Category Scope
+    5. N selected broad Categories when using Selected Categories mode
+    6. Total Budget
+
+Category Scope has two valid modes:
+
+    ALL
+    SELECTED
+
+Examples:
+
+    Plan Name:
+        Fall Groceries
+
+    Start Date:
+        09/01/2026
+
+    End Date:
+        11/30/2026
+
+    Category Scope:
+        SELECTED
+
+    Categories:
+        Food
+        Household
+
+    Budget:
+        3000.00
+
+or:
+
+    Plan Name:
+        Total Household Spending
+
+    Start Date:
+        01/01/2027
+
+    End Date:
+        12/31/2027
+
+    Category Scope:
+        ALL
+
+    Budget:
+        24000.00
+
+The Budget Plan itself contains configuration only.
+
+All spending data remains derived from the existing Purchase History workbook.
+
+Deleting a Budget Plan must therefore NEVER delete or modify Purchase History
+purchase data.
+
+============================================================
+DATA SOURCE
+============================================================
+
+Use the existing:
+
+    data/database/shopgraph_purchase_history.xlsx
+
+as the authoritative spending-data source.
+
+Use the existing Purchase History observation/date/price architecture wherever
+possible instead of independently reinterpreting the workbook.
+
+Budget Plans operate on BROAD:
+
+    Category
+
+not Sub-Category.
+
+Use the existing Category Manager mapping:
+
+    Purchase History.Sub-Category
+        ->
+    Category Manager.Sub-Category -> Category
+
+to determine the broad Category for every purchase observation.
+
+Do not duplicate Category mappings in Budget Plan configuration files.
+
+A Budget Plan therefore automatically follows the existing Category Manager
+taxonomy when regenerated.
+
+If a current Purchase History Sub-Category cannot be mapped to a valid Category,
+report a clear error rather than guessing.
+
+============================================================
+DATE FILTERING
+============================================================
+
+For a selected Budget Plan, include only purchase observations whose dates fall:
+
+    Start Date <= Purchase Date <= End Date
+
+Both Start Date and End Date are inclusive.
+
+Ignore purchases outside the configured date interval.
+
+A plan may represent a period in the past, the current period, or a future
+period.
+
+If the current date falls before the Start Date, actual spending should be zero
+unless Purchase History already contains valid purchases dated within that
+future interval.
+
+If the current date falls after the End Date, show the complete finished plan.
+
+============================================================
+CATEGORY SCOPE
+============================================================
+
+Each Budget Plan must use exactly one Category Scope:
+
+    ALL
+    SELECTED
+
+------------------------------------------------------------
+ALL CATEGORIES MODE
+------------------------------------------------------------
+
+When Category Scope is:
+
+    ALL
+
+the Budget Plan includes every CURRENT valid broad Category available through
+Category Manager.
+
+Do NOT store a copied list of all Categories in the Budget Plan config.
+
+Instead, store only that the plan uses:
+
+    category_scope = "all"
+
+When the Budget Plan is refreshed, re-read the CURRENT Category Manager and use
+all valid broad Categories that exist at that time.
+
+This behavior is intentionally dynamic.
+
+Example:
+
+At plan creation Category Manager contains:
+
+    Food
+    Household
+    Automotive
+
+The plan uses ALL.
+
+Later the user adds:
+
+    Home Improvement
+
+to Category Manager.
+
+On the next Budget Plan refresh, Home Improvement must automatically be included
+without editing the Budget Plan config.
+
+This is required behavior.
+
+------------------------------------------------------------
+SELECTED CATEGORIES MODE
+------------------------------------------------------------
+
+When Category Scope is:
+
+    SELECTED
+
+the Budget Plan includes only the specific broad Categories saved in that plan.
+
+N means any positive number of currently valid broad Categories.
+
+Example:
+
+    Categories:
+        Food
+        Household
+        Personal Care
+
+Only purchases belonging to one of those saved Categories count toward the
+Budget Plan.
+
+The user must select Categories from the CURRENT validated broad Category list
+derived from Category Manager.
+
+Do not ask the user to type Category names manually.
+
+Display the current Categories as a numbered selection list.
+
+============================================================
+CATEGORY SELECTION USER INTERFACE
+============================================================
+
+When creating a Budget Plan, display something conceptually like:
+
+    Category Scope:
+
+    A. All Categories
+    S. Select Categories
+    0. Cancel
+    -1. Exit ShopGraph
+
+If the user selects:
+
+    A
+
+set:
+
+    category_scope = "all"
+
+and do not ask the user to select individual Categories.
+
+If the user selects:
+
+    S
+
+display the current valid broad Categories as a numbered list.
+
+Example:
+
+    Available Categories:
+
+    1. Food
+    2. Household
+    3. Personal Care
+    4. Automotive
+    5. Home Improvement
+
+    Select Categories:
+    1,2,5
+
+Validate that at least one Category is selected.
+
+Accept a clean comma-separated selection such as:
+
+    1
+    1,2
+    1,2,5
+
+Do not allow duplicate Category selections.
+
+Do not accept invalid Category numbers.
+
+Preserve the existing global:
+
+    -1 = Exit ShopGraph
+
+behavior.
+
+============================================================
+CATEGORY VALIDATION ON REFRESH
+============================================================
+
+For:
+
+    category_scope = "all"
+
+use every currently valid broad Category.
+
+For:
+
+    category_scope = "selected"
+
+validate every saved Category against the CURRENT Category Manager.
+
+If a previously selected Category no longer exists or is no longer valid:
+
+    do not silently ignore it;
+    do not guess a replacement;
+    report a clear error identifying the missing Category.
+
+The user may then edit/recreate the Budget Plan as appropriate.
+
+============================================================
+BUDGET
+============================================================
+
+Each Budget Plan has exactly one total monetary budget for the entire selected
+date interval and Category Scope.
+
+Example:
+
+    Budget:
+        3000.00
+
+Budget must be greater than zero.
+
+Store monetary configuration safely and consistently.
+
+============================================================
+BUDGET BURN MODEL
+============================================================
+
+Generate a simple LINEAR BUDGET BURNDOWN chart.
+
+The X axis is calendar date.
+
+The Y axis is Remaining Budget.
+
+Create two lines:
+
+    1. Ideal Remaining Budget
+    2. Actual Remaining Budget
+
+IDEAL REMAINING BUDGET
+----------------------
+
+On the Start Date:
+
+    Ideal Remaining Budget = Full Budget
+
+On the End Date:
+
+    Ideal Remaining Budget = 0
+
+Between those dates, decrease the ideal remaining budget linearly according to
+elapsed calendar time.
+
+Conceptually:
+
+    ideal_remaining =
+        budget * (1 - elapsed_days / total_plan_days)
+
+The implementation must correctly handle inclusive Start/End dates and avoid
+divide-by-zero errors.
+
+ACTUAL REMAINING BUDGET
+-----------------------
+
+Actual remaining budget is:
+
+    Budget - cumulative qualifying spending
+
+where qualifying spending means:
+
+    purchase date is inside the Budget Plan interval
+
+AND
+
+either:
+
+    Category Scope = ALL
+
+or:
+
+    Category Scope = SELECTED
+    and purchase broad Category is one of the selected Categories.
+
+Actual spending must accumulate chronologically.
+
+The actual line should therefore show how much budget would remain after the
+qualifying purchases known as of each date.
+
+If spending exceeds the budget, Actual Remaining Budget may go below zero.
+
+Do NOT clamp it to zero because overspending needs to remain visible.
+
+============================================================
+CHART INTERPRETATION
+============================================================
+
+The chart should make this relationship intuitive:
+
+    Actual Remaining > Ideal Remaining
+        spending is running below the planned burn rate
+
+    Actual Remaining < Ideal Remaining
+        spending is running above the planned burn rate
+
+    Actual Remaining approximately equals Ideal Remaining
+        spending is approximately on budget pace
+
+============================================================
+WORKSHEET OUTPUT
+============================================================
+
+Each Budget Plan gets EXACTLY ONE visible worksheet in:
+
+    shopgraph_purchase_history.xlsx
+
+Do not create a second hidden worksheet per plan.
+
+All helper/chart source data for that Budget Plan should live on the same
+worksheet, placed sufficiently far from the main visible dashboard/chart area if
+needed.
+
+A Budget Plan worksheet is DERIVED DATA.
+
+It may be safely deleted and completely regenerated from:
+
+    Purchase History
+    Category Manager
+    Budget Plan config
+
+Every time a Budget Plan is refreshed:
+
+    delete/rebuild or safely refresh only that Budget Plan's worksheet.
+
+Never alter:
+
+    Purchase History
+    Imported Receipts
+    Category Manager
+    Analytics
+    Sub Analytics
+
+as part of Budget Plan refresh.
+
+============================================================
+WORKSHEET CONTENT
+============================================================
+
+Keep each Budget Plan worksheet simple.
+
+At the top show:
+
+    Budget Plan
+    Start Date
+    End Date
+    Category Scope
+    Categories
+    Budget
+    Total Spent
+    Remaining Budget
+    Ideal Spending Through Current/Relevant Date
+    Actual Spending Through Current/Relevant Date
+    Ahead / Behind Budget
+
+For:
+
+    Category Scope = ALL
+
+display Categories as something concise such as:
+
+    All Categories
+
+Do not print a very long comma-separated list unless useful.
+
+For:
+
+    Category Scope = SELECTED
+
+display the selected Category names.
+
+Then show one primary line chart:
+
+    Budget Burndown
+
+with:
+
+    Ideal Remaining Budget
+    Actual Remaining Budget
+
+The graph should be the visual focus.
+
+Format money as currency and dates as dates.
+
+Use clear readable formatting consistent with ShopGraph's existing workbook
+presentation where practical.
+
+============================================================
+CURRENT-DATE / COMPLETED-PLAN LOGIC
+============================================================
+
+For summary calculations, define a "relevant date":
+
+If today < Start Date:
+    relevant date = Start Date
+
+If Start Date <= today <= End Date:
+    relevant date = today
+
+If today > End Date:
+    relevant date = End Date
+
+Use this date for:
+
+    expected spending
+    actual spending
+    ahead/behind calculations
+
+The complete chart itself should still span the entire configured Start Date
+through End Date.
+
+============================================================
+PLAN STORAGE
+============================================================
+
+Introduce a proper configuration directory:
+
+    utils/config/
+
+This directory is for ShopGraph runtime/settings configuration.
+
+Migrate the existing settings currently stored in:
+
+    utils/config.txt
+
+into the new configuration architecture.
+
+Do this safely and backward-compatibly.
+
+The existing Code Update Importer currently uses config.txt for its import
+location. Preserve that setting and functionality.
+
+If the old:
+
+    utils/config.txt
+
+exists, migrate/read its existing value without losing it.
+
+Do not silently discard existing user configuration.
+
+Update the Code Update Importer's protection logic so the new runtime config
+directory/files cannot accidentally be overwritten by a ShopGraph update ZIP.
+
+============================================================
+BUDGET PLAN CONFIGURATION STORAGE
+============================================================
+
+Within the config architecture create an appropriate location such as:
+
+    utils/config/budget_plans/
+
+Each Budget Plan should be represented by its own small configuration file.
+
+JSON is preferred unless the current codebase strongly suggests another safe
+format.
+
+Example SELECTED config:
+
+{
+    "id": "fall_grocery_2026",
+    "name": "Fall Groceries",
+    "start_date": "2026-09-01",
+    "end_date": "2026-11-30",
+    "category_scope": "selected",
+    "categories": [
+        "Food",
+        "Household"
+    ],
+    "budget": "3000.00",
+    "worksheet_name": "BP Fall Grocery 26"
+}
+
+Example ALL config:
+
+{
+    "id": "annual_spending_2027",
+    "name": "Annual Spending 2027",
+    "start_date": "2027-01-01",
+    "end_date": "2027-12-31",
+    "category_scope": "all",
+    "categories": [],
+    "budget": "24000.00",
+    "worksheet_name": "BP Annual 2027"
+}
+
+The exact schema may be improved if needed.
+
+For ALL mode:
+
+    categories must not be used as a frozen copy of the Category Manager list.
+
+An empty categories list or omitted categories field is acceptable as long as
+category_scope="all" is authoritative.
+
+Do not store derived purchase totals in the config.
+
+Do not store chart datapoints in the config.
+
+Those must always be regenerated from Purchase History.
+
+============================================================
+PLAN ID VS DISPLAY NAME VS WORKSHEET NAME
+============================================================
+
+Keep these concepts separate:
+
+    Plan ID
+        stable internal identifier / config filename
+
+    Plan Name
+        user-readable name
+
+    Worksheet Name
+        compact Excel-safe worksheet name
+
+The user supplies the Plan Name.
+
+Generate a stable Plan ID from that name plus enough information to avoid
+collisions.
+
+The worksheet name must obey Excel's worksheet-name restrictions and maximum
+length.
+
+It should be compact enough that many Budget Plan tabs remain readable.
+
+Prefer a convention similar to:
+
+    BP Groceries Sep26
+    BP Household Q4
+    BP All Spend 2027
+    BP Food Fall26
+
+Do NOT put the entire Category list or full date range in the worksheet name.
+
+If the generated worksheet name collides with another plan, create a
+deterministic short unique variant.
+
+Store the generated worksheet name in the plan config so it remains stable on
+later refreshes.
+
+============================================================
+BUDGET PLANS MENU
+============================================================
+
+Add an appropriate Budget Plans menu under:
+
+    ShopGraph
+        -> Utilities
+        -> Data Base Builder
+
+or another location if the current architecture strongly indicates a better
+placement.
+
+Preferred Data Base Builder menu concept:
+
+    === ShopGraph Data Base Builder ===
+
+    1. Add Receipt to Purchase History
+    2. Generate / Refresh Purchase Analytics - Sub-Categories
+    3. Generate / Refresh Purchase Analytics - Categories
+    4. Category Manager
+    5. Budget Plans
+    0. Return
+    -1. Exit ShopGraph
+
+Budget Plans submenu:
+
+    === ShopGraph Budget Plans ===
+
+    1. Create New Budget Plan
+    2. Refresh Budget Plan
+    3. Refresh All Budget Plans
+    4. View Budget Plans
+    5. Delete Budget Plan
+    0. Return
+    -1. Exit ShopGraph
+
+The existing global -1 exit architecture must continue to work.
+
+============================================================
+CREATE NEW BUDGET PLAN
+============================================================
+
+When creating a Budget Plan, prompt in this order:
+
+    Plan Name
+    Start Date
+    End Date
+    Category Scope
+    Categories, only when Category Scope = SELECTED
+    Budget
+
+Category Scope prompt:
+
+    A. All Categories
+    S. Select Categories
+    0. Cancel
+    -1. Exit ShopGraph
+
+Validate:
+
+    nonblank Plan Name
+    valid dates
+    End Date >= Start Date
+    valid Category Scope
+    at least one Category when using SELECTED mode
+    positive Budget
+    no accidental duplicate Plan ID
+
+For ALL mode:
+
+    do not require Category selection.
+
+Before saving, display a confirmation summary.
+
+Example SELECTED:
+
+    Name:
+        Fall Groceries
+
+    Date Range:
+        09/01/2026 - 11/30/2026
+
+    Category Scope:
+        Selected Categories
+
+    Categories:
+        Food, Household
+
+    Budget:
+        $3,000.00
+
+    Worksheet:
+        BP Fall Grocery 26
+
+Example ALL:
+
+    Name:
+        Annual Spending 2027
+
+    Date Range:
+        01/01/2027 - 12/31/2027
+
+    Category Scope:
+        All Categories
+
+    Categories:
+        All current Categories
+
+    Budget:
+        $24,000.00
+
+    Worksheet:
+        BP Annual 2027
+
+Then allow:
+
+    1. Create
+    0. Cancel
+    -1. Exit ShopGraph
+
+Creation should:
+
+    save the Budget Plan config
+    generate its worksheet immediately
+
+============================================================
+REFRESH BUDGET PLAN
+============================================================
+
+List existing Budget Plans by readable name.
+
+Example:
+
+    1. Fall Groceries
+       09/01/2026 - 11/30/2026
+       $3,000.00
+       Selected: Food, Household
+
+    2. Annual Spending 2027
+       01/01/2027 - 12/31/2027
+       $24,000.00
+       All Categories
+
+The user selects one.
+
+Re-read CURRENT:
+
+    Purchase History
+    Category Manager
+
+then regenerate that plan's worksheet from its saved settings.
+
+For ALL mode, dynamically use all current valid Categories.
+
+Do not rely on totals from the prior worksheet.
+
+============================================================
+REFRESH ALL BUDGET PLANS
+============================================================
+
+Regenerate every saved Budget Plan from current Purchase History and Category
+Manager data.
+
+For each ALL-mode plan:
+
+    resolve the complete current Category set at refresh time.
+
+A failure in one plan should be clearly reported with its plan name.
+
+Avoid corrupting unrelated successfully generated worksheets.
+
+Use the existing safe/atomic workbook-save patterns where appropriate.
+
+============================================================
+VIEW BUDGET PLANS
+============================================================
+
+List existing plans compactly with:
+
+    Plan Name
+    Start Date
+    End Date
+    Budget
+    Category Scope
+    Categories
+    Worksheet Name
+
+For ALL mode show:
+
+    All Categories
+
+For SELECTED mode show:
+
+    Food, Household, ...
+
+This is informational only.
+
+============================================================
+DELETE BUDGET PLAN
+============================================================
+
+List existing Budget Plans.
+
+The user chooses one.
+
+Before deleting, clearly display:
+
+    Plan Name
+    Date Range
+    Category Scope
+    Categories
+    Budget
+    Worksheet
+
+Require explicit confirmation.
+
+On confirmation:
+
+    delete that plan's config file
+    delete only that plan's derived worksheet
+
+Do NOT delete or modify Purchase History data.
+
+Do NOT delete Category Manager data.
+
+Do NOT modify another Budget Plan.
+
+Because Budget Plan worksheets contain only derived data, no backup of the
+worksheet itself is required.
+
+If either the config or worksheet is unexpectedly missing, handle the situation
+safely and report what happened.
+
+============================================================
+DATA INTEGRITY
+============================================================
+
+Purchase History remains the source of truth.
+
+Category Manager remains the source of broad Category relationships.
+
+Budget Plan config remains the source of:
+
+    date interval
+    Category Scope
+    selected Categories, if applicable
+    budget
+    plan identity
+    worksheet identity
+
+Budget Plan worksheets contain derived output only.
+
+Never use a Budget Plan worksheet as a future source of spending truth.
+
+Never modify purchase records while creating, refreshing, viewing, or deleting a
+Budget Plan.
+
+Use safe workbook-save practices consistent with the current ShopGraph codebase.
+
+============================================================
+DATE / PRICE OBSERVATIONS
+============================================================
+
+Reuse existing Purchase Analytics date/price observation parsing wherever
+practical.
+
+Purchase History stores repeating Date N / Price N observation pairs.
+
+Each individual Date/Price pair is a purchase observation.
+
+Do not incorrectly treat a Purchase History product row as a single purchase
+when it may contain multiple historical Date/Price pairs.
+
+Each qualifying historical purchase must count independently.
+
+============================================================
+CONFIGURATION SAFETY
+============================================================
+
+The new:
+
+    utils/config/
+
+contains local runtime configuration and must be treated as persistent user
+settings.
+
+ShopGraph update ZIPs should not overwrite Budget Plan definitions.
+
+Update the Code Update Importer protection rules accordingly.
+
+The migration from:
+
+    utils/config.txt
+
+to:
+
+    utils/config/
+
+must preserve the existing configured update-import folder.
+
+If backward compatibility is useful, it is acceptable to continue reading the
+legacy config.txt as a fallback while writing future configuration to the new
+directory.
+
+============================================================
+FILES / ARCHITECTURE
+============================================================
+
+Choose the cleanest architecture after inspecting the current codebase.
+
+An architecture approximately like this is reasonable:
+
+    utils/
+        config/
+            ...
+            budget_plans/
+                <plan-id>.json
+
+        DataBaseBuilder/
+            budget_plans/
+                __init__.py
+                budget_plan.py
+                budget_plan_config.py
+                budget_plan_analytics.py
+                budget_plan_menu.py
+
+But adapt this if the current ShopGraph structure suggests a cleaner solution.
+
+Do not unnecessarily enlarge existing purchase_analytics.py if a separate Budget
+Plan module provides better separation.
+
+Reuse shared Purchase Analytics functions when appropriate rather than copying
+large amounts of logic.
+
+============================================================
+NO NEW EXTERNAL SERVICE
+============================================================
+
+This feature does NOT require AI or an external API.
+
+It is deterministic analytics derived from ShopGraph's existing database.
+
+Do not introduce an OpenAI dependency or network requirement.
+
+============================================================
+README
+============================================================
+
+Add a README describing:
+
+    Budget Plans
+    ALL vs SELECTED Category Scope
+    dynamic All Categories behavior
+    configuration format/location
+    creation
+    refresh
+    delete behavior
+    Category filtering
+    date filtering
+    budget calculations
+    burndown interpretation
+    worksheet naming
+    config migration
+    data-safety guarantees
+
+============================================================
+TESTING
+============================================================
+
+Before producing the update:
+
+1. Syntax-check every new/modified Python file.
+2. Test plan config creation/loading/deletion.
+3. Test Start Date / End Date validation.
+4. Test SELECTED mode with one Category.
+5. Test SELECTED mode with multiple Categories.
+6. Test ALL mode.
+7. Test that ALL mode dynamically includes a Category added after plan creation.
+8. Test that SELECTED mode does NOT automatically include newly-created Categories.
+9. Test invalid/missing saved Category handling in SELECTED mode.
+10. Test inclusive date boundaries.
+11. Test historical Date N / Price N pairs.
+12. Test linear ideal-budget calculations.
+13. Test cumulative actual spending.
+14. Test spending above budget.
+15. Test dates before, during, and after the plan interval.
+16. Test worksheet-name shortening and collisions.
+17. Test plan deletion without affecting Purchase History.
+18. Test refresh using changed Purchase History data.
+19. Test refresh using changed Category Manager data.
+20. Test the legacy utils/config.txt migration.
+21. Verify existing Code Update Importer settings survive migration.
+22. Verify update ZIPs cannot overwrite runtime Budget Plan configs.
+23. Verify the global -1 exit option continues to work.
+
+============================================================
+OUTPUT
+============================================================
+
+Return a ShopGraph importer-compatible UPDATE ZIP.
+
+Use the existing ShopGraph update-ZIP convention.
+
+Include only files that are new or need replacement.
+
+Do not include runtime Budget Plan config files representing user data.
+
+Do not include the user's database.
+
+Do not include utils/config.txt containing local settings.
+
+Do not include any generated Budget Plan worksheets/workbook.
+
+Include a README.
+
+Briefly state:
+
+    files added/replaced
+    menu changes
+    configuration migration behavior
+    dependencies
+    tests performed

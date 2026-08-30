@@ -1,0 +1,5404 @@
+{
+  "source_receipt": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/current_pic/083026_ALDI_238.JPG",
+  "selection_method": "conservative multi-variant receipt-row consensus: best full-receipt candidate supplies reading order; geometry must also have textual/SKU agreement; SKU is never injected into a row; price/tax additions require independent OCR support; absence is preferred to unsupported reconstruction",
+  "backbone_candidate": {
+    "candidate_id": "otsu_psm4",
+    "image_variant": "otsu",
+    "psm": 4,
+    "comparison_metrics": {
+      "score": 110.6948,
+      "mean_word_confidence": 83.91,
+      "recognized_word_count": 207,
+      "low_confidence_rate": 0.1159,
+      "price_like_count": 33,
+      "sku_count": 30,
+      "plausible_line_count": 44,
+      "garbage_line_count": 2
+    }
+  },
+  "consensus_summary": {
+    "backbone_line_count": 50,
+    "consensus_line_count": 50,
+    "merchandise_line_count": 30,
+    "component_reconstruction_count": 29,
+    "candidate_count": 25,
+    "full_candidate_count": 15,
+    "right_column_candidate_count": 10,
+    "match_threshold": 0.72,
+    "max_row_center_distance": 0.014,
+    "minimum_component_support": 2
+  },
+  "raw_text": "ALUL\nStore #238\n961 E Eau Gallie Blvd\nMelbourne, FL\nhttps://help.aldi .us\nYour cashier today was Candice\n356661 Sweet Potatoes 2.99\n356377 Grape Tomatoes 1.99\n382278 Assort beans 0.89\n381843 Dark Red Kidney 0.85\n383038 Dice Tom w/GrnChl 0.95\n356417 Mandarins 3.99\n383178 Olive O11 Spray 4.49\n356562 Flat Leaf Spinach 1.89\n465110 Chiquita Maduros 6.29\n401280 Organic Peas/Corn 1.59\n356612 Red Potatoes 4.29\n382696 Whipped Crm Cheese 1.79\n383252 Deli Sliced Cheese 1.49\n384215 HiFiber Tortilla 4.57\n356646 Strawberries 2.29\n356425 Mini Cucumbers 1.89\n382129 Canola Oi 3.89\n383168 White Corn Meal 2.85\n484162 Crustless PB&J 2.99\n344280 Cauli Crust Pizza 8.29\n356486 Avocados 0.65\n383231 Wht Corn Tortillas 2.44\n356440 Org Baby Carrots 1.79\n356490 Bagged Avocados 3.15\n356504 Blueberries 2.59\n382773 Cosmic Brewnies 3.12\n384773 4 Ib. Sugar 2.79\n388137 Large Eggs 1.66\n388137 Large Eggs 1.66\nVISA 80.07\nKKARKRRRRKREREXRSGI26 ONLINE\n08/30/26 15:50 Ref/Seq # 0\nAuth # 03004D\nATD A0000000031010\n. TVR Rarer\n40 O602tZ0BADNGNA saw,\nO ARC 00 lode 07\nf\nSUBTOTAL 80.07\n++APPROVED++\nSUBTOTAL 80.07\n0.00\n80.07\nmR",
+  "text": [
+    {
+      "line_number": 1,
+      "candidate_id": "grayscale_psm4",
+      "text": "ALUL",
+      "confidence": 79.0,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 5,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 79.6,
+      "consensus_score": 93.6,
+      "normalized_y": 0.008825,
+      "bbox": {
+        "left": 906,
+        "top": 5,
+        "right": 1005,
+        "bottom": 42,
+        "width": 99,
+        "height": 37
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 5,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 2,
+      "candidate_id": "illumination_psm4",
+      "text": "Store #238",
+      "confidence": 96.0,
+      "source_candidate": "illumination_psm4",
+      "image_variant": "illumination",
+      "psm": 4,
+      "support_count": 12,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 97.2,
+      "consensus_score": 135.7,
+      "normalized_y": 0.026849,
+      "bbox": {
+        "left": 830,
+        "top": 48,
+        "right": 1083,
+        "bottom": 95,
+        "width": 253,
+        "height": 47
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 12,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 3,
+      "candidate_id": "otsu_psm11",
+      "text": "961 E Eau Gallie Blvd",
+      "confidence": 91.6,
+      "source_candidate": "otsu_psm11",
+      "image_variant": "otsu",
+      "psm": 11,
+      "support_count": 10,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 94.6,
+      "consensus_score": 126.1,
+      "normalized_y": 0.044874,
+      "bbox": {
+        "left": 675,
+        "top": 91,
+        "right": 1212,
+        "bottom": 148,
+        "width": 537,
+        "height": 57
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "address/header-like row",
+      "row_family_support": 10,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 4,
+      "candidate_id": "otsu_psm4",
+      "text": "Melbourne, FL",
+      "confidence": 96.0,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 13,
+      "match_method": "backbone",
+      "line_quality_score": 97.2,
+      "consensus_score": 139.2,
+      "normalized_y": 0.067593,
+      "bbox": {
+        "left": 779,
+        "top": 157,
+        "right": 1109,
+        "bottom": 203,
+        "width": 330,
+        "height": 46
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "address/header-like row",
+      "row_family_support": 13,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 5,
+      "candidate_id": "threshold_psm4",
+      "text": "https://help.aldi .us",
+      "confidence": 80.0,
+      "source_candidate": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "support_count": 13,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 81.2,
+      "consensus_score": 123.2,
+      "normalized_y": 0.088622,
+      "bbox": {
+        "left": 701,
+        "top": 206,
+        "right": 1213,
+        "bottom": 266,
+        "width": 512,
+        "height": 60
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 13,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 6,
+      "candidate_id": "grayscale_psm11",
+      "text": "Your cashier today was Candice",
+      "confidence": 96.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 13,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 99.0,
+      "consensus_score": 141.0,
+      "normalized_y": 0.106834,
+      "bbox": {
+        "left": 442,
+        "top": 258,
+        "right": 1213,
+        "bottom": 311,
+        "width": 771,
+        "height": 53
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "known receipt metadata/total/payment row",
+      "row_family_support": 13,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 7,
+      "candidate_id": "threshold_psm11",
+      "text": "356661 Sweet Potatoes 2.99",
+      "confidence": 93.33,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 13,
+      "match_method": "sku",
+      "line_quality_score": 98.13,
+      "consensus_score": 140.13,
+      "normalized_y": 0.141194,
+      "bbox": {
+        "left": 547,
+        "top": 338,
+        "right": 1084,
+        "bottom": 414,
+        "width": 537,
+        "height": 76
+      },
+      "reconstructed": true,
+      "original_consensus_text": "356661 Sweet Potatoes",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 13
+      },
+      "component_support": {
+        "sku": {
+          "value": "356661",
+          "support_count": 12,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Sweet Potatoes",
+          "source_candidate": "threshold_psm11",
+          "source_text": "356661 Sweet Potatoes",
+          "support_count": 12,
+          "confidence": 93.33,
+          "similarity_to_anchor": 1.0,
+          "score": 163.73,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "2.99",
+          "support_count": 4,
+          "average_confidence": 83.0,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "356661 Sweet Potatoes 2.99 ES"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "356661 ‘Sweet Potatoes — 2.99 i"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "356661 Sweet Potatoes 2.99 i"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "356661 Sweet Potatoes 2.99 ik"
+            }
+          ],
+          "selection_reason": "selected from multiple independent OCR candidates"
+        },
+        "tax_code": {
+          "value": "FA",
+          "support_count": 7,
+          "average_confidence": 84.71,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "Shi) | 356661 Sweet Potatoes ee FA ee, ae"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "ce) Fe 356661 Sweet Potatoes 2.35 FA a a"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "g9 FA"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "gg FA"
+            },
+            {
+              "candidate_id": "sharpened_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "g9 FA"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "g9 FA"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "go FA"
+            }
+          ],
+          "selection_reason": "selected from multiple independent OCR candidates"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "356661 Sweet Potatoes 2.99",
+      "human_review": {
+        "total": "2.99",
+        "store": "Aldi",
+        "six_digit_sku": "356661",
+        "product": "Sweet Potatoes",
+        "tax_code": "FA",
+        "store_number": "238",
+        "common_name": "Sweet Potatoes",
+        "category": "Produce",
+        "date": "08/30/2026",
+        "price": "2.99"
+      }
+    },
+    {
+      "line_number": 8,
+      "candidate_id": "illumination_psm11",
+      "text": "356377 Grape Tomatoes 1.99",
+      "confidence": 95.0,
+      "source_candidate": "illumination_psm11",
+      "image_variant": "illumination",
+      "psm": 11,
+      "support_count": 13,
+      "match_method": "sku",
+      "line_quality_score": 99.8,
+      "consensus_score": 141.8,
+      "normalized_y": 0.168231,
+      "bbox": {
+        "left": 549,
+        "top": 426,
+        "right": 1084,
+        "bottom": 470,
+        "width": 535,
+        "height": 44
+      },
+      "reconstructed": true,
+      "original_consensus_text": "356377 Grape Tomatoes",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 13
+      },
+      "component_support": {
+        "sku": {
+          "value": "356377",
+          "support_count": 11,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Grape Tomatoes",
+          "source_candidate": "grayscale_psm11",
+          "source_text": "Grape Tomatoes",
+          "support_count": 11,
+          "confidence": 96.0,
+          "similarity_to_anchor": 1.0,
+          "score": 161.4,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "1.99",
+          "support_count": 4,
+          "average_confidence": 90.0,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "356377 Grape Tomatoes 1.99 FA"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "356377 Grape Tomatoes 1.99 FA"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "356377 Grape Tomatoes 1.99 cp"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "356377 Grape Tomatoes 1.99 FA"
+            }
+          ],
+          "selection_reason": "selected from multiple independent OCR candidates"
+        },
+        "tax_code": {
+          "value": "FA",
+          "support_count": 4,
+          "average_confidence": 60.75,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "356377 Grape Tomatoes 1.99 FA"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "356377 Grape Tomatoes 1.99 FA"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "| | AAA 856377 Grape Tomatoes 1.9 FA Be a"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "356377 Grape Tomatoes 1.99 FA"
+            }
+          ],
+          "selection_reason": "selected from multiple independent OCR candidates"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "356377 Grape Tomatoes 1.99",
+      "human_review": {
+        "total": "1.99",
+        "store": "Aldi",
+        "six_digit_sku": "356377",
+        "product": "Grape Tomatoes",
+        "tax_code": "FA",
+        "store_number": "238",
+        "common_name": "Grape Tomatoes",
+        "category": "Produce",
+        "date": "08/30/2026",
+        "price": "1.99"
+      }
+    },
+    {
+      "line_number": 9,
+      "candidate_id": "sharpened_psm4",
+      "text": "382278 Assort beans 0.89",
+      "confidence": 92.67,
+      "source_candidate": "sharpened_psm4",
+      "image_variant": "sharpened",
+      "psm": 4,
+      "support_count": 13,
+      "match_method": "sku",
+      "line_quality_score": 97.47,
+      "consensus_score": 139.47,
+      "normalized_y": 0.187383,
+      "bbox": {
+        "left": 550,
+        "top": 479,
+        "right": 1033,
+        "bottom": 519,
+        "width": 483,
+        "height": 40
+      },
+      "reconstructed": true,
+      "original_consensus_text": "382278 Assort beans",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 13
+      },
+      "component_support": {
+        "sku": {
+          "value": "382278",
+          "support_count": 13,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Assort beans",
+          "source_candidate": "otsu_psm11",
+          "source_text": "Assort beans",
+          "support_count": 11,
+          "confidence": 93.5,
+          "similarity_to_anchor": 1.0,
+          "score": 158.9,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "0.89",
+          "support_count": 3,
+          "average_confidence": 79.33,
+          "examples": [
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "-» 382278 Assort beans. -.;, 0,89 j"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "ae ‘tae 382278 Assort beans 0.89 FA a"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "' 382278 Assort beans - 0.89 A"
+            }
+          ],
+          "selection_reason": "selected from multiple independent OCR candidates"
+        },
+        "tax_code": {
+          "value": "FA",
+          "support_count": 3,
+          "average_confidence": 84.0,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "Si ‘i 382278 Assort beans N85 FA the ei. iy"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "ae ‘tae 382278 Assort beans 0.89 FA a"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "oan tg 382278 Assort beans 083 FA Ae Be) y"
+            }
+          ],
+          "selection_reason": "selected from multiple independent OCR candidates"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "382278 Assort beans 0.89",
+      "human_review": {
+        "total": "0.89",
+        "store": "Aldi",
+        "six_digit_sku": "382278",
+        "product": "Assort beans",
+        "tax_code": "FA",
+        "store_number": "238",
+        "common_name": "NA",
+        "category": "Pantry",
+        "date": "08/30/2026",
+        "price": "0.89"
+      }
+    },
+    {
+      "line_number": 10,
+      "candidate_id": "otsu_psm4",
+      "text": "381843 Dark Red Kidney 0.85",
+      "confidence": 91.83,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 13,
+      "match_method": "backbone",
+      "line_quality_score": 103.93,
+      "consensus_score": 145.93,
+      "normalized_y": 0.202403,
+      "bbox": {
+        "left": 551,
+        "top": 505,
+        "right": 1476,
+        "bottom": 573,
+        "width": 925,
+        "height": 68
+      },
+      "reconstructed": true,
+      "original_consensus_text": "381843 Dark Red Kidney 0,85 F",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 13
+      },
+      "component_support": {
+        "sku": {
+          "value": "381843",
+          "support_count": 12,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Dark Red Kidney",
+          "source_candidate": "otsu_psm11",
+          "source_text": "Dark Red Kidney",
+          "support_count": 10,
+          "confidence": 95.67,
+          "similarity_to_anchor": 1.0,
+          "score": 157.27,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "0.85",
+          "support_count": 3,
+          "average_confidence": 77.0,
+          "examples": [
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "-' 381843 Dark Red Kidney. a 0,85 FA"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "its he Wy 381843 Dark Red Kidney 0.85 ; te Wi i"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "381843 Dark Red Kidney 0,85 F"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": "FA",
+          "support_count": 10,
+          "average_confidence": 90.0,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "ane u 381843 Dark Red Kidney 95 FA Oa ei a"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "-' 381843 Dark Red Kidney. a 0,85 FA"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "cee 7 381843 Dark Red Kidney 95 FA POU sage e"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "381843 Dark Red Kidney © (0.89 FA"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "85 FA"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "85 FA"
+            },
+            {
+              "candidate_id": "sharpened_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "85 FA"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "85 FA"
+            },
+            {
+              "candidate_id": "illumination_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "9 FA Ea hg si"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "85 FA"
+            }
+          ],
+          "selection_reason": "alternate OCR value had materially stronger support"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "381843 Dark Red Kidney 0.85",
+      "human_review": {
+        "total": "0.85",
+        "store": "Aldi",
+        "six_digit_sku": "381843",
+        "product": "Dark Red Kidney",
+        "tax_code": "FA",
+        "store_number": "238",
+        "common_name": "Dark Red Kidney Beans",
+        "category": "Canned Beans & Legumes",
+        "date": "08/30/2026",
+        "price": "0.85"
+      }
+    },
+    {
+      "line_number": 11,
+      "candidate_id": "illumination_psm11",
+      "text": "383038 Dice Tom w/GrnChl 0.95",
+      "confidence": 93.25,
+      "source_candidate": "illumination_psm11",
+      "image_variant": "illumination",
+      "psm": 11,
+      "support_count": 14,
+      "match_method": "sku",
+      "line_quality_score": 98.65,
+      "consensus_score": 144.15,
+      "normalized_y": 0.226624,
+      "bbox": {
+        "left": 551,
+        "top": 581,
+        "right": 1152,
+        "bottom": 626,
+        "width": 601,
+        "height": 45
+      },
+      "reconstructed": true,
+      "original_consensus_text": "383038 Dice Tom w/GrnChl",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 14
+      },
+      "component_support": {
+        "sku": {
+          "value": "383038",
+          "support_count": 13,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Dice Tom w/GrnChl",
+          "source_candidate": "illumination_psm11",
+          "source_text": "383038 Dice Tom w/GrnChl",
+          "support_count": 13,
+          "confidence": 93.25,
+          "similarity_to_anchor": 1.0,
+          "score": 169.85,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "0.95",
+          "support_count": 4,
+          "average_confidence": 93.5,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "383038 Dice Tom w/GrnCchl 0.95 FA"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": ". 883088. Dice: Tom: w/Grnchl o 0.95 FA"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "ny, eo Kh 383038 Dice Tom w/GrnChl 0.95 F Mid ya"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "383038 Dice Tom w/Grnchi 0.95 FA"
+            }
+          ],
+          "selection_reason": "selected from multiple independent OCR candidates"
+        },
+        "tax_code": {
+          "value": "FA",
+          "support_count": 4,
+          "average_confidence": 88.0,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "383038 Dice Tom w/GrnCchl 0.95 FA"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": ". 883088. Dice: Tom: w/Grnchl o 0.95 FA"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "383038 Dice Tom w/Grnchi 0.95 FA"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "383038 Dice Tom w/Grnchl —s-«0.99 FA, ibe."
+            }
+          ],
+          "selection_reason": "selected from multiple independent OCR candidates"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "383038 Dice Tom w/GrnChl 0.95",
+      "human_review": {
+        "total": "0.95",
+        "store": "Aldi",
+        "six_digit_sku": "383038",
+        "product": "Dice Tom w/GrnChl",
+        "tax_code": "FA",
+        "store_number": "238",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "08/30/2026",
+        "price": "0.95"
+      }
+    },
+    {
+      "line_number": 12,
+      "candidate_id": "otsu_psm4",
+      "text": "356417 Mandarins 3.99",
+      "confidence": 93.25,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 10,
+      "match_method": "backbone",
+      "line_quality_score": 104.15,
+      "consensus_score": 135.65,
+      "normalized_y": 0.243335,
+      "bbox": {
+        "left": 553,
+        "top": 617,
+        "right": 1501,
+        "bottom": 679,
+        "width": 948,
+        "height": 62
+      },
+      "reconstructed": true,
+      "original_consensus_text": "356417 Mandarins 3.99 FA",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 10
+      },
+      "component_support": {
+        "sku": {
+          "value": "356417",
+          "support_count": 8,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Mandarins",
+          "source_candidate": "grayscale_psm4",
+          "source_text": "356417 Mandarins 3.99 FA",
+          "support_count": 10,
+          "confidence": 93.25,
+          "similarity_to_anchor": 1.0,
+          "score": 152.45,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "3.99",
+          "support_count": 3,
+          "average_confidence": 72.0,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "356417 Mandarins 3.99 FA"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "356417 Mandarins 3.99 FA"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "356417 Mandar ins 3.99 FAY By)"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": "FA",
+          "support_count": 9,
+          "average_confidence": 90.78,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "356417 Mandarins 3.99 FA"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "356417 Mandarins i Sts«S 9 FA"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "356417 Mandarins 3.99 FA"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "99 FA"
+            },
+            {
+              "candidate_id": "sharpened_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "illumination_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "9 FA q oe deg"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "356417 Mandarins 3.99",
+      "human_review": {
+        "total": "3.99",
+        "store": "Aldi",
+        "six_digit_sku": "356417",
+        "product": "Mandarins",
+        "tax_code": "FA",
+        "store_number": "238",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "08/30/2026",
+        "price": "3.99"
+      }
+    },
+    {
+      "line_number": 13,
+      "candidate_id": "otsu_psm4",
+      "text": "383178 Olive Oil Spray 4.49",
+      "confidence": 91.17,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 13,
+      "match_method": "backbone",
+      "line_quality_score": 103.27,
+      "consensus_score": 145.27,
+      "normalized_y": 0.263612,
+      "bbox": {
+        "left": 554,
+        "top": 672,
+        "right": 1501,
+        "bottom": 732,
+        "width": 947,
+        "height": 60
+      },
+      "reconstructed": true,
+      "original_consensus_text": "383178 Olive Oil Spray 4.49 FA",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 13
+      },
+      "component_support": {
+        "sku": {
+          "value": "383178",
+          "support_count": 13,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Olive O11 Spray",
+          "source_candidate": "sharpened_psm11",
+          "source_text": "Olive O11 Spray",
+          "support_count": 12,
+          "confidence": 85.0,
+          "similarity_to_anchor": 0.8667,
+          "score": 155.5333,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "4.49",
+          "support_count": 4,
+          "average_confidence": 89.0,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "383178 Olive Oil Spray 4.49 FA"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "a Vin 383178 Olive 011 Spray 4.49 FA Be th"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "a | Wh 383178 Olive O11 Spray 4.49 FA Ba oy"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "383178 Olive Oil Spray 4.49 FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": "FA",
+          "support_count": 10,
+          "average_confidence": 73.3,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "383178 Olive Oil Spray 4.49 FA"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "a Vin 383178 Olive 011 Spray 4.49 FA Be th"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "383178 Olive O11 Spray a. 49 FA"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "a | Wh 383178 Olive O11 Spray 4.49 FA Ba oy"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "383178 Olive Oil Spray 4.49 FA"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "49_FA"
+            },
+            {
+              "candidate_id": "sharpened_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "383178 Olive O11 Spray 4.49",
+      "human_review": {
+        "total": "4.49",
+        "store": "Aldi",
+        "six_digit_sku": "383178",
+        "product": "Olive Oil Spray",
+        "tax_code": "FA",
+        "store_number": "238",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "08/30/2026",
+        "price": "4.49"
+      }
+    },
+    {
+      "line_number": 14,
+      "candidate_id": "otsu_psm4",
+      "text": "356562 Flat Leaf Spinach 1.89",
+      "confidence": 95.67,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 11,
+      "match_method": "backbone",
+      "line_quality_score": 107.77,
+      "consensus_score": 142.77,
+      "normalized_y": 0.28389,
+      "bbox": {
+        "left": 554,
+        "top": 728,
+        "right": 1500,
+        "bottom": 784,
+        "width": 946,
+        "height": 56
+      },
+      "reconstructed": true,
+      "original_consensus_text": "356562 Flat Leaf Spinach 1.89 FA",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 11
+      },
+      "component_support": {
+        "sku": {
+          "value": "356562",
+          "support_count": 11,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Flat Leaf Spinach",
+          "source_candidate": "otsu_psm11",
+          "source_text": "Flat Leaf Spinach",
+          "support_count": 11,
+          "confidence": 96.0,
+          "similarity_to_anchor": 1.0,
+          "score": 162.6,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "1.89",
+          "support_count": 5,
+          "average_confidence": 67.0,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "356562 Flat Leaf Spinach 1.89 FA"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": ". 356562 Flat Leaf: Spinach 1.89 FA"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "ae | 356562 Flat Leaf Spinach 1.89 FA RR Phin"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "356562 Flat Leaf Spinach 1.89 FA"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "356562 Flat Leaf Spinach 1.89 FA Ba yrle' sy wh"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": "FA",
+          "support_count": 11,
+          "average_confidence": 80.27,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "356562 Flat Leaf Spinach 1.89 FA"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": ". 356562 Flat Leaf: Spinach 1.89 FA"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "ae | 356562 Flat Leaf Spinach 1.89 FA RR Phin"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "356562 Flat Leaf Spinach 1.89 FA"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "356562 Flat Leaf Spinach 1.89 FA Ba yrle' sy wh"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "89 FA"
+            },
+            {
+              "candidate_id": "sharpened_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "So FA A a"
+            },
+            {
+              "candidate_id": "sharpened_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "356562 Flat Leaf Spinach 1.89",
+      "human_review": {
+        "total": "1.89",
+        "store": "Aldi",
+        "six_digit_sku": "356562",
+        "product": "Flat Leaf Spinach",
+        "tax_code": "FA",
+        "store_number": "238",
+        "common_name": "Flat Leaf Spinach",
+        "category": "Produce",
+        "date": "08/30/2026",
+        "price": "1.89"
+      }
+    },
+    {
+      "line_number": 15,
+      "candidate_id": "otsu_psm4",
+      "text": "465110 Chiquita Maduros 6.29",
+      "confidence": 94.0,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 12,
+      "match_method": "backbone",
+      "line_quality_score": 105.5,
+      "consensus_score": 144.0,
+      "normalized_y": 0.304356,
+      "bbox": {
+        "left": 554,
+        "top": 782,
+        "right": 1500,
+        "bottom": 839,
+        "width": 946,
+        "height": 57
+      },
+      "reconstructed": true,
+      "original_consensus_text": "465110 Chiquita Maduros 6.29 FA",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 12
+      },
+      "component_support": {
+        "sku": {
+          "value": "465110",
+          "support_count": 12,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Chiquita Maduros",
+          "source_candidate": "otsu_psm4",
+          "source_text": "465110 Chiquita Maduros 6.29 FA",
+          "support_count": 12,
+          "confidence": 94.0,
+          "similarity_to_anchor": 1.0,
+          "score": 164.4,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "6.29",
+          "support_count": 6,
+          "average_confidence": 75.17,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "465110 Chiquita Maduros 6.29 FA"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "‘ m4 a 465110 Chiquita Maduros 6.29 FA Walang Baan"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "anc’ i 465110 Chiquita Maduros 6.29 FA"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "465110 Chiquita Maduros 6.29 FA"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "7 Naa me 465110 Chiquita Maduros 6.29 FA ae ita a"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "465110 Chiquita Maduros 6.29 FA (ee Suse i"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": "FA",
+          "support_count": 12,
+          "average_confidence": 94.0,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "465110 Chiquita Maduros 6.29 FA"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "‘ m4 a 465110 Chiquita Maduros 6.29 FA Walang Baan"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "anc’ i 465110 Chiquita Maduros 6.29 FA"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "465110 Chiquita Maduros 6.29 FA"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "7 Naa me 465110 Chiquita Maduros 6.29 FA ae ita a"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "465110 Chiquita Maduros 6.29 FA (ee Suse i"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "29 FA"
+            },
+            {
+              "candidate_id": "sharpened_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "otsu_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "29 FA jadegd as"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "465110 Chiquita Maduros 6.29",
+      "human_review": {
+        "total": "6.29",
+        "store": "Aldi",
+        "six_digit_sku": "465110",
+        "product": "Chiquita Maduros",
+        "tax_code": "FA",
+        "store_number": "238",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "08/30/2026",
+        "price": "6.29"
+      }
+    },
+    {
+      "line_number": 16,
+      "candidate_id": "otsu_psm4",
+      "text": "401280 Organic Peas/Corn 1.59",
+      "confidence": 94.0,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 14,
+      "match_method": "backbone",
+      "line_quality_score": 105.5,
+      "consensus_score": 151.0,
+      "normalized_y": 0.324446,
+      "bbox": {
+        "left": 556,
+        "top": 836,
+        "right": 1499,
+        "bottom": 892,
+        "width": 943,
+        "height": 56
+      },
+      "reconstructed": true,
+      "original_consensus_text": "401280 Organic Peas/Corn 1.59 FA",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 14
+      },
+      "component_support": {
+        "sku": {
+          "value": "401280",
+          "support_count": 14,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Organic Peas/Corn",
+          "source_candidate": "otsu_psm4",
+          "source_text": "401280 Organic Peas/Corn 1.59 FA",
+          "support_count": 12,
+          "confidence": 94.0,
+          "similarity_to_anchor": 1.0,
+          "score": 164.4,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "1.59",
+          "support_count": 6,
+          "average_confidence": 67.83,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "401280 Organie Peas/Corn 1.59 FA"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "ie 401280 Organic Peas/Corn 1,59 FA"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "SO) BLD 401280 Organic Peas/Corn 1.59 FA ae"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "401280 Organic Peas/Corn 1.59 FA"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": ": a an] 401280 Organic Peas/Corn 1.59 re _ Hil ia) ma"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "401280 Organic Peas/Corn ,-:1.59 FA pees eel ni"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": "FA",
+          "support_count": 12,
+          "average_confidence": 89.5,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "401280 Organie Peas/Corn 1.59 FA"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": ", ae vit 401280 Organic Peas/Corn 1559 FA ‘ae Sided Be"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "ie 401280 Organic Peas/Corn 1,59 FA"
+            },
+            {
+              "candidate_id": "threshold_psm6",
+              "candidate_scope": "full",
+              "text": "Pe | vg 7 401280 ae otto noose ' 49 FA Sue"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "SO) BLD 401280 Organic Peas/Corn 1.59 FA ae"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "401280 Organic Peas/Corn 1.59 FA"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "401280 Organic Peas/Corn ,-:1.59 FA pees eel ni"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "59 FA"
+            },
+            {
+              "candidate_id": "sharpened_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "401280 Organic Peas/Corn 1.59",
+      "human_review": {
+        "total": "1.59",
+        "store": "Aldi",
+        "six_digit_sku": "401280",
+        "product": "Organic Peas/Corn",
+        "tax_code": "FA",
+        "store_number": "238",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "08/30/2026",
+        "price": "1.59"
+      }
+    },
+    {
+      "line_number": 17,
+      "candidate_id": "otsu_psm4",
+      "text": "356612 Red Potatoes 4.29",
+      "confidence": 95.0,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 11,
+      "match_method": "backbone",
+      "line_quality_score": 106.5,
+      "consensus_score": 141.5,
+      "normalized_y": 0.343785,
+      "bbox": {
+        "left": 556,
+        "top": 890,
+        "right": 1499,
+        "bottom": 941,
+        "width": 943,
+        "height": 51
+      },
+      "reconstructed": true,
+      "original_consensus_text": "356612 Red Potatoes 4.29 FA",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 11
+      },
+      "component_support": {
+        "sku": {
+          "value": "356612",
+          "support_count": 9,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Red Potatoes",
+          "source_candidate": "sharpened_psm11",
+          "source_text": "Red Potatoes",
+          "support_count": 11,
+          "confidence": 96.0,
+          "similarity_to_anchor": 1.0,
+          "score": 161.4,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "4.29",
+          "support_count": 4,
+          "average_confidence": 62.0,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "356612 Red Potatoes 4,29 FA"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "ae 356612 Red Potatoes 4.29 FA aaah ti)"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "356612 Red Potatoes 4.29 FA"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "356612 Red Potatoes 4,29 FA Metta ie)"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": "FA",
+          "support_count": 10,
+          "average_confidence": 90.4,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "356612 Red Potatoes 4,29 FA"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "i. | 356612 Red Potatoes” °° ~““AO9 7” FA"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "ae 356612 Red Potatoes 4.29 FA aaah ti)"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "356612 Red Potatoes 4.29 FA"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "356612 Red Potatoes 4,29 FA Metta ie)"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "‘29 FA"
+            },
+            {
+              "candidate_id": "sharpened_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "356612 Red Potatoes 4.29",
+      "human_review": {
+        "total": "4.29",
+        "store": "Aldi",
+        "six_digit_sku": "356612",
+        "product": "Red Potatoes",
+        "tax_code": "FA",
+        "store_number": "238",
+        "common_name": "Red Potatoes",
+        "category": "Produce",
+        "date": "08/30/2026",
+        "price": "4.29"
+      }
+    },
+    {
+      "line_number": 18,
+      "candidate_id": "grayscale_psm4",
+      "text": "382696 Whipped Crm Cheese 1.79",
+      "confidence": 89.67,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 12,
+      "match_method": "sku",
+      "line_quality_score": 101.77,
+      "consensus_score": 140.27,
+      "normalized_y": 0.364063,
+      "bbox": {
+        "left": 557,
+        "top": 943,
+        "right": 1498,
+        "bottom": 996,
+        "width": 941,
+        "height": 53
+      },
+      "reconstructed": true,
+      "original_consensus_text": "382696 Whipped Cri Cheese 1.79 FA",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 12
+      },
+      "component_support": {
+        "sku": {
+          "value": "382696",
+          "support_count": 12,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Whipped Crm Cheese",
+          "source_candidate": "threshold_psm11",
+          "source_text": "382696 Whipped Crm Cheese",
+          "support_count": 12,
+          "confidence": 95.5,
+          "similarity_to_anchor": 0.9444,
+          "score": 166.6556,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "1.79",
+          "support_count": 3,
+          "average_confidence": 94.33,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "382696 Whipped Cri Cheese 1.79 FA"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "382696 Whipped Crim Cheese 1.79 FA"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "382696 Whipped Crm Cheese 1.79 FA . ae Be y"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": "FA",
+          "support_count": 9,
+          "average_confidence": 87.22,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "382696 Whipped Cri Cheese 1.79 FA"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "382696 Whipped Crm Cheese | “179 FA"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "382696 Whipped Crim Cheese 1.79 FA"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "382696 Whipped Crm Cheese 1.79 FA . ae Be y"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "79 FA"
+            },
+            {
+              "candidate_id": "sharpened_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "382696 Whipped Crm Cheese 1.79",
+      "human_review": {
+        "total": "1.79",
+        "store": "Aldi",
+        "six_digit_sku": "382696",
+        "product": "Whipped Crm Cheese",
+        "tax_code": "FA",
+        "store_number": "238",
+        "common_name": "NA",
+        "category": "Dairy",
+        "date": "08/30/2026",
+        "price": "1.79"
+      }
+    },
+    {
+      "line_number": 19,
+      "candidate_id": "otsu_psm4",
+      "text": "383252 Deli Sliced Cheese 1.49",
+      "confidence": 96.0,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 14,
+      "match_method": "backbone",
+      "line_quality_score": 108.1,
+      "consensus_score": 153.6,
+      "normalized_y": 0.38359,
+      "bbox": {
+        "left": 558,
+        "top": 997,
+        "right": 1498,
+        "bottom": 1046,
+        "width": 940,
+        "height": 49
+      },
+      "reconstructed": true,
+      "original_consensus_text": "383252 Deli Sliced Cheese 1.49 FA",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 14
+      },
+      "component_support": {
+        "sku": {
+          "value": "383252",
+          "support_count": 12,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Deli Sliced Cheese",
+          "source_candidate": "otsu_psm4",
+          "source_text": "383252 Deli Sliced Cheese 1.49 FA",
+          "support_count": 13,
+          "confidence": 96.0,
+          "similarity_to_anchor": 1.0,
+          "score": 172.6,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "1.49",
+          "support_count": 7,
+          "average_confidence": 89.57,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "383252 Deli Sliced Cheese 1.49 FA"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "4 eae eli. Sliced Cheese 1.49 FA as | oe"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "- 383252 Deli. Sliced Cheese . 1.49 FA"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "te ae 383252 Deli Sliced Cheese 1.49 FA Nh 6 ¢"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "383252 Deli Sliced Cheese 1.49 FA"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "on eo eli Sliced Cheese 1.49 FA Ry *"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "333252 Deli Sliced Cheese 1.49 FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": "FA",
+          "support_count": 12,
+          "average_confidence": 80.42,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "383252 Deli Sliced Cheese 1.49 FA"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "4 eae eli. Sliced Cheese 1.49 FA as | oe"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "- 383252 Deli. Sliced Cheese . 1.49 FA"
+            },
+            {
+              "candidate_id": "threshold_psm6",
+              "candidate_scope": "full",
+              "text": "Lae un 58612 hele’ sliced Cheese 4.57 FA neh"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "te ae 383252 Deli Sliced Cheese 1.49 FA Nh 6 ¢"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "383252 Deli Sliced Cheese 1.49 FA"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "on eo eli Sliced Cheese 1.49 FA Ry *"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "333252 Deli Sliced Cheese 1.49 FA"
+            },
+            {
+              "candidate_id": "grayscale_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "49 FA he ‘eed"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "49 FA"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "383252 Deli Sliced Cheese 1.49",
+      "human_review": {
+        "total": "1.49",
+        "store": "Aldi",
+        "six_digit_sku": "383252",
+        "product": "Deli Sliced Cheese",
+        "tax_code": "FA",
+        "store_number": "238",
+        "common_name": "NA",
+        "category": "Dairy",
+        "date": "08/30/2026",
+        "price": "1.49"
+      }
+    },
+    {
+      "line_number": 20,
+      "candidate_id": "otsu_psm4",
+      "text": "384215 HiFiber Tortilla 4.57",
+      "confidence": 93.6,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 12,
+      "match_method": "backbone",
+      "line_quality_score": 105.1,
+      "consensus_score": 143.6,
+      "normalized_y": 0.403305,
+      "bbox": {
+        "left": 558,
+        "top": 1050,
+        "right": 1497,
+        "bottom": 1098,
+        "width": 939,
+        "height": 48
+      },
+      "reconstructed": true,
+      "original_consensus_text": "384215 HiFiber Tortilla 4.57 FA",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 12
+      },
+      "component_support": {
+        "sku": {
+          "value": "384215",
+          "support_count": 12,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "HiFiber Tortilla",
+          "source_candidate": "otsu_psm4",
+          "source_text": "384215 HiFiber Tortilla 4.57 FA",
+          "support_count": 10,
+          "confidence": 93.6,
+          "similarity_to_anchor": 1.0,
+          "score": 154.0,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "4.57",
+          "support_count": 3,
+          "average_confidence": 85.0,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "384215 HiFiber Tortilla 4.57 PA"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "384215 HiFiber Tortilla 4.57 FA"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "384215 HiFiber Tortilla — 4.57 FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": "FA",
+          "support_count": 6,
+          "average_confidence": 81.33,
+          "examples": [
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "384215 HiFiber. Tortilla * «4157 FA"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "384215 HiFiber Tortilla 4.57 FA"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "384215 HiFiber Tortilla — 4.57 FA"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "o7 FA"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "384215 HiFiber Tortilla 4.57",
+      "human_review": {
+        "total": "4.57",
+        "store": "Aldi",
+        "six_digit_sku": "384215",
+        "product": "HiFiber Tortilla",
+        "tax_code": "FA",
+        "store_number": "238",
+        "common_name": "NA",
+        "category": "Bakery",
+        "date": "08/30/2026",
+        "price": "4.57"
+      }
+    },
+    {
+      "line_number": 21,
+      "candidate_id": "otsu_psm4",
+      "text": "356646 Strawberries 2.29",
+      "confidence": 95.0,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 13,
+      "match_method": "backbone",
+      "line_quality_score": 105.9,
+      "consensus_score": 147.9,
+      "normalized_y": 0.423207,
+      "bbox": {
+        "left": 559,
+        "top": 1104,
+        "right": 1496,
+        "bottom": 1150,
+        "width": 937,
+        "height": 46
+      },
+      "reconstructed": true,
+      "original_consensus_text": "356646 Strawberries 2.29 FA",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 13
+      },
+      "component_support": {
+        "sku": {
+          "value": "356646",
+          "support_count": 11,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Strawberries",
+          "source_candidate": "grayscale_psm11",
+          "source_text": "Strawberries",
+          "support_count": 10,
+          "confidence": 95.0,
+          "similarity_to_anchor": 1.0,
+          "score": 154.2,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "2.29",
+          "support_count": 5,
+          "average_confidence": 88.2,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "356646 Strawberries 2.29 FA"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "' - 856646 Strawberries ~ : (2.29 FA"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "‘ ae pe 356646 Strawberries 2.29 FA | Bua an ae"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "356646 Strawberries 2.29 FA"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "' 356646 Strawberries 2.29 FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": "FA",
+          "support_count": 11,
+          "average_confidence": 90.91,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "356646 Strawberries 2.29 FA"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "' - 856646 Strawberries ~ : (2.29 FA"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "‘ ae pe 356646 Strawberries 2.29 FA | Bua an ae"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "356646 Strawberries 2.29 FA"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "' 356646 Strawberries 2.29 FA"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "29 FA"
+            },
+            {
+              "candidate_id": "sharpened_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "illumination_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "59 FA fe a a)"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "356646 Strawberries 2.29",
+      "human_review": {
+        "total": "2.29",
+        "store": "Aldi",
+        "six_digit_sku": "356646",
+        "product": "Strawberries",
+        "tax_code": "FA",
+        "store_number": "238",
+        "common_name": "Strawberries",
+        "category": "Produce",
+        "date": "08/30/2026",
+        "price": "2.29"
+      }
+    },
+    {
+      "line_number": 22,
+      "candidate_id": "otsu_psm4",
+      "text": "356425 Mini Cucumbers 1.89",
+      "confidence": 95.8,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 13,
+      "match_method": "backbone",
+      "line_quality_score": 107.3,
+      "consensus_score": 149.3,
+      "normalized_y": 0.442734,
+      "bbox": {
+        "left": 560,
+        "top": 1156,
+        "right": 1496,
+        "bottom": 1202,
+        "width": 936,
+        "height": 46
+      },
+      "reconstructed": true,
+      "original_consensus_text": "356425 Mini Cucumbers 1.89 FA",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 13
+      },
+      "component_support": {
+        "sku": {
+          "value": "356425",
+          "support_count": 13,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Mini Cucumbers",
+          "source_candidate": "otsu_psm4",
+          "source_text": "356425 Mini Cucumbers 1.89 FA",
+          "support_count": 12,
+          "confidence": 95.8,
+          "similarity_to_anchor": 1.0,
+          "score": 166.2,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "1.89",
+          "support_count": 5,
+          "average_confidence": 74.4,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "356425 Mini Cucumbers 1.89 FA"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "a 356425 Mini Cucumbers 1.89 FA ae"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "356425 Mini Cucumbers =» —,.-«1.89 FA."
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "356425 Mini Cucumbers 1.89 FA"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "356425 Mini Cucumbers 1.89 FA Ne"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": "FA",
+          "support_count": 11,
+          "average_confidence": 81.64,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "356425 Mini Cucumbers 1.89 FA"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "a 356425 Mini Cucumbers 1.89 FA ae"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "356425 Mini Cucumbers =» —,.-«1.89 FA."
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "356425 Mini Cucumbers 1.89 FA"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "Nees 2s 356425 Mini Cucumbers 1.69 FA ari"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "356425 Mini Cucumbers 1.89 FA Ne"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "89. FA"
+            },
+            {
+              "candidate_id": "sharpened_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "356425 Mini Cucumbers 1.89",
+      "human_review": {
+        "total": "1.89",
+        "store": "Aldi",
+        "six_digit_sku": "356425",
+        "product": "Mini Cucumbers",
+        "tax_code": "FA",
+        "store_number": "238",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "08/30/2026",
+        "price": "1.89"
+      }
+    },
+    {
+      "line_number": 23,
+      "candidate_id": "otsu_psm4",
+      "text": "382129 Canola Oil 3.89",
+      "confidence": 88.4,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 10,
+      "match_method": "backbone",
+      "line_quality_score": 99.9,
+      "consensus_score": 131.4,
+      "normalized_y": 0.462073,
+      "bbox": {
+        "left": 560,
+        "top": 1208,
+        "right": 1496,
+        "bottom": 1253,
+        "width": 936,
+        "height": 45
+      },
+      "reconstructed": true,
+      "original_consensus_text": "382129 Canola Oi] 3.89 FA",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 10
+      },
+      "component_support": {
+        "sku": {
+          "value": "382129",
+          "support_count": 10,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Canola Oi",
+          "source_candidate": "otsu_psm4",
+          "source_text": "382129 Canola Oi] 3.89 FA",
+          "support_count": 10,
+          "confidence": 88.4,
+          "similarity_to_anchor": 1.0,
+          "score": 148.8,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "3.89",
+          "support_count": 3,
+          "average_confidence": 66.0,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "382129 Canola Oi] 3.89 FA"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "382129 Canola Oi] 3.89 FA"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "- 382129 Canola Oi] . $3.89 FA hie, to"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": "FA",
+          "support_count": 9,
+          "average_confidence": 95.0,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "382129 Canola Oi] 3.89 FA"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "382129 Canola Qi] \"3189 FA"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "382129 Canola Oi] 3.89 FA"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "- 382129 Canola Oi] . $3.89 FA hie, to"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "89 FA"
+            },
+            {
+              "candidate_id": "sharpened_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "382129 Canola Oi 3.89",
+      "human_review": {
+        "total": "3.89",
+        "store": "Aldi",
+        "six_digit_sku": "382129",
+        "product": "Canola Oil",
+        "tax_code": "FA",
+        "store_number": "238",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "08/30/2026",
+        "price": "3.89"
+      }
+    },
+    {
+      "line_number": 24,
+      "candidate_id": "otsu_psm4",
+      "text": "383168 White Corn Meal 2.85",
+      "confidence": 95.5,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 13,
+      "match_method": "backbone",
+      "line_quality_score": 107.6,
+      "consensus_score": 149.6,
+      "normalized_y": 0.4816,
+      "bbox": {
+        "left": 560,
+        "top": 1260,
+        "right": 1497,
+        "bottom": 1305,
+        "width": 937,
+        "height": 45
+      },
+      "reconstructed": true,
+      "original_consensus_text": "383168 White Corn Meal 2.85 FA",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 13
+      },
+      "component_support": {
+        "sku": {
+          "value": "383168",
+          "support_count": 13,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "White Corn Meal",
+          "source_candidate": "sharpened_psm11",
+          "source_text": "White Corn Meal",
+          "support_count": 12,
+          "confidence": 96.0,
+          "similarity_to_anchor": 1.0,
+          "score": 167.6,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "2.85",
+          "support_count": 5,
+          "average_confidence": 66.4,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "\\ A 383168 White Corn Meal 2.85 FA |e aia"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "\"383168 White Corn Meal -. 2,85: FA Loi Wav"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "383168 White Corn Meal 2.85 FA"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "an 383168 White Corn Meal 2.85 FA ae"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "383168 White Corn Meal =~ 2.85 FA wibe ay re"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": "FA",
+          "support_count": 12,
+          "average_confidence": 83.67,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "383168 White Corn Meal 2.89 FA"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "\\ A 383168 White Corn Meal 2.85 FA |e aia"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "\"383168 White Corn Meal -. 2,85: FA Loi Wav"
+            },
+            {
+              "candidate_id": "threshold_psm6",
+              "candidate_scope": "full",
+              "text": "mg fF yl 383168 eee pizza 8.29 FA By ona a"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "383168 White Corn Meal 2.85 FA"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "an 383168 White Corn Meal 2.85 FA ae"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "383168 White Corn Meal =~ 2.85 FA wibe ay re"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "85: FA"
+            },
+            {
+              "candidate_id": "sharpened_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "383168 White Corn Meal 2.85",
+      "human_review": {
+        "total": "2.85",
+        "store": "Aldi",
+        "six_digit_sku": "383168",
+        "product": "White Corn Meal",
+        "tax_code": "FA",
+        "store_number": "238",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "08/30/2026",
+        "price": "2.85"
+      }
+    },
+    {
+      "line_number": 25,
+      "candidate_id": "otsu_psm4",
+      "text": "484162 Crustless PB&J 2.99",
+      "confidence": 88.8,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 13,
+      "match_method": "backbone",
+      "line_quality_score": 100.3,
+      "consensus_score": 142.3,
+      "normalized_y": 0.501314,
+      "bbox": {
+        "left": 560,
+        "top": 1313,
+        "right": 1498,
+        "bottom": 1357,
+        "width": 938,
+        "height": 44
+      },
+      "reconstructed": true,
+      "original_consensus_text": "484162 Crustless PB&J 2.99 FA",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 13
+      },
+      "component_support": {
+        "sku": {
+          "value": "484162",
+          "support_count": 13,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Crustless PB&J",
+          "source_candidate": "otsu_psm11",
+          "source_text": "Crustless PB&J",
+          "support_count": 11,
+          "confidence": 91.5,
+          "similarity_to_anchor": 1.0,
+          "score": 156.9,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "2.99",
+          "support_count": 5,
+          "average_confidence": 74.6,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "484162 Crustless PB&J 2.99.FA"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "ten!) Bh 484162 Crustless PB&J 2.99.FA nT ER a alto"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "484162 Crustless PB&J 2.99 FA"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "* 484162 Crustless PB&J 2.99 FA ae"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "- 484162 Crustless PB&J = 2.99 FA ct Rie Ne"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": "FA",
+          "support_count": 11,
+          "average_confidence": 80.82,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "484162 Crustless PB&J 2.99.FA"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "484162 Crustless PB&J i“ ss 2. GQ FA: 4 Ie 4"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "ten!) Bh 484162 Crustless PB&J 2.99.FA nT ER a alto"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "484162 Crustless PB&J 2.99 FA"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "* 484162 Crustless PB&J 2.99 FA ae"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "- 484162 Crustless PB&J = 2.99 FA ct Rie Ne"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "99 FA"
+            },
+            {
+              "candidate_id": "sharpened_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "484162 Crustless PB&J 2.99",
+      "human_review": {
+        "total": "2.99",
+        "store": "Aldi",
+        "six_digit_sku": "484162",
+        "product": "Crustless PB&J",
+        "tax_code": "FA",
+        "store_number": "238",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "08/30/2026",
+        "price": "2.99"
+      }
+    },
+    {
+      "line_number": 26,
+      "candidate_id": "otsu_psm4",
+      "text": "344280 Cauli Crust Pizza 8.29",
+      "confidence": 94.17,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 13,
+      "match_method": "backbone",
+      "line_quality_score": 106.27,
+      "consensus_score": 148.27,
+      "normalized_y": 0.521029,
+      "bbox": {
+        "left": 561,
+        "top": 1365,
+        "right": 1498,
+        "bottom": 1410,
+        "width": 937,
+        "height": 45
+      },
+      "reconstructed": true,
+      "original_consensus_text": "344280 Cauli Crust Pizza 8.29 FA",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 13
+      },
+      "component_support": {
+        "sku": {
+          "value": "344280",
+          "support_count": 13,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Cauli Crust Pizza",
+          "source_candidate": "otsu_psm4",
+          "source_text": "344280 Cauli Crust Pizza 8.29 FA",
+          "support_count": 13,
+          "confidence": 94.17,
+          "similarity_to_anchor": 1.0,
+          "score": 170.77,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "8.29",
+          "support_count": 6,
+          "average_confidence": 69.33,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "344280 Cauli Crust Pizza 8.29 FA"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "; aa 344280 Cauli Crust Pizza 8.29 FA ae"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "; ee Bis 344280 Cauli Crust Pizza 8.29 FA ee ae le ae"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "344280 Cauli Crust Pizza 8.29 FA"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "a 344280 Cauli Crust Pizza 8.29 FA a"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "344280 Cauli Crust Pizza = 8.29 FA “okey fe"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": "FA",
+          "support_count": 12,
+          "average_confidence": 80.08,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "344280 Cauli Crust Pizza 8.29 FA"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "; aa 344280 Cauli Crust Pizza 8.29 FA ae"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "344280. Cauli Crust Pizza “829 FA ata"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "; ee Bis 344280 Cauli Crust Pizza 8.29 FA ee ae le ae"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "344280 Cauli Crust Pizza 8.29 FA"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "a 344280 Cauli Crust Pizza 8.29 FA a"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "344280 Cauli Crust Pizza = 8.29 FA “okey fe"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "29: FA"
+            },
+            {
+              "candidate_id": "sharpened_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "344280 Cauli Crust Pizza 8.29",
+      "human_review": {
+        "total": "8.29",
+        "store": "Aldi",
+        "six_digit_sku": "344280",
+        "product": "Cauli Crust Pizza",
+        "tax_code": "FA",
+        "store_number": "238",
+        "common_name": "Cauliflower Crust Pizza",
+        "category": "Frozen Pizza",
+        "date": "08/30/2026",
+        "price": "8.29"
+      }
+    },
+    {
+      "line_number": 27,
+      "candidate_id": "otsu_psm4",
+      "text": "356486 Avocados 0.65",
+      "confidence": 93.25,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 13,
+      "match_method": "backbone",
+      "line_quality_score": 104.15,
+      "consensus_score": 146.15,
+      "normalized_y": 0.540368,
+      "bbox": {
+        "left": 562,
+        "top": 1417,
+        "right": 1498,
+        "bottom": 1461,
+        "width": 936,
+        "height": 44
+      },
+      "reconstructed": true,
+      "original_consensus_text": "356486 Avocados 0.65 FA",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 13
+      },
+      "component_support": {
+        "sku": {
+          "value": "356486",
+          "support_count": 13,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Avocados",
+          "source_candidate": "sharpened_psm4",
+          "source_text": "356486 Avocados",
+          "support_count": 12,
+          "confidence": 95.0,
+          "similarity_to_anchor": 1.0,
+          "score": 164.2,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "0.65",
+          "support_count": 7,
+          "average_confidence": 91.86,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "356486 Avocados 0.65 FA"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "iy y 356486 Avocados 0.65 FA Ree"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "356486 Avocados - °- ~ 0.65 FA"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "vi Y 356486 Avocados 0.65 FA Ae een ta tH, 8"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "356486 Avocados 0.65 FA"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "oY 356486 Avocados 0.65 FA ie"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "356486 Avocados . 0.65 FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": "FA",
+          "support_count": 12,
+          "average_confidence": 95.25,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "356486 Avocados 0.65 FA"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "iy y 356486 Avocados 0.65 FA Ree"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "356486 Avocados - °- ~ 0.65 FA"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "vi Y 356486 Avocados 0.65 FA Ae een ta tH, 8"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "356486 Avocados 0.65 FA"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "oY 356486 Avocados 0.65 FA ie"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "356486 Avocados . 0.65 FA"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "65 FA"
+            },
+            {
+              "candidate_id": "sharpened_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "356486 Avocados 0.65",
+      "human_review": {
+        "total": "0.65",
+        "store": "Aldi",
+        "six_digit_sku": "356486",
+        "product": "Avocados",
+        "tax_code": "FA",
+        "store_number": "238",
+        "common_name": "Avocados",
+        "category": "Produce",
+        "date": "08/30/2026",
+        "price": "0.65"
+      }
+    },
+    {
+      "line_number": 28,
+      "candidate_id": "otsu_psm4",
+      "text": "383231 Wht Corn Tortillas 2.44",
+      "confidence": 94.83,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 13,
+      "match_method": "backbone",
+      "line_quality_score": 106.93,
+      "consensus_score": 148.93,
+      "normalized_y": 0.559895,
+      "bbox": {
+        "left": 561,
+        "top": 1469,
+        "right": 1498,
+        "bottom": 1513,
+        "width": 937,
+        "height": 44
+      },
+      "reconstructed": true,
+      "original_consensus_text": "383231 Wht Corn Tortillas 2.44 FA",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 13
+      },
+      "component_support": {
+        "sku": {
+          "value": "383231",
+          "support_count": 12,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Wht Corn Tortillas",
+          "source_candidate": "otsu_psm4",
+          "source_text": "383231 Wht Corn Tortillas 2.44 FA",
+          "support_count": 13,
+          "confidence": 94.83,
+          "similarity_to_anchor": 1.0,
+          "score": 171.43,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "2.44",
+          "support_count": 7,
+          "average_confidence": 85.43,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "383231 Wht Corn Tortillas 2.44 FA"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "| shh 383231 Wht Corn Tortillas 2.44 FA ees"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "383231. Wht Corn Tortillas. 2.44 FA.."
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "mer 1 | 383231 Wht Corn Tortillas 2.44 FA 70 in ae"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "383231 Wht Corn Tortillas 2.44 FA"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": ", ae 383231 Wht Corn Tortillas 2.44 FA oye"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "383231 Wht Corn Tortillas 2.44 FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": "FA",
+          "support_count": 13,
+          "average_confidence": 93.54,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "383231 Wht Corn Tortillas 2.44 FA"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "| shh 383231 Wht Corn Tortillas 2.44 FA ees"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "383231. Wht Corn Tortillas. 2.44 FA.."
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "mer 1 | 383231 Wht Corn Tortillas 2.44 FA 70 in ae"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "383231 Wht Corn Tortillas 2.44 FA"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": ", ae 383231 Wht Corn Tortillas 2.44 FA oye"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "383231 Wht Corn Tortillas 2.44 FA"
+            },
+            {
+              "candidate_id": "grayscale_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "44 FA eo cad"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "44 FA"
+            },
+            {
+              "candidate_id": "sharpened_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "383231 Wht Corn Tortillas 2.44",
+      "human_review": {
+        "total": "2.44",
+        "store": "Aldi",
+        "six_digit_sku": "383231",
+        "product": "Wht Corn Tortillas",
+        "tax_code": "FA",
+        "store_number": "238",
+        "common_name": "NA",
+        "category": "Bakery",
+        "date": "08/30/2026",
+        "price": "2.44"
+      }
+    },
+    {
+      "line_number": 29,
+      "candidate_id": "otsu_psm4",
+      "text": "356440 Org Baby Carrots 1.79",
+      "confidence": 95.67,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 14,
+      "match_method": "backbone",
+      "line_quality_score": 107.77,
+      "consensus_score": 153.27,
+      "normalized_y": 0.580548,
+      "bbox": {
+        "left": 563,
+        "top": 1521,
+        "right": 1498,
+        "bottom": 1571,
+        "width": 935,
+        "height": 50
+      },
+      "reconstructed": true,
+      "original_consensus_text": "356440 Org Baby Carrots 1.79 FA",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 14
+      },
+      "component_support": {
+        "sku": {
+          "value": "356440",
+          "support_count": 8,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Org Baby Carrots",
+          "source_candidate": "grayscale_psm11",
+          "source_text": "Org Baby Carrots",
+          "support_count": 13,
+          "confidence": 96.0,
+          "similarity_to_anchor": 1.0,
+          "score": 172.6,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "1.79",
+          "support_count": 7,
+          "average_confidence": 81.29,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "356440 Org Baby Carrots 1.79 FA"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "— v 356440 Org Baby Carrots 1.79 FA HOR Ahh,"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": ", 856440 Org Baby Carrots. 1.79 FA."
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "356440 Org Baby Carrots - 1.79 FA MMe ah iu) Ty."
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "356440 Org Baby Carrots 1.79 FA"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "an 356440 Org Baby Carrots 1.79 FA ae"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "856440 Org Baby Carrots - . 1.79 FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": "FA",
+          "support_count": 14,
+          "average_confidence": 93.29,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "356440 Org Baby Carrots 1.79 FA"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "— v 356440 Org Baby Carrots 1.79 FA HOR Ahh,"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": ", 856440 Org Baby Carrots. 1.79 FA."
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "356440 Org Baby Carrots - 1.79 FA MMe ah iu) Ty."
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "356440 Org Baby Carrots 1.79 FA"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "an 356440 Org Baby Carrots 1.79 FA ae"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "856440 Org Baby Carrots - . 1.79 FA"
+            },
+            {
+              "candidate_id": "grayscale_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "79 FA Bee stom"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "79 FA"
+            },
+            {
+              "candidate_id": "sharpened_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "otsu_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "79 FA a"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "356440 Org Baby Carrots 1.79",
+      "human_review": {
+        "total": "1.79",
+        "store": "Aldi",
+        "six_digit_sku": "356440",
+        "product": "Org Baby Carrots",
+        "tax_code": "FA",
+        "store_number": "238",
+        "common_name": "NA",
+        "category": "Baby",
+        "date": "08/30/2026",
+        "price": "1.79"
+      }
+    },
+    {
+      "line_number": 30,
+      "candidate_id": "otsu_psm4",
+      "text": "356490 Bagged Avocados 3.15",
+      "confidence": 89.2,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 14,
+      "match_method": "backbone",
+      "line_quality_score": 100.7,
+      "consensus_score": 146.2,
+      "normalized_y": 0.600075,
+      "bbox": {
+        "left": 563,
+        "top": 1573,
+        "right": 1499,
+        "bottom": 1623,
+        "width": 936,
+        "height": 50
+      },
+      "reconstructed": true,
+      "original_consensus_text": "356490 Bagged Avocados 3.15 FA",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 14
+      },
+      "component_support": {
+        "sku": {
+          "value": "356490",
+          "support_count": 14,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Bagged Avocados",
+          "source_candidate": "otsu_psm11",
+          "source_text": "Bagged Avocados",
+          "support_count": 12,
+          "confidence": 95.5,
+          "similarity_to_anchor": 1.0,
+          "score": 165.9,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "3.15",
+          "support_count": 5,
+          "average_confidence": 55.6,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "356490 Bagged Avocados 3.15 FA"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "q 356490 Bagged Avocados '3.15 FA Play > h."
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "356490 Bagged Avocados 3.15 FA"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "356490 Bagged Avocados 3.15 FA ns"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "~ 356490 Bagged Avocados — 3.15 FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": "FA",
+          "support_count": 13,
+          "average_confidence": 90.0,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "356490 Bagged Avocados 3.15 FA"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "~ 356490 Bagged Avocados a3 15 FA"
+            },
+            {
+              "candidate_id": "threshold_psm6",
+              "candidate_scope": "full",
+              "text": "eae ie - 356490 Bag berries « 3: 9 FA... hie, ary |"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "q 356490 Bagged Avocados '3.15 FA Play > h."
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "356490 Bagged Avocados 3.15 FA"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "356490 Bagged Avocados 3.15 FA ns"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "~ 356490 Bagged Avocados — 3.15 FA"
+            },
+            {
+              "candidate_id": "grayscale_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "15 FA =o Tae"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "15 FA"
+            },
+            {
+              "candidate_id": "sharpened_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "356490 Bagged Avocados 3.15",
+      "human_review": {
+        "total": "3.15",
+        "store": "Aldi",
+        "six_digit_sku": "356490",
+        "product": "Bagged Avocados",
+        "tax_code": "FA",
+        "store_number": "238",
+        "common_name": "Bagged Avocados",
+        "category": "Produce",
+        "date": "08/30/2026",
+        "price": "3.15"
+      }
+    },
+    {
+      "line_number": 31,
+      "candidate_id": "otsu_psm6",
+      "text": "356504 Blueberries 2.59",
+      "confidence": 96.0,
+      "source_candidate": "otsu_psm6",
+      "image_variant": "otsu",
+      "psm": 6,
+      "support_count": 14,
+      "match_method": "sku",
+      "line_quality_score": 106.9,
+      "consensus_score": 152.4,
+      "normalized_y": 0.619039,
+      "bbox": {
+        "left": 563,
+        "top": 1626,
+        "right": 1499,
+        "bottom": 1671,
+        "width": 936,
+        "height": 45
+      },
+      "reconstructed": true,
+      "original_consensus_text": "356504 Blueberries 2.59 FA",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 14
+      },
+      "component_support": {
+        "sku": {
+          "value": "356504",
+          "support_count": 9,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Blueberries",
+          "source_candidate": "otsu_psm6",
+          "source_text": "356504 Blueberries 2.59 FA",
+          "support_count": 13,
+          "confidence": 96.0,
+          "similarity_to_anchor": 1.0,
+          "score": 170.2,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "2.59",
+          "support_count": 6,
+          "average_confidence": 94.0,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "356504 Blueberries 2.59 FA"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "| 396504 Blueberries 2.59 FA"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": ". 356504 Blueberries < - * 2.59 FA."
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "356504 Blueberries 2.59 FA"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "356504 Blueberries 2.59 FA"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "' 350504 Blueberries = = 2.59 FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": "FA",
+          "support_count": 16,
+          "average_confidence": 91.56,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "356504 Blueberries 2.59 FA"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "| 396504 Blueberries 2.59 FA"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": ". 356504 Blueberries < - * 2.59 FA."
+            },
+            {
+              "candidate_id": "threshold_psm6",
+              "candidate_scope": "full",
+              "text": "fe ‘one iyi mo 356504 Blue ic Brownies rae FA - Baer"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "396504 Blueberries ene FA i yi"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "356504 Blueberries 2.59 FA"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "356504 Blueberries 2.59 FA"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "' 350504 Blueberries = = 2.59 FA"
+            },
+            {
+              "candidate_id": "grayscale_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "59 FA |"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "59 FA"
+            },
+            {
+              "candidate_id": "sharpened_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "59 FA ;"
+            },
+            {
+              "candidate_id": "sharpened_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "otsu_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "59 FA"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "356504 Blueberries 2.59",
+      "human_review": {
+        "total": "2.59",
+        "store": "Aldi",
+        "six_digit_sku": "356504",
+        "product": "Blueberries",
+        "tax_code": "FA",
+        "store_number": "238",
+        "common_name": "Blueberries",
+        "category": "Fresh Fruit",
+        "date": "08/30/2026",
+        "price": "2.59"
+      }
+    },
+    {
+      "line_number": 32,
+      "candidate_id": "otsu_psm4",
+      "text": "382773 Cosmic Brewnies 3.12",
+      "confidence": 93.4,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 13,
+      "match_method": "backbone",
+      "line_quality_score": 104.9,
+      "consensus_score": 146.9,
+      "normalized_y": 0.638941,
+      "bbox": {
+        "left": 563,
+        "top": 1679,
+        "right": 1500,
+        "bottom": 1724,
+        "width": 937,
+        "height": 45
+      },
+      "reconstructed": true,
+      "original_consensus_text": "382773 Cosmic Brewnies 3.12 FA",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 13
+      },
+      "component_support": {
+        "sku": {
+          "value": "382773",
+          "support_count": 13,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Cosmic Brewnies",
+          "source_candidate": "otsu_psm4",
+          "source_text": "382773 Cosmic Brewnies 3.12 FA",
+          "support_count": 13,
+          "confidence": 93.4,
+          "similarity_to_anchor": 1.0,
+          "score": 168.8,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "3.12",
+          "support_count": 4,
+          "average_confidence": 95.0,
+          "examples": [
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "382773 Cosmic Brownies 3.12 FA ra"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "382773 Cosmic Brewnies 3.12 FA"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "382773 Cosmic Brownies 3.12 FA :"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "382773 Cosmic Brownies 3.12 FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": "FA",
+          "support_count": 15,
+          "average_confidence": 93.07,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "382773 Cosmic Brewnies oeil2 FA"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "382773 Cosmic Brewnies Seid FA ‘"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "382773 Cosmic Brownies 3:12 FA."
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "382773 Cosmic Brownies 3.12 FA ra"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "382773 Cosmic Brewnies 3.12 FA"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "382773 Cosmic Brownies 3.12 FA :"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "382773 Cosmic Brownies 3.12 FA"
+            },
+            {
+              "candidate_id": "grayscale_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "12 FA"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "12 FA"
+            },
+            {
+              "candidate_id": "sharpened_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "12 FA rem"
+            },
+            {
+              "candidate_id": "sharpened_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "12 FA"
+            },
+            {
+              "candidate_id": "otsu_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "12 FA a"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "12 FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "382773 Cosmic Brewnies 3.12",
+      "human_review": {
+        "total": "3.12",
+        "store": "Aldi",
+        "six_digit_sku": "382773",
+        "product": "Cosmic Brewnies",
+        "tax_code": "FA",
+        "store_number": "238",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "08/30/2026",
+        "price": "3.12"
+      }
+    },
+    {
+      "line_number": 33,
+      "candidate_id": "otsu_psm4",
+      "text": "384773 4 Ib. Sugar 2.79",
+      "confidence": 93.67,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 13,
+      "match_method": "backbone",
+      "line_quality_score": 105.77,
+      "consensus_score": 147.77,
+      "normalized_y": 0.659031,
+      "bbox": {
+        "left": 563,
+        "top": 1731,
+        "right": 1501,
+        "bottom": 1779,
+        "width": 938,
+        "height": 48
+      },
+      "reconstructed": true,
+      "original_consensus_text": "384773 4 Ib. Sugar 2.79 FA",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 13
+      },
+      "component_support": {
+        "sku": {
+          "value": "384773",
+          "support_count": 13,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "4 Ib. Sugar",
+          "source_candidate": "otsu_psm4",
+          "source_text": "384773 4 Ib. Sugar 2.79 FA",
+          "support_count": 12,
+          "confidence": 93.67,
+          "similarity_to_anchor": 1.0,
+          "score": 165.27,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "2.79",
+          "support_count": 5,
+          "average_confidence": 89.6,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "384773 4 1b. Sugar 2.79 FA"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "384773 4 1b. Sugar 2.79 FA SANs"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "384773 4 Ib. Sugar 2.79 FA"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "384773 4 1b. Sugar 2.79 FA -"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "384773 4 lb. Sugar 2.79 FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": "FA",
+          "support_count": 14,
+          "average_confidence": 85.0,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "384773 4 1b. Sugar 2.79 FA"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "384773 4 1b. Sugar 2./9 FA é"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "384773 4 lb: Sugar 5 Ct iti FA"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "384773 4 1b. Sugar 2.79 FA SANs"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "384773 4 Ib. Sugar 2.79 FA"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "384773 4 1b. Sugar 2.79 FA -"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "384773 4 lb. Sugar 2.79 FA"
+            },
+            {
+              "candidate_id": "grayscale_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "79 FA ,"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "79 FA"
+            },
+            {
+              "candidate_id": "sharpened_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "IO FA Sh"
+            },
+            {
+              "candidate_id": "otsu_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "79 FA"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "79 FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        }
+      },
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 34,
+      "candidate_id": "otsu_psm4",
+      "text": "388137 Large Eggs 1.66",
+      "confidence": 95.8,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 14,
+      "match_method": "backbone",
+      "line_quality_score": 107.3,
+      "consensus_score": 152.8,
+      "normalized_y": 0.679309,
+      "bbox": {
+        "left": 562,
+        "top": 1783,
+        "right": 1502,
+        "bottom": 1835,
+        "width": 940,
+        "height": 52
+      },
+      "reconstructed": true,
+      "original_consensus_text": "388137 Large Eggs 1.66 FA",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 14
+      },
+      "component_support": {
+        "sku": {
+          "value": "388137",
+          "support_count": 14,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Large Eggs",
+          "source_candidate": "otsu_psm4",
+          "source_text": "388137 Large Eggs 1.66 FA",
+          "support_count": 23,
+          "confidence": 95.8,
+          "similarity_to_anchor": 1.0,
+          "score": 221.2,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "1.66",
+          "support_count": 5,
+          "average_confidence": 86.2,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "388137 Large Eggs 1.66 FA"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "388137 Large Eggs' 1.66 FA ©"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "388137 Large Eggs 1.66 FA A ary"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "388137 Large Eggs 1.66 FA"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "388137 Large Eggs 1.66 FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": "FA",
+          "support_count": 13,
+          "average_confidence": 95.46,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "388137 Large Eggs 1.66 FA"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "388137 Large Eggs' 1.66 FA ©"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "388137 Large Eggs 1.66 FA A ary"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "388137 Large Eggs 1.66 FA"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "388137 Large Eggs 1.66 FA"
+            },
+            {
+              "candidate_id": "grayscale_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "66 FA"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "66 FA"
+            },
+            {
+              "candidate_id": "sharpened_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "66 FA a ay)"
+            },
+            {
+              "candidate_id": "sharpened_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "66 FA"
+            },
+            {
+              "candidate_id": "otsu_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "66 FA _"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "FA"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "66 FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "388137 Large Eggs 1.66",
+      "human_review": {
+        "total": "1.66",
+        "store": "Aldi",
+        "six_digit_sku": "388137",
+        "product": "Large Eggs",
+        "tax_code": "FA",
+        "store_number": "238",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "08/30/2026",
+        "price": "1.66"
+      }
+    },
+    {
+      "line_number": 35,
+      "candidate_id": "otsu_psm4",
+      "text": "388137 Large Eggs 1.66",
+      "confidence": 95.2,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 14,
+      "match_method": "backbone",
+      "line_quality_score": 106.7,
+      "consensus_score": 152.2,
+      "normalized_y": 0.698836,
+      "bbox": {
+        "left": 562,
+        "top": 1836,
+        "right": 1502,
+        "bottom": 1886,
+        "width": 940,
+        "height": 50
+      },
+      "reconstructed": true,
+      "original_consensus_text": "388137 Large Eggs 1.66 FA",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 14
+      },
+      "component_support": {
+        "sku": {
+          "value": "388137",
+          "support_count": 14,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Large Eggs",
+          "source_candidate": "otsu_psm4",
+          "source_text": "388137 Large Eggs 1.66 FA",
+          "support_count": 24,
+          "confidence": 95.2,
+          "similarity_to_anchor": 1.0,
+          "score": 225.6,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "1.66",
+          "support_count": 5,
+          "average_confidence": 86.2,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "388137 Large Eggs 1.66 FA"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "388137 Large Eggs' 1.66 FA ©"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "388137 Large Eggs 1.66 FA A ary"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "388137 Large Eggs 1.66 FA"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "388137 Large Eggs 1.66 FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": "FA",
+          "support_count": 13,
+          "average_confidence": 95.15,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "388137 Large Eggs 1.66 FA"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "388137 Large Eggs' 1.66 FA ©"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "388137 Large Eggs 1.66 FA A ary"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "388137 Large Eggs 1.66 FA"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "388137 Large Eggs 1.66 FA"
+            },
+            {
+              "candidate_id": "grayscale_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "66 FA"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "66 FA"
+            },
+            {
+              "candidate_id": "threshold_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "66 FA"
+            },
+            {
+              "candidate_id": "sharpened_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "66 FA"
+            },
+            {
+              "candidate_id": "sharpened_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "66 FA"
+            },
+            {
+              "candidate_id": "otsu_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "66 FA ,"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "66 FA"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "66 FA"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "388137 Large Eggs 1.66",
+      "human_review": {
+        "total": "1.66",
+        "store": "Aldi",
+        "six_digit_sku": "388137",
+        "product": "Large Eggs",
+        "tax_code": "FA",
+        "store_number": "238",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "08/30/2026",
+        "price": "1.66"
+      }
+    },
+    {
+      "line_number": 36,
+      "candidate_id": "grayscale_psm4",
+      "text": "VISA 80.07",
+      "confidence": 96.0,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 13,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 101.2,
+      "consensus_score": 143.2,
+      "normalized_y": 0.716485,
+      "bbox": {
+        "left": 464,
+        "top": 1888,
+        "right": 1374,
+        "bottom": 1928,
+        "width": 910,
+        "height": 40
+      },
+      "reconstructed": false,
+      "original_consensus_text": "VISA 80.07",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one price",
+        "family_candidate_count": 13
+      },
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
+        },
+        "description": {
+          "value": "VISA",
+          "source_candidate": "grayscale_psm4",
+          "source_text": "VISA 80.07",
+          "support_count": 13,
+          "confidence": 96.0,
+          "similarity_to_anchor": 1.0,
+          "score": 170.2,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "80.07",
+          "support_count": 12,
+          "average_confidence": 90.08,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "VISA 80.07"
+            },
+            {
+              "candidate_id": "grayscale_psm6",
+              "candidate_scope": "full",
+              "text": "VISA re 80.07 |"
+            },
+            {
+              "candidate_id": "grayscale_psm11",
+              "candidate_scope": "full",
+              "text": "80.07"
+            },
+            {
+              "candidate_id": "threshold_psm4",
+              "candidate_scope": "full",
+              "text": "VISA - 80.07 ° :"
+            },
+            {
+              "candidate_id": "threshold_psm11",
+              "candidate_scope": "full",
+              "text": "80.07"
+            },
+            {
+              "candidate_id": "sharpened_psm6",
+              "candidate_scope": "full",
+              "text": "VISA 80.07 |"
+            },
+            {
+              "candidate_id": "sharpened_psm11",
+              "candidate_scope": "full",
+              "text": "80.07"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "VISA 80.07"
+            },
+            {
+              "candidate_id": "otsu_psm6",
+              "candidate_scope": "full",
+              "text": "VISA _ 80.07 |"
+            },
+            {
+              "candidate_id": "otsu_psm11",
+              "candidate_scope": "full",
+              "text": "80.07"
+            },
+            {
+              "candidate_id": "illumination_psm4",
+              "candidate_scope": "full",
+              "text": "VISA , 80.07"
+            },
+            {
+              "candidate_id": "illumination_psm11",
+              "candidate_scope": "full",
+              "text": "80.07"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        }
+      }
+    },
+    {
+      "line_number": 37,
+      "candidate_id": "grayscale_psm6",
+      "text": "KKARKRRRRKREREXRSGI26 ONLINE",
+      "confidence": 44.5,
+      "source_candidate": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "support_count": 13,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 45.7,
+      "consensus_score": 87.7,
+      "normalized_y": 0.736575,
+      "bbox": {
+        "left": 463,
+        "top": 1939,
+        "right": 1117,
+        "bottom": 1984,
+        "width": 654,
+        "height": 45
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 13
+    },
+    {
+      "line_number": 38,
+      "candidate_id": "illumination_psm11",
+      "text": "08/30/26 15:50 Ref/Seq # 0",
+      "confidence": 93.0,
+      "source_candidate": "illumination_psm11",
+      "image_variant": "illumination",
+      "psm": 11,
+      "support_count": 13,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 92.0,
+      "consensus_score": 134.0,
+      "normalized_y": 0.757229,
+      "bbox": {
+        "left": 464,
+        "top": 1993,
+        "right": 1120,
+        "bottom": 2040,
+        "width": 656,
+        "height": 47
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 13
+    },
+    {
+      "line_number": 39,
+      "candidate_id": "grayscale_psm11",
+      "text": "Auth # 03004D",
+      "confidence": 91.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 13,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 88.8,
+      "consensus_score": 130.8,
+      "normalized_y": 0.775629,
+      "bbox": {
+        "left": 466,
+        "top": 2045,
+        "right": 790,
+        "bottom": 2086,
+        "width": 324,
+        "height": 41
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 13
+    },
+    {
+      "line_number": 40,
+      "candidate_id": "otsu_psm11",
+      "text": "ATD A0000000031010",
+      "confidence": 83.0,
+      "source_candidate": "otsu_psm11",
+      "image_variant": "otsu",
+      "psm": 11,
+      "support_count": 13,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 84.2,
+      "consensus_score": 126.2,
+      "normalized_y": 0.79478,
+      "bbox": {
+        "left": 467,
+        "top": 2093,
+        "right": 916,
+        "bottom": 2140,
+        "width": 449,
+        "height": 47
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 13
+    },
+    {
+      "line_number": 41,
+      "candidate_id": "otsu_psm4",
+      "text": ". TVR Rarer",
+      "confidence": 55.67,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 3,
+      "match_method": "backbone",
+      "line_quality_score": 53.47,
+      "consensus_score": 60.47,
+      "normalized_y": 0.822569,
+      "bbox": {
+        "left": 428,
+        "top": 2142,
+        "right": 816,
+        "bottom": 2239,
+        "width": 388,
+        "height": 97
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 3
+    },
+    {
+      "line_number": 42,
+      "candidate_id": "otsu_psm4",
+      "text": "40 O602tZ0BADNGNA saw,",
+      "confidence": 15.0,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 1,
+      "match_method": "backbone",
+      "line_quality_score": 16.8,
+      "consensus_score": 16.8,
+      "normalized_y": 0.839655,
+      "bbox": {
+        "left": 407,
+        "top": 2188,
+        "right": 1201,
+        "bottom": 2284,
+        "width": 794,
+        "height": 96
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 1
+    },
+    {
+      "line_number": 43,
+      "candidate_id": "sharpened_psm4",
+      "text": "O ARC 00 lode 07",
+      "confidence": 76.0,
+      "source_candidate": "sharpened_psm4",
+      "image_variant": "sharpened",
+      "psm": 4,
+      "support_count": 13,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 79.0,
+      "consensus_score": 121.0,
+      "normalized_y": 0.853361,
+      "bbox": {
+        "left": 645,
+        "top": 2241,
+        "right": 1324,
+        "bottom": 2304,
+        "width": 679,
+        "height": 63
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 13
+    },
+    {
+      "line_number": 44,
+      "candidate_id": "illumination_psm11",
+      "text": "f",
+      "confidence": 26.0,
+      "source_candidate": "illumination_psm11",
+      "image_variant": "illumination",
+      "psm": 11,
+      "support_count": 3,
+      "match_method": "fuzzy",
+      "line_quality_score": 6.1,
+      "consensus_score": 13.1,
+      "normalized_y": 0.05614,
+      "bbox": {
+        "left": 19,
+        "top": 117,
+        "right": 45,
+        "bottom": 182,
+        "width": 26,
+        "height": 65
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 1
+    },
+    {
+      "line_number": 45,
+      "candidate_id": "otsu_psm6",
+      "text": "SUBTOTAL 80.07",
+      "confidence": 92.5,
+      "source_candidate": "otsu_psm6",
+      "image_variant": "otsu",
+      "psm": 6,
+      "support_count": 13,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 97.7,
+      "consensus_score": 139.7,
+      "normalized_y": 0.908186,
+      "bbox": {
+        "left": 470,
+        "top": 2394,
+        "right": 1424,
+        "bottom": 2443,
+        "width": 954,
+        "height": 49
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "known receipt metadata/total/payment row",
+      "row_family_support": 13
+    },
+    {
+      "line_number": 46,
+      "candidate_id": "illumination_psm4",
+      "text": "++APPROVED++",
+      "confidence": 91.0,
+      "source_candidate": "illumination_psm4",
+      "image_variant": "illumination",
+      "psm": 4,
+      "support_count": 11,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 91.6,
+      "consensus_score": 126.6,
+      "normalized_y": 0.873075,
+      "bbox": {
+        "left": 820,
+        "top": 2304,
+        "right": 1119,
+        "bottom": 2346,
+        "width": 299,
+        "height": 42
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "known receipt metadata/total/payment row",
+      "row_family_support": 11
+    },
+    {
+      "line_number": 47,
+      "candidate_id": "otsu_psm6",
+      "text": "SUBTOTAL 80.07",
+      "confidence": 92.5,
+      "source_candidate": "otsu_psm6",
+      "image_variant": "otsu",
+      "psm": 6,
+      "support_count": 13,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 97.7,
+      "consensus_score": 139.7,
+      "normalized_y": 0.908186,
+      "bbox": {
+        "left": 470,
+        "top": 2394,
+        "right": 1424,
+        "bottom": 2443,
+        "width": 954,
+        "height": 49
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "known receipt metadata/total/payment row",
+      "row_family_support": 13
+    },
+    {
+      "line_number": 48,
+      "candidate_id": "otsu_psm4",
+      "text": "0.00",
+      "confidence": 95.0,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 7,
+      "match_method": "backbone",
+      "line_quality_score": 99.6,
+      "consensus_score": 120.6,
+      "normalized_y": 0.925648,
+      "bbox": {
+        "left": 1326,
+        "top": 2445,
+        "right": 1425,
+        "bottom": 2485,
+        "width": 99,
+        "height": 40
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 7
+    },
+    {
+      "line_number": 49,
+      "candidate_id": "threshold_psm11",
+      "text": "80.07",
+      "confidence": 96.0,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 7,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 100.6,
+      "consensus_score": 121.6,
+      "normalized_y": 0.944987,
+      "bbox": {
+        "left": 1301,
+        "top": 2495,
+        "right": 1425,
+        "bottom": 2538,
+        "width": 124,
+        "height": 43
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 7
+    },
+    {
+      "line_number": 50,
+      "candidate_id": "otsu_psm4",
+      "text": "mR",
+      "confidence": 13.0,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 2,
+      "match_method": "backbone",
+      "line_quality_score": 1.6,
+      "consensus_score": 5.1,
+      "normalized_y": 0.996245,
+      "bbox": {
+        "left": 1254,
+        "top": 2648,
+        "right": 1348,
+        "bottom": 2658,
+        "width": 94,
+        "height": 10
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 2
+    }
+  ],
+  "candidate_ranking": [
+    {
+      "rank": 1,
+      "candidate_id": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 110.6948,
+        "mean_word_confidence": 83.91,
+        "recognized_word_count": 207,
+        "low_confidence_rate": 0.1159,
+        "price_like_count": 33,
+        "sku_count": 30,
+        "plausible_line_count": 44,
+        "garbage_line_count": 2
+      }
+    },
+    {
+      "rank": 2,
+      "candidate_id": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 106.3992,
+        "mean_word_confidence": 80.93,
+        "recognized_word_count": 206,
+        "low_confidence_rate": 0.1311,
+        "price_like_count": 31,
+        "sku_count": 31,
+        "plausible_line_count": 42,
+        "garbage_line_count": 1
+      }
+    },
+    {
+      "rank": 3,
+      "candidate_id": "sharpened_psm4",
+      "image_variant": "sharpened",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 93.2692,
+        "mean_word_confidence": 81.57,
+        "recognized_word_count": 144,
+        "low_confidence_rate": 0.1111,
+        "price_like_count": 0,
+        "sku_count": 29,
+        "plausible_line_count": 42,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 4,
+      "candidate_id": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 86.8608,
+        "mean_word_confidence": 76.46,
+        "recognized_word_count": 237,
+        "low_confidence_rate": 0.1814,
+        "price_like_count": 6,
+        "sku_count": 30,
+        "plausible_line_count": 76,
+        "garbage_line_count": 70
+      }
+    },
+    {
+      "rank": 5,
+      "candidate_id": "illumination_psm4",
+      "image_variant": "illumination",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 86.3844,
+        "mean_word_confidence": 65.92,
+        "recognized_word_count": 277,
+        "low_confidence_rate": 0.3177,
+        "price_like_count": 33,
+        "sku_count": 29,
+        "plausible_line_count": 41,
+        "garbage_line_count": 1
+      }
+    },
+    {
+      "rank": 6,
+      "candidate_id": "otsu_psm11",
+      "image_variant": "otsu",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 85.5128,
+        "mean_word_confidence": 76.12,
+        "recognized_word_count": 236,
+        "low_confidence_rate": 0.1949,
+        "price_like_count": 7,
+        "sku_count": 30,
+        "plausible_line_count": 74,
+        "garbage_line_count": 76
+      }
+    },
+    {
+      "rank": 7,
+      "candidate_id": "sharpened_psm11",
+      "image_variant": "sharpened",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 85.5108,
+        "mean_word_confidence": 73.29,
+        "recognized_word_count": 246,
+        "low_confidence_rate": 0.2439,
+        "price_like_count": 11,
+        "sku_count": 30,
+        "plausible_line_count": 78,
+        "garbage_line_count": 62
+      }
+    },
+    {
+      "rank": 8,
+      "candidate_id": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 75.1368,
+        "mean_word_confidence": 61.41,
+        "recognized_word_count": 269,
+        "low_confidence_rate": 0.3494,
+        "price_like_count": 22,
+        "sku_count": 29,
+        "plausible_line_count": 38,
+        "garbage_line_count": 4
+      }
+    },
+    {
+      "rank": 9,
+      "candidate_id": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 67.5,
+        "mean_word_confidence": 56.45,
+        "recognized_word_count": 438,
+        "low_confidence_rate": 0.4475,
+        "price_like_count": 28,
+        "sku_count": 30,
+        "plausible_line_count": 86,
+        "garbage_line_count": 110
+      }
+    },
+    {
+      "rank": 10,
+      "candidate_id": "otsu_psm6",
+      "image_variant": "otsu",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": 64.438,
+        "mean_word_confidence": 56.01,
+        "recognized_word_count": 298,
+        "low_confidence_rate": 0.4765,
+        "price_like_count": 21,
+        "sku_count": 26,
+        "plausible_line_count": 33,
+        "garbage_line_count": 1
+      }
+    },
+    {
+      "rank": 11,
+      "candidate_id": "illumination_psm11",
+      "image_variant": "illumination",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 60.128,
+        "mean_word_confidence": 56.72,
+        "recognized_word_count": 472,
+        "low_confidence_rate": 0.464,
+        "price_like_count": 11,
+        "sku_count": 29,
+        "plausible_line_count": 90,
+        "garbage_line_count": 164
+      }
+    },
+    {
+      "rank": 12,
+      "candidate_id": "sharpened_psm6",
+      "image_variant": "sharpened",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": 59.8356,
+        "mean_word_confidence": 52.66,
+        "recognized_word_count": 305,
+        "low_confidence_rate": 0.5148,
+        "price_like_count": 24,
+        "sku_count": 23,
+        "plausible_line_count": 28,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 13,
+      "candidate_id": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": 57.4024,
+        "mean_word_confidence": 53.8,
+        "recognized_word_count": 301,
+        "low_confidence_rate": 0.5017,
+        "price_like_count": 14,
+        "sku_count": 25,
+        "plausible_line_count": 29,
+        "garbage_line_count": 1
+      }
+    },
+    {
+      "rank": 14,
+      "candidate_id": "illumination_psm6",
+      "image_variant": "illumination",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": 35.374,
+        "mean_word_confidence": 45.88,
+        "recognized_word_count": 294,
+        "low_confidence_rate": 0.602,
+        "price_like_count": 4,
+        "sku_count": 5,
+        "plausible_line_count": 19,
+        "garbage_line_count": 1
+      }
+    },
+    {
+      "rank": 15,
+      "candidate_id": "threshold_psm6",
+      "image_variant": "threshold",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": 26.3668,
+        "mean_word_confidence": 38.37,
+        "recognized_word_count": 339,
+        "low_confidence_rate": 0.6519,
+        "price_like_count": 8,
+        "sku_count": 7,
+        "plausible_line_count": 7,
+        "garbage_line_count": 3
+      }
+    }
+  ],
+  "provenance": {
+    "candidates_file": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_candidates/083026_ALDI_238_ocr_candidates.json",
+    "rule": "All output remains OCR-derived. A full-receipt observation may join another observation only through exact SKU agreement or close physical-row geometry plus textual agreement. Right-column observations can contribute only price/tax evidence at the same narrow row position. SKU values cannot be imported into rows that lacked a SKU in the selected full-receipt observation. Components with insufficient support are omitted rather than guessed."
+  },
+  "benchmark": {
+    "source_raw_ocr": "083026_ALDI_238_raw_ocr.json",
+    "receipt_type": "Aldi",
+    "store_number": "238",
+    "receipt_date": "08/30/2026",
+    "starting_line_number": 1,
+    "reviewed_line_count": 35,
+    "accepted_purchase_count": 28,
+    "skipped_line_count": 7,
+    "ground_truth": true
+  }
+}

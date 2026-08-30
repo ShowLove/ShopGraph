@@ -4,6 +4,16 @@
 # SUBSTRINGS match anywhere inside Product for a store.
 # Matching is case-insensitive and whitespace-normalized.
 
+[STORE:Aldi]
+TERMS:
+ALUL
+Store #238
+961 E Eau Gallie Blvd
+Melbourne, FL
+https://help.aldi .us
+Your cashier today was Candice
+SUBSTRINGS:
+
 [STORE:Publix]
 TERMS:
 F

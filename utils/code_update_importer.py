@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 
 import os
@@ -9,13 +10,22 @@ from pathlib import Path, PurePosixPath
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 UTILS_DIR = Path(__file__).resolve().parent
-CONFIG_PATH = UTILS_DIR / "config.txt"
+LEGACY_CONFIG_PATH = UTILS_DIR / "config.txt"
+CONFIG_DIR = UTILS_DIR / "config"
+CONFIG_PATH = CONFIG_DIR / "settings.txt"
 DEFAULT_IMPORT_LOCATION = Path("~/Downloads").expanduser()
 CONFIG_KEY = "code_update_import_location"
 
 PROTECTED_RELATIVE_PATHS = {
     Path("utils") / "config.txt",
 }
+
+
+def _is_protected_relative_path(relative: Path) -> bool:
+    if relative in PROTECTED_RELATIVE_PATHS:
+        return True
+    parts = relative.parts
+    return len(parts) >= 2 and parts[0] == "utils" and parts[1] == "config"
 
 PROJECT_ROOT_MARKERS = {
     "main.py",
@@ -36,13 +46,13 @@ def _expand_path(value: str) -> Path:
     return Path(os.path.expandvars(value)).expanduser().resolve()
 
 
-def _read_config() -> dict[str, str]:
-    if not CONFIG_PATH.exists():
+def _read_key_value_file(path: Path) -> dict[str, str]:
+    if not path.exists():
         return {}
 
     values: dict[str, str] = {}
     try:
-        lines = CONFIG_PATH.read_text(encoding="utf-8").splitlines()
+        lines = path.read_text(encoding="utf-8").splitlines()
     except OSError:
         return {}
 
@@ -55,6 +65,24 @@ def _read_config() -> dict[str, str]:
         value = value.strip()
         if key:
             values[key] = value
+    return values
+
+
+def _read_config() -> dict[str, str]:
+    # Legacy config is read first so existing installations migrate without
+    # losing their saved Code Update Importer location. New settings override
+    # legacy values when both files exist.
+    values = _read_key_value_file(LEGACY_CONFIG_PATH)
+    values.update(_read_key_value_file(CONFIG_PATH))
+
+    if values and not CONFIG_PATH.exists():
+        try:
+            _write_config(values)
+        except OSError:
+            # Reading legacy settings must still work even if migration cannot
+            # be written at this moment.
+            pass
+
     return values
 
 
@@ -82,6 +110,25 @@ def _write_config(values: dict[str, str]) -> None:
     finally:
         if temporary_path.exists():
             temporary_path.unlink()
+
+
+def _migrate_legacy_config() -> None:
+    if CONFIG_PATH.exists() or not LEGACY_CONFIG_PATH.exists():
+        return
+
+    values = _read_key_value_file(LEGACY_CONFIG_PATH)
+    if not values:
+        return
+
+    try:
+        _write_config(values)
+    except OSError:
+        # Legacy settings remain readable through _read_config(), so migration
+        # failure must not prevent ShopGraph from starting.
+        return
+
+
+_migrate_legacy_config()
 
 
 def _save_import_location(path: Path) -> None:
@@ -281,7 +328,7 @@ def _build_payload_plan(archive: zipfile.ZipFile) -> list[tuple[zipfile.ZipInfo,
         if not parts:
             continue
         relative = Path(*parts)
-        if relative in PROTECTED_RELATIVE_PATHS:
+        if _is_protected_relative_path(relative):
             continue
         if relative.name in {".DS_Store", "Thumbs.db"}:
             continue
@@ -326,7 +373,7 @@ def _confirm_import(zip_path: Path) -> bool:
     )
     print(
         "\nFiles not present in the ZIP will NOT be deleted."
-        "\nLocal utils/config.txt is protected and will NOT be replaced."
+        "\nLocal utils/config.txt and the utils/config/ runtime settings directory are protected and will NOT be replaced."
     )
     while True:
         answer = input("\nApply this update? [y/N]: ").strip().casefold()

@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 
 from datetime import datetime
@@ -16,6 +17,9 @@ from utils.DataBaseBuilder.excel.purchase_analytics import (
 )
 from utils.DataBaseBuilder.excel.category_manager import (
     run_category_manager_menu,
+)
+from utils.DataBaseBuilder.budget_plans import (
+    run_budget_plans_menu,
 )
 from utils.DataBaseBuilder.parsers import build_parser
 from utils.DataBaseBuilder.parsers.publix_parser import PUBLIX_TAX_PATTERN
@@ -56,6 +60,7 @@ def display_data_base_builder_menu() -> None:
     print("2. Generate / Refresh Purchase Analytics - Sub-Categories")
     print("3. Generate / Refresh Purchase Analytics - Categories")
     print("4. Category Manager")
+    print("5. Budget Plans")
     print("0. Return to Main")
 
 
@@ -993,6 +998,9 @@ def run_data_base_builder_menu() -> None:
 
         elif option == "4":
             run_category_manager_menu()
+
+        elif option == "5":
+            run_budget_plans_menu()
 
         elif option == "0":
             return

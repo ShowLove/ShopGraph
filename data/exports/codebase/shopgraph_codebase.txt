@@ -33,6 +33,7 @@ shopping_analysis/
         main.py
         ocr_benchmark_evaluator.py
         pdf_to_jpg.py
+        program_exit.py
         purchase_history_backup.py
         utils_main.py
         DataBaseBuilder/
@@ -65,6 +66,7 @@ shopping_analysis/
         README_CATEGORY_MANAGER_AB_FIX.txt
         README_CATEGORY_MANAGER_PRODUCT_MAPPING_FIX.txt
         README_CODE_UPDATE_IMPORTER.txt
+        README_GLOBAL_MINUS_ONE_EXIT.txt
         README_HIERARCHICAL_CATEGORIES_ANALYTICS.txt
         README_PDF_TO_JPG.txt
         README_PURCHASE_HISTORY_COPY_UTILITY.txt
@@ -97,7 +99,7 @@ shopping_analysis/
 
 ================================================================================
 
-Generated: 2026-08-30 13:27:21.686229
+Generated: 2026-08-30 14:28:14.240701
 Root: /Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis
 Mode: LLM-clean export
 Excluded: receipt images, OCR JSON, datasets, databases, logs, caches
@@ -110,6 +112,7 @@ Excluded: receipt images, OCR JSON, datasets, databases, logs, caches
 FILE: main.py
 ================================================================================
 
+from utils.program_exit import install_global_exit_option
 from utils.utils_main import run_utils_menu
 
 
@@ -120,6 +123,15 @@ def display_menu() -> None:
 
 
 def main() -> None:
+    install_global_exit_option()
+
+    try:
+        _run_main_loop()
+    except SystemExit:
+        print("\nGoodbye.")
+
+
+def _run_main_loop() -> None:
     while True:
         display_menu()
 
@@ -8859,6 +8871,53 @@ def run_pdf_to_jpg_converter() -> None:
 
 
 ================================================================================
+FILE: utils/program_exit.py
+================================================================================
+
+from __future__ import annotations
+
+import builtins
+from typing import Callable
+
+
+_ORIGINAL_INPUT: Callable[[str], str] = builtins.input
+_INSTALLED = False
+
+
+def _exit_aware_input(prompt: str = "") -> str:
+    """
+    ShopGraph-wide input wrapper.
+
+    Every interactive prompt accepts:
+        -1
+    to immediately exit the entire program.
+
+    The hint is appended to the prompt automatically so individual modules do
+    not need duplicate exit-handling code.
+    """
+    if "-1" not in prompt:
+        prompt = f"{prompt.rstrip()} [-1 = Exit ShopGraph] "
+
+    value = _ORIGINAL_INPUT(prompt)
+
+    if value.strip() == "-1":
+        raise SystemExit
+
+    return value
+
+
+def install_global_exit_option() -> None:
+    """Install the ShopGraph-wide -1 exit option exactly once."""
+    global _INSTALLED
+
+    if _INSTALLED:
+        return
+
+    builtins.input = _exit_aware_input
+    _INSTALLED = True
+
+
+================================================================================
 FILE: utils/purchase_history_backup.py
 ================================================================================
 
@@ -16501,6 +16560,63 @@ NEW:     utils/code_update_importer.py
 UPDATED: utils/utils_main.py
 NEW:     README/README_CODE_UPDATE_IMPORTER.txt
 RUNTIME: utils/config.txt (created automatically; not shipped in this ZIP)
+
+
+================================================================================
+FILE: README/README_GLOBAL_MINUS_ONE_EXIT.txt
+================================================================================
+
+ShopGraph - Global -1 Exit Option
+=================================
+
+PURPOSE
+-------
+Every interactive input prompt in ShopGraph now accepts:
+
+    -1
+
+to exit the ENTIRE ShopGraph program immediately.
+
+This applies globally, including:
+- Main menu
+- Utilities menus
+- Capability menus
+- OCR sub-task prompts
+- Data Base Builder prompts
+- receipt selection/review prompts
+- confirmation prompts
+- text/date/store/tax/category inputs
+- Code Update Importer prompts
+- other prompts that use Python input()
+
+Each prompt automatically displays:
+
+    [-1 = Exit ShopGraph]
+
+Existing 0 / Cancel / Return behavior is unchanged.
+
+IMPLEMENTATION
+--------------
+A small central input wrapper is installed when ShopGraph starts. This avoids
+duplicating exit logic throughout the codebase and ensures future prompts that
+use input() automatically inherit the -1 behavior.
+
+FILES
+-----
+NEW:
+    utils/program_exit.py
+
+UPDATED:
+    main.py
+
+DEPENDENCIES
+------------
+No new dependency is required.
+
+INSTALL
+-------
+Install with ShopGraph's existing Import Code Update ZIP utility, then restart
+ShopGraph so the new startup behavior is loaded.
 
 
 ================================================================================

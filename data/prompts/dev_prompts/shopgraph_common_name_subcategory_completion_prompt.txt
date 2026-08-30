@@ -1,5 +1,5 @@
-SHOPGRAPH — INTELLIGENT COMMON NAME + SUB-CATEGORY COMPLETION PROMPT
-=====================================================================
+SHOPGRAPH — NEW PURCHASE COMMON NAME + SUB-CATEGORY ANALYSIS
+============================================================
 
 TASK
 ----
@@ -10,90 +10,248 @@ Analyze the attached/exported ShopGraph file:
 
 This file is a CSV-formatted export of the "Purchase History" worksheet.
 
-Your job is to intelligently complete ONLY missing Common Name and Sub-Category
-values for newly-added purchase-history rows.
+Your job is to analyze the NEWLY ADDED purchase-history rows and assign the best:
 
-The existing data is the taxonomy reference and must be treated as authoritative.
+    Common Name
+    Sub-Category
 
+to EVERY new row.
 
-CORE RULE: PRESERVE EXISTING TAXONOMY
--------------------------------------
+IMPORTANT:
 
-1. DO NOT change any existing nonblank/non-NA Common Name.
-2. DO NOT change any existing nonblank/non-NA Sub-Category.
-3. DO NOT "clean up", normalize, rename, merge, or reorganize existing values,
-   even if you think a different name would be better.
-4. Learn ShopGraph's naming style and classification habits from the existing
-   rows, then extend them consistently to new/missing rows.
-5. Existing assignments are examples of the user's intended taxonomy, not
-   suggestions to rewrite.
+The new rows may already contain Common Name and/or Sub-Category values.
 
+DO NOT automatically preserve those values.
 
-WHAT COUNTS AS MISSING
-----------------------
+They are provisional data and should be independently reviewed along with every
+other new row.
 
-Treat either of these as missing:
+The OLDER historical rows are the authoritative taxonomy reference.
+
+The NEW rows are the rows being classified.
+
+============================================================
+CORE DISTINCTION — HISTORICAL ROWS VS NEW ROWS
+============================================================
+
+Treat the database as two conceptual groups:
+
+    HISTORICAL ROWS
+        authoritative reference data
+
+    NEW ROWS
+        items that must be analyzed/reclassified
+
+The user will identify the first new Excel row, for example:
+
+    Analyze all items from row 125 down.
+
+In that example:
+
+    Rows 1-124
+        = historical taxonomy/reference data
+
+    Rows 125 through the final populated row
+        = new items to classify
+
+This distinction is extremely important.
+
+============================================================
+HISTORICAL TAXONOMY — PRESERVE IT
+============================================================
+
+Rows BEFORE the requested starting row are authoritative.
+
+Use them to learn ShopGraph's:
+
+    Common Name conventions
+    Sub-Category taxonomy
+    classification granularity
+    product relationships
+    retailer/SKU relationships
+
+DO NOT propose changes to historical rows.
+
+DO NOT:
+
+    rename historical Common Names
+    rename historical Sub-Categories
+    merge historical Sub-Categories
+    reorganize historical taxonomy
+    normalize historical values
+    "clean up" historical classifications
+
+Historical assignments are evidence of the user's intended taxonomy.
+
+============================================================
+NEW ROWS — ANALYZE EVERY ITEM
+============================================================
+
+Analyze EVERY row from the requested starting row through the final populated
+purchase-history row.
+
+Do this regardless of whether its current Common Name or Sub-Category is:
 
     blank
     NA
+    already populated
 
-Analyze rows where Common Name and/or Sub-Category is missing.
+For every new row, independently determine the best:
 
-If Common Name already exists but Sub-Category is missing:
-    preserve the Common Name exactly and infer only Sub-Category.
+    Common Name
+    Sub-Category
 
-If Sub-Category already exists but Common Name is missing:
-    preserve the Sub-Category exactly and infer only Common Name.
+The existing Common Name/Sub-Category values in NEW rows are useful evidence,
+but they are NOT authoritative.
 
-If both are present:
-    leave the row completely untouched.
+They may be:
 
+    accepted unchanged
+    refined
+    replaced
+    corrected
 
+when analysis indicates another result better matches the established historical
+ShopGraph taxonomy.
+
+Example:
+
+If a new row contains:
+
+    Product:
+        Org Baby Carrots
+
+    Existing Common Name:
+        NA
+
+    Existing Sub-Category:
+        Baby
+
+but historical ShopGraph taxonomy shows fresh carrots and vegetables belong in:
+
+    Fresh Vegetables
+
+then classify the new row as:
+
+    Organic Baby Carrots
+    Fresh Vegetables
+
+Do not preserve an obviously inappropriate provisional classification merely
+because the field was already populated.
+
+============================================================
+ANALYZE THE NEW BLOCK AS A COHERENT BATCH
+============================================================
+
+Do not analyze only the blank cells.
+
+Study ALL new rows together.
+
+This allows populated new rows to provide evidence about:
+
+    repeated products
+    related products
+    receipt patterns
+    SKU patterns
+    naming consistency
+
+but do not allow an incorrect provisional classification in one new row to
+override stronger historical taxonomy evidence.
+
+When multiple new rows clearly represent related or identical products, classify
+them consistently.
+
+============================================================
 HOW TO INFER COMMON NAME
-------------------------
+============================================================
 
-Use all relevant fields in the row, especially:
+Use all relevant fields, especially:
 
     Store
     Six-Digit SKU
     Product
     Tax Code
     Store Number
-    purchase history / repeated appearances
+    historical purchase records
+    repeated product appearances
+    related new rows
 
-Common Name should describe the real-world product in a stable, human-readable
-way rather than merely copying noisy receipt text.
+Common Name should describe the real-world product in a stable,
+human-readable way rather than simply copying noisy receipt text.
 
-Prefer an existing Common Name when the new row is clearly the same product.
+Prefer an existing historical Common Name when the new row clearly represents
+the same product.
 
-Use SKU/store/product relationships when available. A matching SKU from the same
-retailer is strong evidence, but do not force a match when the product evidence
-conflicts.
+Use SKU/store/product relationships when available.
+
+A matching SKU from the same retailer is strong evidence, but do not force a
+match when product evidence conflicts.
 
 When creating a genuinely new Common Name:
+
 - use a concise recognizable product name;
 - remove receipt/OCR clutter;
-- keep meaningful brand/product distinctions when they matter;
-- follow the naming style already present in the file;
-- do not invent details unsupported by the row.
+- retain meaningful brand/product distinctions;
+- retain useful size/variant information when appropriate;
+- follow the naming style of historical ShopGraph data;
+- do not invent unsupported product details.
 
-
+============================================================
 HOW TO INFER SUB-CATEGORY
--------------------------
+============================================================
 
-First study the complete set of existing Common Name -> Sub-Category assignments.
+First study the complete set of HISTORICAL:
 
-For a new item:
+    Common Name -> Sub-Category
 
-1. Reuse an existing Sub-Category when it is genuinely the same type of item.
-2. Prefer consistency with existing classifications over generic assumptions.
-3. Do NOT force an item into an existing Sub-Category merely because it is the
-   closest thing currently present.
-4. Create a NEW Sub-Category when the item represents a materially different
-   product type.
+assignments.
 
-The database may expand into completely new domains. New purchases might be:
+For every new item:
 
+1. Reuse an existing Sub-Category when it genuinely represents the same type
+   of item.
+
+2. Prefer consistency with established historical ShopGraph classifications
+   over provisional classifications appearing in the new rows.
+
+3. Prefer the established historical level of specificity.
+
+4. Do NOT preserve an overly broad provisional new-row Sub-Category merely
+   because it is populated.
+
+For example, if historical ShopGraph distinguishes:
+
+    Fresh Fruit
+    Fresh Vegetables
+    Frozen Vegetables
+    Bread
+    Specialty Cheese
+    Baby Care
+
+do not automatically retain new provisional categories such as:
+
+    Produce
+    Bakery
+    Dairy
+    Baby
+
+when a more appropriate established Sub-Category applies.
+
+5. Do NOT force an item into an existing Sub-Category merely because it is the
+   closest existing category.
+
+6. Create a NEW Sub-Category when the item represents a materially different
+   product type that is not adequately represented by the historical taxonomy.
+
+============================================================
+NEW SUB-CATEGORIES
+============================================================
+
+ShopGraph's database may expand into completely new domains.
+
+New purchases may include:
+
+    groceries
     home improvement
     tools
     automotive
@@ -106,121 +264,203 @@ The database may expand into completely new domains. New purchases might be:
     services
     or anything else
 
-Do not assume future purchases resemble groceries or any existing domain.
+Do not assume new purchases resemble the existing database.
+
+When a genuinely new product type appears, create an appropriate new
+Sub-Category.
 
 A new Sub-Category should:
+
 - be specific enough to remain analytically useful;
 - be broad enough to contain future comparable products;
-- match the naming style and granularity of existing Sub-Categories;
-- describe WHAT the item is, not where it was purchased;
-- avoid catch-all labels such as "Miscellaneous" unless the existing taxonomy
-  clearly uses that approach.
+- match the naming style and granularity of established ShopGraph
+  Sub-Categories;
+- describe WHAT the item is;
+- not describe the retailer;
+- avoid generic catch-all labels when a useful product-type classification is
+  possible.
 
+Examples of reasonable new classifications might include:
 
+    Cooking Oils & Sprays
+    Canned Tomatoes
+    Tortillas
+    Frozen Sandwiches
+    Snack Cakes
+
+but create these only when supported by the actual new products and existing
+taxonomy.
+
+============================================================
 CONSISTENCY CHECKS
-------------------
+============================================================
 
 Before producing the answer:
 
-1. Build an internal reference map of existing Common Name -> Sub-Category.
-2. Check whether a new product matches an existing Common Name.
-3. Check whether the proposed Sub-Category already exists under the same concept.
-4. Avoid creating near-duplicate Sub-Categories differing only by wording,
+1. Build an internal reference map of HISTORICAL:
+
+       Common Name -> Sub-Category
+
+2. Check whether each new product matches an existing historical Common Name.
+
+3. Check retailer + SKU relationships where available.
+
+4. Check whether the proposed Sub-Category already exists under the same
+   concept.
+
+5. Avoid creating near-duplicate Sub-Categories differing only by wording,
    capitalization, singular/plural, or minor phrasing.
-5. If a genuinely new product domain is encountered, create the needed new
-   Sub-Category instead of distorting the existing taxonomy.
-6. Apply the same reasoning consistently to repeated new products.
-7. Never overwrite existing populated taxonomy values to make the file appear
-   more consistent.
 
+6. Prefer established granular historical categories over unusually broad
+   provisional categories appearing only in the new block.
 
+7. If a genuinely new product domain is encountered, create the needed new
+   Sub-Category rather than distorting an existing category.
+
+8. Apply the same reasoning consistently across all new rows.
+
+9. Review populated new-row classifications just as carefully as blank ones.
+
+============================================================
 UNCERTAINTY
------------
+============================================================
 
-Make a best evidence-based classification when reasonable.
+Make the best evidence-based classification when reasonable.
 
-If a row is genuinely too ambiguous to classify reliably from the available
-data, use:
+If a product is genuinely too ambiguous to identify or classify reliably from
+the available information, use:
 
     NA
 
-Do not fabricate a specific identity simply to avoid NA.
+Do not fabricate a specific identity merely to avoid NA.
 
-If several new rows clearly refer to the same product, classify them consistently.
+However, do not use NA simply because a product requires reasonable inference
+from ordinary receipt abbreviations.
 
-
+============================================================
 OUTPUT FORMAT — IMPORTANT
--------------------------
+============================================================
 
 The goal is easy copy/paste into the actual Excel "Purchase History" worksheet.
 
-The export's first CSV line corresponds to Excel row 1, so source line numbers
-can be used as Excel row numbers.
+The export's first CSV line corresponds to Excel row 1.
+
+Therefore source line numbers correspond to Excel row numbers.
+
+The user will specify a starting row.
+
+Analyze:
+
+    starting row -> final populated row
 
 Return TWO sections only.
 
-SECTION 1 — REVIEW TABLE
+============================================================
+SECTION 1 — COMPLETE NEW-ROW REVIEW TABLE
+============================================================
 
-Provide a compact Markdown table:
+Provide a Markdown table:
 
-| Excel Row | Store | Product | Common Name | Sub-Category | Reason |
+| Excel Row | Store | Product | New Common Name | New Sub-Category | Reason |
 |---:|---|---|---|---|---|
 
-Include ONLY rows where Common Name and/or Sub-Category was missing in the input.
+IMPORTANT:
 
-The "Common Name" and "Sub-Category" columns must show the FINAL proposed values,
-including an existing value that is being preserved.
+Include EVERY row from the requested starting row through the final populated
+row.
 
-Keep Reason brief: usually one sentence.
+Do NOT include only rows containing NA.
 
+For each row, show the FINAL recommended:
 
-SECTION 2 — COPY/PASTE BLOCKS
+    Common Name
+    Sub-Category
 
-Group missing rows into contiguous Excel row ranges.
+even when the recommendation happens to be identical to the values already
+present in the new row.
 
-For each contiguous range, provide a label saying exactly where to paste:
+The Reason should briefly explain the classification.
 
-    Paste into H27
+When useful, indicate whether the decision:
 
-or:
+    matches historical precedent
+    corrects a provisional new-row classification
+    creates a genuinely new Sub-Category
 
-    Paste into H27:I31
+Keep Reason concise, usually one sentence.
+
+============================================================
+SECTION 2 — COMPLETE COPY/PASTE BLOCK
+============================================================
+
+Return replacement values for EVERY analyzed new row.
+
+Because the entire new block has been independently reviewed, the output is
+intended to replace columns:
+
+    H = Common Name
+    I = Sub-Category
+
+for the entire requested new-row range.
+
+For example, if the request is:
+
+    Analyze all items from row 125 down
+
+and the final row is 152, output:
+
+    Paste into H125:I152
 
 Then provide a TAB-SEPARATED code block containing exactly two columns:
 
     Common Name<TAB>Sub-Category
 
-in exact Excel row order.
+Rules:
 
-Example:
-
-Paste into H27:I29
-
-```text
-Bananas	Fresh Fruit
-16 oz Claw Hammer	Hammers
-USB-C Charging Cable	Charging Cables
-```
-
-Rules for paste blocks:
 - no header row;
 - exactly two tab-separated values per row;
-- Common Name first, Sub-Category second;
-- exact source-row order;
-- one output row per Excel row;
-- use the preserved existing value when only one of the two fields was missing;
-- do not include rows where both fields were already populated.
+- Common Name first;
+- Sub-Category second;
+- exact Excel row order;
+- exactly one output line for every analyzed Excel row;
+- include populated and previously unpopulated new rows;
+- do not omit a row because its existing values happened to be correct;
+- output the FINAL recommended values;
+- the number of lines in the paste block MUST exactly equal the number of
+  analyzed new rows.
 
-If missing rows are noncontiguous, make separate paste blocks so pasting cannot
-overwrite existing populated rows.
+This allows the entire H:I range for the newly added purchase block to be
+replaced safely in one paste operation.
 
-
+============================================================
 FINAL BEHAVIOR
---------------
+============================================================
+
+The key rule is:
+
+    HISTORICAL DATA TEACHES THE TAXONOMY.
+    NEW DATA IS COMPLETELY RECLASSIFIED.
+
+Do not modify or recommend changes to historical rows before the requested
+starting row.
+
+Do independently analyze every row from the requested starting row onward.
+
+Do not assume populated Common Name/Sub-Category fields in the new block are
+correct.
+
+Use them as evidence, not authority.
+
+Return:
+
+    1. Complete review table for ALL new rows.
+    2. Complete H:I copy/paste block for ALL new rows.
 
 Do not rewrite the complete Purchase History.
-Do not return replacement CSV.
-Do not suggest changes to already-populated taxonomy.
-Do not create a broad "Category" field here.
-Only complete missing Common Name and Sub-Category values and return the
-review table plus safe copy/paste blocks.
+
+Do not return a replacement CSV.
+
+Do not create a broad "Category" field.
+
+Only produce Common Name and Sub-Category classifications for the requested
+new-row block.
