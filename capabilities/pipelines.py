@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import shutil
+from pathlib import Path
+
 from capabilities.OCRAcquisitionPipeline.main_OCRAcquisitionPipeline import (
     run_ocr_acquisition_pipeline_for_image,
 )
@@ -18,6 +21,13 @@ from utils.picture_importer import (
 )
 from utils.purchase_history_backup import (
     update_purchase_history_copy,
+)
+from utils.code_update_importer import (
+    get_import_location,
+)
+from utils.constants import DATA_DIR
+from utils.export_purchase_history_txt import (
+    export_purchase_history_as_csv_txt,
 )
 
 
@@ -49,6 +59,101 @@ def _run_database_builder_for_outputs(
         )
 
 
+
+PIPELINE_EXPORT_1_FOLDER = (
+    Path("PipelineExports")
+    / "Export_1"
+)
+
+PIPELINE_EXPORT_1_PROMPT = (
+    DATA_DIR
+    / "prompts"
+    / "dev_prompts"
+    / "shopgraph_common_name_subcategory_completion_prompt.txt"
+)
+
+
+def run_pipeline_export_1() -> Path | None:
+    """
+    Refresh and export the two files needed for the Common Name/Sub-Category
+    completion workflow.
+
+    Destination:
+        <configured import location>/PipelineExports/Export_1/
+
+    Existing destination files are overwritten.
+    Source ShopGraph files remain in place.
+    """
+    print("\n=== ShopGraph Pipeline Export 1 ===\n")
+
+    try:
+        import_location = get_import_location()
+        export_folder = (
+            import_location
+            / PIPELINE_EXPORT_1_FOLDER
+        )
+        export_folder.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
+
+        if not PIPELINE_EXPORT_1_PROMPT.exists():
+            raise FileNotFoundError(
+                "Prompt file was not found:"
+                f"\n{PIPELINE_EXPORT_1_PROMPT.resolve()}"
+            )
+
+        # Refresh the TXT from the live Purchase History workbook first so
+        # Pipeline Export 1 always sends the latest purchase-history data.
+        purchase_history_txt = (
+            export_purchase_history_as_csv_txt()
+        )
+
+        sources = (
+            PIPELINE_EXPORT_1_PROMPT,
+            purchase_history_txt,
+        )
+
+        for source in sources:
+            destination = (
+                export_folder
+                / source.name
+            )
+            shutil.copy2(
+                source,
+                destination,
+            )
+
+        print(
+            "[OK] Pipeline Export 1 complete."
+        )
+        print(
+            "\nExport folder:"
+            f"\n{export_folder.resolve()}"
+        )
+        print(
+            "\nExported / overwritten:"
+        )
+        for source in sources:
+            print(
+                f"- {source.name}"
+            )
+
+        return export_folder.resolve()
+
+    except (
+        FileNotFoundError,
+        PermissionError,
+        OSError,
+        ValueError,
+    ) as error:
+        print(
+            f"\n[ERROR] Pipeline Export 1 failed:"
+            f"\n{error}"
+        )
+        return None
+
+
 def run_pipeline_part_1() -> None:
     """
     Automated single-receipt workflow:
@@ -66,7 +171,7 @@ def run_pipeline_part_1() -> None:
     """
     print("\n=== ShopGraph Pipeline Part 1 ===\n")
 
-    print("[1/5] Clean Generated Processing Data")
+    print("[1/6] Clean Generated Processing Data")
     generated_result = (
         clean_ocr_acquisition_pipeline_data()
     )
@@ -76,7 +181,7 @@ def run_pipeline_part_1() -> None:
         f"Folders: {generated_result['directories_deleted']}"
     )
 
-    print("\n[2/5] Clean Current Receipt Images")
+    print("\n[2/6] Clean Current Receipt Images")
     source_result = (
         clean_current_receipt_images()
     )
@@ -86,7 +191,7 @@ def run_pipeline_part_1() -> None:
         f"Folders: {source_result['directories_deleted']}"
     )
 
-    print("\n[3/5] Import Picture")
+    print("\n[3/6] Import Picture")
     try:
         imported_path = (
             import_picture_to_current_folder()
@@ -125,7 +230,7 @@ def run_pipeline_part_1() -> None:
         f"\n{saved_picture.name}"
     )
 
-    print("\n[4/5] Update Purchase History Copy")
+    print("\n[4/6] Update Purchase History Copy")
     try:
         backup_path = (
             update_purchase_history_copy()
@@ -148,7 +253,7 @@ def run_pipeline_part_1() -> None:
     )
 
     print(
-        "\n[5/5] OCR Acquisition Pipeline + Data Base Builder"
+        "\n[5/6] OCR Acquisition Pipeline + Data Base Builder"
     )
 
     try:
@@ -176,6 +281,22 @@ def run_pipeline_part_1() -> None:
     )
 
     print(
+        "\n[OK] Core Pipeline Part 1 processing complete."
+    )
+
+    print(
+        "\n[6/6] Pipeline Export 1"
+    )
+    export_folder = run_pipeline_export_1()
+
+    if export_folder is None:
+        print(
+            "\n[WARNING] Pipeline Part 1 processing completed, "
+            "but Pipeline Export 1 failed."
+        )
+        return
+
+    print(
         "\n[OK] Pipeline Part 1 complete."
     )
 
@@ -183,6 +304,7 @@ def run_pipeline_part_1() -> None:
 def display_pipelines_menu() -> None:
     print("\n=== ShopGraph Pipelines ===\n")
     print("1. Pipeline Part 1")
+    print("2. Pipeline Export 1")
     print("0. Return to Capabilities Menu")
 
 
@@ -196,6 +318,9 @@ def run_pipelines_menu() -> None:
 
         if option == "1":
             run_pipeline_part_1()
+
+        elif option == "2":
+            run_pipeline_export_1()
 
         elif option == "0":
             return
