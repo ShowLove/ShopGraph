@@ -52,6 +52,9 @@ from utils.code_update_importer import (
 from utils.purchase_history_backup import (
     run_purchase_history_backup,
 )
+from utils.picture_importer import (
+    run_picture_importer_menu,
+)
 
 
 def display_capabilities_menu() -> None:
@@ -223,6 +226,9 @@ def display_standalone_utilities_menu() -> None:
         "8. Update Purchase History Copy"
     )
     print(
+        "9. Import Picture to Current Folder"
+    )
+    print(
         "0. Return to Utilities Menu"
     )
 
@@ -251,6 +257,8 @@ def run_standalone_utilities_menu() -> None:
             run_code_update_importer_menu()
         elif option == "8":
             run_purchase_history_backup()
+        elif option == "9":
+            run_picture_importer_menu()
         elif option == "0":
             return
         else:
