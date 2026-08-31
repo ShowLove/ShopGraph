@@ -55,6 +55,9 @@ from utils.purchase_history_backup import (
 from utils.picture_importer import (
     run_picture_importer_menu,
 )
+from capabilities.pipelines import (
+    run_pipelines_menu,
+)
 
 
 def display_capabilities_menu() -> None:
@@ -63,6 +66,7 @@ def display_capabilities_menu() -> None:
     print("2. OCR Acquisition Pipeline - All Images")
     print("3. OCR Acquisition Pipeline + Data Base Builder")
     print("4. OCR Acquisition Pipeline - All Images + Data Base Builder")
+    print("5. Pipelines")
     print("0. Return to Utilities Menu")
 
 
@@ -101,6 +105,8 @@ def run_capabilities_menu() -> None:
         elif option == "4":
             raw_ocr_files = run_ocr_acquisition_pipeline_all_images()
             _run_database_builder_for_outputs(raw_ocr_files)
+        elif option == "5":
+            run_pipelines_menu()
         elif option == "0":
             return
         else:

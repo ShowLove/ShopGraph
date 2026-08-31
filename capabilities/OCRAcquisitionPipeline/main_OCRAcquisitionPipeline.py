@@ -54,6 +54,42 @@ def run_ocr_acquisition_pipeline() -> list[Path]:
     return [raw_path]
 
 
+
+def run_ocr_acquisition_pipeline_for_image(
+    source_path: str | Path,
+) -> list[Path]:
+    """
+    Run Stages 1-7 for one explicit receipt image without showing the receipt
+    picker. This is used by higher-level automated Pipelines.
+    """
+    source = (
+        Path(source_path)
+        .expanduser()
+        .resolve()
+    )
+
+    print(
+        "\n=== OCR Acquisition Pipeline - Saved Picture ===\n"
+    )
+    print(
+        "[INFO] Using saved receipt image:"
+        f"\n{source}"
+    )
+
+    raw_path = _run_stages_for_receipt(
+        source
+    )
+
+    if raw_path is None:
+        return []
+
+    print(
+        "\n[OK] OCR Acquisition Pipeline complete."
+    )
+
+    return [raw_path]
+
+
 def run_ocr_acquisition_pipeline_all_images() -> list[Path]:
     """New behavior: process every supported image in data/current_pic/."""
     print("\n=== OCR Acquisition Pipeline - All Images ===\n")

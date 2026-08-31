@@ -56,6 +56,28 @@ def _clear_directory_contents(directory: Path) -> tuple[int, int]:
     return files_deleted, directories_deleted
 
 
+
+def clean_current_receipt_images() -> dict:
+    """
+    Non-interactive cleanup used by automated Pipelines.
+
+    Only data/current_pic/ contents are removed. The folder itself remains.
+    """
+    label, directory = SOURCE_FOLDERS["1"]
+    files_deleted, directories_deleted = (
+        _clear_directory_contents(
+            directory
+        )
+    )
+
+    return {
+        "label": label,
+        "directory": directory.resolve(),
+        "files_deleted": files_deleted,
+        "directories_deleted": directories_deleted,
+    }
+
+
 def _display_menu() -> None:
     print("\n=== Clean Source Data ===\n")
     print("Choose which folder contents to delete:\n")

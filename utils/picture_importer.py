@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import os
 import shutil
+import tempfile
 from pathlib import Path
 
 from capabilities.OCRAcquisitionPipeline.receipt_picker import (
@@ -11,6 +13,137 @@ from utils.code_update_importer import (
     get_import_location,
 )
 from utils.constants import CURRENT_PIC_DIR
+
+
+LEGACY_CONFIG_PATH = Path(__file__).resolve().parent / "config.txt"
+SELECTED_PICTURE_CONFIG_KEY = "selected_picture_filename"
+
+
+
+def _read_legacy_config() -> dict[str, str]:
+    if not LEGACY_CONFIG_PATH.exists():
+        return {}
+
+    values: dict[str, str] = {}
+
+    try:
+        lines = LEGACY_CONFIG_PATH.read_text(
+            encoding="utf-8",
+        ).splitlines()
+    except OSError:
+        return {}
+
+    for raw_line in lines:
+        line = raw_line.strip()
+
+        if (
+            not line
+            or line.startswith("#")
+            or "=" not in line
+        ):
+            continue
+
+        key, value = line.split("=", 1)
+        key = key.strip()
+        value = value.strip()
+
+        if key:
+            values[key] = value
+
+    return values
+
+
+def _write_legacy_config(values: dict[str, str]) -> None:
+    """
+    Persist legacy/runtime compatibility values in utils/config.txt without
+    discarding any existing settings already stored there.
+    """
+    LEGACY_CONFIG_PATH.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    lines = [
+        "# ShopGraph utility configuration",
+        "# Paths may use ~ and environment variables.",
+        "",
+    ]
+
+    for key in sorted(values):
+        lines.append(
+            f"{key}={values[key]}"
+        )
+
+    lines.append("")
+
+    descriptor, temporary_name = tempfile.mkstemp(
+        prefix=".shopgraph_legacy_config_",
+        suffix=".txt",
+        dir=LEGACY_CONFIG_PATH.parent,
+    )
+    os.close(descriptor)
+    temporary_path = Path(temporary_name)
+
+    try:
+        temporary_path.write_text(
+            "\n".join(lines),
+            encoding="utf-8",
+        )
+        os.replace(
+            temporary_path,
+            LEGACY_CONFIG_PATH,
+        )
+    finally:
+        if temporary_path.exists():
+            temporary_path.unlink()
+
+
+def save_selected_picture_filename(filename: str) -> None:
+    filename = Path(
+        str(filename).strip()
+    ).name
+
+    if not filename:
+        raise ValueError(
+            "Selected picture filename cannot be blank."
+        )
+
+    values = _read_legacy_config()
+    values[SELECTED_PICTURE_CONFIG_KEY] = filename
+    _write_legacy_config(values)
+
+
+def get_saved_picture_filename() -> str | None:
+    value = _read_legacy_config().get(
+        SELECTED_PICTURE_CONFIG_KEY,
+        "",
+    ).strip()
+
+    if not value:
+        return None
+
+    return Path(value).name
+
+
+def get_saved_picture_path() -> Path | None:
+    filename = get_saved_picture_filename()
+
+    if filename is None:
+        return None
+
+    path = (
+        CURRENT_PIC_DIR
+        / filename
+    ).resolve()
+
+    if (
+        not path.exists()
+        or not path.is_file()
+        or not is_picture(path)
+    ):
+        return None
+
+    return path
 
 
 def _looks_like_supported_image_signature(path: Path) -> bool:
@@ -211,10 +344,20 @@ def import_picture_to_current_folder() -> Path | None:
             f"\n\n{error}"
         ) from error
 
+    save_selected_picture_filename(
+        destination.name
+    )
+
     print(
         "\n[OK] Picture imported:"
         f"\n{selected.name}"
         f"\n\nDestination:\n{destination.resolve()}"
+    )
+
+    print(
+        "\n[OK] Selected picture saved for Pipelines:"
+        f"\n{destination.name}"
+        f"\n\nConfiguration:\n{LEGACY_CONFIG_PATH}"
     )
 
     return destination.resolve()
