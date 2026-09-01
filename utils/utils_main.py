@@ -50,7 +50,7 @@ from utils.code_update_importer import (
     run_code_update_importer_menu,
 )
 from utils.purchase_history_backup import (
-    run_purchase_history_backup,
+    run_purchase_history_backup_menu,
 )
 from utils.picture_importer import (
     run_picture_importer_menu,
@@ -262,7 +262,7 @@ def run_standalone_utilities_menu() -> None:
         elif option == "7":
             run_code_update_importer_menu()
         elif option == "8":
-            run_purchase_history_backup()
+            run_purchase_history_backup_menu()
         elif option == "9":
             run_picture_importer_menu()
         elif option == "0":
