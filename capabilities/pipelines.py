@@ -34,6 +34,10 @@ from utils.export_category_manager_txt import (
 )
 from utils.DataBaseBuilder.excel.category_manager import (
     create_or_refresh_category_manager,
+    apply_category_manager,
+)
+from utils.DataBaseBuilder.budget_plans.budget_plan_menu import (
+    refresh_all_budget_plans,
 )
 
 
@@ -325,6 +329,88 @@ def run_category_manager_completion() -> None:
     )
 
 
+
+def run_finalize_taxonomy_and_budgets() -> None:
+    """
+    Finalize the current ShopGraph taxonomy and refresh every Budget Plan.
+
+    Workflow:
+        1. Apply Category Manager to Purchase History.
+        2. Refresh All Budget Plans.
+
+    Category Manager validation must succeed before Budget Plans are refreshed.
+    Existing Category Manager and Budget Plan business logic is reused directly.
+    """
+    print(
+        "\n=== ShopGraph Finalize Taxonomy + Budgets ===\n"
+    )
+
+    print(
+        "[1/2] Apply Category Manager to Purchase History"
+    )
+
+    try:
+        result = apply_category_manager()
+    except (
+        OSError,
+        ValueError,
+    ) as error:
+        print(
+            "\n[ERROR] Category Manager could not be applied."
+            f"\n\n{error}"
+        )
+        print(
+            "\n[INFO] Budget Plans were not refreshed."
+        )
+        return
+
+    if not result["success"]:
+        print(
+            "\n" + result["report"]
+        )
+        print(
+            "\n[INFO] Budget Plans were not refreshed."
+        )
+        return
+
+    print(
+        "\n[OK] Purchase History Sub-Categories updated successfully."
+    )
+    print(
+        f"Purchase History rows changed: {result['changed_rows']}"
+    )
+    print(
+        f"Categories: {result['category_count']}"
+    )
+    print(
+        f"Sub-Categories: {result['subcategory_count']}"
+    )
+    print(
+        f"Common Names: {result['product_count']}"
+    )
+    print(
+        "Category Manager cleaned and synchronized."
+    )
+    print(
+        f"\nWorkbook:\n{result['workbook_path']}"
+    )
+
+    print(
+        "\n[2/2] Refresh All Budget Plans"
+    )
+
+    # Reuse the existing Budget Plans action exactly. It already handles:
+    # - no plans,
+    # - individual plan failures,
+    # - success/failure counts,
+    # - normal ShopGraph output.
+    refresh_all_budget_plans()
+
+    print(
+        "\n[OK] Finalize Taxonomy + Budgets workflow complete."
+    )
+
+
 def run_pipeline_part_1() -> None:
     """
     Automated single-receipt workflow:
@@ -478,6 +564,7 @@ def display_pipelines_menu() -> None:
     print("2. Pipeline Export 1")
     print("3. Category Manager Completion")
     print("4. Pipeline Export 2")
+    print("5. Finalize Taxonomy + Budgets")
     print("0. Return to Capabilities Menu")
 
 
@@ -500,6 +587,9 @@ def run_pipelines_menu() -> None:
 
         elif option == "4":
             run_pipeline_export_2()
+
+        elif option == "5":
+            run_finalize_taxonomy_and_budgets()
 
         elif option == "0":
             return

@@ -28,6 +28,7 @@ shopping_analysis/
         codebase_bundler.py
         config.txt
         constants.py
+        export_category_manager_txt.py
         export_codebase.py
         export_purchase_history_txt.py
         image_preprocessing.py
@@ -76,6 +77,7 @@ shopping_analysis/
         README_CAPABILITY_MODES_UPDATE.txt
         README_CATEGORY_MANAGER.txt
         README_CATEGORY_MANAGER_AB_FIX.txt
+        README_CATEGORY_MANAGER_COMPLETION_PIPELINE.txt
         README_CATEGORY_MANAGER_PRODUCT_MAPPING_FIX.txt
         README_CODE_UPDATE_IMPORTER.txt
         README_GLOBAL_MINUS_ONE_EXIT.txt
@@ -100,6 +102,7 @@ shopping_analysis/
         requirements.txt
         pdf_files/
         database/
+            shopgraph_category_manager.txt
             shopgraph_purchase_history.txt
             archive/
         refined_json/
@@ -111,13 +114,14 @@ shopping_analysis/
         prompts/
             creation_prompts/
             dev_prompts/
+                shopgraph_category_completion_prompt.txt
                 shopgraph_code_update_zip_output_prompt.txt
                 shopgraph_common_name_subcategory_completion_prompt.txt
         current_pic/
 
 ================================================================================
 
-Generated: 2026-09-03 21:01:52.893414
+Generated: 2026-09-03 21:27:44.789143
 Root: /Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis
 Mode: LLM-clean export
 Excluded: receipt images, OCR JSON, datasets, databases, logs, caches
@@ -210,6 +214,12 @@ from utils.code_update_importer import (
 from utils.constants import DATA_DIR
 from utils.export_purchase_history_txt import (
     export_purchase_history_as_csv_txt,
+)
+from utils.export_category_manager_txt import (
+    export_category_manager_as_csv_txt,
+)
+from utils.DataBaseBuilder.excel.category_manager import (
+    create_or_refresh_category_manager,
 )
 
 
@@ -334,6 +344,171 @@ def run_pipeline_export_1() -> Path | None:
             f"\n{error}"
         )
         return None
+
+
+
+PIPELINE_EXPORT_2_FOLDER = (
+    Path("PipelineExports")
+    / "Export_2"
+)
+
+PIPELINE_EXPORT_2_PROMPT = (
+    DATA_DIR
+    / "prompts"
+    / "dev_prompts"
+    / "shopgraph_category_completion_prompt.txt"
+)
+
+
+def run_pipeline_export_2() -> Path | None:
+    """
+    Refresh and export the three files needed for broad Category completion.
+
+    Destination:
+        <configured import location>/PipelineExports/Export_2/
+
+    Existing destination files are overwritten.
+    Source ShopGraph files remain in place.
+    """
+    print("\n=== ShopGraph Pipeline Export 2 ===\n")
+
+    try:
+        import_location = get_import_location()
+        export_folder = (
+            import_location
+            / PIPELINE_EXPORT_2_FOLDER
+        )
+        export_folder.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
+
+        if not PIPELINE_EXPORT_2_PROMPT.exists():
+            raise FileNotFoundError(
+                "Prompt file was not found:"
+                f"\n{PIPELINE_EXPORT_2_PROMPT.resolve()}"
+            )
+
+        # Always refresh both TXT files from the live workbook immediately
+        # before copying them into Export_2.
+        category_manager_txt = (
+            export_category_manager_as_csv_txt()
+        )
+        purchase_history_txt = (
+            export_purchase_history_as_csv_txt()
+        )
+
+        sources = (
+            category_manager_txt,
+            PIPELINE_EXPORT_2_PROMPT,
+            purchase_history_txt,
+        )
+
+        for source in sources:
+            destination = (
+                export_folder
+                / source.name
+            )
+            shutil.copy2(
+                source,
+                destination,
+            )
+
+        print(
+            "[OK] Pipeline Export 2 complete."
+        )
+        print(
+            "\nExport folder:"
+            f"\n{export_folder.resolve()}"
+        )
+        print(
+            "\nExported / overwritten:"
+        )
+
+        for source in sources:
+            print(
+                f"- {source.name}"
+            )
+
+        return export_folder.resolve()
+
+    except (
+        FileNotFoundError,
+        PermissionError,
+        OSError,
+        ValueError,
+    ) as error:
+        print(
+            f"\n[ERROR] Pipeline Export 2 failed:"
+            f"\n{error}"
+        )
+        return None
+
+
+def run_category_manager_completion() -> None:
+    """
+    Refresh Category Manager and, only if that succeeds, create Pipeline Export 2.
+    """
+    print(
+        "\n=== ShopGraph Category Manager Completion ===\n"
+    )
+
+    print(
+        "[1/2] Create / Refresh Category Manager"
+    )
+
+    try:
+        result = (
+            create_or_refresh_category_manager()
+        )
+    except (
+        FileNotFoundError,
+        PermissionError,
+        OSError,
+        ValueError,
+    ) as error:
+        print(
+            "\n[ERROR] Category Manager refresh failed."
+            f"\n\n{error}"
+        )
+        print(
+            "\n[INFO] Pipeline Export 2 was not created."
+        )
+        return
+
+    print(
+        "\n[OK] Category Manager created / refreshed."
+    )
+    print(
+        f"Categories assigned: {result['category_count']}"
+    )
+    print(
+        f"Sub-Categories: {result['subcategory_count']}"
+    )
+    print(
+        f"Common Names: {result['product_count']}"
+    )
+    print(
+        "Workbook:"
+        f"\n{result['workbook_path']}"
+    )
+
+    print(
+        "\n[2/2] Pipeline Export 2"
+    )
+
+    export_folder = run_pipeline_export_2()
+
+    if export_folder is None:
+        print(
+            "\n[WARNING] Category Manager refresh succeeded, "
+            "but Pipeline Export 2 failed."
+        )
+        return
+
+    print(
+        "\n[OK] Category Manager Completion complete."
+    )
 
 
 def run_pipeline_part_1() -> None:
@@ -487,6 +662,8 @@ def display_pipelines_menu() -> None:
     print("\n=== ShopGraph Pipelines ===\n")
     print("1. Pipeline Part 1")
     print("2. Pipeline Export 1")
+    print("3. Category Manager Completion")
+    print("4. Pipeline Export 2")
     print("0. Return to Capabilities Menu")
 
 
@@ -503,6 +680,12 @@ def run_pipelines_menu() -> None:
 
         elif option == "2":
             run_pipeline_export_1()
+
+        elif option == "3":
+            run_category_manager_completion()
+
+        elif option == "4":
+            run_pipeline_export_2()
 
         elif option == "0":
             return
@@ -8094,6 +8277,159 @@ CODEBASE_OUTPUT_FILE = (
 
 
 ================================================================================
+FILE: utils/export_category_manager_txt.py
+================================================================================
+
+from __future__ import annotations
+
+import csv
+from pathlib import Path
+
+from openpyxl import load_workbook
+
+from utils.constants import DATA_DIR
+
+
+DATABASE_DIR = DATA_DIR / "database"
+
+WORKBOOK_PATH = (
+    DATABASE_DIR
+    / "shopgraph_purchase_history.xlsx"
+)
+
+OUTPUT_PATH = (
+    DATABASE_DIR
+    / "shopgraph_category_manager.txt"
+)
+
+CATEGORY_MANAGER_SHEET = "Category Manager"
+
+
+def _cell_to_text(value) -> str:
+    if value is None:
+        return ""
+
+    return str(value)
+
+
+def export_category_manager_as_csv_txt() -> Path:
+    """
+    Export the Category Manager worksheet as CSV-formatted plain text.
+
+    Source:
+        data/database/shopgraph_purchase_history.xlsx
+
+    Worksheet:
+        Category Manager
+
+    Output:
+        data/database/shopgraph_category_manager.txt
+
+    Formula cells are preserved as formula text.
+    """
+    if not WORKBOOK_PATH.exists():
+        raise FileNotFoundError(
+            "Purchase History workbook was not found:"
+            f"\n{WORKBOOK_PATH.resolve()}"
+        )
+
+    workbook = load_workbook(
+        WORKBOOK_PATH,
+        data_only=False,
+        read_only=True,
+    )
+
+    try:
+        if CATEGORY_MANAGER_SHEET not in workbook.sheetnames:
+            raise ValueError(
+                f'Worksheet "{CATEGORY_MANAGER_SHEET}" '
+                f"was not found in {WORKBOOK_PATH.name}. "
+                "Create / Refresh Category Manager first."
+            )
+
+        worksheet = workbook[
+            CATEGORY_MANAGER_SHEET
+        ]
+
+        DATABASE_DIR.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
+
+        with OUTPUT_PATH.open(
+            "w",
+            encoding="utf-8",
+            newline="",
+        ) as output_file:
+            writer = csv.writer(
+                output_file,
+                dialect="excel",
+                quoting=csv.QUOTE_MINIMAL,
+                lineterminator="\n",
+            )
+
+            for row in worksheet.iter_rows(
+                values_only=True,
+            ):
+                writer.writerow(
+                    [
+                        _cell_to_text(value)
+                        for value in row
+                    ]
+                )
+
+    finally:
+        workbook.close()
+
+    return OUTPUT_PATH.resolve()
+
+
+def run_category_manager_txt_export() -> None:
+    print(
+        "\n=== Export Category Manager as CSV TXT ===\n"
+    )
+
+    try:
+        output_path = (
+            export_category_manager_as_csv_txt()
+        )
+    except (
+        FileNotFoundError,
+        ValueError,
+        PermissionError,
+        OSError,
+    ) as error:
+        print(
+            f"[ERROR] {error}"
+        )
+        return
+
+    print(
+        "[OK] Category Manager exported "
+        "as CSV-formatted text."
+    )
+
+    print(
+        "\nSource:"
+        f"\n{WORKBOOK_PATH.resolve()}"
+    )
+
+    print(
+        "\nWorksheet:"
+        f"\n{CATEGORY_MANAGER_SHEET}"
+    )
+
+    print(
+        "\nOutput:"
+        f"\n{output_path}"
+    )
+
+
+if __name__ == "__main__":
+    run_category_manager_txt_export()
+
+
+================================================================================
 FILE: utils/export_codebase.py
 ================================================================================
 
@@ -10105,6 +10441,9 @@ from utils.clean_source_data import (
 from utils.export_purchase_history_txt import (
     run_purchase_history_txt_export,
 )
+from utils.export_category_manager_txt import (
+    run_category_manager_txt_export,
+)
 from utils.code_update_importer import (
     run_code_update_importer_menu,
 )
@@ -10294,6 +10633,9 @@ def display_standalone_utilities_menu() -> None:
         "9. Import Picture to Current Folder"
     )
     print(
+        "10. Export Category Manager as CSV TXT"
+    )
+    print(
         "0. Return to Utilities Menu"
     )
 
@@ -10324,6 +10666,8 @@ def run_standalone_utilities_menu() -> None:
             run_purchase_history_backup_menu()
         elif option == "9":
             run_picture_importer_menu()
+        elif option == "10":
+            run_category_manager_txt_export()
         elif option == "0":
             return
         else:
@@ -19039,6 +19383,116 @@ then atomically replace the live workbook.
 
 
 ================================================================================
+FILE: README/README_CATEGORY_MANAGER_COMPLETION_PIPELINE.txt
+================================================================================
+
+ShopGraph - Category Manager Completion Pipeline
+================================================
+
+PURPOSE
+-------
+Adds the second ShopGraph taxonomy-completion stage:
+
+    Common Name
+        -> Sub-Category
+        -> Category
+
+This update preserves the existing Common Name/Sub-Category workflow and adds
+a separate broad-Category completion workflow.
+
+UTILITIES
+---------
+The standalone Utilities menu now includes:
+
+    10. Export Category Manager as CSV TXT
+
+It exports the live "Category Manager" worksheet from:
+
+    data/database/shopgraph_purchase_history.xlsx
+
+to:
+
+    data/database/shopgraph_category_manager.txt
+
+PIPELINES
+---------
+The Pipelines menu becomes:
+
+    1. Pipeline Part 1
+    2. Pipeline Export 1
+    3. Category Manager Completion
+    4. Pipeline Export 2
+    0. Return to Capabilities Menu
+
+Category Manager Completion runs:
+
+    1. Create / Refresh Category Manager
+    2. Pipeline Export 2
+
+The existing reusable Category Manager create/refresh function is used
+directly. If Category Manager refresh fails, Export_2 is not created.
+
+PIPELINE EXPORT 2
+-----------------
+Pipeline Export 2 uses the same configured import location as Pipeline Export 1
+and creates:
+
+    PipelineExports/Export_2/
+
+containing:
+
+    shopgraph_category_manager.txt
+    shopgraph_category_completion_prompt.txt
+    shopgraph_purchase_history.txt
+
+Both TXT exports are refreshed from the live workbook immediately before being
+copied to Export_2. Existing destination files are overwritten.
+
+NEW PROMPT
+----------
+Added:
+
+    data/prompts/dev_prompts/shopgraph_category_completion_prompt.txt
+
+The prompt analyzes ONLY Category Manager rows where:
+
+    Category = NA
+
+Existing non-NA Category assignments are authoritative and are never targets
+for modification. Purchase History is used as supporting evidence.
+
+COMPATIBILITY / PRESERVATION
+----------------------------
+Existing functionality is retained, including:
+
+    Pipeline Part 1
+    Pipeline Export 1
+    Category Manager menu
+    Apply Category Manager to Purchase History
+    Purchase History TXT export
+    OCR workflows
+    Analytics
+    Budget Plans
+    Picture Importer
+    Code Update Importer
+    global -1 exit behavior
+
+FILES
+-----
+NEW:
+    utils/export_category_manager_txt.py
+    data/prompts/dev_prompts/shopgraph_category_completion_prompt.txt
+    README/README_CATEGORY_MANAGER_COMPLETION_PIPELINE.txt
+
+UPDATED:
+    capabilities/pipelines.py
+    utils/utils_main.py
+
+No runtime database, runtime config, archive, or PipelineExports files are
+included in this update.
+
+
+================================================================================
 FILE: README/README_CATEGORY_MANAGER_PRODUCT_MAPPING_FIX.txt
 ================================================================================
 
@@ -20510,6 +20964,76 @@ PyMuPDF
 
 
 ================================================================================
+FILE: data/database/shopgraph_category_manager.txt
+================================================================================
+
+Category,Sub-Category,Product 1,Product 2,Product 3,Product 4,Product 5,Product 6,Product 7,Product 8,Product 9,Product 10,Product 11,Product 12,Product 13,Product 14
+Baby Care,Baby & Toddler Food,Once Upon a Farm Tractor Wheels Toddler Bars,,,,,,,,,,,,,
+Baby Care,Baby Care,CeraVe Baby Healing Ointment,Desitin Maximum Strength Diaper Rash Cream,Huggies Natural Care Baby Wipes,Pampers Swaddlers Size 5 Diapers,Safety 1st Soft Grip Brush & Comb,,,,,,,,,
+Pantry,Baking Ingredients,"King Arthur Unbleached Bread Flour, 10 lb",Nestle Toll House Allergen-Free Dark Chocolate Baking Chips,Nestle Toll House Dark Chocolate Baking Chips,,,,,,,,,,,
+Dessert,Baking Mixes,Ghirardelli Gluten-Free Double Chocolate Brownie Mix,King Arthur Gluten-Free Pancake Mix,,,,,,,,,,,,
+"Toiletries, Cleaning and Disposables",Body Wash,Dove Sensitive Skin Body Wash,,,,,,,,,,,,,
+Bakery,Bread,Dave's Killer Bread Oats & Blues,Dave's Killer Bread Organic Oats & Blues,Gluten-Free Wide Pan Bread,No [or possibly Nature's Own] Honey Wheat Bread,,,,,,,,,,
+Pantry,Canned Beans & Legumes,Dark Red Kidney Beans,Organic Chickpeas,,,,,,,,,,,,
+Pets,Cat Litter,Purina Tidy Cats Clumping Cat Litter,,,,,,,,,,,,,
+Dairy,Cheese,Cabot Mexican Shredded Cheese,,,,,,,,,,,,,
+NA,Coffee Creamer,Starbucks Oatmilk Brown Sugar Creamer,,,,,,,,,,,,,
+Pantry,Crackers,Peanut Butter Toast Crackers,,,,,,,,,,,,,
+Dairy,Cream & Half-and-Half,"Publix Half & Half, Half Gallon",,,,,,,,,,,,,
+Pantry,Croutons,Organic Croutons,,,,,,,,,,,,,
+Meat,Deli Meat,Hillshire Farm Oven Roasted Turkey Breast,,,,,,,,,,,,,
+"Toiletries, Cleaning and Disposables",Deodorant,Dove Men+Care Antiperspirant,,,,,,,,,,,,,
+Condiments & Seasonings,Dips & Spreads,Hummus Mini Cups,,,,,,,,,,,,,
+"Toiletries, Cleaning and Disposables",Dishwashing Supplies,Dawn Dish Cleaning Brush Wand,,,,,,,,,,,,,
+"Toiletries, Cleaning and Disposables",Disposable Tableware,"Everyday Paper Plates, 8.5 Inch",,,,,,,,,,,,,
+Eggs,Eggs,Great Value Large White Eggs,,,,,,,,,,,,,
+Fees,Fees & Charges,Driver Tip,Express Delivery Fee,Price Adjustment,Sales Tax,Tax,Tip,,,,,,,,
+"Toiletries, Cleaning and Disposables",Food Storage,Ziploc Gallon Freezer Bags,Ziploc Quart Freezer Bags,,,,,,,,,,,,
+Produce,Fresh Fruit,Bananas,Blueberries,Golden Kiwi,Mandarin Oranges,Mango,Persian Limes,Pink Lady Apples,"Strawberries, 1 lb",,,,,,
+Produce,Fresh Herbs,Cilantro,Parsley,,,,,,,,,,,,
+Meat,Fresh Poultry,Empire Kosher Ground Turkey,,,,,,,,,,,,,
+Fish,Fresh Seafood,GreenWise Keta Salmon Fillet,Salmon Fillet,,,,,,,,,,,,
+Produce,Fresh Vegetables,Baby Carrots,Beefsteak Tomatoes,Broccoli Crowns,Fresh Trimmed Green Beans,Green Beans,Medley Potatoes,Mini Cucumbers,"Multi-Color Peppers, 3-Pack",Red Onion,Red Onions,Ruby Sensation Potato Nibbles,Tomatoes on the Vine,Yellow Squash,Zucchini
+Produce,Fresh-Cut Fruit,Pineapple & Watermelon Spears,Seedless Watermelon Wedge,,,,,,,,,,,,
+Frozen,Frozen Breakfast,Van's Gluten Free Blueberry Waffles,,,,,,,,,,,,,
+NA,Frozen Desserts,Klondike Double Chocolate Bar,"Yasso Greek Yogurt Bars, Coffee Chocolate Chip","Yasso Greek Yogurt Bars, Mint Chocolate Chip",,,,,,,,,,,
+Meat,Frozen Meat,Applegate Chicken & Maple Breakfast Sausage,,,,,,,,,,,,,
+Frozen Food,Frozen Pizza,Cauliflower Crust Pizza,,,,,,,,,,,,,
+Frozen Food,Frozen Vegetables,Birds Eye Steamfresh Sweet Peas,,,,,,,,,,,,,
+Self Care,Hair Care,Honest Company Conditioning Detangler,,,,,,,,,,,,,
+Home Improvement,Home Improvement,Command Heavy Duty Picture Hangers,,,,,,,,,,,,,
+Meat,Hot Dogs & Sausages,Hebrew National Beef Franks,,,,,,,,,,,,,
+"Toiletries, Cleaning and Disposables",Household Cleaners,Weiman Granite & Stone Cleaner & Polish,,,,,,,,,,,,,
+Pantry,Jarred Vegetables,Fire Roasted Red Peppers,,,,,,,,,,,,,
+Torah,Judaica,Yehuda Sabbath Candles,,,,,,,,,,,,,
+Pantry,Macaroni & Cheese,Annie's Gluten-Free Deluxe Shells & Cheddar,Banza White Cheddar Shells,,,,,,,,,,,,
+Dairy,Milk,Fairlife Chocolate Milk,,,,,,,,,,,,,
+Bakery,Muffins & Pastries,Gluten-Free Blueberry Muffins,,,,,,,,,,,,,
+Pantry,Pasta,Chickpea Fusilli Pasta,,,,,,,,,,,,,
+Pantry,Peanut Butter,Jif No Sugar Added Creamy Peanut Butter,,,,,,,,,,,,,
+Dairy,Plant-Based Cheese,Daiya Mexican Blend Shreds,,,,,,,,,,,,,
+Dairy,Plant-Based Milk,Chobani Extra Creamy Oatmilk,"Silk Organic Unsweet Soymilk, Half Gallon",,,,,,,,,,,,
+Pantry,Popcorn,LesserEvil Popcorn,,,,,,,,,,,,,
+Prepared Eating,Prepared Coffee,1 Caramel Macchiato,1 Iced Caramel Macchiato,,,,,,,,,,,,
+Prepared Eating,Prepared Meals,1 Chicken N French Toast,1 Frenchy Plate,,,,,,,,,,,,
+Dessert,Refrigerated Dough,Sweet Loren's Gluten Free Brownie Cookie Dough,,,,,,,,,,,,,
+Pantry,Rice & Grains,Mahatma Jasmine Rice,,,,,,,,,,,,,
+NA,Rice Cakes & Crisps,Quaker Rice Crisps Apple Cinnamon,Quaker Rice Crisps Chocolate,,,,,,,,,,,,
+Pantry,Salad Dressing,Vinaigrette Dressing,,,,,,,,,,,,,
+Produce,Salad Kits,Publix Makoto Ginger Salad,Publix True Bleu Salad Kit,Taylor Farms Chopped Caesar Salad Kit,Taylor Farms Everything Chopped Salad Kit,,,,,,,,,,
+Condiments & Seasonings,Sauces & Condiments,Cholula Cremosa Cilantro Lime Sauce,,,,,,,,,,,,,
+Condiments & Seasonings,Seasonings & Spices,Lawry's Garlic Salt,McCormick Everything Bagel Seasoning,McCormick Sea Salt Grinder,,,,,,,,,,,
+NA,Smoked Seafood,Smoked Salmon with Pepper,,,,,,,,,,,,,
+Pantry,Snack Bars,Fruit & Grain Bars,Nature's Bakery Gluten-Free Raspberry Fig Bars,,,,,,,,,,,,
+Dessert,Snack Cakes,Little Debbie Cosmic Brownies,,,,,,,,,,,,,
+Dairy,Specialty Cheese,Feta Cheese Crumbles,Goat Cheese Logs,,,,,,,,,,,,
+"Toiletries, Cleaning and Disposables",Storage & Organization,Collapsible Storage Container/Bin,,,,,,,,,,,,,
+Wine,Wine,Häagen-Dazs Blackberry Ice Cream,Magen David Blackberry Wine,,,,,,,,,,,,
+Office Supplies,Writing Supplies,"Gel Pens, 3-Pack",,,,,,,,,,,,,
+Dairy,Yogurt,"Chobani Greek Yogurt 4-Pack, Hero Batch","Chobani Protein Greek Yogurt Drink, Strawberries & Cream",Chobani Vanilla Mixed Berry Greek Yogurt,"Stonyfield Organic YoBaby Yogurt Pouch, Banana","Stonyfield Organic YoBaby Yogurt Pouch, Peach",,,,,,,,,
+
+
+================================================================================
 FILE: data/database/shopgraph_purchase_history.txt
 ================================================================================
 
@@ -20777,6 +21301,357 @@ shopped
 www.walmart.com
 - Walmart
 26,
+
+
+================================================================================
+FILE: data/prompts/dev_prompts/shopgraph_category_completion_prompt.txt
+================================================================================
+
+SHOPGRAPH — CATEGORY MANAGER BROAD CATEGORY COMPLETION
+=======================================================
+
+TASK
+----
+
+Analyze the attached ShopGraph exports:
+
+    shopgraph_category_manager.txt
+    shopgraph_purchase_history.txt
+
+Your job is to complete ONLY missing broad Category assignments in the
+Category Manager export.
+
+ShopGraph taxonomy:
+
+    Common Name
+        ↓
+    Sub-Category
+        ↓
+    Category
+
+The Category Manager contains:
+
+    Category
+    Sub-Category
+    Product 1
+    Product 2
+    Product 3
+    ...
+
+The Purchase History contains the underlying product history and includes:
+
+    Store
+    Six-Digit SKU
+    Product
+    Common Name
+    Sub-Category
+    purchase dates/prices
+
+The only target rows are Category Manager rows whose:
+
+    Category = NA
+
+Existing non-NA Category assignments are authoritative taxonomy reference data.
+
+Do NOT modify or recommend changes to any existing non-NA Category assignment.
+
+
+=======================================================
+CORE RULE
+=======================================================
+
+    EXISTING CATEGORY ASSIGNMENTS TEACH THE BROAD TAXONOMY.
+    NA CATEGORY ASSIGNMENTS ARE THE ITEMS TO CLASSIFY.
+
+
+=======================================================
+WHAT MAY BE CHANGED
+=======================================================
+
+ONLY determine the broad Category for Category Manager rows where:
+
+    Category = NA
+
+Do NOT:
+
+    rename Common Names
+    rename Products
+    rename Sub-Categories
+    move Products between Sub-Categories
+    alter Purchase History
+    change non-NA Category assignments
+    create another taxonomy level
+    rewrite Category Manager
+    return a replacement CSV
+
+
+=======================================================
+HOW TO LEARN THE EXISTING CATEGORY TAXONOMY
+=======================================================
+
+First study every existing non-NA:
+
+    Sub-Category → Category
+
+relationship in shopgraph_category_manager.txt.
+
+Those assignments are authoritative evidence of ShopGraph's intended broad
+taxonomy and naming style.
+
+Build an internal reference map such as:
+
+    existing Sub-Category
+        → existing broad Category
+
+Do not "clean up," rename, merge, normalize, or reorganize those historical
+assignments.
+
+When an NA Sub-Category clearly belongs to an existing Category, reuse the
+existing Category exactly as written.
+
+
+=======================================================
+USE CATEGORY MANAGER PRODUCT EVIDENCE
+=======================================================
+
+For each Category = NA row, study:
+
+    Sub-Category
+    Product 1
+    Product 2
+    Product 3
+    ...
+
+These Products/Common Names show what the Sub-Category actually contains.
+
+Analyze all products on the row together rather than relying only on the
+Sub-Category wording.
+
+
+=======================================================
+USE PURCHASE HISTORY AS SUPPORTING EVIDENCE
+=======================================================
+
+Use shopgraph_purchase_history.txt to understand ambiguous or unfamiliar
+Sub-Categories.
+
+Find Purchase History rows whose:
+
+    Sub-Category
+
+matches the NA Category Manager row.
+
+Then study relevant:
+
+    Store
+    Six-Digit SKU
+    Product
+    Common Name
+    Sub-Category
+
+data.
+
+Purchase History is supporting product evidence.
+
+Existing non-NA Category Manager assignments remain the authority for the
+broad taxonomy.
+
+
+=======================================================
+CLASSIFICATION PRIORITY
+=======================================================
+
+For every Category = NA row:
+
+1. Identify what the Sub-Category represents from its name and associated
+   Products/Common Names.
+
+2. Check existing non-NA Sub-Category → Category relationships for closely
+   related product types.
+
+3. Use Purchase History product records when additional context is useful.
+
+4. Prefer an EXISTING broad Category when it genuinely represents the
+   Sub-Category.
+
+5. Reuse the exact established Category spelling/capitalization.
+
+6. Avoid creating near-duplicate Categories that differ only by wording,
+   capitalization, singular/plural, or minor phrasing.
+
+7. Do NOT force an item into an existing Category merely because it is the
+   closest available label.
+
+8. Create a NEW broad Category only when the Sub-Category belongs to a
+   materially different purchasing domain not adequately represented by the
+   established taxonomy.
+
+9. Apply the same reasoning consistently to related NA Sub-Categories.
+
+
+=======================================================
+NEW BROAD CATEGORIES
+=======================================================
+
+ShopGraph may contain purchases from many domains, including groceries,
+household goods, baby products, personal care, pets, automotive, tools,
+electronics, office supplies, garden, furniture, clothing, services, and
+others.
+
+Do not assume every new Sub-Category belongs to Food.
+
+A new Category may be created when necessary.
+
+A new broad Category should:
+
+    be concise
+    be human-readable
+    represent a broad purchasing domain
+    be broader than a Sub-Category
+    be useful for future comparable Sub-Categories
+    match the naming style of existing Categories
+    not describe a retailer
+    not simply repeat a highly specific Sub-Category unless that genuinely
+        represents the broader domain
+
+Create new Categories conservatively.
+
+
+=======================================================
+UNCERTAINTY
+=======================================================
+
+Make the best evidence-based classification when reasonable.
+
+Use:
+
+    NA
+
+only when the Category Manager and Purchase History evidence is genuinely
+insufficient to determine a reasonable broad Category.
+
+Do not fabricate unsupported details merely to avoid NA.
+
+Do not use NA simply because ordinary semantic inference is required.
+
+
+=======================================================
+CONSISTENCY CHECKS
+=======================================================
+
+Before producing the answer:
+
+1. Verify that every target row really has Category = NA.
+
+2. Verify that no non-NA Category Manager row is included as a target.
+
+3. Check whether the proposed Category already exists.
+
+4. Prefer an existing Category over a synonymous new one.
+
+5. Check associated Products/Common Names.
+
+6. Check Purchase History evidence when useful.
+
+7. Apply consistent Categories to related Sub-Categories.
+
+8. Confirm that every target row appears exactly once in the output.
+
+
+=======================================================
+OUTPUT FORMAT — IMPORTANT
+=======================================================
+
+Return TWO sections only.
+
+
+=======================================================
+SECTION 1 — COMPLETE NA CATEGORY REVIEW TABLE
+=======================================================
+
+Provide a Markdown table:
+
+| Category Manager Row | Sub-Category | New Category | Reason |
+|---:|---|---|---|
+
+Include EVERY Category Manager row whose Category equals NA.
+
+Do NOT include rows whose Category already contains a valid non-NA value.
+
+For each target row, show the FINAL recommended Category.
+
+Reason should be concise, usually one sentence.
+
+When useful, state whether the classification:
+
+    follows an existing Category precedent
+    is supported by related Sub-Categories
+    is supported by the row's Products/Common Names
+    is supported by Purchase History
+    creates a genuinely new broad Category
+
+
+=======================================================
+SECTION 2 — COMPLETE COPY/PASTE BLOCK
+=======================================================
+
+Return one line for EVERY Category = NA target row.
+
+Use a TAB-SEPARATED code block with:
+
+    Excel Row<TAB>Category
+
+NO header row.
+
+Example:
+
+    17	Food
+    29	Household
+    41	Automotive
+
+Rules:
+
+- exactly two tab-separated values per output line;
+- Excel row number first;
+- final Category second;
+- exact Category Manager Excel row numbers;
+- include every Category = NA row exactly once;
+- do not include any row whose Category was already non-NA;
+- do not return a replacement Category Manager CSV;
+- do not add commentary inside the code block.
+
+The number of copy/paste lines MUST exactly equal the number of rows in
+Section 1.
+
+
+=======================================================
+FINAL BEHAVIOR
+=======================================================
+
+Only classify:
+
+    Category = NA
+
+rows.
+
+Never alter existing non-NA Category assignments.
+
+Use:
+
+    shopgraph_category_manager.txt
+
+as the authoritative source for the existing broad taxonomy and target rows.
+
+Use:
+
+    shopgraph_purchase_history.txt
+
+as supporting evidence for understanding the products and Sub-Categories.
+
+Return:
+
+    1. Complete review table for every Category = NA row.
+    2. Complete Excel Row + Category copy/paste block.
 
 
 ================================================================================
