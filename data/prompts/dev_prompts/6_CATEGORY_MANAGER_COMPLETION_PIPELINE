@@ -1,0 +1,935 @@
+SHOPGRAPH — CATEGORY MANAGER COMPLETION PIPELINE UPDATE
+======================================================
+
+TASK
+----
+
+Modify the attached/current ShopGraph codebase to add a new Category Manager
+completion workflow.
+
+The goal is to create a second LLM-assisted classification stage that occurs
+AFTER ShopGraph has created/refreshed the Category Manager worksheet.
+
+The existing ShopGraph taxonomy is:
+
+    Common Name
+        ↓
+    Sub-Category
+        ↓
+    Category
+
+Purchase History stores:
+
+    Common Name
+    Sub-Category
+
+The Category Manager worksheet maps:
+
+    Category
+        ↓
+    Sub-Category
+        ↓
+    Common Names / Products
+
+The new workflow is specifically responsible for completing missing broad
+Category assignments in Category Manager.
+
+Do NOT redesign the existing taxonomy architecture.
+
+Do NOT add broad Category to Purchase History.
+
+Do NOT replace the existing Category Manager.
+
+Extend the existing architecture conservatively.
+
+
+============================================================
+CURRENT RELEVANT WORKFLOW
+============================================================
+
+ShopGraph currently contains:
+
+    Data Base Builder
+        → Category Manager
+            → Create / Refresh Category Manager
+
+When Category Manager is refreshed, products and Sub-Categories are rebuilt
+from Purchase History while existing valid:
+
+    Sub-Category → Category
+
+mappings are preserved.
+
+New or unmapped Sub-Categories can therefore appear in Category Manager with:
+
+    Category = NA
+
+The user currently reaches this through:
+
+    ShopGraph
+        → Utilities
+            → Data Base Builder
+                → Category Manager
+                    → Create / Refresh Category Manager
+
+
+============================================================
+FEATURE 1 — CATEGORY MANAGER TXT EXPORTER
+============================================================
+
+Create a reusable utility that exports the current:
+
+    Category Manager
+
+worksheet from:
+
+    data/database/shopgraph_purchase_history.xlsx
+
+to a CSV-formatted TXT file.
+
+This should be conceptually parallel to the existing:
+
+    utils/export_purchase_history_txt.py
+
+and its:
+
+    Export Purchase History as CSV TXT
+
+functionality.
+
+However, this new exporter must export the:
+
+    Category Manager
+
+worksheet rather than:
+
+    Purchase History
+
+
+------------------------------------------------------------
+OUTPUT FILE
+------------------------------------------------------------
+
+Use:
+
+    data/database/shopgraph_category_manager.txt
+
+unless the existing project architecture strongly indicates a more appropriate
+location consistent with the Purchase History TXT export.
+
+The export must represent the current live Category Manager worksheet.
+
+Preserve the worksheet's actual columns and values.
+
+The output must be CSV-formatted text, consistent with the existing Purchase
+History TXT exporter wherever practical.
+
+
+------------------------------------------------------------
+REUSABLE FUNCTION
+------------------------------------------------------------
+
+Implement the exporter as a reusable function so it can be called from:
+
+    1. the Utilities menu
+    2. the new Pipeline workflow
+
+Do not duplicate the export implementation between those two locations.
+
+
+============================================================
+FEATURE 2 — ADD CATEGORY MANAGER EXPORT TO UTILITIES
+============================================================
+
+The current standalone Utilities menu includes approximately:
+
+    === ShopGraph Utilities ===
+
+    1. Export Clean Codebase
+    2. Clean Generated Processing Data
+    3. Evaluate OCR Against Benchmarks
+    4. Convert PDF Files to JPG
+    5. Clean Source Data
+    6. Export Purchase History as CSV TXT
+    7. Import Code Update ZIP
+    8. Update Purchase History Copy
+    9. Import Picture to Current Folder
+    0. Return to Utilities Menu
+
+Add:
+
+    10. Export Category Manager as CSV TXT
+
+Do not renumber the existing options.
+
+Selecting option 10 should run the reusable Category Manager exporter.
+
+Use output/status messages consistent with the existing Purchase History TXT
+exporter, for example:
+
+    === Export Category Manager as CSV TXT ===
+
+    [OK] Category Manager exported as CSV-formatted text.
+
+    Source:
+    <workbook path>
+
+    Worksheet:
+    Category Manager
+
+    Output:
+    <TXT path>
+
+Preserve the global -1 exit behavior.
+
+
+============================================================
+FEATURE 3 — NEW LLM CLASSIFICATION PROMPT
+============================================================
+
+Create a new prompt file under:
+
+    data/prompts/dev_prompts/
+
+Use a descriptive filename such as:
+
+    shopgraph_category_completion_prompt.txt
+
+The prompt should be modeled structurally and philosophically after the
+existing:
+
+    shopgraph_common_name_subcategory_completion_prompt.txt
+
+but it performs a DIFFERENT classification task.
+
+
+============================================================
+PURPOSE OF THE NEW PROMPT
+============================================================
+
+The prompt will receive TWO ShopGraph exports:
+
+    1. shopgraph_category_manager.txt
+    2. shopgraph_purchase_history.txt
+
+Its job is to examine Category Manager and identify every Sub-Category whose:
+
+    Category = NA
+
+It must intelligently assign the best broad Category to each of those
+Sub-Categories.
+
+The prompt must use BOTH files as evidence.
+
+
+============================================================
+SHOPGRAPH TAXONOMY RULE
+============================================================
+
+The hierarchy is:
+
+    Common Name
+        ↓
+    Sub-Category
+        ↓
+    Category
+
+The prompt is ONLY completing:
+
+    Sub-Category → Category
+
+relationships.
+
+It must NOT:
+
+    rename Common Names
+    rename Sub-Categories
+    modify Purchase History
+    create Common Names
+    reclassify products into different Sub-Categories
+    change existing non-NA Category assignments
+    create another taxonomy level
+
+The task is specifically:
+
+    Find Category Manager rows where Category = NA
+        ↓
+    determine the appropriate broad Category
+        ↓
+    return replacement Category values
+
+
+============================================================
+EXISTING CATEGORY ASSIGNMENTS ARE AUTHORITATIVE
+============================================================
+
+Existing non-NA Category assignments in Category Manager are the primary
+taxonomy reference.
+
+The model should first study all existing:
+
+    Sub-Category → Category
+
+relationships.
+
+These teach ShopGraph's existing broad Category taxonomy.
+
+For example, if Category Manager already demonstrates relationships such as:
+
+    Fresh Fruit → Food
+    Fresh Vegetables → Food
+    Bread → Food
+
+then another food-oriented Sub-Category should normally reuse:
+
+    Food
+
+rather than creating a synonymous broad Category.
+
+The exact categories must come from the actual supplied data.
+
+Do NOT hard-code the examples above into the result.
+
+
+============================================================
+USE PURCHASE HISTORY AS SUPPORTING EVIDENCE
+============================================================
+
+shopgraph_purchase_history.txt provides additional context for understanding
+what each Sub-Category actually contains.
+
+Use relevant fields such as:
+
+    Store
+    Six-Digit SKU
+    Product
+    Common Name
+    Sub-Category
+
+to understand the meaning of an unmapped Sub-Category.
+
+For example:
+
+    Category Manager:
+        Category = NA
+        Sub-Category = some unfamiliar classification
+
+The model should inspect Purchase History rows belonging to that Sub-Category
+and study their Common Names and Product descriptions.
+
+This allows the model to determine what the Sub-Category represents before
+assigning its broad Category.
+
+
+============================================================
+CLASSIFICATION PRIORITY
+============================================================
+
+For every Category Manager row where:
+
+    Category = NA
+
+use this reasoning order:
+
+1. Study all existing non-NA Sub-Category → Category relationships.
+
+2. Determine whether the unmapped Sub-Category clearly belongs to one of the
+   established broad Categories.
+
+3. Inspect Common Names / Products already associated with that Sub-Category
+   in Category Manager.
+
+4. Inspect corresponding Purchase History records for additional evidence.
+
+5. Prefer an EXISTING broad Category whenever it genuinely represents the
+   Sub-Category.
+
+6. Avoid creating near-duplicate broad Categories that differ only in wording,
+   capitalization, singular/plural, or minor phrasing.
+
+7. Do not force a genuinely different domain into an inappropriate existing
+   Category merely to avoid creating a new Category.
+
+8. Create a new broad Category only when the Sub-Category represents a
+   materially different domain not adequately represented by the existing
+   taxonomy.
+
+
+============================================================
+NEW BROAD CATEGORIES
+============================================================
+
+ShopGraph may eventually contain purchases across many domains.
+
+Examples might include:
+
+    food
+    household goods
+    automotive
+    tools
+    electronics
+    office supplies
+    garden
+    furniture
+    pet supplies
+    clothing
+    services
+
+Do not assume every Sub-Category belongs to the existing grocery-oriented
+taxonomy.
+
+If an unmapped Sub-Category clearly represents a genuinely new domain, the
+model may create a new broad Category.
+
+A new Category should:
+
+    be concise
+    be human-readable
+    represent a broad purchasing domain
+    be broader than Sub-Category
+    support future comparable Sub-Categories
+    match the naming style of existing Categories
+    not describe a retailer
+    not simply repeat the Sub-Category name unless that is genuinely the
+        correct broader concept
+
+Do not create new Categories unnecessarily.
+
+
+============================================================
+UNCERTAINTY
+============================================================
+
+Make the best evidence-based classification when reasonable.
+
+Use:
+
+    NA
+
+only when the available Category Manager and Purchase History evidence is
+genuinely insufficient to determine a reasonable broad Category.
+
+Do not fabricate unsupported classifications merely to avoid NA.
+
+However, do not use NA merely because classification requires ordinary
+semantic inference.
+
+
+============================================================
+NEW PROMPT OUTPUT — SECTION 1
+============================================================
+
+Return a review table containing EVERY Category Manager row whose Category was
+NA.
+
+Use:
+
+| Category Manager Row | Sub-Category | New Category | Reason |
+|---:|---|---|---|
+
+The Reason should be concise but specific.
+
+When useful, explain that the classification:
+
+    follows an existing Category precedent
+    is supported by related Sub-Categories
+    is supported by Purchase History products/Common Names
+    requires creation of a genuinely new broad Category
+
+
+============================================================
+NEW PROMPT OUTPUT — SECTION 2
+============================================================
+
+The second section must be optimized for direct Excel copy/paste.
+
+Return the final Category values for the NA rows.
+
+Because NA Category cells may not necessarily form one contiguous Excel range,
+the output must clearly preserve the Category Manager Excel row number for
+each replacement.
+
+Use a TAB-SEPARATED code block:
+
+    Excel Row<TAB>Category
+
+with NO header.
+
+Example:
+
+    17	Food
+    29	Household
+    41	Automotive
+
+The number of lines must exactly equal the number of Category Manager rows
+identified as Category = NA.
+
+Do not include rows whose existing Category is already populated.
+
+Do not rewrite the entire Category Manager.
+
+Do not return a replacement CSV.
+
+
+============================================================
+NEW PROMPT — IMPORTANT SAFETY RULE
+============================================================
+
+The LLM must NEVER recommend changing an existing non-NA Category assignment
+as part of this workflow.
+
+Existing assignments are authoritative taxonomy evidence.
+
+Only:
+
+    Category = NA
+
+rows are targets.
+
+The key rule is:
+
+    EXISTING CATEGORY ASSIGNMENTS TEACH THE BROAD TAXONOMY.
+    NA CATEGORY ASSIGNMENTS ARE THE ITEMS TO CLASSIFY.
+
+
+============================================================
+FEATURE 4 — NEW PIPELINE EXPORT
+============================================================
+
+Create a new Pipeline export analogous to the existing:
+
+    Pipeline Export 1
+
+The existing Pipeline Export 1 exports the files needed for Common Name /
+Sub-Category completion.
+
+Create:
+
+    Pipeline Export 2
+
+Destination:
+
+    <configured import location>/
+        PipelineExports/
+            Export_2/
+
+Use the same configured import location architecture already used by Pipeline
+Export 1.
+
+Do NOT introduce another import/export location configuration.
+
+
+============================================================
+EXPORT_2 CONTENTS
+============================================================
+
+Export_2 must contain exactly the workflow files needed for the new Category
+classification task:
+
+    1. shopgraph_category_manager.txt
+    2. shopgraph_category_completion_prompt.txt
+    3. shopgraph_purchase_history.txt
+
+The TXT exports must be refreshed from the LIVE workbook immediately before
+being copied into Export_2.
+
+Do not rely on stale TXT exports left over from an earlier run.
+
+Existing files in Export_2 with those same names may be overwritten.
+
+Do not move or delete the original ShopGraph files.
+
+
+============================================================
+FEATURE 5 — NEW PIPELINE CAPABILITY
+============================================================
+
+The current Pipelines menu contains approximately:
+
+    === ShopGraph Pipelines ===
+
+    1. Pipeline Part 1
+    2. Pipeline Export 1
+    0. Return to Capabilities Menu
+
+Add a new workflow.
+
+Use this final menu:
+
+    === ShopGraph Pipelines ===
+
+    1. Pipeline Part 1
+    2. Pipeline Export 1
+    3. Category Manager Completion
+    4. Pipeline Export 2
+    0. Return to Capabilities Menu
+
+
+============================================================
+OPTION 3 — CATEGORY MANAGER COMPLETION
+============================================================
+
+Option:
+
+    3. Category Manager Completion
+
+should automate the prerequisite ShopGraph work that needs to happen BEFORE
+Pipeline Export 2.
+
+Its workflow should be:
+
+    [1] Create / Refresh Category Manager
+            ↓
+    [2] Pipeline Export 2
+
+The first step must use the SAME underlying reusable Category Manager
+create/refresh functionality already used by:
+
+    Data Base Builder
+        → Category Manager
+            → Create / Refresh Category Manager
+
+Do NOT duplicate Category Manager generation logic.
+
+If the existing Category Manager module currently exposes only an interactive
+menu wrapper, refactor minimally so the underlying create/refresh operation can
+be called safely from both:
+
+    the existing Category Manager menu
+    the new pipeline
+
+without duplicating business logic.
+
+
+============================================================
+CATEGORY MANAGER COMPLETION WORKFLOW
+============================================================
+
+When option 3 runs, display something conceptually like:
+
+    === ShopGraph Category Manager Completion ===
+
+    [1/2] Create / Refresh Category Manager
+
+    [OK] Category Manager created / refreshed.
+
+    [2/2] Pipeline Export 2
+
+    [OK] Pipeline Export 2 complete.
+
+The user should not have to manually navigate into Data Base Builder and
+refresh Category Manager first.
+
+After Category Manager refresh succeeds, automatically run Pipeline Export 2.
+
+If Category Manager refresh fails:
+
+    STOP.
+
+Do not generate Export_2 from potentially stale Category Manager data.
+
+If Category Manager refresh succeeds but Pipeline Export 2 fails:
+
+    report that the Category Manager refresh succeeded
+    report that Pipeline Export 2 failed
+    do not roll back the valid Category Manager refresh
+
+
+============================================================
+OPTION 4 — PIPELINE EXPORT 2
+============================================================
+
+Also expose:
+
+    4. Pipeline Export 2
+
+as a standalone Pipeline option.
+
+This should allow the user to regenerate Export_2 without necessarily running
+Category Manager Completion.
+
+However, Pipeline Export 2 itself MUST still refresh both TXT representations
+from the current workbook:
+
+    Category Manager → shopgraph_category_manager.txt
+    Purchase History → shopgraph_purchase_history.txt
+
+before copying the files.
+
+
+============================================================
+RELATIONSHIP TO PIPELINE PART 1
+============================================================
+
+Do NOT change Pipeline Part 1 unless required for compatibility.
+
+Do NOT automatically attach Category Manager Completion to Pipeline Part 1 in
+this update.
+
+The workflows should remain separately callable:
+
+    Pipeline Part 1
+    Pipeline Export 1
+    Category Manager Completion
+    Pipeline Export 2
+
+This keeps each stage independently testable.
+
+
+============================================================
+ARCHITECTURAL REQUIREMENTS
+============================================================
+
+Keep the implementation close to the existing ShopGraph architecture.
+
+Prefer extending existing modules over creating unnecessary abstractions.
+
+Likely relevant files include:
+
+    capabilities/pipelines.py
+    utils/utils_main.py
+    utils/export_purchase_history_txt.py
+    utils/DataBaseBuilder/excel/category_manager.py
+    data/prompts/dev_prompts/
+        shopgraph_common_name_subcategory_completion_prompt.txt
+
+You may create a focused new module such as:
+
+    utils/export_category_manager_txt.py
+
+if that produces cleaner separation.
+
+The exact module choice should follow the conventions already present in the
+attached codebase.
+
+
+============================================================
+DO NOT DUPLICATE BUSINESS LOGIC
+============================================================
+
+There should be ONE reusable implementation for:
+
+    exporting Purchase History TXT
+
+ONE reusable implementation for:
+
+    exporting Category Manager TXT
+
+ONE reusable implementation for:
+
+    creating/refreshing Category Manager
+
+Pipeline functions and menu handlers should call those implementations.
+
+Do not copy/paste the underlying algorithms into capabilities/pipelines.py.
+
+
+============================================================
+DO NOT BREAK EXISTING FEATURES
+============================================================
+
+Preserve:
+
+    OCR Acquisition Pipeline
+    OCR Acquisition Pipeline - All Images
+    OCR Acquisition Pipeline + Data Base Builder
+    OCR Acquisition Pipeline - All Images + Data Base Builder
+    Pipeline Part 1
+    Pipeline Export 1
+    Purchase History TXT export
+    Category Manager
+    Apply Category Manager to Purchase History
+    Analytics
+    Budget Plans
+    Picture Importer
+    Code Update Importer
+    global -1 exit behavior
+
+Existing menu option numbers must remain stable except for adding the new
+options described above.
+
+
+============================================================
+RUNTIME DATA / UPDATE ZIP SAFETY
+============================================================
+
+Do NOT package runtime-generated data that could overwrite the user's real
+ShopGraph data.
+
+In particular, do NOT include generated copies of:
+
+    data/database/shopgraph_purchase_history.xlsx
+    data/database/shopgraph_purchase_history.txt
+    data/database/shopgraph_category_manager.txt
+    utils/config.txt
+    utils/config/settings.txt
+    budget plan runtime JSON files
+    PipelineExports runtime output folders
+
+The new PROMPT file IS source-controlled project content and SHOULD be included
+in the update ZIP:
+
+    data/prompts/dev_prompts/shopgraph_category_completion_prompt.txt
+
+
+============================================================
+README
+============================================================
+
+Add a concise README describing:
+
+    Category Manager TXT export
+    Category Manager Completion
+    Pipeline Export 2
+    Export_2 contents
+    new prompt
+    menu locations
+    workflow order
+
+Use the existing README conventions.
+
+
+============================================================
+EXPECTED FILE CHANGES
+============================================================
+
+Inspect the actual attached codebase before deciding the final file list.
+
+A likely update will involve something similar to:
+
+    capabilities/
+        pipelines.py
+
+    utils/
+        utils_main.py
+        export_category_manager_txt.py
+
+    utils/
+        DataBaseBuilder/
+            excel/
+                category_manager.py
+        [only if a small reusable-function refactor is necessary]
+
+    data/
+        prompts/
+            dev_prompts/
+                shopgraph_category_completion_prompt.txt
+
+    README/
+        README_CATEGORY_MANAGER_COMPLETION_PIPELINE.txt
+
+Do not modify unrelated files.
+
+
+============================================================
+TESTING REQUIREMENTS
+============================================================
+
+Before returning the update:
+
+1. Run Python syntax compilation on every changed/new Python file.
+
+2. Verify the standalone Category Manager TXT exporter targets the:
+       Category Manager
+   worksheet, not Purchase History.
+
+3. Verify Purchase History TXT export still targets:
+       Purchase History
+
+4. Verify Pipeline Export 2 contains:
+       shopgraph_category_manager.txt
+       shopgraph_category_completion_prompt.txt
+       shopgraph_purchase_history.txt
+
+5. Verify Pipeline Export 2 refreshes BOTH TXT files before copying them.
+
+6. Verify Category Manager Completion executes:
+       Create / Refresh Category Manager
+       THEN
+       Pipeline Export 2
+
+7. Verify a Category Manager refresh failure prevents Pipeline Export 2.
+
+8. Verify existing Pipeline Export 1 remains unchanged and functional.
+
+9. Verify existing menu option numbers remain stable.
+
+10. Verify:
+        3. Category Manager Completion
+        4. Pipeline Export 2
+    appear under ShopGraph Pipelines.
+
+11. Verify:
+        10. Export Category Manager as CSV TXT
+    appears under standalone Utilities.
+
+12. Verify the new prompt targets ONLY Category = NA rows.
+
+13. Verify the new prompt never instructs the LLM to alter existing non-NA
+    Category assignments.
+
+14. Verify no runtime database/config/export files are packaged.
+
+15. Verify the update contains no __pycache__, .pyc, or temporary files.
+
+
+============================================================
+DELIVERABLE
+============================================================
+
+Return ONE importer-compatible ZIP overlay that can be installed through
+ShopGraph's existing:
+
+    Import Code Update ZIP
+
+utility.
+
+The ZIP must preserve project-relative paths.
+
+It may contain one wrapper directory if compatible with the existing importer.
+
+Do NOT return isolated snippets instead of the ZIP.
+
+Do NOT require the user to manually copy individual Python functions.
+
+The update should be directly importable into the current ShopGraph project.
+
+
+============================================================
+FINAL DESIGN INTENT
+============================================================
+
+The resulting workflow should be:
+
+    Purchase History
+        ↓
+    Create / Refresh Category Manager
+        ↓
+    identify newly unmapped Sub-Categories as Category = NA
+        ↓
+    Pipeline Export 2
+        ↓
+    Export_2/
+        shopgraph_category_manager.txt
+        shopgraph_category_completion_prompt.txt
+        shopgraph_purchase_history.txt
+        ↓
+    LLM analyzes Category = NA rows
+        ↓
+    user receives intelligent broad Category assignments
+
+The existing Common Name/Sub-Category workflow remains separate:
+
+    Purchase History
+        ↓
+    Pipeline Export 1
+        ↓
+    Common Name + Sub-Category classification
+
+Together, the two LLM-assisted stages correspond to ShopGraph's hierarchy:
+
+    Common Name
+        ↓
+    Sub-Category
+        ↓
+    Category

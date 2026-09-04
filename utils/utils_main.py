@@ -46,6 +46,9 @@ from utils.clean_source_data import (
 from utils.export_purchase_history_txt import (
     run_purchase_history_txt_export,
 )
+from utils.export_category_manager_txt import (
+    run_category_manager_txt_export,
+)
 from utils.code_update_importer import (
     run_code_update_importer_menu,
 )
@@ -235,6 +238,9 @@ def display_standalone_utilities_menu() -> None:
         "9. Import Picture to Current Folder"
     )
     print(
+        "10. Export Category Manager as CSV TXT"
+    )
+    print(
         "0. Return to Utilities Menu"
     )
 
@@ -265,6 +271,8 @@ def run_standalone_utilities_menu() -> None:
             run_purchase_history_backup_menu()
         elif option == "9":
             run_picture_importer_menu()
+        elif option == "10":
+            run_category_manager_txt_export()
         elif option == "0":
             return
         else:

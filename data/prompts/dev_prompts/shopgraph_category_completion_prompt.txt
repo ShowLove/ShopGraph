@@ -1,0 +1,345 @@
+SHOPGRAPH — CATEGORY MANAGER BROAD CATEGORY COMPLETION
+=======================================================
+
+TASK
+----
+
+Analyze the attached ShopGraph exports:
+
+    shopgraph_category_manager.txt
+    shopgraph_purchase_history.txt
+
+Your job is to complete ONLY missing broad Category assignments in the
+Category Manager export.
+
+ShopGraph taxonomy:
+
+    Common Name
+        ↓
+    Sub-Category
+        ↓
+    Category
+
+The Category Manager contains:
+
+    Category
+    Sub-Category
+    Product 1
+    Product 2
+    Product 3
+    ...
+
+The Purchase History contains the underlying product history and includes:
+
+    Store
+    Six-Digit SKU
+    Product
+    Common Name
+    Sub-Category
+    purchase dates/prices
+
+The only target rows are Category Manager rows whose:
+
+    Category = NA
+
+Existing non-NA Category assignments are authoritative taxonomy reference data.
+
+Do NOT modify or recommend changes to any existing non-NA Category assignment.
+
+
+=======================================================
+CORE RULE
+=======================================================
+
+    EXISTING CATEGORY ASSIGNMENTS TEACH THE BROAD TAXONOMY.
+    NA CATEGORY ASSIGNMENTS ARE THE ITEMS TO CLASSIFY.
+
+
+=======================================================
+WHAT MAY BE CHANGED
+=======================================================
+
+ONLY determine the broad Category for Category Manager rows where:
+
+    Category = NA
+
+Do NOT:
+
+    rename Common Names
+    rename Products
+    rename Sub-Categories
+    move Products between Sub-Categories
+    alter Purchase History
+    change non-NA Category assignments
+    create another taxonomy level
+    rewrite Category Manager
+    return a replacement CSV
+
+
+=======================================================
+HOW TO LEARN THE EXISTING CATEGORY TAXONOMY
+=======================================================
+
+First study every existing non-NA:
+
+    Sub-Category → Category
+
+relationship in shopgraph_category_manager.txt.
+
+Those assignments are authoritative evidence of ShopGraph's intended broad
+taxonomy and naming style.
+
+Build an internal reference map such as:
+
+    existing Sub-Category
+        → existing broad Category
+
+Do not "clean up," rename, merge, normalize, or reorganize those historical
+assignments.
+
+When an NA Sub-Category clearly belongs to an existing Category, reuse the
+existing Category exactly as written.
+
+
+=======================================================
+USE CATEGORY MANAGER PRODUCT EVIDENCE
+=======================================================
+
+For each Category = NA row, study:
+
+    Sub-Category
+    Product 1
+    Product 2
+    Product 3
+    ...
+
+These Products/Common Names show what the Sub-Category actually contains.
+
+Analyze all products on the row together rather than relying only on the
+Sub-Category wording.
+
+
+=======================================================
+USE PURCHASE HISTORY AS SUPPORTING EVIDENCE
+=======================================================
+
+Use shopgraph_purchase_history.txt to understand ambiguous or unfamiliar
+Sub-Categories.
+
+Find Purchase History rows whose:
+
+    Sub-Category
+
+matches the NA Category Manager row.
+
+Then study relevant:
+
+    Store
+    Six-Digit SKU
+    Product
+    Common Name
+    Sub-Category
+
+data.
+
+Purchase History is supporting product evidence.
+
+Existing non-NA Category Manager assignments remain the authority for the
+broad taxonomy.
+
+
+=======================================================
+CLASSIFICATION PRIORITY
+=======================================================
+
+For every Category = NA row:
+
+1. Identify what the Sub-Category represents from its name and associated
+   Products/Common Names.
+
+2. Check existing non-NA Sub-Category → Category relationships for closely
+   related product types.
+
+3. Use Purchase History product records when additional context is useful.
+
+4. Prefer an EXISTING broad Category when it genuinely represents the
+   Sub-Category.
+
+5. Reuse the exact established Category spelling/capitalization.
+
+6. Avoid creating near-duplicate Categories that differ only by wording,
+   capitalization, singular/plural, or minor phrasing.
+
+7. Do NOT force an item into an existing Category merely because it is the
+   closest available label.
+
+8. Create a NEW broad Category only when the Sub-Category belongs to a
+   materially different purchasing domain not adequately represented by the
+   established taxonomy.
+
+9. Apply the same reasoning consistently to related NA Sub-Categories.
+
+
+=======================================================
+NEW BROAD CATEGORIES
+=======================================================
+
+ShopGraph may contain purchases from many domains, including groceries,
+household goods, baby products, personal care, pets, automotive, tools,
+electronics, office supplies, garden, furniture, clothing, services, and
+others.
+
+Do not assume every new Sub-Category belongs to Food.
+
+A new Category may be created when necessary.
+
+A new broad Category should:
+
+    be concise
+    be human-readable
+    represent a broad purchasing domain
+    be broader than a Sub-Category
+    be useful for future comparable Sub-Categories
+    match the naming style of existing Categories
+    not describe a retailer
+    not simply repeat a highly specific Sub-Category unless that genuinely
+        represents the broader domain
+
+Create new Categories conservatively.
+
+
+=======================================================
+UNCERTAINTY
+=======================================================
+
+Make the best evidence-based classification when reasonable.
+
+Use:
+
+    NA
+
+only when the Category Manager and Purchase History evidence is genuinely
+insufficient to determine a reasonable broad Category.
+
+Do not fabricate unsupported details merely to avoid NA.
+
+Do not use NA simply because ordinary semantic inference is required.
+
+
+=======================================================
+CONSISTENCY CHECKS
+=======================================================
+
+Before producing the answer:
+
+1. Verify that every target row really has Category = NA.
+
+2. Verify that no non-NA Category Manager row is included as a target.
+
+3. Check whether the proposed Category already exists.
+
+4. Prefer an existing Category over a synonymous new one.
+
+5. Check associated Products/Common Names.
+
+6. Check Purchase History evidence when useful.
+
+7. Apply consistent Categories to related Sub-Categories.
+
+8. Confirm that every target row appears exactly once in the output.
+
+
+=======================================================
+OUTPUT FORMAT — IMPORTANT
+=======================================================
+
+Return TWO sections only.
+
+
+=======================================================
+SECTION 1 — COMPLETE NA CATEGORY REVIEW TABLE
+=======================================================
+
+Provide a Markdown table:
+
+| Category Manager Row | Sub-Category | New Category | Reason |
+|---:|---|---|---|
+
+Include EVERY Category Manager row whose Category equals NA.
+
+Do NOT include rows whose Category already contains a valid non-NA value.
+
+For each target row, show the FINAL recommended Category.
+
+Reason should be concise, usually one sentence.
+
+When useful, state whether the classification:
+
+    follows an existing Category precedent
+    is supported by related Sub-Categories
+    is supported by the row's Products/Common Names
+    is supported by Purchase History
+    creates a genuinely new broad Category
+
+
+=======================================================
+SECTION 2 — COMPLETE COPY/PASTE BLOCK
+=======================================================
+
+Return one line for EVERY Category = NA target row.
+
+Use a TAB-SEPARATED code block with:
+
+    Excel Row<TAB>Category
+
+NO header row.
+
+Example:
+
+    17	Food
+    29	Household
+    41	Automotive
+
+Rules:
+
+- exactly two tab-separated values per output line;
+- Excel row number first;
+- final Category second;
+- exact Category Manager Excel row numbers;
+- include every Category = NA row exactly once;
+- do not include any row whose Category was already non-NA;
+- do not return a replacement Category Manager CSV;
+- do not add commentary inside the code block.
+
+The number of copy/paste lines MUST exactly equal the number of rows in
+Section 1.
+
+
+=======================================================
+FINAL BEHAVIOR
+=======================================================
+
+Only classify:
+
+    Category = NA
+
+rows.
+
+Never alter existing non-NA Category assignments.
+
+Use:
+
+    shopgraph_category_manager.txt
+
+as the authoritative source for the existing broad taxonomy and target rows.
+
+Use:
+
+    shopgraph_purchase_history.txt
+
+as supporting evidence for understanding the products and Sub-Categories.
+
+Return:
+
+    1. Complete review table for every Category = NA row.
+    2. Complete Excel Row + Category copy/paste block.

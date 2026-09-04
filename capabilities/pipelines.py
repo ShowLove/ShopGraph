@@ -29,6 +29,12 @@ from utils.constants import DATA_DIR
 from utils.export_purchase_history_txt import (
     export_purchase_history_as_csv_txt,
 )
+from utils.export_category_manager_txt import (
+    export_category_manager_as_csv_txt,
+)
+from utils.DataBaseBuilder.excel.category_manager import (
+    create_or_refresh_category_manager,
+)
 
 
 def _run_database_builder_for_outputs(
@@ -152,6 +158,171 @@ def run_pipeline_export_1() -> Path | None:
             f"\n{error}"
         )
         return None
+
+
+
+PIPELINE_EXPORT_2_FOLDER = (
+    Path("PipelineExports")
+    / "Export_2"
+)
+
+PIPELINE_EXPORT_2_PROMPT = (
+    DATA_DIR
+    / "prompts"
+    / "dev_prompts"
+    / "shopgraph_category_completion_prompt.txt"
+)
+
+
+def run_pipeline_export_2() -> Path | None:
+    """
+    Refresh and export the three files needed for broad Category completion.
+
+    Destination:
+        <configured import location>/PipelineExports/Export_2/
+
+    Existing destination files are overwritten.
+    Source ShopGraph files remain in place.
+    """
+    print("\n=== ShopGraph Pipeline Export 2 ===\n")
+
+    try:
+        import_location = get_import_location()
+        export_folder = (
+            import_location
+            / PIPELINE_EXPORT_2_FOLDER
+        )
+        export_folder.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
+
+        if not PIPELINE_EXPORT_2_PROMPT.exists():
+            raise FileNotFoundError(
+                "Prompt file was not found:"
+                f"\n{PIPELINE_EXPORT_2_PROMPT.resolve()}"
+            )
+
+        # Always refresh both TXT files from the live workbook immediately
+        # before copying them into Export_2.
+        category_manager_txt = (
+            export_category_manager_as_csv_txt()
+        )
+        purchase_history_txt = (
+            export_purchase_history_as_csv_txt()
+        )
+
+        sources = (
+            category_manager_txt,
+            PIPELINE_EXPORT_2_PROMPT,
+            purchase_history_txt,
+        )
+
+        for source in sources:
+            destination = (
+                export_folder
+                / source.name
+            )
+            shutil.copy2(
+                source,
+                destination,
+            )
+
+        print(
+            "[OK] Pipeline Export 2 complete."
+        )
+        print(
+            "\nExport folder:"
+            f"\n{export_folder.resolve()}"
+        )
+        print(
+            "\nExported / overwritten:"
+        )
+
+        for source in sources:
+            print(
+                f"- {source.name}"
+            )
+
+        return export_folder.resolve()
+
+    except (
+        FileNotFoundError,
+        PermissionError,
+        OSError,
+        ValueError,
+    ) as error:
+        print(
+            f"\n[ERROR] Pipeline Export 2 failed:"
+            f"\n{error}"
+        )
+        return None
+
+
+def run_category_manager_completion() -> None:
+    """
+    Refresh Category Manager and, only if that succeeds, create Pipeline Export 2.
+    """
+    print(
+        "\n=== ShopGraph Category Manager Completion ===\n"
+    )
+
+    print(
+        "[1/2] Create / Refresh Category Manager"
+    )
+
+    try:
+        result = (
+            create_or_refresh_category_manager()
+        )
+    except (
+        FileNotFoundError,
+        PermissionError,
+        OSError,
+        ValueError,
+    ) as error:
+        print(
+            "\n[ERROR] Category Manager refresh failed."
+            f"\n\n{error}"
+        )
+        print(
+            "\n[INFO] Pipeline Export 2 was not created."
+        )
+        return
+
+    print(
+        "\n[OK] Category Manager created / refreshed."
+    )
+    print(
+        f"Categories assigned: {result['category_count']}"
+    )
+    print(
+        f"Sub-Categories: {result['subcategory_count']}"
+    )
+    print(
+        f"Common Names: {result['product_count']}"
+    )
+    print(
+        "Workbook:"
+        f"\n{result['workbook_path']}"
+    )
+
+    print(
+        "\n[2/2] Pipeline Export 2"
+    )
+
+    export_folder = run_pipeline_export_2()
+
+    if export_folder is None:
+        print(
+            "\n[WARNING] Category Manager refresh succeeded, "
+            "but Pipeline Export 2 failed."
+        )
+        return
+
+    print(
+        "\n[OK] Category Manager Completion complete."
+    )
 
 
 def run_pipeline_part_1() -> None:
@@ -305,6 +476,8 @@ def display_pipelines_menu() -> None:
     print("\n=== ShopGraph Pipelines ===\n")
     print("1. Pipeline Part 1")
     print("2. Pipeline Export 1")
+    print("3. Category Manager Completion")
+    print("4. Pipeline Export 2")
     print("0. Return to Capabilities Menu")
 
 
@@ -321,6 +494,12 @@ def run_pipelines_menu() -> None:
 
         elif option == "2":
             run_pipeline_export_1()
+
+        elif option == "3":
+            run_category_manager_completion()
+
+        elif option == "4":
+            run_pipeline_export_2()
 
         elif option == "0":
             return
