@@ -1,110 +1,340 @@
-MASTER RECEIPT ITEM EXTRACTION RULES
-====================================
+##################################################
+ MASTER RECEIPT RULE DISCOVERY & REASSESSMENT PROMPT
 
-GOAL
-----
+##################################################
+
+##################################################
+ PURPOSE 
+##################################################
+
+This document is a living, store-neutral receipt ruleset.
+
+Each time this document is submitted with one or more new receipt
+images, analyze the new receipts against the rules already contained
+below.
+
+The prompt portion of this document should normally remain unchanged
+from iteration to iteration.
+
+The rules portion is expected to mature gradually as additional receipt
+evidence is supplied.
+
+Do not force new rules merely because new receipts were provided. Add,
+modify, or remove a rule only when the new evidence materially justifies
+the change.
+
+##################################################
+ PRIMARY GOAL — PRODUCT NAME + FINAL ITEM PRICE
+
+##################################################
+
 For each purchased item, identify exactly:
-- One Product Name
-- One Final Item Price
 
+-   One Product Name
+-   One Final Item Price
 
-LINE STRUCTURE RULES
-====================
+Study the strings and their ordering, grouping, formatting, numerical
+patterns, and relationships to determine general rules that can reliably
+associate each purchased product with its final item price.
 
-Preserve Line Order,
-Receipt lines must be processed in their original top-to-bottom order.
+The rules should be as store-neutral as possible. A rule learned from
+one store should not be generalized if doing so would conflict with
+evidence from another store.
 
-Product and Price May Share a Line,
-A product description and its final item price may occur on the same line.
+When an existing rule already explains the new receipt evidence, retain
+it rather than creating a redundant rule.
 
-Product and Price May Span Lines,
-A product line without a final price may remain open while immediately following lines are examined for its final item price.
+When new evidence contradicts an existing rule, revise or remove the
+rule rather than adding a conflicting rule.
 
-Following Lines Can Complete an Open Product,
-When a probable product line has no final price, subsequent related lines should be examined before deciding that the product has no price.
+Distinguish strong structural rules from mere patterns that happen to
+occur on one receipt. Do not promote a store-specific convention into a
+universal rule without sufficient evidence.
 
-Intermediate Lines Can Contain Pricing Mathematics,
-Lines between a product name and its final price may contain unit prices, quantities, weights, or promotional calculations.
+Focus primarily on the actual receipt strings and their relationships.
+Do not assume information that is not supported by the receipt.
 
+##################################################
+ SECONDARY GOAL — STORE, DATE, AND STORE NUMBER
 
-PRICE IDENTIFICATION RULES
-==========================
+##################################################
 
-Detect Price-Like Tokens,
-A price-like token normally contains digits followed by a decimal separator and two decimal digits, such as 7.85, 14.29, 0.00, or $3.34.
+As the data becomes sufficient, develop general rules for identifying:
 
-Price-Like Does Not Mean Item Price,
-A price-like token is only a candidate and must not automatically be treated as the final item price.
+-   Store
+-   Date
+-   Store Number
 
-Distinguish Final Price from Price Components,
-A line may contain multiple numeric or monetary values, and only one may represent the final item price.
+Apply the same conservative rule-discovery process used for Product Name
+and Final Item Price.
 
-Unit Price Is Not Necessarily Final Price,
-A monetary value representing a unit price, such as price per pound, must not automatically be treated as the final item price.
+Prefer rules based on observable receipt strings, labels, positions,
+relationships, and repeated patterns.
 
-Weight Is Not Final Price,
-A numeric value representing product weight must not be treated as the final item price.
+Do not create a rule simply because one receipt makes the field obvious.
+Add a rule when the evidence is useful enough to improve general
+extraction without unnecessarily conflicting with receipts from other
+stores.
 
-Quantity Is Not Final Price,
-A numeric value representing quantity must not be treated as the final item price.
+If the current receipts do not provide enough evidence for a reliable
+new rule, leave this part of the ruleset unchanged.
 
-Promotional Price Is Not Necessarily Final Price,
-A monetary value describing a promotion or deal must not automatically be treated as the final item price.
+##################################################
+ RULE REASSESSMENT PROCESS 
+##################################################
 
-Savings Amount Is Not Final Price,
-A monetary value representing savings or a discount must not be treated as the final item price.
+For every new batch of receipts:
 
-Prefer Final Charge over Reference Amount,
-When multiple monetary values are associated with an item, prefer the value representing the actual final charge rather than a unit price, promotional price, savings amount, or reference amount.
+1.  Read the complete existing ruleset before proposing changes.
 
-Zero Is a Valid Item Price,
-A final item price of 0.00 is valid and must not be interpreted as a missing price.
+2.  Analyze each new receipt against the existing rules.
 
+3.  Determine which existing rules are confirmed by the new evidence.
 
-POSITION RULES
-==============
+4.  Determine whether any existing rule is contradicted, too broad, too
+    narrow, redundant, or misleading.
 
-Use Price Position as Evidence,
-A monetary value occupying the established item-price position or column is stronger evidence of the final item price than a monetary value embedded within descriptive or calculation text.
+5.  Add a new rule only when the new evidence reveals a recurring or
+    important situation that the existing rules do not already cover.
 
-Price Position Is Not Absolute,
-The position of a monetary value should be treated as evidence rather than absolute proof that it is the final item price.
+6.  Modify an existing rule when the underlying idea remains valid but
+    the new evidence shows that its wording or scope needs refinement.
 
+7.  Remove a rule only when the accumulated evidence shows that the rule
+    is incorrect, redundant, or harmful to general receipt
+    interpretation.
 
-PRODUCT ASSOCIATION RULES
-=========================
+8.  Avoid store-specific rules in this master ruleset unless a rule can
+    be expressed in a way that remains compatible with other stores.
 
-Modifier Lines May Belong to Previous Product,
-A line describing quantity, weight, promotion, discount, or price calculation may belong to the preceding product rather than representing another product.
+9.  Preserve uncertainty when the evidence is insufficient. Do not
+    invent a rule merely to produce a complete answer.
 
-Savings Lines Are Not Products,
-A savings or discount line associated with a product must not generate a separate purchased item.
+10. Preserve the general organization, section headings, and
+    human-readable formatting of this document from iteration to
+    iteration.
 
-Do Not Create Items from Pricing Mathematics,
-A line whose purpose is to explain the calculation of another item's price should not independently create a purchased item.
+##################################################
+ AI RESPONSE FOR EACH ITERATION 
+##################################################
 
+In the chat response, clearly report what happened to the rules.
 
-REPEATED PRODUCT RULES
-======================
+State:
 
-Repeated Product Names Are Valid,
-Identical product descriptions may represent multiple independently purchased units.
+-   Rules Added
+-   Rules Modified
+-   Rules Removed
+-   Important Existing Rules Confirmed
+-   Why each actual change was necessary
 
-Do Not Deduplicate by Product Name,
-Repeated product descriptions must not automatically be merged or removed.
+If no rules need to change, explicitly say that the new receipts are
+already covered by the existing rules and do not modify the rules merely
+to create a change.
 
-Each Independently Priced Occurrence Is an Item,
-Each independently priced occurrence of a product should normally be retained as a separate purchased item.
+Keep this discussion concise and evidence-based.
 
+Then provide a downloadable updated version of this complete document,
+including this unchanged prompt at the top and the current ruleset below
+it.
 
-FINAL OUTPUT RULES
-==================
+The downloadable document becomes the version to attach with the next
+batch of receipt data.
 
-One Item Has One Final Price,
-Regardless of how many source lines or numeric values participate in an item record, the normalized item must contain exactly one final item price.
+##################################################
+ RULESET MAINTENANCE PRINCIPLE 
+##################################################
 
-One Item Has One Product Name,
-Regardless of how many source lines participate in an item record, the normalized item must contain exactly one product name.
+The objective is not to maximize the number of rules.
 
-Preserve Ambiguity When Necessary,
-If the available lines do not provide sufficient evidence to associate one final price with one product, preserve the ambiguity for later processing rather than inventing an association.
+The objective is to develop the smallest sufficiently complete set of
+general rules that accurately explains increasingly diverse receipt
+data.
+
+As more receipts are analyzed, the ruleset should become more mature,
+stable, and general rather than simply becoming longer.
+
+##################################################
+ CURRENT RULESET 
+##################################################
+
+MASTER RECEIPT ITEM EXTRACTION RULES
+
+##################################################
+ GOAL 
+##################################################
+
+For each purchased item, identify exactly: - One Product Name - One
+Final Item Price
+
+##################################################
+ LINE STRUCTURE RULES 
+##################################################
+
+Preserve Line Order, Receipt lines must be processed in their original
+top-to-bottom order.
+
+Product and Price May Share a Line, A product description and its final
+item price may occur on the same line.
+
+Product and Price May Span Lines, A product line without a final price
+may remain open while immediately following lines are examined for its
+final item price.
+
+Following Lines Can Complete an Open Product, When a probable product
+line has no final price, subsequent related lines should be examined
+before deciding that the product has no price.
+
+Intermediate Lines Can Contain Pricing Mathematics, Lines between a
+product name and its final price may contain unit prices, quantities,
+weights, or promotional calculations.
+
+Product Metadata May Share an Item Line, Text such as quantity,
+fulfillment status, substitution status, or weight-adjustment status may
+appear between the product description and final item price and must not
+be mistaken for a separate product or price.
+
+##################################################
+ PRICE IDENTIFICATION RULES 
+##################################################
+
+Detect Price-Like Tokens, A price-like token normally contains digits
+followed by a decimal separator and two decimal digits, such as 7.85,
+14.29, 0.00, or $3.34.
+
+Price-Like Does Not Mean Item Price, A price-like token is only a
+candidate and must not automatically be treated as the final item price.
+
+Distinguish Final Price from Price Components, A line may contain
+multiple numeric or monetary values, and only one may represent the
+final item price.
+
+Unit Price Is Not Necessarily Final Price, A monetary value representing
+a unit price, such as price per pound, must not automatically be treated
+as the final item price.
+
+Weight Is Not Final Price, A numeric value representing product weight
+must not be treated as the final item price.
+
+Quantity Is Not Final Price, A numeric value representing quantity must
+not be treated as the final item price.
+
+Quantity Does Not Require Price Splitting, When one product record shows
+a quantity greater than one but provides one final monetary value,
+preserve the displayed final item-line price unless the receipt provides
+evidence that the value is a per-unit price.
+
+Displayed Price Can Represent Multiple Units, A single final item price
+may represent the combined charge for multiple units of the same
+product, so quantity metadata must be preserved as evidence even when
+the normalized output remains one product name and one final item price.
+
+Promotional Price Is Not Necessarily Final Price, A monetary value
+describing a promotion or deal must not automatically be treated as the
+final item price.
+
+Savings Amount Is Not Final Price, A monetary value representing savings
+or a discount must not be treated as the final item price.
+
+Prefer Final Charge over Reference Amount, When multiple monetary values
+are associated with an item, prefer the value representing the actual
+final charge rather than a unit price, promotional price, savings
+amount, or reference amount.
+
+Zero Is a Valid Item Price, A final item price of 0.00 is valid and must
+not be interpreted as a missing price.
+
+##################################################
+ POSITION RULES 
+##################################################
+
+Use Price Position as Evidence, A monetary value occupying the
+established item-price position or column is stronger evidence of the
+final item price than a monetary value embedded within descriptive or
+calculation text.
+
+Price Position Is Not Absolute, The position of a monetary value should
+be treated as evidence rather than absolute proof that it is the final
+item price.
+
+##################################################
+ PRODUCT ASSOCIATION RULES 
+##################################################
+
+Modifier Lines May Belong to Previous Product, A line describing
+quantity, weight, promotion, discount, or price calculation may belong
+to the preceding product rather than representing another product.
+
+Savings Lines Are Not Products, A savings or discount line associated
+with a product must not generate a separate purchased item.
+
+Do Not Create Items from Pricing Mathematics, A line whose purpose is to
+explain the calculation of another item’s price should not independently
+create a purchased item.
+
+Status Text Is Not a Product, Fulfillment or item-status text such as
+shopped, substituted, unavailable, or weight adjusted is metadata
+associated with a product and must not independently generate a
+purchased item.
+
+Product and Price Alone Do Not Prove a Completed Purchase, When explicit
+status metadata indicates that an item was unavailable, the presence of
+a product name and displayed price is not by itself sufficient evidence
+that the item was actually purchased or charged.
+
+##################################################
+ REPEATED PRODUCT RULES 
+##################################################
+
+Repeated Product Names Are Valid, Identical product descriptions may
+represent multiple independently purchased units.
+
+Do Not Deduplicate by Product Name, Repeated product descriptions must
+not automatically be merged or removed.
+
+Each Independently Priced Occurrence Is an Item, Each independently
+priced occurrence of a product should normally be retained as a separate
+purchased item.
+
+##################################################
+ FINAL OUTPUT RULES 
+##################################################
+
+One Item Has One Final Price, Regardless of how many source lines or
+numeric values participate in an item record, the normalized item must
+contain exactly one final item price.
+
+One Item Has One Product Name, Regardless of how many source lines
+participate in an item record, the normalized item must contain exactly
+one product name.
+
+Preserve Ambiguity When Necessary, If the available lines do not provide
+sufficient evidence to associate one final price with one product,
+preserve the ambiguity for later processing rather than inventing an
+association.
+
+##################################################
+ FUTURE GOAL — RECEIPT SECTION IDENTIFICATION 
+##################################################
+
+This goal is intentionally placed at the bottom because the
+rule-discovery process for it has not yet been developed.
+
+Eventually, use receipt evidence to develop general rules that determine
+whether a string or group of strings belongs to:
+
+-   Header
+-   Main Receipt / Purchased Item Section
+-   Footer
+
+The purpose will be to establish reliable boundaries around the
+purchased-item region and distinguish it from store information,
+transaction metadata, totals, payment information, messages, promotions,
+and other non-item content.
+
+Do not force section-identification rules from the current data unless
+this goal is explicitly being analyzed in a future iteration.
+
+As with the other goals, future rules should be based on observable
+evidence, should remain as store-neutral as possible, and should be
+added only when the data supports them.
