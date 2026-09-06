@@ -10,6 +10,7 @@ SUPPORTED_IMAGE_SUFFIXES = {
     ".jpeg",
     ".png",
     ".heic",
+    ".heif",
     ".webp",
     ".tif",
     ".tiff",

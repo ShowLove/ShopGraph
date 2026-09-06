@@ -186,7 +186,7 @@ def _looks_like_supported_image_signature(path: Path) -> bool:
             )
         )
 
-    if suffix == ".heic":
+    if suffix in {".heic", ".heif"}:
         # HEIC/HEIF files are ISO Base Media File Format containers. The
         # compatible brand normally appears in the initial ftyp box.
         if len(header) < 12 or header[4:8] != b"ftyp":

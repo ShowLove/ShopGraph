@@ -6,6 +6,7 @@ import cv2
 import numpy as np
 
 from capabilities.OCRAcquisitionPipeline.constants import CROPPED_DIR
+from capabilities.OCRAcquisitionPipeline.image_loader import load_image_for_opencv
 from capabilities.OCRAcquisitionPipeline.receipt_picker import choose_receipt_image
 from capabilities.OCRAcquisitionPipeline.session_state import set_selected_cropped_image
 
@@ -445,15 +446,9 @@ def crop_receipt(
             f"{source_path}"
         )
 
-    image = cv2.imread(
-        str(source_path)
+    image = load_image_for_opencv(
+        source_path
     )
-
-    if image is None:
-        raise ValueError(
-            "OpenCV could not read image: "
-            f"{source_path}"
-        )
 
     corners = (
         _find_receipt_corners_from_paper(
