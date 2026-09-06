@@ -80,6 +80,7 @@ shopping_analysis/
         README_CATEGORY_MANAGER_COMPLETION_PIPELINE.txt
         README_CATEGORY_MANAGER_PRODUCT_MAPPING_FIX.txt
         README_CODE_UPDATE_IMPORTER.txt
+        README_FINALIZE_TAXONOMY_BUDGETS_PIPELINE.txt
         README_GLOBAL_MINUS_ONE_EXIT.txt
         README_HIERARCHICAL_CATEGORIES_ANALYTICS.txt
         README_PDF_TO_JPG.txt
@@ -121,7 +122,7 @@ shopping_analysis/
 
 ================================================================================
 
-Generated: 2026-09-03 21:27:44.789143
+Generated: 2026-09-06 12:15:25.510691
 Root: /Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis
 Mode: LLM-clean export
 Excluded: receipt images, OCR JSON, datasets, databases, logs, caches
@@ -220,6 +221,10 @@ from utils.export_category_manager_txt import (
 )
 from utils.DataBaseBuilder.excel.category_manager import (
     create_or_refresh_category_manager,
+    apply_category_manager,
+)
+from utils.DataBaseBuilder.budget_plans.budget_plan_menu import (
+    refresh_all_budget_plans,
 )
 
 
@@ -511,6 +516,88 @@ def run_category_manager_completion() -> None:
     )
 
 
+
+def run_finalize_taxonomy_and_budgets() -> None:
+    """
+    Finalize the current ShopGraph taxonomy and refresh every Budget Plan.
+
+    Workflow:
+        1. Apply Category Manager to Purchase History.
+        2. Refresh All Budget Plans.
+
+    Category Manager validation must succeed before Budget Plans are refreshed.
+    Existing Category Manager and Budget Plan business logic is reused directly.
+    """
+    print(
+        "\n=== ShopGraph Finalize Taxonomy + Budgets ===\n"
+    )
+
+    print(
+        "[1/2] Apply Category Manager to Purchase History"
+    )
+
+    try:
+        result = apply_category_manager()
+    except (
+        OSError,
+        ValueError,
+    ) as error:
+        print(
+            "\n[ERROR] Category Manager could not be applied."
+            f"\n\n{error}"
+        )
+        print(
+            "\n[INFO] Budget Plans were not refreshed."
+        )
+        return
+
+    if not result["success"]:
+        print(
+            "\n" + result["report"]
+        )
+        print(
+            "\n[INFO] Budget Plans were not refreshed."
+        )
+        return
+
+    print(
+        "\n[OK] Purchase History Sub-Categories updated successfully."
+    )
+    print(
+        f"Purchase History rows changed: {result['changed_rows']}"
+    )
+    print(
+        f"Categories: {result['category_count']}"
+    )
+    print(
+        f"Sub-Categories: {result['subcategory_count']}"
+    )
+    print(
+        f"Common Names: {result['product_count']}"
+    )
+    print(
+        "Category Manager cleaned and synchronized."
+    )
+    print(
+        f"\nWorkbook:\n{result['workbook_path']}"
+    )
+
+    print(
+        "\n[2/2] Refresh All Budget Plans"
+    )
+
+    # Reuse the existing Budget Plans action exactly. It already handles:
+    # - no plans,
+    # - individual plan failures,
+    # - success/failure counts,
+    # - normal ShopGraph output.
+    refresh_all_budget_plans()
+
+    print(
+        "\n[OK] Finalize Taxonomy + Budgets workflow complete."
+    )
+
+
 def run_pipeline_part_1() -> None:
     """
     Automated single-receipt workflow:
@@ -664,6 +751,7 @@ def display_pipelines_menu() -> None:
     print("2. Pipeline Export 1")
     print("3. Category Manager Completion")
     print("4. Pipeline Export 2")
+    print("5. Finalize Taxonomy + Budgets")
     print("0. Return to Capabilities Menu")
 
 
@@ -686,6 +774,9 @@ def run_pipelines_menu() -> None:
 
         elif option == "4":
             run_pipeline_export_2()
+
+        elif option == "5":
+            run_finalize_taxonomy_and_budgets()
 
         elif option == "0":
             return
@@ -19599,6 +19690,95 @@ NEW:     utils/code_update_importer.py
 UPDATED: utils/utils_main.py
 NEW:     README/README_CODE_UPDATE_IMPORTER.txt
 RUNTIME: utils/config.txt (created automatically; not shipped in this ZIP)
+
+
+================================================================================
+FILE: README/README_FINALIZE_TAXONOMY_BUDGETS_PIPELINE.txt
+================================================================================
+
+ShopGraph - Finalize Taxonomy + Budgets Pipeline
+================================================
+
+PURPOSE
+-------
+Adds one new ShopGraph Pipelines option:
+
+    5. Finalize Taxonomy + Budgets
+
+The new workflow reproduces the user's current manual sequence:
+
+    Category Manager
+        -> Apply Category Manager to Purchase History
+        -> Budget Plans
+            -> Refresh All Budget Plans
+
+PIPELINES MENU
+--------------
+The menu becomes:
+
+    1. Pipeline Part 1
+    2. Pipeline Export 1
+    3. Category Manager Completion
+    4. Pipeline Export 2
+    5. Finalize Taxonomy + Budgets
+    0. Return to Capabilities Menu
+
+WORKFLOW
+--------
+Option 5 performs:
+
+    [1/2] Apply Category Manager to Purchase History
+    [2/2] Refresh All Budget Plans
+
+The workflow calls the existing reusable Category Manager business logic:
+
+    apply_category_manager()
+
+and the existing Budget Plans action:
+
+    refresh_all_budget_plans()
+
+No Category Manager validation logic, Purchase History update logic, Budget
+Plan generation logic, or budget calculations are duplicated.
+
+FAILURE BEHAVIOR
+----------------
+If Category Manager validation/application fails:
+
+    - the error/validation report is shown;
+    - Purchase History remains protected by the existing Category Manager logic;
+    - Budget Plans are NOT refreshed.
+
+If Category Manager succeeds, ShopGraph proceeds to the existing Refresh All
+Budget Plans function, which already reports each plan's success/failure and a
+final successful/failed count.
+
+UNCHANGED
+---------
+This update preserves all existing functionality, including:
+
+    Pipeline Part 1
+    Pipeline Export 1
+    Category Manager Completion
+    Pipeline Export 2
+    Category Manager menus
+    Budget Plans menus
+    OCR workflows
+    Analytics
+    Utilities
+    Code Update Importer
+    global -1 exit behavior
+
+FILES
+-----
+UPDATED:
+    capabilities/pipelines.py
+
+NEW:
+    README/README_FINALIZE_TAXONOMY_BUDGETS_PIPELINE.txt
+
+No runtime database, config, budget plan JSON, prompt, or export files are
+included.
 
 
 ================================================================================
