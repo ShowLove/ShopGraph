@@ -12,6 +12,17 @@ Store #238
 Melbourne, FL
 https://help.aldi .us
 Your cashier today was Candice
+(T) 0.0
+N) 1b x /1
+G) 3.4
+2.99
+1.49
+29
+3,89
+8.29
+870
+.
+ons
 SUBSTRINGS:
 
 [STORE:Publix]

@@ -1,0 +1,1587 @@
+{
+  "source_receipt": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/current_pic/090626_ALDI_238.JPG",
+  "selection_method": "conservative multi-variant receipt-row consensus: best full-receipt candidate supplies reading order; geometry must also have textual/SKU agreement; SKU is never injected into a row; price/tax additions require independent OCR support; absence is preferred to unsupported reconstruction",
+  "backbone_candidate": {
+    "candidate_id": "grayscale_psm4",
+    "image_variant": "grayscale",
+    "psm": 4,
+    "comparison_metrics": {
+      "score": 79.59,
+      "mean_word_confidence": 76.13,
+      "recognized_word_count": 61,
+      "low_confidence_rate": 0.1475,
+      "price_like_count": 3,
+      "sku_count": 12,
+      "plausible_line_count": 18,
+      "garbage_line_count": 0
+    }
+  },
+  "consensus_summary": {
+    "backbone_line_count": 20,
+    "consensus_line_count": 20,
+    "merchandise_line_count": 15,
+    "component_reconstruction_count": 4,
+    "candidate_count": 25,
+    "full_candidate_count": 15,
+    "right_column_candidate_count": 10,
+    "match_threshold": 0.72,
+    "max_row_center_distance": 0.014,
+    "minimum_component_support": 2
+  },
+  "raw_text": "701574 Frmhse Rnch Chd\n356457 Organic Kale\n356591 Pink Lady Apple\n356686 Little Yellows\n356427 Multi-Peppers 3\n396384 Green\n(T) 0.0\nN) 1b x /1 T 2.18\n356417 Mandarins\n692109 Org Celery Heart\n466249 Head & Shoulders\n399518 alt Grinders\n399025 Peppercorn Grind\nrocco] j Crowns\nBananas LR\nBananas LR\nG) 3.4\n399518 alt Grinders\n399025 Peppercorn Grind\n356508 Peppercorn Grind",
+  "text": [
+    {
+      "line_number": 1,
+      "candidate_id": "otsu_psm11",
+      "text": "701574 Frmhse Rnch Chd",
+      "confidence": 91.5,
+      "source_candidate": "otsu_psm11",
+      "image_variant": "otsu",
+      "psm": 11,
+      "support_count": 12,
+      "match_method": "sku",
+      "line_quality_score": 96.9,
+      "consensus_score": 135.4,
+      "normalized_y": 0.017519,
+      "bbox": {
+        "left": 17,
+        "top": 14,
+        "right": 1986,
+        "bottom": 169,
+        "width": 1969,
+        "height": 155
+      },
+      "reconstructed": false,
+      "original_consensus_text": "701574 Frmhse Rnch Chd",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 12
+      },
+      "component_support": {
+        "sku": {
+          "value": "701574",
+          "support_count": 8,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Frmhse Rnch Chd",
+          "source_candidate": "otsu_psm11",
+          "source_text": "701574 Frmhse Rnch Chd",
+          "support_count": 10,
+          "confidence": 91.5,
+          "similarity_to_anchor": 1.0,
+          "score": 153.1,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "701574 Frmhse Rnch Chd",
+      "human_review": {
+        "total": "3.29",
+        "store": "Aldi",
+        "six_digit_sku": "701574",
+        "product": "Frmhse Rnch Chd",
+        "tax_code": "NA",
+        "store_number": "238",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "09/06/2026",
+        "price": "NA"
+      }
+    },
+    {
+      "line_number": 2,
+      "candidate_id": "grayscale_psm4",
+      "text": "356457 Organic Kale",
+      "confidence": 95.67,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 13,
+      "match_method": "backbone",
+      "line_quality_score": 100.47,
+      "consensus_score": 142.47,
+      "normalized_y": 0.051599,
+      "bbox": {
+        "left": 17,
+        "top": 181,
+        "right": 1693,
+        "bottom": 358,
+        "width": 1676,
+        "height": 177
+      },
+      "reconstructed": false,
+      "original_consensus_text": "356457 Organic Kale",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 13
+      },
+      "component_support": {
+        "sku": {
+          "value": "356457",
+          "support_count": 8,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Organic Kale",
+          "source_candidate": "grayscale_psm4",
+          "source_text": "356457 Organic Kale",
+          "support_count": 11,
+          "confidence": 95.67,
+          "similarity_to_anchor": 1.0,
+          "score": 161.07,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "356457 Organic Kale",
+      "human_review": {
+        "total": "3.19",
+        "store": "Aldi",
+        "six_digit_sku": "356457",
+        "product": "Organic Kale",
+        "tax_code": "NA",
+        "store_number": "238",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "09/06/2026",
+        "price": "NA"
+      }
+    },
+    {
+      "line_number": 3,
+      "candidate_id": "threshold_psm4",
+      "text": "356591 Pink Lady Apple",
+      "confidence": 92.25,
+      "source_candidate": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "support_count": 12,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 97.65,
+      "consensus_score": 136.15,
+      "normalized_y": 0.090274,
+      "bbox": {
+        "left": 14,
+        "top": 360,
+        "right": 1971,
+        "bottom": 583,
+        "width": 1957,
+        "height": 223
+      },
+      "reconstructed": false,
+      "original_consensus_text": "356591 Pink Lady Apple",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 12
+      },
+      "component_support": {
+        "sku": {
+          "value": "356591",
+          "support_count": 4,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Pink Lady Apple",
+          "source_candidate": "otsu_psm4",
+          "source_text": "396591 Pink Lady Apple",
+          "support_count": 10,
+          "confidence": 92.5,
+          "similarity_to_anchor": 1.0,
+          "score": 154.1,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "356591 Pink Lady Apple",
+      "human_review": {
+        "total": "3.69",
+        "store": "Aldi",
+        "six_digit_sku": "356591",
+        "product": "Pink Lady Apple",
+        "tax_code": "NA",
+        "store_number": "238",
+        "common_name": "Pink Lady Apple",
+        "category": "Produce",
+        "date": "09/06/2026",
+        "price": "NA"
+      }
+    },
+    {
+      "line_number": 4,
+      "candidate_id": "grayscale_psm4",
+      "text": "356686 Little Yellows",
+      "confidence": 89.67,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 12,
+      "match_method": "backbone",
+      "line_quality_score": 94.47,
+      "consensus_score": 132.97,
+      "normalized_y": 0.121003,
+      "bbox": {
+        "left": 17,
+        "top": 536,
+        "right": 1867,
+        "bottom": 728,
+        "width": 1850,
+        "height": 192
+      },
+      "reconstructed": false,
+      "original_consensus_text": "356686 Little Yellows",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 12
+      },
+      "component_support": {
+        "sku": {
+          "value": "356686",
+          "support_count": 4,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Little Yellows",
+          "source_candidate": "grayscale_psm4",
+          "source_text": "356686 Little Yellows",
+          "support_count": 10,
+          "confidence": 89.67,
+          "similarity_to_anchor": 1.0,
+          "score": 150.07,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "356686 Little Yellows",
+      "human_review": {
+        "total": "3.29",
+        "store": "Aldi",
+        "six_digit_sku": "356686",
+        "product": "Little Yellows",
+        "tax_code": "NA",
+        "store_number": "238",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "09/06/2026",
+        "price": "NA"
+      }
+    },
+    {
+      "line_number": 5,
+      "candidate_id": "threshold_psm4",
+      "text": "356427 Multi-Peppers 3",
+      "confidence": 93.33,
+      "source_candidate": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "support_count": 11,
+      "match_method": "sku",
+      "line_quality_score": 98.13,
+      "consensus_score": 133.13,
+      "normalized_y": 0.157764,
+      "bbox": {
+        "left": 27,
+        "top": 714,
+        "right": 1956,
+        "bottom": 934,
+        "width": 1929,
+        "height": 220
+      },
+      "reconstructed": false,
+      "original_consensus_text": "356427 Multi-Peppers 3",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 11
+      },
+      "component_support": {
+        "sku": {
+          "value": "356427",
+          "support_count": 7,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Multi-Peppers 3",
+          "source_candidate": "threshold_psm4",
+          "source_text": "356427 Multi-Peppers 3",
+          "support_count": 11,
+          "confidence": 93.33,
+          "similarity_to_anchor": 1.0,
+          "score": 158.73,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "356427 Multi-Peppers 3",
+      "human_review": {
+        "total": "2.69",
+        "store": "Aldi",
+        "six_digit_sku": "356427",
+        "product": "Multi-Peppers 3",
+        "tax_code": "NA",
+        "store_number": "238",
+        "common_name": "Multi-Peppers 3",
+        "category": "Produce",
+        "date": "09/06/2026",
+        "price": "NA"
+      }
+    },
+    {
+      "line_number": 6,
+      "candidate_id": "illumination_psm11",
+      "text": "396384 Green Grapes LRW",
+      "confidence": 95.5,
+      "source_candidate": "illumination_psm11",
+      "image_variant": "illumination",
+      "psm": 11,
+      "support_count": 10,
+      "match_method": "sku",
+      "line_quality_score": 99.7,
+      "consensus_score": 131.2,
+      "normalized_y": 0.187632,
+      "bbox": {
+        "left": 30,
+        "top": 894,
+        "right": 1041,
+        "bottom": 1066,
+        "width": 1011,
+        "height": 172
+      },
+      "reconstructed": false,
+      "original_consensus_text": "396384 Green",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 10
+      },
+      "component_support": {
+        "sku": {
+          "value": "396384",
+          "support_count": 7,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Green",
+          "source_candidate": "illumination_psm11",
+          "source_text": "396384 Green",
+          "support_count": 5,
+          "confidence": 95.5,
+          "similarity_to_anchor": 1.0,
+          "score": 129.7,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "396384 Green",
+      "human_review": {
+        "total": "3.81",
+        "store": "Aldi",
+        "six_digit_sku": "396384",
+        "product": "Green Grapes LRW",
+        "tax_code": "NA",
+        "store_number": "238",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "09/06/2026",
+        "price": "NA"
+      }
+    },
+    {
+      "line_number": 7,
+      "candidate_id": "otsu_psm11",
+      "text": "(T) 0.0",
+      "confidence": 91.5,
+      "source_candidate": "otsu_psm11",
+      "image_variant": "otsu",
+      "psm": 11,
+      "support_count": 9,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 94.2,
+      "consensus_score": 122.2,
+      "normalized_y": 0.231093,
+      "bbox": {
+        "left": 1338,
+        "top": 1128,
+        "right": 1947,
+        "bottom": 1286,
+        "width": 609,
+        "height": 158
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 9,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 8,
+      "candidate_id": "grayscale_psm4",
+      "text": "N) 1b x /1 T 2.18",
+      "confidence": 81.2,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 8,
+      "match_method": "backbone",
+      "line_quality_score": 93.7,
+      "consensus_score": 118.2,
+      "normalized_y": 0.260387,
+      "bbox": {
+        "left": 56,
+        "top": 1243,
+        "right": 1986,
+        "bottom": 1477,
+        "width": 1930,
+        "height": 234
+      },
+      "reconstructed": true,
+      "original_consensus_text": "(N) 2.18 1b x 1.79/1t",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "multiple matching row observations plus independent price support",
+        "family_candidate_count": 8
+      },
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
+        },
+        "description": {
+          "value": "N) 1b x /1",
+          "source_candidate": "grayscale_psm4",
+          "source_text": "(N) 2.18 1b x 1.79/1t",
+          "support_count": 7,
+          "confidence": 81.2,
+          "similarity_to_anchor": 1.0,
+          "score": 129.0,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "2.18",
+          "support_count": 5,
+          "average_confidence": 83.6,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "(N) 2.18 1b x 1.79/1t"
+            },
+            {
+              "candidate_id": "grayscale_psm11",
+              "candidate_scope": "full",
+              "text": "(N) 2.18 1b x"
+            },
+            {
+              "candidate_id": "sharpened_psm4",
+              "candidate_scope": "full",
+              "text": "(N) 2.18 1b x 1,79/1f"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "(N) 2.18 Ib x 1.79/1f"
+            },
+            {
+              "candidate_id": "otsu_psm11",
+              "candidate_scope": "full",
+              "text": "(N) 2.18 Ib x"
+            }
+          ],
+          "selection_reason": "selected from multiple independent OCR candidates"
+        },
+        "tax_code": {
+          "value": "T",
+          "support_count": 5,
+          "average_confidence": 40.4,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "(N) 2.18 1b x 1.79/1t"
+            },
+            {
+              "candidate_id": "grayscale_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "1, 79/1t"
+            },
+            {
+              "candidate_id": "grayscale_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "se T9/1k"
+            },
+            {
+              "candidate_id": "sharpened_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "1, 79/1t"
+            },
+            {
+              "candidate_id": "otsu_right_psm6",
+              "candidate_scope": "right_column",
+              "text": "1.79/1t"
+            }
+          ],
+          "selection_reason": "preserved value already present in selected full-receipt line"
+        }
+      },
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 9,
+      "candidate_id": "grayscale_psm4",
+      "text": "356417 Mandarins",
+      "confidence": 92.0,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 10,
+      "match_method": "backbone",
+      "line_quality_score": 96.2,
+      "consensus_score": 127.7,
+      "normalized_y": 0.291116,
+      "bbox": {
+        "left": 42,
+        "top": 1414,
+        "right": 1381,
+        "bottom": 1627,
+        "width": 1339,
+        "height": 213
+      },
+      "reconstructed": false,
+      "original_consensus_text": "356417 Mandarins",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 10
+      },
+      "component_support": {
+        "sku": {
+          "value": "356417",
+          "support_count": 7,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Mandarins",
+          "source_candidate": "grayscale_psm4",
+          "source_text": "356417 Mandarins",
+          "support_count": 10,
+          "confidence": 92.0,
+          "similarity_to_anchor": 1.0,
+          "score": 151.2,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "356417 Mandarins",
+      "human_review": {
+        "total": "2.89",
+        "store": "Aldi",
+        "six_digit_sku": "356417",
+        "product": "Mandarins",
+        "tax_code": "NA",
+        "store_number": "238",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "09/06/2026",
+        "price": "NA"
+      }
+    },
+    {
+      "line_number": 10,
+      "candidate_id": "otsu_psm4",
+      "text": "692109 Org Celery Heart",
+      "confidence": 95.25,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 10,
+      "match_method": "sku",
+      "line_quality_score": 100.65,
+      "consensus_score": 132.15,
+      "normalized_y": 0.325771,
+      "bbox": {
+        "left": 46,
+        "top": 1583,
+        "right": 1986,
+        "bottom": 1820,
+        "width": 1940,
+        "height": 237
+      },
+      "reconstructed": false,
+      "original_consensus_text": "692109 Org Celery Heart",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 10
+      },
+      "component_support": {
+        "sku": {
+          "value": "692109",
+          "support_count": 4,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Org Celery Heart",
+          "source_candidate": "otsu_psm4",
+          "source_text": "692109 Org Celery Heart",
+          "support_count": 10,
+          "confidence": 95.25,
+          "similarity_to_anchor": 1.0,
+          "score": 156.85,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "692109 Org Celery Heart",
+      "human_review": {
+        "total": "2.59",
+        "store": "Aldi",
+        "six_digit_sku": "692109",
+        "product": "Org Celery Heart",
+        "tax_code": "NA",
+        "store_number": "238",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "09/06/2026",
+        "price": "NA"
+      }
+    },
+    {
+      "line_number": 11,
+      "candidate_id": "sharpened_psm4",
+      "text": "466249 Head & Shoulders",
+      "confidence": 93.5,
+      "source_candidate": "sharpened_psm4",
+      "image_variant": "sharpened",
+      "psm": 4,
+      "support_count": 11,
+      "match_method": "sku",
+      "line_quality_score": 94.9,
+      "consensus_score": 129.9,
+      "normalized_y": 0.357266,
+      "bbox": {
+        "left": 53,
+        "top": 1749,
+        "right": 1986,
+        "bottom": 1983,
+        "width": 1933,
+        "height": 234
+      },
+      "reconstructed": false,
+      "original_consensus_text": "466249 Head & Shoulders",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 11
+      },
+      "component_support": {
+        "sku": {
+          "value": "466249",
+          "support_count": 5,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Head & Shoulders",
+          "source_candidate": "sharpened_psm4",
+          "source_text": "466249 Head & Shoulders",
+          "support_count": 10,
+          "confidence": 93.5,
+          "similarity_to_anchor": 1.0,
+          "score": 151.1,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "466249 Head & Shoulders",
+      "human_review": {
+        "total": "6.79",
+        "store": "Aldi",
+        "six_digit_sku": "466249",
+        "product": "Head & Shoulders",
+        "tax_code": "NA",
+        "store_number": "238",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "09/06/2026",
+        "price": "NA"
+      }
+    },
+    {
+      "line_number": 12,
+      "candidate_id": "sharpened_psm4",
+      "text": "399518 Salt Grinders",
+      "confidence": 91.0,
+      "source_candidate": "sharpened_psm4",
+      "image_variant": "sharpened",
+      "psm": 4,
+      "support_count": 10,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 95.8,
+      "consensus_score": 127.3,
+      "normalized_y": 0.388283,
+      "bbox": {
+        "left": 55,
+        "top": 1911,
+        "right": 1729,
+        "bottom": 2145,
+        "width": 1674,
+        "height": 234
+      },
+      "reconstructed": true,
+      "original_consensus_text": "399518 Salt Grinders",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 10
+      },
+      "component_support": {
+        "sku": {
+          "value": "399518",
+          "support_count": 9,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "alt Grinders",
+          "source_candidate": "otsu_psm4",
+          "source_text": "alt Grinders",
+          "support_count": 9,
+          "confidence": 95.5,
+          "similarity_to_anchor": 0.96,
+          "score": 150.58,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "399518 alt Grinders",
+      "human_review": {
+        "total": "1.59",
+        "store": "Aldi",
+        "six_digit_sku": "399518",
+        "product": "Salt Grinders",
+        "tax_code": "NA",
+        "store_number": "238",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "09/06/2026",
+        "price": "NA"
+      }
+    },
+    {
+      "line_number": 13,
+      "candidate_id": "sharpened_psm4",
+      "text": "399025 Peppercorn Grinder",
+      "confidence": 92.67,
+      "source_candidate": "sharpened_psm4",
+      "image_variant": "sharpened",
+      "psm": 4,
+      "support_count": 13,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 97.47,
+      "consensus_score": 139.47,
+      "normalized_y": 0.421214,
+      "bbox": {
+        "left": 57,
+        "top": 2071,
+        "right": 1986,
+        "bottom": 2329,
+        "width": 1929,
+        "height": 258
+      },
+      "reconstructed": false,
+      "original_consensus_text": "399025 Peppercorn Grind",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 13
+      },
+      "component_support": {
+        "sku": {
+          "value": "399025",
+          "support_count": 6,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Peppercorn Grind",
+          "source_candidate": "sharpened_psm4",
+          "source_text": "399025 Peppercorn Grind",
+          "support_count": 11,
+          "confidence": 92.67,
+          "similarity_to_anchor": 1.0,
+          "score": 158.07,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "399025 Peppercorn Grind",
+      "human_review": {
+        "total": "2.29",
+        "store": "Aldi",
+        "six_digit_sku": "399025",
+        "product": "Peppercorn Grinder",
+        "tax_code": "NA",
+        "store_number": "238",
+        "common_name": "Peppercorn Grind",
+        "category": "Produce",
+        "date": "09/06/2026",
+        "price": "NA"
+      }
+    },
+    {
+      "line_number": 14,
+      "candidate_id": "grayscale_psm11",
+      "text": "Brocoli Crowns",
+      "confidence": 83.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 10,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 84.8,
+      "consensus_score": 116.3,
+      "normalized_y": 0.459793,
+      "bbox": {
+        "left": 702,
+        "top": 2313,
+        "right": 1896,
+        "bottom": 2490,
+        "width": 1194,
+        "height": 177
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 10,
+      "review_status": "accepted",
+      "original_ocr_text": "rocco] j Crowns",
+      "human_review": {
+        "total": "3.95",
+        "store": "Aldi",
+        "six_digit_sku": "NA",
+        "product": "Brocoli Crowns",
+        "tax_code": "NA",
+        "store_number": "238",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "09/06/2026",
+        "price": "NA"
+      }
+    },
+    {
+      "line_number": 15,
+      "candidate_id": "grayscale_psm11",
+      "text": "Banannas LRW",
+      "confidence": 95.0,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 10,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 96.2,
+      "consensus_score": 127.7,
+      "normalized_y": 0.508329,
+      "bbox": {
+        "left": 615,
+        "top": 2508,
+        "right": 1439,
+        "bottom": 2802,
+        "width": 824,
+        "height": 294
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 10,
+      "review_status": "accepted",
+      "original_ocr_text": "Bananas LR",
+      "human_review": {
+        "total": "1.66",
+        "store": "Aldi",
+        "six_digit_sku": "NA",
+        "product": "Banannas LRW",
+        "tax_code": "NA",
+        "store_number": "238",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "09/06/2026",
+        "price": "NA"
+      }
+    },
+    {
+      "line_number": 16,
+      "candidate_id": "sharpened_psm11",
+      "text": "Bananas LR",
+      "confidence": 95.5,
+      "source_candidate": "sharpened_psm11",
+      "image_variant": "sharpened",
+      "psm": 11,
+      "support_count": 10,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 96.7,
+      "consensus_score": 128.2,
+      "normalized_y": 0.516849,
+      "bbox": {
+        "left": 615,
+        "top": 2597,
+        "right": 1447,
+        "bottom": 2802,
+        "width": 832,
+        "height": 205
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 10,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 17,
+      "candidate_id": "sharpened_psm11",
+      "text": "G) 3.4",
+      "confidence": 89.5,
+      "source_candidate": "sharpened_psm11",
+      "image_variant": "sharpened",
+      "psm": 11,
+      "support_count": 6,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 90.7,
+      "consensus_score": 108.2,
+      "normalized_y": 0.534654,
+      "bbox": {
+        "left": 132,
+        "top": 2708,
+        "right": 603,
+        "bottom": 2877,
+        "width": 471,
+        "height": 169
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 6,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 18,
+      "candidate_id": "sharpened_psm4",
+      "text": "399518 alt Grinders",
+      "confidence": 91.0,
+      "source_candidate": "sharpened_psm4",
+      "image_variant": "sharpened",
+      "psm": 4,
+      "support_count": 10,
+      "match_method": "sku",
+      "line_quality_score": 95.8,
+      "consensus_score": 127.3,
+      "normalized_y": 0.388283,
+      "bbox": {
+        "left": 55,
+        "top": 1911,
+        "right": 1729,
+        "bottom": 2145,
+        "width": 1674,
+        "height": 234
+      },
+      "reconstructed": true,
+      "original_consensus_text": "399518 Salt Grinders",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 10
+      },
+      "component_support": {
+        "sku": {
+          "value": "399518",
+          "support_count": 9,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "alt Grinders",
+          "source_candidate": "otsu_psm4",
+          "source_text": "alt Grinders",
+          "support_count": 9,
+          "confidence": 95.5,
+          "similarity_to_anchor": 0.96,
+          "score": 150.58,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        }
+      },
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 19,
+      "candidate_id": "sharpened_psm4",
+      "text": "399025 Peppercorn Grind",
+      "confidence": 92.67,
+      "source_candidate": "sharpened_psm4",
+      "image_variant": "sharpened",
+      "psm": 4,
+      "support_count": 13,
+      "match_method": "sku",
+      "line_quality_score": 97.47,
+      "consensus_score": 139.47,
+      "normalized_y": 0.421214,
+      "bbox": {
+        "left": 57,
+        "top": 2071,
+        "right": 1986,
+        "bottom": 2329,
+        "width": 1929,
+        "height": 258
+      },
+      "reconstructed": false,
+      "original_consensus_text": "399025 Peppercorn Grind",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 13
+      },
+      "component_support": {
+        "sku": {
+          "value": "399025",
+          "support_count": 6,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Peppercorn Grind",
+          "source_candidate": "sharpened_psm4",
+          "source_text": "399025 Peppercorn Grind",
+          "support_count": 11,
+          "confidence": 92.67,
+          "similarity_to_anchor": 1.0,
+          "score": 158.07,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        }
+      },
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 20,
+      "candidate_id": "illumination_psm6",
+      "text": "356508 Peppercorn Grind",
+      "confidence": 77.33,
+      "source_candidate": "illumination_psm6",
+      "image_variant": "illumination",
+      "psm": 6,
+      "support_count": 13,
+      "match_method": "sku",
+      "line_quality_score": 82.13,
+      "consensus_score": 124.13,
+      "normalized_y": 0.423511,
+      "bbox": {
+        "left": 56,
+        "top": 2012,
+        "right": 1730,
+        "bottom": 2412,
+        "width": 1674,
+        "height": 400
+      },
+      "reconstructed": true,
+      "original_consensus_text": "356508 Pepercorn Gr",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "selected full-receipt line contains one SKU",
+        "family_candidate_count": 13
+      },
+      "component_support": {
+        "sku": {
+          "value": "356508",
+          "support_count": 8,
+          "selection_reason": "preserved SKU already present in selected full-receipt line",
+          "examples": []
+        },
+        "description": {
+          "value": "Peppercorn Grind",
+          "source_candidate": "sharpened_psm4",
+          "source_text": "399025 Peppercorn Grind",
+          "support_count": 11,
+          "confidence": 92.67,
+          "similarity_to_anchor": 0.8571,
+          "score": 156.9271,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        }
+      },
+      "review_status": "skipped"
+    }
+  ],
+  "candidate_ranking": [
+    {
+      "rank": 1,
+      "candidate_id": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 79.59,
+        "mean_word_confidence": 76.13,
+        "recognized_word_count": 61,
+        "low_confidence_rate": 0.1475,
+        "price_like_count": 3,
+        "sku_count": 12,
+        "plausible_line_count": 18,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 2,
+      "candidate_id": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 78.0924,
+        "mean_word_confidence": 75.17,
+        "recognized_word_count": 66,
+        "low_confidence_rate": 0.1667,
+        "price_like_count": 3,
+        "sku_count": 12,
+        "plausible_line_count": 18,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 3,
+      "candidate_id": "sharpened_psm11",
+      "image_variant": "sharpened",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 78.0304,
+        "mean_word_confidence": 71.24,
+        "recognized_word_count": 111,
+        "low_confidence_rate": 0.1982,
+        "price_like_count": 3,
+        "sku_count": 13,
+        "plausible_line_count": 47,
+        "garbage_line_count": 6
+      }
+    },
+    {
+      "rank": 4,
+      "candidate_id": "otsu_psm11",
+      "image_variant": "otsu",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 76.4776,
+        "mean_word_confidence": 70.11,
+        "recognized_word_count": 123,
+        "low_confidence_rate": 0.2033,
+        "price_like_count": 4,
+        "sku_count": 12,
+        "plausible_line_count": 47,
+        "garbage_line_count": 10
+      }
+    },
+    {
+      "rank": 5,
+      "candidate_id": "sharpened_psm4",
+      "image_variant": "sharpened",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 75.9176,
+        "mean_word_confidence": 72.83,
+        "recognized_word_count": 72,
+        "low_confidence_rate": 0.2083,
+        "price_like_count": 5,
+        "sku_count": 13,
+        "plausible_line_count": 19,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 6,
+      "candidate_id": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 75.1024,
+        "mean_word_confidence": 69.39,
+        "recognized_word_count": 119,
+        "low_confidence_rate": 0.2017,
+        "price_like_count": 3,
+        "sku_count": 11,
+        "plausible_line_count": 47,
+        "garbage_line_count": 10
+      }
+    },
+    {
+      "rank": 7,
+      "candidate_id": "illumination_psm11",
+      "image_variant": "illumination",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 74.6828,
+        "mean_word_confidence": 68.81,
+        "recognized_word_count": 135,
+        "low_confidence_rate": 0.2074,
+        "price_like_count": 3,
+        "sku_count": 13,
+        "plausible_line_count": 50,
+        "garbage_line_count": 16
+      }
+    },
+    {
+      "rank": 8,
+      "candidate_id": "illumination_psm4",
+      "image_variant": "illumination",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 57.2708,
+        "mean_word_confidence": 60.74,
+        "recognized_word_count": 74,
+        "low_confidence_rate": 0.3514,
+        "price_like_count": 3,
+        "sku_count": 10,
+        "plausible_line_count": 14,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 9,
+      "candidate_id": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 56.8944,
+        "mean_word_confidence": 58.05,
+        "recognized_word_count": 123,
+        "low_confidence_rate": 0.3577,
+        "price_like_count": 3,
+        "sku_count": 13,
+        "plausible_line_count": 39,
+        "garbage_line_count": 23
+      }
+    },
+    {
+      "rank": 10,
+      "candidate_id": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 56.2824,
+        "mean_word_confidence": 61.28,
+        "recognized_word_count": 47,
+        "low_confidence_rate": 0.3617,
+        "price_like_count": 2,
+        "sku_count": 9,
+        "plausible_line_count": 11,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 11,
+      "candidate_id": "illumination_psm6",
+      "image_variant": "illumination",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": 35.882,
+        "mean_word_confidence": 45.3,
+        "recognized_word_count": 122,
+        "low_confidence_rate": 0.541,
+        "price_like_count": 2,
+        "sku_count": 9,
+        "plausible_line_count": 15,
+        "garbage_line_count": 1
+      }
+    },
+    {
+      "rank": 12,
+      "candidate_id": "sharpened_psm6",
+      "image_variant": "sharpened",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": 30.1184,
+        "mean_word_confidence": 43.78,
+        "recognized_word_count": 93,
+        "low_confidence_rate": 0.6022,
+        "price_like_count": 2,
+        "sku_count": 2,
+        "plausible_line_count": 10,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 13,
+      "candidate_id": "threshold_psm6",
+      "image_variant": "threshold",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": 29.1692,
+        "mean_word_confidence": 42.95,
+        "recognized_word_count": 103,
+        "low_confidence_rate": 0.6311,
+        "price_like_count": 1,
+        "sku_count": 8,
+        "plausible_line_count": 8,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 14,
+      "candidate_id": "otsu_psm6",
+      "image_variant": "otsu",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": 25.6968,
+        "mean_word_confidence": 40.6,
+        "recognized_word_count": 103,
+        "low_confidence_rate": 0.6019,
+        "price_like_count": 0,
+        "sku_count": 3,
+        "plausible_line_count": 8,
+        "garbage_line_count": 2
+      }
+    },
+    {
+      "rank": 15,
+      "candidate_id": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": 24.79,
+        "mean_word_confidence": 39.01,
+        "recognized_word_count": 96,
+        "low_confidence_rate": 0.625,
+        "price_like_count": 1,
+        "sku_count": 7,
+        "plausible_line_count": 8,
+        "garbage_line_count": 3
+      }
+    }
+  ],
+  "provenance": {
+    "candidates_file": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_candidates/090626_ALDI_238_ocr_candidates.json",
+    "rule": "All output remains OCR-derived. A full-receipt observation may join another observation only through exact SKU agreement or close physical-row geometry plus textual agreement. Right-column observations can contribute only price/tax evidence at the same narrow row position. SKU values cannot be imported into rows that lacked a SKU in the selected full-receipt observation. Components with insufficient support are omitted rather than guessed."
+  },
+  "benchmark": {
+    "source_raw_ocr": "090626_ALDI_238_raw_ocr.json",
+    "receipt_type": "Aldi",
+    "store_number": "238",
+    "receipt_date": "09/06/2026",
+    "starting_line_number": 1,
+    "reviewed_line_count": 20,
+    "accepted_purchase_count": 13,
+    "skipped_line_count": 7,
+    "ground_truth": true
+  }
+}

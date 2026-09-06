@@ -1,0 +1,590 @@
+{
+  "source_receipt": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/current_pic/090626_ALDI_238_B.JPG",
+  "selection_method": "conservative multi-variant receipt-row consensus: best full-receipt candidate supplies reading order; geometry must also have textual/SKU agreement; SKU is never injected into a row; price/tax additions require independent OCR support; absence is preferred to unsupported reconstruction",
+  "backbone_candidate": {
+    "candidate_id": "grayscale_psm4",
+    "image_variant": "grayscale",
+    "psm": 4,
+    "comparison_metrics": {
+      "score": 74.45,
+      "mean_word_confidence": 75.92,
+      "recognized_word_count": 25,
+      "low_confidence_rate": 0.12,
+      "price_like_count": 1,
+      "sku_count": 0,
+      "plausible_line_count": 8,
+      "garbage_line_count": 0
+    }
+  },
+  "consensus_summary": {
+    "backbone_line_count": 8,
+    "consensus_line_count": 8,
+    "merchandise_line_count": 0,
+    "component_reconstruction_count": 0,
+    "candidate_count": 25,
+    "full_candidate_count": 15,
+    "right_column_candidate_count": 10,
+    "match_threshold": 0.72,
+    "max_row_center_distance": 0.014,
+    "minimum_component_support": 2
+  },
+  "raw_text": "56504 Blueberrl es\n2.99\n6604 Raspberr't és\n5696 Str awberr 1 es\n212 GF Wide Pan\n89 Artisanal Bul\n53 Organic Chick\n59 Pil ere Bis",
+  "text": [
+    {
+      "line_number": 1,
+      "candidate_id": "otsu_psm4",
+      "text": "Blueberries",
+      "confidence": 66.33,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 12,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 68.13,
+      "consensus_score": 106.63,
+      "normalized_y": 0.047098,
+      "bbox": {
+        "left": 93,
+        "top": 46,
+        "right": 1906,
+        "bottom": 277,
+        "width": 1813,
+        "height": 231
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 12,
+      "review_status": "accepted",
+      "original_ocr_text": "56504 Blueberrl es",
+      "human_review": {
+        "total": "5.98",
+        "store": "Aldi",
+        "six_digit_sku": "NA",
+        "product": "Blueberries",
+        "tax_code": "NA",
+        "store_number": "238",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "09/06/2026",
+        "price": "NA"
+      }
+    },
+    {
+      "line_number": 2,
+      "candidate_id": "otsu_psm4",
+      "text": "2.99",
+      "confidence": 95.0,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 6,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 99.6,
+      "consensus_score": 117.1,
+      "normalized_y": 0.100321,
+      "bbox": {
+        "left": 765,
+        "top": 254,
+        "right": 1205,
+        "bottom": 434,
+        "width": 440,
+        "height": 180
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "insufficient product-like text",
+      "row_family_support": 6,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 3,
+      "candidate_id": "otsu_psm4",
+      "text": "Raspberries",
+      "confidence": 71.67,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 12,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 74.97,
+      "consensus_score": 113.47,
+      "normalized_y": 0.146107,
+      "bbox": {
+        "left": 93,
+        "top": 339,
+        "right": 1834,
+        "bottom": 663,
+        "width": 1741,
+        "height": 324
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 12,
+      "review_status": "accepted",
+      "original_ocr_text": "6604 Raspberr't és",
+      "human_review": {
+        "total": "2.69",
+        "store": "Aldi",
+        "six_digit_sku": "NA",
+        "product": "Raspberries",
+        "tax_code": "NA",
+        "store_number": "238",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "09/06/2026",
+        "price": "NA"
+      }
+    },
+    {
+      "line_number": 4,
+      "candidate_id": "illumination_psm11",
+      "text": "Strawberries",
+      "confidence": 84.0,
+      "source_candidate": "illumination_psm11",
+      "image_variant": "illumination",
+      "psm": 11,
+      "support_count": 15,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 87.0,
+      "consensus_score": 136.0,
+      "normalized_y": 0.218868,
+      "bbox": {
+        "left": 93,
+        "top": 630,
+        "right": 1906,
+        "bottom": 871,
+        "width": 1813,
+        "height": 241
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 15,
+      "review_status": "accepted",
+      "original_ocr_text": "5696 Str awberr 1 es",
+      "human_review": {
+        "total": "2.29",
+        "store": "Aldi",
+        "six_digit_sku": "NA",
+        "product": "Strawberries",
+        "tax_code": "NA",
+        "store_number": "238",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "09/06/2026",
+        "price": "NA"
+      }
+    },
+    {
+      "line_number": 5,
+      "candidate_id": "threshold_psm4",
+      "text": "GF Wide Pan Bread",
+      "confidence": 95.0,
+      "source_candidate": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "support_count": 15,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 97.4,
+      "consensus_score": 146.4,
+      "normalized_y": 0.288714,
+      "bbox": {
+        "left": 106,
+        "top": 868,
+        "right": 1770,
+        "bottom": 1112,
+        "width": 1664,
+        "height": 244
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 15,
+      "review_status": "accepted",
+      "original_ocr_text": "212 GF Wide Pan",
+      "human_review": {
+        "total": "6.79",
+        "store": "Aldi",
+        "six_digit_sku": "NA",
+        "product": "GF Wide Pan Bread",
+        "tax_code": "NA",
+        "store_number": "238",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "09/06/2026",
+        "price": "NA"
+      }
+    },
+    {
+      "line_number": 6,
+      "candidate_id": "illumination_psm6",
+      "text": "Artisinal Buns",
+      "confidence": 94.67,
+      "source_candidate": "illumination_psm6",
+      "image_variant": "illumination",
+      "psm": 6,
+      "support_count": 14,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 96.47,
+      "consensus_score": 141.97,
+      "normalized_y": 0.353602,
+      "bbox": {
+        "left": 173,
+        "top": 1088,
+        "right": 1904,
+        "bottom": 1337,
+        "width": 1731,
+        "height": 249
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 12,
+      "review_status": "accepted",
+      "original_ocr_text": "89 Artisanal Bul",
+      "human_review": {
+        "total": "2.99",
+        "store": "Aldi",
+        "six_digit_sku": "NA",
+        "product": "Artisinal Buns",
+        "tax_code": "NA",
+        "store_number": "238",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "09/06/2026",
+        "price": "NA"
+      }
+    },
+    {
+      "line_number": 7,
+      "candidate_id": "grayscale_psm4",
+      "text": "Organic Chickpeas",
+      "confidence": 95.67,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 14,
+      "match_method": "backbone",
+      "line_quality_score": 97.47,
+      "consensus_score": 142.97,
+      "normalized_y": 0.418198,
+      "bbox": {
+        "left": 95,
+        "top": 1317,
+        "right": 1907,
+        "bottom": 1551,
+        "width": 1812,
+        "height": 234
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 14,
+      "review_status": "accepted",
+      "original_ocr_text": "53 Organic Chick",
+      "human_review": {
+        "total": "0.99",
+        "store": "Aldi",
+        "six_digit_sku": "NA",
+        "product": "Organic Chickpeas",
+        "tax_code": "NA",
+        "store_number": "238",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "09/06/2026",
+        "price": "NA"
+      }
+    },
+    {
+      "line_number": 8,
+      "candidate_id": "grayscale_psm4",
+      "text": "Pil Flaky Biscuits",
+      "confidence": 71.5,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 2,
+      "match_method": "backbone",
+      "line_quality_score": 73.9,
+      "consensus_score": 77.4,
+      "normalized_y": 0.515019,
+      "bbox": {
+        "left": 93,
+        "top": 1517,
+        "right": 1907,
+        "bottom": 2015,
+        "width": 1814,
+        "height": 498
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 2,
+      "review_status": "accepted",
+      "original_ocr_text": "59 Pil ere Bis",
+      "human_review": {
+        "total": "2.79",
+        "store": "Aldi",
+        "six_digit_sku": "NA",
+        "product": "Pil Flaky Biscuits",
+        "tax_code": "NA",
+        "store_number": "238",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "09/06/2026",
+        "price": "NA"
+      }
+    }
+  ],
+  "candidate_ranking": [
+    {
+      "rank": 1,
+      "candidate_id": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 74.45,
+        "mean_word_confidence": 75.92,
+        "recognized_word_count": 25,
+        "low_confidence_rate": 0.12,
+        "price_like_count": 1,
+        "sku_count": 0,
+        "plausible_line_count": 8,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 2,
+      "candidate_id": "illumination_psm6",
+      "image_variant": "illumination",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": 72.6784,
+        "mean_word_confidence": 74.15,
+        "recognized_word_count": 46,
+        "low_confidence_rate": 0.1522,
+        "price_like_count": 1,
+        "sku_count": 0,
+        "plausible_line_count": 13,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 3,
+      "candidate_id": "otsu_psm11",
+      "image_variant": "otsu",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 65.8184,
+        "mean_word_confidence": 70.06,
+        "recognized_word_count": 36,
+        "low_confidence_rate": 0.2222,
+        "price_like_count": 0,
+        "sku_count": 0,
+        "plausible_line_count": 11,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 4,
+      "candidate_id": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 65.3004,
+        "mean_word_confidence": 71.05,
+        "recognized_word_count": 38,
+        "low_confidence_rate": 0.2632,
+        "price_like_count": 0,
+        "sku_count": 0,
+        "plausible_line_count": 11,
+        "garbage_line_count": 3
+      }
+    },
+    {
+      "rank": 5,
+      "candidate_id": "illumination_psm11",
+      "image_variant": "illumination",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 64.5216,
+        "mean_word_confidence": 69.31,
+        "recognized_word_count": 51,
+        "low_confidence_rate": 0.2353,
+        "price_like_count": 0,
+        "sku_count": 0,
+        "plausible_line_count": 12,
+        "garbage_line_count": 3
+      }
+    },
+    {
+      "rank": 6,
+      "candidate_id": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 62.6644,
+        "mean_word_confidence": 65.96,
+        "recognized_word_count": 27,
+        "low_confidence_rate": 0.1852,
+        "price_like_count": 1,
+        "sku_count": 0,
+        "plausible_line_count": 8,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 7,
+      "candidate_id": "sharpened_psm6",
+      "image_variant": "sharpened",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": 61.6116,
+        "mean_word_confidence": 67.5,
+        "recognized_word_count": 36,
+        "low_confidence_rate": 0.2778,
+        "price_like_count": 1,
+        "sku_count": 0,
+        "plausible_line_count": 8,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 8,
+      "candidate_id": "sharpened_psm11",
+      "image_variant": "sharpened",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 61.0596,
+        "mean_word_confidence": 65.98,
+        "recognized_word_count": 42,
+        "low_confidence_rate": 0.2143,
+        "price_like_count": 0,
+        "sku_count": 0,
+        "plausible_line_count": 8,
+        "garbage_line_count": 3
+      }
+    },
+    {
+      "rank": 9,
+      "candidate_id": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": 60.0376,
+        "mean_word_confidence": 67.26,
+        "recognized_word_count": 38,
+        "low_confidence_rate": 0.3158,
+        "price_like_count": 0,
+        "sku_count": 0,
+        "plausible_line_count": 9,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 10,
+      "candidate_id": "otsu_psm6",
+      "image_variant": "otsu",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": 57.2656,
+        "mean_word_confidence": 63.97,
+        "recognized_word_count": 37,
+        "low_confidence_rate": 0.2973,
+        "price_like_count": 0,
+        "sku_count": 0,
+        "plausible_line_count": 9,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 11,
+      "candidate_id": "sharpened_psm4",
+      "image_variant": "sharpened",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 56.7976,
+        "mean_word_confidence": 64.69,
+        "recognized_word_count": 45,
+        "low_confidence_rate": 0.3333,
+        "price_like_count": 0,
+        "sku_count": 0,
+        "plausible_line_count": 10,
+        "garbage_line_count": 3
+      }
+    },
+    {
+      "rank": 12,
+      "candidate_id": "illumination_psm4",
+      "image_variant": "illumination",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 47.4712,
+        "mean_word_confidence": 57.23,
+        "recognized_word_count": 31,
+        "low_confidence_rate": 0.3871,
+        "price_like_count": 0,
+        "sku_count": 0,
+        "plausible_line_count": 6,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 13,
+      "candidate_id": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 43.588,
+        "mean_word_confidence": 54.38,
+        "recognized_word_count": 52,
+        "low_confidence_rate": 0.4615,
+        "price_like_count": 1,
+        "sku_count": 0,
+        "plausible_line_count": 10,
+        "garbage_line_count": 1
+      }
+    },
+    {
+      "rank": 14,
+      "candidate_id": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 34.3368,
+        "mean_word_confidence": 48.21,
+        "recognized_word_count": 47,
+        "low_confidence_rate": 0.5319,
+        "price_like_count": 0,
+        "sku_count": 0,
+        "plausible_line_count": 7,
+        "garbage_line_count": 2
+      }
+    },
+    {
+      "rank": 15,
+      "candidate_id": "threshold_psm6",
+      "image_variant": "threshold",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": 25.0772,
+        "mean_word_confidence": 41.28,
+        "recognized_word_count": 53,
+        "low_confidence_rate": 0.6226,
+        "price_like_count": 1,
+        "sku_count": 0,
+        "plausible_line_count": 5,
+        "garbage_line_count": 1
+      }
+    }
+  ],
+  "provenance": {
+    "candidates_file": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_candidates/090626_ALDI_238_B_ocr_candidates.json",
+    "rule": "All output remains OCR-derived. A full-receipt observation may join another observation only through exact SKU agreement or close physical-row geometry plus textual agreement. Right-column observations can contribute only price/tax evidence at the same narrow row position. SKU values cannot be imported into rows that lacked a SKU in the selected full-receipt observation. Components with insufficient support are omitted rather than guessed."
+  },
+  "benchmark": {
+    "source_raw_ocr": "090626_ALDI_238_B_raw_ocr.json",
+    "receipt_type": "Aldi",
+    "store_number": "238",
+    "receipt_date": "09/06/2026",
+    "starting_line_number": 1,
+    "reviewed_line_count": 8,
+    "accepted_purchase_count": 7,
+    "skipped_line_count": 1,
+    "ground_truth": true
+  }
+}
