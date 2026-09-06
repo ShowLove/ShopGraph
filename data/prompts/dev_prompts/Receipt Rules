@@ -277,6 +277,12 @@ shopped, substituted, unavailable, or weight adjusted is metadata
 associated with a product and must not independently generate a
 purchased item.
 
+Product Identifiers Are Not Product Names, Numeric or alphanumeric identifiers
+such as SKU, PLU, or item codes may appear adjacent to or before a product
+description and should be treated as item metadata rather than as part of the
+normalized Product Name when the receipt structure distinguishes them from the
+description.
+
 Product and Price Alone Do Not Prove a Completed Purchase, When explicit
 status metadata indicates that an item was unavailable, the presence of
 a product name and displayed price is not by itself sufficient evidence
@@ -312,6 +318,41 @@ Preserve Ambiguity When Necessary, If the available lines do not provide
 sufficient evidence to associate one final price with one product,
 preserve the ambiguity for later processing rather than inventing an
 association.
+
+##################################################
+ RECEIPT METADATA IDENTIFICATION RULES
+##################################################
+
+Store Name — Prefer Explicit Store Identity, Identify the Store from explicit
+merchant or retailer identity printed on the receipt, such as a store name,
+brand name, or clearly presented merchant heading. Do not infer the Store only
+from products, address, payment information, or other indirect clues when an
+explicit identity is available.
+
+Store Name — Position Is Supporting Evidence, Merchant identity commonly appears
+in prominent receipt-heading content, but position alone is not sufficient to
+identify the Store.
+
+Date — Prefer Explicit Transaction or Order Date, Identify the Date from an
+explicit date associated with the transaction or order. A date may appear alone,
+with a time, or beside transaction/order wording.
+
+Date — Distinguish Transaction Date from Other Dates, A date-like value is only
+a candidate. Prefer the date tied to the purchase, transaction, sale, or order
+rather than unrelated dates that may appear elsewhere on a receipt or invoice.
+
+Store Number — Prefer Explicit Store Labels, When a receipt explicitly labels a
+location identifier with wording such as "Store", "Store #", or an equivalent
+store/location label, treat the associated identifier as the Store Number.
+
+Store Number — Preserve Printed Identifier, Preserve meaningful leading zeros or
+other formatting in a printed Store Number unless a later normalization stage
+explicitly requires conversion.
+
+Store Number — Do Not Substitute Other Identifiers, Transaction numbers, order
+numbers, check numbers, register numbers, authorization codes, payment IDs,
+addresses, phone numbers, and similar identifiers must not automatically be
+treated as the Store Number.
 
 ##################################################
  FUTURE GOAL — RECEIPT SECTION IDENTIFICATION 
