@@ -347,10 +347,18 @@ def _ensure_purchase_schema(
     )
 
 
-def _load_or_create_workbook():
-    if WORKBOOK_PATH.exists():
+def _load_or_create_workbook(
+    workbook_path: str | Path = WORKBOOK_PATH,
+):
+    workbook_path = (
+        Path(workbook_path)
+        .expanduser()
+        .resolve()
+    )
+
+    if workbook_path.exists():
         workbook = load_workbook(
-            WORKBOOK_PATH
+            workbook_path
         )
 
         if (
@@ -1043,12 +1051,21 @@ def _source_already_imported(
 
 def source_already_imported(
     source_path: Path,
+    workbook_path: str | Path = WORKBOOK_PATH,
 ) -> bool:
-    if not WORKBOOK_PATH.exists():
+    workbook_path = (
+        Path(workbook_path)
+        .expanduser()
+        .resolve()
+    )
+
+    if not workbook_path.exists():
         return False
 
     workbook = (
-        _load_or_create_workbook()
+        _load_or_create_workbook(
+            workbook_path=workbook_path,
+        )
     )
 
     return _source_already_imported(
@@ -1116,8 +1133,14 @@ def _record_import(
 
 def _atomic_save(
     workbook,
+    workbook_path: str | Path = WORKBOOK_PATH,
 ) -> None:
-    DATABASE_DIR.mkdir(
+    workbook_path = (
+        Path(workbook_path)
+        .expanduser()
+        .resolve()
+    )
+    workbook_path.parent.mkdir(
         parents=True,
         exist_ok=True,
     )
@@ -1127,7 +1150,7 @@ def _atomic_save(
         temporary_name,
     ) = tempfile.mkstemp(
         suffix=".xlsx",
-        dir=DATABASE_DIR,
+        dir=workbook_path.parent,
     )
 
     os.close(
@@ -1145,7 +1168,7 @@ def _atomic_save(
 
         os.replace(
             temporary_path,
-            WORKBOOK_PATH,
+            workbook_path,
         )
 
     finally:
@@ -1159,9 +1182,18 @@ def _atomic_save(
 
 def commit_receipt(
     session: ReceiptSession,
+    workbook_path: str | Path = WORKBOOK_PATH,
 ) -> dict:
+    workbook_path = (
+        Path(workbook_path)
+        .expanduser()
+        .resolve()
+    )
+
     workbook = (
-        _load_or_create_workbook()
+        _load_or_create_workbook(
+            workbook_path=workbook_path,
+        )
     )
 
     sheet = workbook[
@@ -1206,13 +1238,12 @@ def commit_receipt(
     )
 
     _atomic_save(
-        workbook
+        workbook,
+        workbook_path=workbook_path,
     )
 
     return {
-        "workbook_path": (
-            WORKBOOK_PATH.resolve()
-        ),
+        "workbook_path": workbook_path,
         "purchases_added": len(
             session.accepted_purchases
         ),

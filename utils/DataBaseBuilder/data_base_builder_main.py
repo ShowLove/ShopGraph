@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 from datetime import datetime
@@ -8,9 +7,11 @@ import readline
 
 from utils.DataBaseBuilder.benchmark_writer import write_corrected_benchmark
 from utils.DataBaseBuilder.excel.purchase_history import (
+    WORKBOOK_PATH,
     commit_receipt,
     source_already_imported,
 )
+from utils.constants import DATA_DIR
 from utils.DataBaseBuilder.excel.purchase_analytics import (
     generate_category_purchase_analytics,
     generate_subcategory_purchase_analytics,
@@ -44,6 +45,13 @@ from utils.DataBaseBuilder.skip_terms import (
 )
 
 
+TEST_WORKBOOK_PATH = (
+    DATA_DIR
+    / "exports"
+    / "test_shopgraph_purchase_history.xlsx"
+)
+
+
 PUBLIX_TAX_OPTIONS = {
     "1": ("F", "Food item. Basic grocery/raw food category; generally non-taxable in Florida and commonly SNAP/EBT eligible."),
     "2": ("T", "Taxable item. Commonly taxable non-food or applicable prepared item."),
@@ -61,6 +69,7 @@ def display_data_base_builder_menu() -> None:
     print("3. Generate / Refresh Purchase Analytics - Categories")
     print("4. Category Manager")
     print("5. Budget Plans")
+    print("6. Test Mode")
     print("0. Return to Main")
 
 
@@ -187,8 +196,14 @@ def _prompt_starting_line(lines: list[dict]) -> int | None:
         return line_number
 
 
-def _confirm_duplicate_import(source_path) -> bool:
-    if not source_already_imported(source_path):
+def _confirm_duplicate_import(
+    source_path,
+    workbook_path: str | Path = WORKBOOK_PATH,
+) -> bool:
+    if not source_already_imported(
+        source_path,
+        workbook_path=workbook_path,
+    ):
         return True
 
     print(
@@ -550,7 +565,13 @@ def _review_line(parser, line: dict, record: PurchaseRecord) -> tuple[str, Purch
 
 def run_receipt_import(
     source_path: str | Path | None = None,
+    workbook_path: str | Path = WORKBOOK_PATH,
 ) -> None:
+    workbook_path = (
+        Path(workbook_path)
+        .expanduser()
+        .resolve()
+    )
     if source_path is None:
         selected_source = choose_raw_ocr_file()
     else:
@@ -684,7 +705,8 @@ def run_receipt_import(
         return
 
     if not _confirm_duplicate_import(
-        source_path
+        source_path,
+        workbook_path=workbook_path,
     ):
         return
 
@@ -854,7 +876,8 @@ def run_receipt_import(
 
     try:
         summary = commit_receipt(
-            session
+            session,
+            workbook_path=workbook_path,
         )
     except (OSError, ValueError) as error:
         print(
@@ -982,6 +1005,29 @@ def _run_category_purchase_analytics() -> None:
     )
 
 
+def display_test_mode_menu() -> None:
+    print("\n=== ShopGraph Data Base Builder - Test Mode ===\n")
+    print("1. Add Receipt to Purchase History - Test Mode")
+    print("0. Return to Main Data Base Builder")
+
+
+def run_test_mode_menu() -> None:
+    while True:
+        display_test_mode_menu()
+        option = input("\nSelect option: ").strip()
+
+        if option == "1":
+            run_receipt_import(
+                workbook_path=TEST_WORKBOOK_PATH,
+            )
+
+        elif option == "0":
+            return
+
+        else:
+            print("\n[ERROR] Invalid option.")
+
+
 def run_data_base_builder_menu() -> None:
     while True:
         display_data_base_builder_menu()
@@ -1001,6 +1047,9 @@ def run_data_base_builder_menu() -> None:
 
         elif option == "5":
             run_budget_plans_menu()
+
+        elif option == "6":
+            run_test_mode_menu()
 
         elif option == "0":
             return
