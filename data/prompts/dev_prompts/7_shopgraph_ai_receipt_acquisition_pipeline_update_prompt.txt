@@ -1,0 +1,918 @@
+SHOPGRAPH — ADD PARALLEL LOCAL OLLAMA RECEIPT ACQUISITION PIPELINE
+==========================================================
+
+TASK
+----
+
+Analyze the attached/current ShopGraph codebase and add a NEW AI-based receipt
+acquisition capability without removing, replacing, or breaking the existing OCR
+Acquisition Pipeline.
+
+The goal is to create a parallel path that can use an local Ollama vision model to read a
+receipt image and produce the SAME downstream-compatible kind of raw receipt
+output expected by the existing Data Base Builder.
+
+The existing OCR path must remain fully usable.
+
+This version must use OLLAMA ONLY for the new intelligent receipt-acquisition
+capability. It must run locally and must not require OpenAI or any other paid/cloud
+AI API.
+
+The new Ollama path should integrate into ShopGraph's current architecture rather than
+creating a separate application or redesigning unrelated systems.
+
+
+==========================================================
+CURRENT ARCHITECTURE TO PRESERVE
+==========================================================
+
+ShopGraph currently has an existing capability:
+
+    1. OCR Acquisition Pipeline
+
+and related modes such as:
+
+    OCR Acquisition Pipeline - All Images
+    OCR Acquisition Pipeline + Data Base Builder
+    OCR Acquisition Pipeline - All Images + Data Base Builder
+
+Pipeline Part 1 currently performs approximately:
+
+    1. Clean Generated Processing Data
+    2. Clean Current Receipt Images
+    3. Import Picture
+    4. Update Purchase History Copy
+    5. OCR Acquisition Pipeline + Data Base Builder
+    6. Pipeline Export 1
+
+The existing Pipeline Part 1 implementation obtains raw OCR output from:
+
+    run_ocr_acquisition_pipeline_for_image(...)
+
+and then passes the resulting raw OCR file(s) to the existing Data Base Builder
+through the current receipt-import workflow.
+
+DO NOT remove or alter the old OCR path merely because the new Ollama path exists.
+
+
+==========================================================
+PRIMARY GOAL
+==========================================================
+
+Add a new parallel capability named:
+
+    Ollama Receipt Acquisition Pipeline
+
+Conceptually:
+
+    Receipt Image
+        ↓
+    Local Ollama Vision Receipt Analysis
+        ↓
+    ShopGraph-compatible Raw Receipt JSON
+        ↓
+    Existing Data Base Builder
+        ↓
+    Existing Purchase History / benchmark / taxonomy workflow
+
+The most important architectural rule is:
+
+    THE NEW Ollama PIPELINE MUST HAND OFF TO THE EXISTING SHOPGRAPH DOWNSTREAM
+    FRAMEWORK THROUGH A CLEAR COMPATIBILITY BOUNDARY.
+
+Do not rewrite the Data Base Builder around a completely different Ollama schema if
+that can reasonably be avoided.
+
+Prefer adapting the Ollama result into the same or a deliberately compatible raw
+receipt representation already consumed by ShopGraph.
+
+
+==========================================================
+KEEP BOTH ACQUISITION ENGINES
+==========================================================
+
+After this update ShopGraph should have TWO independent receipt acquisition
+engines:
+
+    A. OCR Acquisition Pipeline
+       - existing implementation
+       - Tesseract / image variants / OCR comparison / reconstruction
+       - unchanged and still selectable
+
+    B. Ollama Receipt Acquisition Pipeline
+       - new implementation
+       - sends the selected receipt image to an local Ollama vision model
+       - asks the model to transcribe the receipt conservatively
+       - converts the result to ShopGraph-compatible raw receipt data
+
+The user must be able to choose either path.
+
+Do not silently replace the existing OCR implementation.
+
+
+==========================================================
+NEW CAPABILITY MENU
+==========================================================
+
+Extend the existing ShopGraph Capabilities menu conservatively.
+
+Keep all current options available.
+
+Add new options similar in spirit to the existing OCR modes, for example:
+
+    === ShopGraph Capabilities ===
+
+    1. OCR Acquisition Pipeline
+    2. OCR Acquisition Pipeline - All Images
+    3. OCR Acquisition Pipeline + Data Base Builder
+    4. OCR Acquisition Pipeline - All Images + Data Base Builder
+
+    5. Ollama Receipt Acquisition Pipeline
+    6. Ollama Receipt Acquisition Pipeline + Data Base Builder
+
+    7. Pipelines
+
+    0. Return to Utilities Menu
+
+The exact numbering may be adjusted if necessary to preserve current structure,
+but the final menu must be clear and must retain every old capability.
+
+For the first version, a single-image Ollama mode is sufficient.
+
+Do NOT add an "All Images" Ollama mode unless doing so is straightforward and does
+not complicate the implementation unnecessarily.
+
+
+==========================================================
+NEW PIPELINE PART 1 VARIANT
+==========================================================
+
+Also add a SECOND Pipeline Part 1-style workflow that uses Ollama acquisition instead
+of OCR acquisition.
+
+Keep the existing:
+
+    1. Pipeline Part 1
+
+unchanged in behavior.
+
+Add a clearly named parallel workflow such as:
+
+    2. Pipeline Part 1 - Ollama Receipt Acquisition
+
+Then renumber the later pipeline menu entries as necessary.
+
+The new Ollama version should preserve the existing Pipeline Part 1 flow as closely
+as possible:
+
+    1. Clean Generated Processing Data
+    2. Clean Current Receipt Images
+    3. Import Picture
+    4. Update Purchase History Copy
+    5. Ollama Receipt Acquisition Pipeline + Data Base Builder
+    6. Pipeline Export 1
+
+Only acquisition step 5 should materially differ.
+
+Everything before and after that step should reuse the existing ShopGraph logic.
+
+DO NOT fork duplicate implementations of picture import, Purchase History backup,
+Data Base Builder, Pipeline Export 1, or other reusable functionality when the
+existing functions can be called directly.
+
+
+==========================================================
+PROPOSED PIPELINES MENU
+==========================================================
+
+A good target menu is:
+
+    === ShopGraph Pipelines ===
+
+    1. Pipeline Part 1
+    2. Pipeline Part 1 - Ollama Receipt Acquisition
+    3. Pipeline Export 1
+    4. Category Manager Completion
+    5. Pipeline Export 2
+    6. Finalize Taxonomy + Budgets
+    0. Return to Capabilities Menu
+
+The original Pipeline Part 1 must continue using the existing OCR Acquisition
+Pipeline.
+
+The new Pipeline Part 1 - Ollama Receipt Acquisition must use the new Ollama acquisition
+engine.
+
+
+==========================================================
+OLLAMA RECEIPT ACQUISITION PACKAGE
+==========================================================
+
+Create a separate capability package rather than placing all Ollama logic into
+capabilities/pipelines.py.
+
+Preferred structure:
+
+    capabilities/
+        OllamaReceiptAcquisitionPipeline/
+            __init__.py
+            main_OllamaReceiptAcquisitionPipeline.py
+            ollama_client.py
+            receipt_prompt.py
+            response_parser.py
+            raw_receipt_writer.py
+
+This is a suggested structure, not an absolute requirement.
+
+Keep responsibilities separated:
+
+    main_OllamaReceiptAcquisitionPipeline.py
+        orchestration / public entry points
+
+    ollama_client.py
+        local Ollama HTTP interaction only
+
+    receipt_prompt.py
+        receipt-reading instructions / schema definition
+
+    response_parser.py
+        validation and normalization of model output
+
+    raw_receipt_writer.py
+        writes ShopGraph-compatible raw receipt JSON
+
+Do not put local Ollama calls inside Data Base Builder modules.
+
+
+==========================================================
+PUBLIC ENTRY POINT
+==========================================================
+
+Provide an entry point parallel to the existing OCR function, preferably:
+
+    run_ollama_receipt_acquisition_pipeline_for_image(
+        image_path: Path,
+    ) -> list[Path]
+
+or another interface compatible with the existing Pipeline Part 1 handoff.
+
+It should return one or more raw receipt file paths that can be passed directly
+to the existing helper:
+
+    _run_database_builder_for_outputs(...)
+
+This symmetry is intentional.
+
+Desired conceptual code:
+
+    raw_receipt_files = (
+        run_ollama_receipt_acquisition_pipeline_for_image(
+            saved_picture
+        )
+    )
+
+    _run_database_builder_for_outputs(
+        raw_receipt_files
+    )
+
+Do not require the caller to understand AI-Ollama-native response objects.
+
+
+==========================================================
+OLLAMA LOCAL MODEL / CONFIGURATION
+==========================================================
+
+This implementation must use OLLAMA ONLY.
+
+Do NOT integrate cloud AI provider, Anthropic, Google Gemini, a paid cloud inference API,
+or any other hosted AI provider.
+
+Do NOT require an Ollama service/model, cloud account, token billing, or per-receipt AI fee.
+
+The intended architecture is:
+
+    ShopGraph
+        ↓
+    Ollama running locally on the user's computer
+        ↓
+    Local vision-capable model
+        ↓
+    Receipt transcription returned to ShopGraph
+
+Communicate with Ollama through its local HTTP API, normally:
+
+    http://localhost:11434
+
+Keep the Ollama base URL configurable in one obvious location, with localhost as
+the default.
+
+Use Ollama's documented local API for image-capable/chat generation. The image
+must be supplied in the format expected by the local Ollama API.
+
+Do not require the Python `ollama` package unless it provides a compelling
+advantage. Prefer Python's standard-library HTTP facilities if that keeps the
+project simpler and avoids a new dependency.
+
+The implementation must perform controlled availability checks.
+
+If Ollama is not installed or the local Ollama service cannot be reached:
+
+    - print a clear message explaining that Ollama must be installed and running;
+    - do not show an opaque traceback;
+    - do not modify Purchase History;
+    - leave the existing OCR pipeline fully usable.
+
+If the configured vision model is not installed locally:
+
+    - identify the missing model clearly;
+    - tell the user the exact `ollama pull <model>` command needed;
+    - do not automatically download a large model without user approval;
+    - do not modify Purchase History.
+
+MODEL CONFIGURATION
+-------------------
+
+Keep the Ollama model name configurable in ONE obvious location.
+
+Use an environment variable such as:
+
+    SHOPGRAPH_OLLAMA_MODEL
+
+and/or ShopGraph's existing non-secret settings architecture.
+
+There is NO Ollama service/model.
+
+Choose a sensible vision-capable default model supported by Ollama, but isolate
+that choice behind a constant/configuration value so it can be changed later
+without changing pipeline logic.
+
+Do not scatter model names throughout the project.
+
+Also support a configurable base URL such as:
+
+    SHOPGRAPH_OLLAMA_BASE_URL
+
+with default:
+
+    http://localhost:11434
+
+LOCAL-ONLY REQUIREMENT
+----------------------
+
+For this capability, receipt images and prompts must be sent only to the locally
+running Ollama service.
+
+Do not silently fall back to cloud AI provider or another cloud provider.
+
+Do not add telemetry or upload receipt images elsewhere.
+
+The existing non-AI OCR path remains available as a completely separate fallback
+that the USER may choose manually.
+
+==========================================================
+OLLAMA MODEL'S JOB
+==========================================================
+
+The local Ollama vision model is replacing RECEIPT OCR / TRANSCRIPTION, not the rest of
+ShopGraph.
+
+The Ollama should inspect the receipt image and reconstruct the receipt faithfully.
+
+It should identify the printed receipt content in top-to-bottom order.
+
+Preserve receipt evidence rather than prematurely converting the receipt into the
+final Purchase History taxonomy.
+
+The Ollama acquisition layer should focus on things such as:
+
+    - line order
+    - printed text
+    - product descriptions
+    - SKU / PLU / item codes when visible
+    - tax codes when visible
+    - monetary values
+    - promotion/reference-price lines
+    - savings lines
+    - quantity/weight/pricing-detail lines
+    - subtotal/tax/total lines
+    - store/date/store-number evidence when visible
+
+Do NOT ask the Ollama acquisition layer to invent:
+
+    Common Name
+    Sub-Category
+    broad Category
+
+Those belong to later ShopGraph stages.
+
+
+==========================================================
+CONSERVATIVE TRANSCRIPTION RULES
+==========================================================
+
+The Ollama receipt prompt should explicitly require conservative behavior.
+
+Rules should include:
+
+1. Preserve receipt line order.
+
+2. Do not invent text that cannot reasonably be read.
+
+3. If text is genuinely unreadable, represent uncertainty explicitly rather than
+   fabricating a confident value.
+
+4. Do not collapse repeated products merely because the text is identical.
+
+5. Do not treat a promotional/reference amount as automatically being the final
+   item charge.
+
+6. Preserve savings lines such as:
+
+       You saved: $0.62
+
+   as receipt evidence rather than turning them into product purchases.
+
+7. Preserve pricing-detail lines such as:
+
+       1 @ 10 for $10.00    1.00
+
+   so downstream ShopGraph logic can distinguish promotional/reference amounts
+   from final charges.
+
+8. Preserve zero-price purchases when the receipt actually shows 0.00.
+
+9. Preserve quantity and weighted-item evidence.
+
+10. Preserve subtotal/tax/total/payment metadata rather than misclassifying it as
+    product text.
+
+11. Preserve repeated independently purchased items separately.
+
+12. Do not infer a six-digit SKU merely because some unrelated six-digit number
+    appears in receipt metadata.
+
+13. Output only evidence supported by the image.
+
+
+==========================================================
+RAW RECEIPT COMPATIBILITY
+==========================================================
+
+Before implementing the new writer, inspect exactly what the current Data Base
+Builder expects from raw OCR JSON.
+
+Do NOT guess the schema.
+
+Study the existing:
+
+    capabilities/OCRAcquisitionPipeline/
+    utils/DataBaseBuilder/receipt_loader.py
+    utils/DataBaseBuilder/data_base_builder_main.py
+    utils/DataBaseBuilder/receipt_item_interpreter.py
+    store-specific parsers
+    session-state / selected-raw-OCR behavior
+
+Then define the smallest compatibility adapter necessary.
+
+The Ollama-generated file should contain all fields required by the existing
+downstream code.
+
+If some OCR-specific metadata has no meaningful Ollama equivalent, populate it with a
+safe compatible value rather than changing unrelated downstream systems merely to
+satisfy an OCR-specific field.
+
+Document every compatibility decision.
+
+
+==========================================================
+IMPORTANT: RAW OUTPUT SHOULD REMAIN REVIEWABLE
+==========================================================
+
+The Ollama-generated raw receipt output should remain inspectable by a human.
+
+Do not make the only stored artifact an opaque provider response.
+
+Store a normalized ShopGraph receipt JSON containing the receipt lines that
+ShopGraph actually uses.
+
+Optionally, Ollama/model metadata may be stored separately, but downstream ShopGraph
+should not depend directly on the Ollama's native response format.
+
+
+==========================================================
+DATA BASE BUILDER
+==========================================================
+
+The existing Data Base Builder must remain the downstream authority for the normal
+interactive review workflow.
+
+The new Ollama acquisition mode should still flow through:
+
+    run_receipt_import(...)
+
+and therefore preserve the current:
+
+    deterministic receipt-item interpretation
+    store/date/store-number handling
+    review/correction prompts
+    skip-term behavior
+    Purchase History writing
+    duplicate checks
+    benchmark behavior
+
+Do not bypass these systems simply because the acquisition source is AI.
+
+If a very small compatibility change to Data Base Builder is necessary, isolate it
+and keep existing OCR behavior unchanged.
+
+
+==========================================================
+TESTABILITY — REQUIRED
+==========================================================
+
+The new capability must be easy to test BEFORE using it against the live Purchase
+History.
+
+Add a dedicated test path.
+
+A preferred design is a new submenu such as:
+
+    === Ollama Receipt Acquisition Pipeline - Test Mode ===
+
+    1. Run Ollama Receipt Acquisition Only
+    2. Run Ollama Receipt Acquisition + Data Base Builder Test Mode
+    3. Compare Ollama Acquisition with Existing OCR Acquisition
+    0. Return
+
+At minimum implement options 1 and 2.
+
+Option 1:
+    - choose/use one receipt image;
+    - run Ollama acquisition;
+    - write the normalized raw receipt JSON;
+    - display its output path;
+    - DO NOT modify live Purchase History.
+
+Option 2:
+    - run Ollama acquisition;
+    - send the result through ShopGraph's existing Data Base Builder TEST MODE;
+    - use the existing test workbook destination rather than the live Purchase
+      History workbook;
+    - preserve all normal review prompts;
+    - DO NOT alter live Purchase History.
+
+If the existing Data Base Builder Test Mode already provides a reusable
+workbook-path or test entry point, reuse it.
+
+Do not duplicate Data Base Builder logic to create the test mode.
+
+
+==========================================================
+OPTIONAL COMPARISON TEST
+==========================================================
+
+If practical, add:
+
+    Compare Ollama Acquisition with Existing OCR Acquisition
+
+For the same receipt image:
+
+    Receipt
+       ├── Existing OCR Acquisition
+       └── Ollama Receipt Acquisition
+
+Then show/output enough information to compare:
+
+    - number of reconstructed receipt lines
+    - line text
+    - item-like lines
+    - detected prices
+    - detected SKUs
+    - obvious differences
+
+Do not automatically declare one result correct solely because it contains more
+text.
+
+This comparison functionality is secondary to getting the parallel Ollama pipeline
+working safely.
+
+
+==========================================================
+OUTPUT LOCATIONS
+==========================================================
+
+Keep generated Ollama artifacts inside ShopGraph's existing data architecture.
+
+Prefer a distinct Ollama-generated directory if mixing the files with OCR-generated
+artifacts would create ambiguity, for example:
+
+    data/
+        ollama_receipt_acquisition/
+            raw/
+
+However, if the existing raw OCR directory is required for compatibility, use a
+clear naming convention that distinguishes Ollama-generated files.
+
+Do not overwrite existing OCR raw outputs merely because the same receipt is
+processed with AI.
+
+Example naming style:
+
+    <receipt-stem>_ollama_raw.json
+
+versus existing OCR output.
+
+Use the project's existing constants/path conventions where reasonable.
+
+
+==========================================================
+CLEANUP BEHAVIOR
+==========================================================
+
+Review the existing:
+
+    Clean Generated Processing Data
+
+logic.
+
+Decide explicitly whether Ollama acquisition artifacts should be cleaned by that
+utility.
+
+The preferred behavior is:
+
+    - temporary Ollama processing artifacts may be cleaned;
+    - final Ollama raw receipt JSON needed for downstream review should follow the same
+      lifecycle expectations as current raw OCR output;
+    - cleanup must not touch Purchase History, benchmarks, archives, configuration,
+      or unrelated data.
+
+Document the decision.
+
+
+==========================================================
+PIPELINE PART 1 — Ollama FAILURE SAFETY
+==========================================================
+
+The new Ollama Pipeline Part 1 variant must stop safely if:
+
+    picture import fails
+    saved picture cannot be resolved
+    Purchase History backup fails
+    Ollama is unavailable or the configured local model is missing
+    Ollama request fails
+    Ollama response cannot be validated
+    raw receipt JSON cannot be written
+    no compatible raw receipt file is produced
+
+If failure occurs before Data Base Builder:
+
+    DO NOT modify live Purchase History.
+
+If Ollama acquisition succeeds but later Pipeline Export 1 fails, preserve the same
+kind of warning/failure behavior already used by the original Pipeline Part 1.
+
+Do not automatically fall back to OCR unless the user explicitly chooses such a
+mode.
+
+The two acquisition engines should remain independently testable.
+
+
+==========================================================
+DO NOT CHANGE UNRELATED FUNCTIONALITY
+==========================================================
+
+Preserve:
+
+    existing OCR Acquisition Pipeline
+    OCR sub-task menu
+    OCR All Images mode
+    current Data Base Builder
+    Data Base Builder Test Mode
+    Purchase History workbook structure
+    Category Manager
+    Analytics
+    Budget Plans
+    Pipeline Export 1
+    Category Manager Completion
+    Pipeline Export 2
+    Finalize Taxonomy + Budgets
+    Purchase History backup/archive utilities
+    Picture Importer
+    Code Update Importer
+    global -1 exit behavior
+    HEIC/HEIF support
+    existing prompts
+    existing taxonomy
+
+Do not perform unrelated refactors.
+
+
+==========================================================
+BACKWARD COMPATIBILITY
+==========================================================
+
+Old code paths should continue to work.
+
+In particular:
+
+    run_ocr_acquisition_pipeline()
+    run_ocr_acquisition_pipeline_for_image(...)
+    run_ocr_acquisition_pipeline_all_images(...)
+
+and existing menu selections must remain available.
+
+Do not rename old public functions unless compatibility aliases are retained.
+
+
+==========================================================
+README
+==========================================================
+
+Add:
+
+    README/README_AI_RECEIPT_ACQUISITION_PIPELINE.txt
+
+Document:
+
+    purpose
+    architecture
+    menu locations
+    Ollama vs OCR distinction
+    Ollama installation, local service, and model configuration
+    output schema compatibility
+    output locations
+    testing procedure
+    Pipeline Part 1 - Ollama flow
+    failure behavior
+    files added/changed
+    dependencies
+    how to return to the old OCR path
+
+
+==========================================================
+DEPENDENCIES
+==========================================================
+
+Keep new dependencies minimal.
+
+Prefer calling Ollama's local HTTP API with Python's standard library so no new
+Python AI SDK is required.
+
+If an Ollama-specific Python package is genuinely necessary:
+
+    - explain why the standard local HTTP API is insufficient;
+    - add the dependency to data/requirements.txt;
+    - pin/specify it in the same style as existing dependencies;
+    - do not remove existing requirements.
+
+Ollama itself is a local system prerequisite, not a Python package dependency.
+Document installation separately from Python requirements.
+
+Do not introduce a web framework, database server, or unrelated dependency.
+
+
+==========================================================
+OLLAMA SETUP / FIRST-RUN EXPERIENCE
+==========================================================
+
+The README must give a beginner-friendly setup sequence for macOS:
+
+    1. Install Ollama.
+    2. Start Ollama / verify the local service is running.
+    3. Pull the configured vision model:
+
+           ollama pull <configured-model>
+
+    4. Run ShopGraph.
+    5. Open the Ollama Receipt Acquisition Test Mode.
+    6. Test acquisition only before testing Data Base Builder.
+    7. Only after successful testing, use the live Ollama Pipeline Part 1 variant.
+
+Also document simple diagnostic commands such as:
+
+    ollama list
+
+and a safe way to confirm the local service is responding.
+
+Do not require the user to create an account or enter a payment method merely to
+use the local Ollama capability.
+
+==========================================================
+VALIDATION
+==========================================================
+
+Before delivering the update:
+
+1. Run Python syntax compilation on every added or changed Python file.
+
+2. Verify the old OCR Acquisition Pipeline still imports.
+
+3. Verify the new Ollama Receipt Acquisition Pipeline imports without requiring an API
+   call merely to import the module.
+
+4. Verify missing Ollama configuration produces a controlled error.
+
+6. Verify Ollama raw-output schema is accepted by the current Data Base Builder loader.
+
+7. Verify Ollama Acquisition Test Mode does not write to the live Purchase History.
+
+8. Verify Data Base Builder Test Mode writes only to its existing test workbook.
+
+9. Verify the original Pipeline Part 1 still calls the original OCR engine.
+
+10. Verify the new Pipeline Part 1 - Ollama calls only the new Ollama engine at acquisition
+   step 5.
+
+11. Verify both Pipeline Part 1 versions still finish with Pipeline Export 1 after
+    successful Data Base Builder processing.
+
+12. Verify Category Manager Completion, Pipeline Export 2, and Finalize Taxonomy +
+    Budgets remain callable.
+
+13. Verify global -1 exit behavior still applies to new interactive prompts.
+
+
+==========================================================
+EXPECTED ARCHITECTURE AFTER UPDATE
+==========================================================
+
+Conceptually:
+
+                       Receipt Image
+                            │
+                   ┌────────┴────────┐
+                   │                 │
+                   ▼                 ▼
+          Existing OCR Engine     New Ollama Engine
+                   │                 │
+                   ▼                 ▼
+             Raw OCR JSON      Ollama Raw Receipt JSON
+                   │                 │
+                   └────────┬────────┘
+                            │
+                            ▼
+                 Compatibility Boundary
+                            │
+                            ▼
+                    Data Base Builder
+                            │
+                            ▼
+                     Purchase History
+                            │
+                            ▼
+                    Pipeline Export 1
+                            │
+                            ▼
+                 Common Name/Sub-Category
+                            │
+                            ▼
+                Category Manager Completion
+                            │
+                            ▼
+                    Pipeline Export 2
+                            │
+                            ▼
+              Finalize Taxonomy + Budgets
+
+
+==========================================================
+IMPLEMENTATION PRINCIPLE
+==========================================================
+
+Treat this as:
+
+    NEW ACQUISITION ENGINE
+        +
+    SMALL INTEGRATION LAYER
+        +
+    NEW TEST PATH
+        +
+    NEW PIPELINE PART 1 VARIANT
+
+NOT as:
+
+    rewrite ShopGraph around AI.
+
+
+==========================================================
+DELIVERABLE
+==========================================================
+
+Return an importer-compatible ShopGraph overlay ZIP preserving project-relative
+paths.
+
+The ZIP should contain only files that are new or intentionally changed.
+
+Also provide a concise summary of:
+
+    files added
+    files changed
+    menu changes
+    Ollama configuration
+    test instructions
+    compatibility decisions
+    validation performed
+
+Do not include runtime databases, Purchase History workbooks, receipt images,
+benchmarks, archives, cloud Ollama service/models, generated OCR/Ollama outputs, caches, or user-specific
+configuration files in the ZIP.

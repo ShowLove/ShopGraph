@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 
 import shutil
@@ -5,6 +6,9 @@ from pathlib import Path
 
 from capabilities.OCRAcquisitionPipeline.main_OCRAcquisitionPipeline import (
     run_ocr_acquisition_pipeline_for_image,
+)
+from capabilities.OllamaReceiptAcquisitionPipeline.main_OllamaReceiptAcquisitionPipeline import (
+    run_ollama_receipt_acquisition_pipeline_for_image,
 )
 from utils.clean_ocr_acquisition_pipeline import (
     clean_ocr_acquisition_pipeline_data,
@@ -411,22 +415,20 @@ def run_finalize_taxonomy_and_budgets() -> None:
     )
 
 
-def run_pipeline_part_1() -> None:
+def _run_pipeline_part_1_with_acquisition(
+    *,
+    title: str,
+    acquisition_label: str,
+    acquisition_function,
+) -> None:
     """
-    Automated single-receipt workflow:
+    Shared Pipeline Part 1 orchestration.
 
-    1. Clean generated OCR-processing data.
-    2. Clear data/current_pic/.
-    3. Prompt once to choose/import a supported picture.
-    4. Re-read the saved picture filename from utils/config.txt.
-    5. Update the Purchase History copy.
-    6. Run the equivalent of Capability 3 for that exact saved picture:
-       OCR Acquisition Pipeline + Data Base Builder.
-
-    Administrative confirmation menus are intentionally skipped to minimize
-    prompting. Data Base Builder's normal review/correction prompts remain.
+    The original OCR and local Ollama variants deliberately reuse the same
+    cleanup, picture import, Purchase History backup, Data Base Builder, and
+    Pipeline Export 1 logic. Only the receipt-acquisition engine differs.
     """
-    print("\n=== ShopGraph Pipeline Part 1 ===\n")
+    print(f"\n=== {title} ===\n")
 
     print("[1/6] Clean Generated Processing Data")
     generated_result = (
@@ -465,14 +467,11 @@ def run_pipeline_part_1() -> None:
 
     if imported_path is None:
         print(
-            "\n[INFO] Pipeline Part 1 cancelled "
-            "before OCR processing."
+            f"\n[INFO] {title} cancelled "
+            "before receipt acquisition."
         )
         return
 
-    # Deliberately resolve the image through the saved configuration rather
-    # than relying only on the function return value. This proves the same
-    # saved filename can drive the next capability step.
     saved_picture = get_saved_picture_path()
 
     if saved_picture is None:
@@ -499,7 +498,7 @@ def run_pipeline_part_1() -> None:
     ) as error:
         print(
             "\n[ERROR] Purchase History backup failed. "
-            "OCR/Data Base Builder will not start."
+            f"{acquisition_label}/Data Base Builder will not start."
             f"\n\n{error}"
         )
         return
@@ -510,31 +509,31 @@ def run_pipeline_part_1() -> None:
     )
 
     print(
-        "\n[5/6] OCR Acquisition Pipeline + Data Base Builder"
+        f"\n[5/6] {acquisition_label} + Data Base Builder"
     )
 
     try:
-        raw_ocr_files = (
-            run_ocr_acquisition_pipeline_for_image(
+        raw_receipt_files = (
+            acquisition_function(
                 saved_picture
             )
         )
     except Exception as error:
         print(
-            "\n[ERROR] OCR Acquisition Pipeline failed:"
+            f"\n[ERROR] {acquisition_label} failed:"
             f"\n{error}"
         )
         return
 
-    if not raw_ocr_files:
+    if not raw_receipt_files:
         print(
-            "\n[ERROR] OCR Acquisition Pipeline did not "
-            "produce a raw OCR file."
+            f"\n[ERROR] {acquisition_label} did not "
+            "produce a compatible raw receipt file."
         )
         return
 
     _run_database_builder_for_outputs(
-        raw_ocr_files
+        raw_receipt_files
     )
 
     print(
@@ -548,23 +547,57 @@ def run_pipeline_part_1() -> None:
 
     if export_folder is None:
         print(
-            "\n[WARNING] Pipeline Part 1 processing completed, "
+            f"\n[WARNING] {title} processing completed, "
             "but Pipeline Export 1 failed."
         )
         return
 
     print(
-        "\n[OK] Pipeline Part 1 complete."
+        f"\n[OK] {title} complete."
+    )
+
+
+def run_pipeline_part_1() -> None:
+    """
+    Existing Pipeline Part 1. It continues to use the original OCR engine.
+    """
+    _run_pipeline_part_1_with_acquisition(
+        title="ShopGraph Pipeline Part 1",
+        acquisition_label="OCR Acquisition Pipeline",
+        acquisition_function=(
+            run_ocr_acquisition_pipeline_for_image
+        ),
+    )
+
+
+def run_pipeline_part_1_ollama() -> None:
+    """
+    Parallel Pipeline Part 1 using local Ollama receipt acquisition.
+
+    Only stage 5 differs from the original workflow.
+    """
+    _run_pipeline_part_1_with_acquisition(
+        title=(
+            "ShopGraph Pipeline Part 1 - "
+            "Ollama Receipt Acquisition"
+        ),
+        acquisition_label=(
+            "Ollama Receipt Acquisition Pipeline"
+        ),
+        acquisition_function=(
+            run_ollama_receipt_acquisition_pipeline_for_image
+        ),
     )
 
 
 def display_pipelines_menu() -> None:
     print("\n=== ShopGraph Pipelines ===\n")
     print("1. Pipeline Part 1")
-    print("2. Pipeline Export 1")
-    print("3. Category Manager Completion")
-    print("4. Pipeline Export 2")
-    print("5. Finalize Taxonomy + Budgets")
+    print("2. Pipeline Part 1 - Ollama Receipt Acquisition")
+    print("3. Pipeline Export 1")
+    print("4. Category Manager Completion")
+    print("5. Pipeline Export 2")
+    print("6. Finalize Taxonomy + Budgets")
     print("0. Return to Capabilities Menu")
 
 
@@ -580,15 +613,18 @@ def run_pipelines_menu() -> None:
             run_pipeline_part_1()
 
         elif option == "2":
-            run_pipeline_export_1()
+            run_pipeline_part_1_ollama()
 
         elif option == "3":
-            run_category_manager_completion()
+            run_pipeline_export_1()
 
         elif option == "4":
-            run_pipeline_export_2()
+            run_category_manager_completion()
 
         elif option == "5":
+            run_pipeline_export_2()
+
+        elif option == "6":
             run_finalize_taxonomy_and_budgets()
 
         elif option == "0":

@@ -1,3 +1,4 @@
+
 from capabilities.OCRAcquisitionPipeline.main_OCRAcquisitionPipeline import (
     run_ocr_acquisition_pipeline,
     run_ocr_acquisition_pipeline_all_images,
@@ -22,6 +23,11 @@ from capabilities.OCRAcquisitionPipeline.compare_ocr import (
 )
 from capabilities.OCRAcquisitionPipeline.refine_json import (
     run_refine_json,
+)
+
+from capabilities.OllamaReceiptAcquisitionPipeline.main_OllamaReceiptAcquisitionPipeline import (
+    run_ollama_receipt_acquisition_pipeline,
+    run_ollama_receipt_acquisition_test_mode,
 )
 
 from utils.export_codebase import (
@@ -69,7 +75,10 @@ def display_capabilities_menu() -> None:
     print("2. OCR Acquisition Pipeline - All Images")
     print("3. OCR Acquisition Pipeline + Data Base Builder")
     print("4. OCR Acquisition Pipeline - All Images + Data Base Builder")
-    print("5. Pipelines")
+    print("5. Ollama Receipt Acquisition Pipeline")
+    print("6. Ollama Receipt Acquisition Pipeline + Data Base Builder")
+    print("7. Ollama Receipt Acquisition Pipeline - Test Mode")
+    print("8. Pipelines")
     print("0. Return to Utilities Menu")
 
 
@@ -109,6 +118,13 @@ def run_capabilities_menu() -> None:
             raw_ocr_files = run_ocr_acquisition_pipeline_all_images()
             _run_database_builder_for_outputs(raw_ocr_files)
         elif option == "5":
+            run_ollama_receipt_acquisition_pipeline()
+        elif option == "6":
+            raw_ollama_files = run_ollama_receipt_acquisition_pipeline()
+            _run_database_builder_for_outputs(raw_ollama_files)
+        elif option == "7":
+            run_ollama_receipt_acquisition_test_mode()
+        elif option == "8":
             run_pipelines_menu()
         elif option == "0":
             return
