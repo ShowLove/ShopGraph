@@ -91,6 +91,11 @@ Age Bypassed
 SUBSTRINGS:
 $
 
+[STORE:Trader Joe's]
+TERMS:
+SALE TRANSACTION
+SUBSTRINGS:
+
 [STORE:Walmart]
 TERMS:
 Walmart Invoice

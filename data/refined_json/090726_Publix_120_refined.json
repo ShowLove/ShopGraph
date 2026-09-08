@@ -1,0 +1,219 @@
+{
+  "source_raw_ocr": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/raw_ocr/090726_Publix_120_raw_ocr.json",
+  "source_receipt": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/current_pic/090726_Publix_120.JPG",
+  "refinement_version": "1.0",
+  "receipt_context": {
+    "store": "NA",
+    "store_number": "NA",
+    "receipt_date": "NA"
+  },
+  "receipt_context_confidence": {
+    "store": 0.0,
+    "store_number": 0.0,
+    "receipt_date": 0.0
+  },
+  "receipt_context_reasoning": {
+    "store": "No supported store name was detected.",
+    "store_number": "No reliable store number was detected.",
+    "receipt_date": "No reliable receipt date was detected."
+  },
+  "line_count": 4,
+  "lines": [
+    {
+      "line_number": 1,
+      "source_text": "‘you saved:",
+      "classification": "unknown",
+      "confidence": 0.82,
+      "fields": {
+        "Total": "NA",
+        "Store": "NA",
+        "Six-Digit SKU": "NA",
+        "Product": "‘you saved:",
+        "Tax Code": "NA",
+        "Store Number": "NA",
+        "Common Name": "NA",
+        "Sub-Category": "NA",
+        "Date 1": "NA",
+        "Price 1": "NA"
+      },
+      "field_confidence": {
+        "Total": 0.0,
+        "Store": 0.0,
+        "Six-Digit SKU": 0.0,
+        "Product": 0.82,
+        "Tax Code": 0.0,
+        "Store Number": 0.0,
+        "Common Name": 0.0,
+        "Sub-Category": 0.0,
+        "Date 1": 0.0,
+        "Price 1": 0.0
+      },
+      "reasoning": {
+        "Total": "Not a purchase item.",
+        "Store": "No relevant value was identified for this line.",
+        "Six-Digit SKU": "No merchandise SKU is assigned to this non-purchase line.",
+        "Product": "Best editable line-level interpretation.",
+        "Tax Code": "No merchandise tax code is assigned to this non-purchase line.",
+        "Store Number": "No relevant value was identified for this line.",
+        "Common Name": "Common Name is reserved for purchase-item normalization.",
+        "Sub-Category": "Sub-Category is reserved for purchase-item normalization.",
+        "Date 1": "No relevant value was identified for this line.",
+        "Price 1": "No product price is assigned to this non-purchase line."
+      },
+      "stage6_metadata": {
+        "reconstructed": false,
+        "recovered_missing_row": false,
+        "numeric_refined": false,
+        "normalized_y": 0.687367
+      }
+    },
+    {
+      "line_number": 2,
+      "source_text": "chobant 20G ork !",
+      "classification": "unknown",
+      "confidence": 0.56,
+      "fields": {
+        "Total": "NA",
+        "Store": "NA",
+        "Six-Digit SKU": "NA",
+        "Product": "chobant 20G ork !",
+        "Tax Code": "NA",
+        "Store Number": "NA",
+        "Common Name": "NA",
+        "Sub-Category": "NA",
+        "Date 1": "NA",
+        "Price 1": "NA"
+      },
+      "field_confidence": {
+        "Total": 0.0,
+        "Store": 0.0,
+        "Six-Digit SKU": 0.0,
+        "Product": 0.56,
+        "Tax Code": 0.0,
+        "Store Number": 0.0,
+        "Common Name": 0.0,
+        "Sub-Category": 0.0,
+        "Date 1": 0.0,
+        "Price 1": 0.0
+      },
+      "reasoning": {
+        "Total": "Not a purchase item.",
+        "Store": "No relevant value was identified for this line.",
+        "Six-Digit SKU": "No merchandise SKU is assigned to this non-purchase line.",
+        "Product": "Best editable line-level interpretation.",
+        "Tax Code": "No merchandise tax code is assigned to this non-purchase line.",
+        "Store Number": "No relevant value was identified for this line.",
+        "Common Name": "Common Name is reserved for purchase-item normalization.",
+        "Sub-Category": "Sub-Category is reserved for purchase-item normalization.",
+        "Date 1": "No relevant value was identified for this line.",
+        "Price 1": "No product price is assigned to this non-purchase line."
+      },
+      "stage6_metadata": {
+        "reconstructed": false,
+        "recovered_missing_row": false,
+        "numeric_refined": false,
+        "normalized_y": 0.755694
+      }
+    },
+    {
+      "line_number": 3,
+      "source_text": "sn Raisins Golde",
+      "classification": "unknown",
+      "confidence": 0.8,
+      "fields": {
+        "Total": "NA",
+        "Store": "NA",
+        "Six-Digit SKU": "NA",
+        "Product": "sn Raisins Golde",
+        "Tax Code": "NA",
+        "Store Number": "NA",
+        "Common Name": "NA",
+        "Sub-Category": "NA",
+        "Date 1": "NA",
+        "Price 1": "NA"
+      },
+      "field_confidence": {
+        "Total": 0.0,
+        "Store": 0.0,
+        "Six-Digit SKU": 0.0,
+        "Product": 0.8,
+        "Tax Code": 0.0,
+        "Store Number": 0.0,
+        "Common Name": 0.0,
+        "Sub-Category": 0.0,
+        "Date 1": 0.0,
+        "Price 1": 0.0
+      },
+      "reasoning": {
+        "Total": "Not a purchase item.",
+        "Store": "No relevant value was identified for this line.",
+        "Six-Digit SKU": "No merchandise SKU is assigned to this non-purchase line.",
+        "Product": "Best editable line-level interpretation.",
+        "Tax Code": "No merchandise tax code is assigned to this non-purchase line.",
+        "Store Number": "No relevant value was identified for this line.",
+        "Common Name": "Common Name is reserved for purchase-item normalization.",
+        "Sub-Category": "Sub-Category is reserved for purchase-item normalization.",
+        "Date 1": "No relevant value was identified for this line.",
+        "Price 1": "No product price is assigned to this non-purchase line."
+      },
+      "stage6_metadata": {
+        "reconstructed": false,
+        "recovered_missing_row": false,
+        "numeric_refined": false,
+        "normalized_y": 0.870463
+      }
+    },
+    {
+      "line_number": 4,
+      "source_text": "tha APk Flin Ltc",
+      "classification": "unknown",
+      "confidence": 0.66,
+      "fields": {
+        "Total": "NA",
+        "Store": "NA",
+        "Six-Digit SKU": "NA",
+        "Product": "tha APk Flin Ltc",
+        "Tax Code": "NA",
+        "Store Number": "NA",
+        "Common Name": "NA",
+        "Sub-Category": "NA",
+        "Date 1": "NA",
+        "Price 1": "NA"
+      },
+      "field_confidence": {
+        "Total": 0.0,
+        "Store": 0.0,
+        "Six-Digit SKU": 0.0,
+        "Product": 0.66,
+        "Tax Code": 0.0,
+        "Store Number": 0.0,
+        "Common Name": 0.0,
+        "Sub-Category": 0.0,
+        "Date 1": 0.0,
+        "Price 1": 0.0
+      },
+      "reasoning": {
+        "Total": "Not a purchase item.",
+        "Store": "No relevant value was identified for this line.",
+        "Six-Digit SKU": "No merchandise SKU is assigned to this non-purchase line.",
+        "Product": "Best editable line-level interpretation.",
+        "Tax Code": "No merchandise tax code is assigned to this non-purchase line.",
+        "Store Number": "No relevant value was identified for this line.",
+        "Common Name": "Common Name is reserved for purchase-item normalization.",
+        "Sub-Category": "Sub-Category is reserved for purchase-item normalization.",
+        "Date 1": "No relevant value was identified for this line.",
+        "Price 1": "No product price is assigned to this non-purchase line."
+      },
+      "stage6_metadata": {
+        "reconstructed": false,
+        "recovered_missing_row": false,
+        "numeric_refined": false,
+        "normalized_y": 0.949466
+      }
+    }
+  ],
+  "provenance": {
+    "rule": "Stage 7 preserves one refined object per Stage-6 line. Receipt context may propagate Store, Store Number, and Date 1 to genuine purchase items. Product remains an editable best guess for every source line. Historical Purchase History may support identity/Common Name/Sub-Category but never supplies a current receipt Price 1 or Date 1.",
+    "purchase_history_reference_used": true
+  }
+}

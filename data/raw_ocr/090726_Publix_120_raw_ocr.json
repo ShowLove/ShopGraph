@@ -1,0 +1,380 @@
+{
+  "source_receipt": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/current_pic/090726_Publix_120.JPG",
+  "selection_method": "conservative multi-variant receipt-row consensus: best full-receipt candidate supplies reading order; geometry must also have textual/SKU agreement; SKU is never injected into a row; price/tax additions require independent OCR support; absence is preferred to unsupported reconstruction",
+  "backbone_candidate": {
+    "candidate_id": "grayscale_psm4",
+    "image_variant": "grayscale",
+    "psm": 4,
+    "comparison_metrics": {
+      "score": 46.5404,
+      "mean_word_confidence": 54.0,
+      "recognized_word_count": 14,
+      "low_confidence_rate": 0.2857,
+      "price_like_count": 0,
+      "sku_count": 0,
+      "plausible_line_count": 3,
+      "garbage_line_count": 0
+    }
+  },
+  "consensus_summary": {
+    "backbone_line_count": 4,
+    "consensus_line_count": 4,
+    "merchandise_line_count": 0,
+    "component_reconstruction_count": 0,
+    "candidate_count": 25,
+    "full_candidate_count": 15,
+    "right_column_candidate_count": 10,
+    "match_threshold": 0.72,
+    "max_row_center_distance": 0.014,
+    "minimum_component_support": 2
+  },
+  "raw_text": "‘you saved:\nchobant 20G ork !\nsn Raisins Golde\ntha APk Flin Ltc",
+  "text": [
+    {
+      "line_number": 1,
+      "candidate_id": "sharpened_psm4",
+      "text": "‘you saved:",
+      "confidence": 82.5,
+      "source_candidate": "sharpened_psm4",
+      "image_variant": "sharpened",
+      "psm": 4,
+      "support_count": 9,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 83.7,
+      "consensus_score": 111.7,
+      "normalized_y": 0.687367,
+      "bbox": {
+        "left": 22,
+        "top": 1761,
+        "right": 1180,
+        "bottom": 2102,
+        "width": 1158,
+        "height": 341
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 9
+    },
+    {
+      "line_number": 2,
+      "candidate_id": "grayscale_psm4",
+      "text": "chobant 20G ork !",
+      "confidence": 56.5,
+      "source_candidate": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "support_count": 4,
+      "match_method": "backbone",
+      "line_quality_score": 54.9,
+      "consensus_score": 65.4,
+      "normalized_y": 0.755694,
+      "bbox": {
+        "left": 21,
+        "top": 1891,
+        "right": 1958,
+        "bottom": 2356,
+        "width": 1937,
+        "height": 465
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 4
+    },
+    {
+      "line_number": 3,
+      "candidate_id": "sharpened_psm6",
+      "text": "sn Raisins Golde",
+      "confidence": 79.67,
+      "source_candidate": "sharpened_psm6",
+      "image_variant": "sharpened",
+      "psm": 6,
+      "support_count": 6,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 81.47,
+      "consensus_score": 98.97,
+      "normalized_y": 0.870463,
+      "bbox": {
+        "left": 23,
+        "top": 2268,
+        "right": 1963,
+        "bottom": 2624,
+        "width": 1940,
+        "height": 356
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 6
+    },
+    {
+      "line_number": 4,
+      "candidate_id": "otsu_psm4",
+      "text": "tha APk Flin Ltc",
+      "confidence": 66.0,
+      "source_candidate": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "support_count": 9,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 68.4,
+      "consensus_score": 96.4,
+      "normalized_y": 0.949466,
+      "bbox": {
+        "left": 21,
+        "top": 2547,
+        "right": 1979,
+        "bottom": 2789,
+        "width": 1958,
+        "height": 242
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 9
+    }
+  ],
+  "candidate_ranking": [
+    {
+      "rank": 1,
+      "candidate_id": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 46.5404,
+        "mean_word_confidence": 54.0,
+        "recognized_word_count": 14,
+        "low_confidence_rate": 0.2857,
+        "price_like_count": 0,
+        "sku_count": 0,
+        "plausible_line_count": 3,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 2,
+      "candidate_id": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 45.4012,
+        "mean_word_confidence": 54.86,
+        "recognized_word_count": 14,
+        "low_confidence_rate": 0.3571,
+        "price_like_count": 0,
+        "sku_count": 0,
+        "plausible_line_count": 3,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 3,
+      "candidate_id": "sharpened_psm4",
+      "image_variant": "sharpened",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 41.98,
+        "mean_word_confidence": 53.69,
+        "recognized_word_count": 16,
+        "low_confidence_rate": 0.4375,
+        "price_like_count": 0,
+        "sku_count": 0,
+        "plausible_line_count": 3,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 4,
+      "candidate_id": "otsu_psm11",
+      "image_variant": "otsu",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 41.1184,
+        "mean_word_confidence": 52.58,
+        "recognized_word_count": 45,
+        "low_confidence_rate": 0.4222,
+        "price_like_count": 0,
+        "sku_count": 0,
+        "plausible_line_count": 8,
+        "garbage_line_count": 9
+      }
+    },
+    {
+      "rank": 5,
+      "candidate_id": "sharpened_psm11",
+      "image_variant": "sharpened",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 35.6376,
+        "mean_word_confidence": 50.09,
+        "recognized_word_count": 45,
+        "low_confidence_rate": 0.5333,
+        "price_like_count": 0,
+        "sku_count": 0,
+        "plausible_line_count": 8,
+        "garbage_line_count": 8
+      }
+    },
+    {
+      "rank": 6,
+      "candidate_id": "otsu_psm6",
+      "image_variant": "otsu",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": 32.8444,
+        "mean_word_confidence": 46.55,
+        "recognized_word_count": 33,
+        "low_confidence_rate": 0.5152,
+        "price_like_count": 0,
+        "sku_count": 0,
+        "plausible_line_count": 4,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 7,
+      "candidate_id": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 30.8532,
+        "mean_word_confidence": 45.88,
+        "recognized_word_count": 43,
+        "low_confidence_rate": 0.5581,
+        "price_like_count": 0,
+        "sku_count": 0,
+        "plausible_line_count": 8,
+        "garbage_line_count": 7
+      }
+    },
+    {
+      "rank": 8,
+      "candidate_id": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": 30.81,
+        "mean_word_confidence": 45.84,
+        "recognized_word_count": 32,
+        "low_confidence_rate": 0.5625,
+        "price_like_count": 0,
+        "sku_count": 0,
+        "plausible_line_count": 4,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 9,
+      "candidate_id": "illumination_psm11",
+      "image_variant": "illumination",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 30.73,
+        "mean_word_confidence": 48.9,
+        "recognized_word_count": 80,
+        "low_confidence_rate": 0.5375,
+        "price_like_count": 0,
+        "sku_count": 0,
+        "plausible_line_count": 6,
+        "garbage_line_count": 35
+      }
+    },
+    {
+      "rank": 10,
+      "candidate_id": "sharpened_psm6",
+      "image_variant": "sharpened",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": 27.6032,
+        "mean_word_confidence": 42.87,
+        "recognized_word_count": 31,
+        "low_confidence_rate": 0.5806,
+        "price_like_count": 1,
+        "sku_count": 0,
+        "plausible_line_count": 3,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 11,
+      "candidate_id": "illumination_psm6",
+      "image_variant": "illumination",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": 8.43,
+        "mean_word_confidence": 29.43,
+        "recognized_word_count": 44,
+        "low_confidence_rate": 0.75,
+        "price_like_count": 0,
+        "sku_count": 0,
+        "plausible_line_count": 0,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 12,
+      "candidate_id": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": -0.016,
+        "mean_word_confidence": 32.75,
+        "recognized_word_count": 878,
+        "low_confidence_rate": 0.7745,
+        "price_like_count": 0,
+        "sku_count": 0,
+        "plausible_line_count": 15,
+        "garbage_line_count": 547
+      }
+    },
+    {
+      "rank": 13,
+      "candidate_id": "threshold_psm6",
+      "image_variant": "threshold",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": -11.7888,
+        "mean_word_confidence": 24.58,
+        "recognized_word_count": 1281,
+        "low_confidence_rate": 0.9071,
+        "price_like_count": 0,
+        "sku_count": 0,
+        "plausible_line_count": 0,
+        "garbage_line_count": 43
+      }
+    },
+    {
+      "rank": 14,
+      "candidate_id": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": -28.0,
+        "mean_word_confidence": 0.0,
+        "recognized_word_count": 0,
+        "low_confidence_rate": 1.0,
+        "price_like_count": 0,
+        "sku_count": 0,
+        "plausible_line_count": 0,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 15,
+      "candidate_id": "illumination_psm4",
+      "image_variant": "illumination",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": -28.0,
+        "mean_word_confidence": 0.0,
+        "recognized_word_count": 0,
+        "low_confidence_rate": 1.0,
+        "price_like_count": 0,
+        "sku_count": 0,
+        "plausible_line_count": 0,
+        "garbage_line_count": 0
+      }
+    }
+  ],
+  "provenance": {
+    "candidates_file": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_candidates/090726_Publix_120_ocr_candidates.json",
+    "rule": "All output remains OCR-derived. A full-receipt observation may join another observation only through exact SKU agreement or close physical-row geometry plus textual agreement. Right-column observations can contribute only price/tax evidence at the same narrow row position. SKU values cannot be imported into rows that lacked a SKU in the selected full-receipt observation. Components with insufficient support are omitted rather than guessed."
+  }
+}

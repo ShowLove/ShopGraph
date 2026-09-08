@@ -1,0 +1,935 @@
+{
+  "source_receipt": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/current_pic/090726_TraderJoes_0848.JPG",
+  "selection_method": "conservative multi-variant receipt-row consensus: best full-receipt candidate supplies reading order; geometry must also have textual/SKU agreement; SKU is never injected into a row; price/tax additions require independent OCR support; absence is preferred to unsupported reconstruction",
+  "backbone_candidate": {
+    "candidate_id": "sharpened_psm4",
+    "image_variant": "sharpened",
+    "psm": 4,
+    "comparison_metrics": {
+      "score": 84.8208,
+      "mean_word_confidence": 85.05,
+      "recognized_word_count": 38,
+      "low_confidence_rate": 0.0789,
+      "price_like_count": 0,
+      "sku_count": 0,
+      "plausible_line_count": 11,
+      "garbage_line_count": 0
+    }
+  },
+  "consensus_summary": {
+    "backbone_line_count": 11,
+    "consensus_line_count": 11,
+    "merchandise_line_count": 4,
+    "component_reconstruction_count": 4,
+    "candidate_count": 25,
+    "full_candidate_count": 15,
+    "right_column_candidate_count": 10,
+    "match_threshold": 0.72,
+    "max_row_center_distance": 0.014,
+    "minimum_component_support": 2
+  },
+  "raw_text": "SALE TRANSACTION\nTOS BLACK BEAN &\nRE KOSHER TRKY HALF\nE KOSHER GROUND TRK 6.99\nAPTRE KOSHER GROUND TRK\nTRE KOSHER BNL 0.79\nTRE KOSHER BNL/SKNL B 10.95\nBEEF KOSHER GROUND 85/15 F 35.97\nCHOCOLATE BABKA\nAD COMPLETE SWEET\nN BLUEBERRY GLUTEN ©",
+  "text": [
+    {
+      "line_number": 1,
+      "candidate_id": "otsu_psm11",
+      "text": "SALE TRANSACTION",
+      "confidence": 96.0,
+      "source_candidate": "otsu_psm11",
+      "image_variant": "otsu",
+      "psm": 11,
+      "support_count": 7,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 97.2,
+      "consensus_score": 118.2,
+      "normalized_y": 0.255914,
+      "bbox": {
+        "left": 632,
+        "top": 632,
+        "right": 1320,
+        "bottom": 731,
+        "width": 688,
+        "height": 99
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "known receipt metadata/total/payment row",
+      "row_family_support": 7,
+      "review_status": "skipped"
+    },
+    {
+      "line_number": 2,
+      "candidate_id": "threshold_psm4",
+      "text": "TAQUITOS BLACK BEAN & CH",
+      "confidence": 94.0,
+      "source_candidate": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "support_count": 9,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 92.4,
+      "consensus_score": 120.4,
+      "normalized_y": 0.32163,
+      "bbox": {
+        "left": 353,
+        "top": 780,
+        "right": 996,
+        "bottom": 933,
+        "width": 643,
+        "height": 153
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 8,
+      "review_status": "accepted",
+      "original_ocr_text": "TAQUITOS BLACK BEAN & CH",
+      "human_review": {
+        "total": "4.49",
+        "store": "Trader Joe's",
+        "six_digit_sku": "NA",
+        "product": "TAQUITOS BLACK BEAN & CH",
+        "tax_code": "NA",
+        "store_number": "0848",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "09/07/2026",
+        "price": "NA"
+      }
+    },
+    {
+      "line_number": 3,
+      "candidate_id": "sharpened_psm11",
+      "text": "EMPIRE KOSHER TRKY HALF",
+      "confidence": 94.25,
+      "source_candidate": "sharpened_psm11",
+      "image_variant": "sharpened",
+      "psm": 11,
+      "support_count": 10,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 96.65,
+      "consensus_score": 128.15,
+      "normalized_y": 0.356928,
+      "bbox": {
+        "left": 317,
+        "top": 903,
+        "right": 1124,
+        "bottom": 998,
+        "width": 807,
+        "height": 95
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 10,
+      "review_status": "accepted",
+      "original_ocr_text": "EMPIRE KOSHER TRKY HALF",
+      "human_review": {
+        "total": "19.60",
+        "store": "Trader Joe's",
+        "six_digit_sku": "NA",
+        "product": "EMPIRE KOSHER TRKY HALF",
+        "tax_code": "NA",
+        "store_number": "0848",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "09/07/2026",
+        "price": "NA"
+      }
+    },
+    {
+      "line_number": 4,
+      "candidate_id": "sharpened_psm11",
+      "text": "EMPIRE KOSHER GROUND TRK 6.99",
+      "confidence": 93.0,
+      "source_candidate": "sharpened_psm11",
+      "image_variant": "sharpened",
+      "psm": 11,
+      "support_count": 10,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 95.4,
+      "consensus_score": 126.9,
+      "normalized_y": 0.391288,
+      "bbox": {
+        "left": 362,
+        "top": 999,
+        "right": 1166,
+        "bottom": 1085,
+        "width": 804,
+        "height": 86
+      },
+      "reconstructed": true,
+      "original_consensus_text": "E KOSHER GROUND TRK",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "multiple matching row observations plus independent price support",
+        "family_candidate_count": 10
+      },
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
+        },
+        "description": {
+          "value": "E KOSHER GROUND TRK",
+          "source_candidate": "sharpened_psm11",
+          "source_text": "E KOSHER GROUND TRK",
+          "support_count": 10,
+          "confidence": 93.0,
+          "similarity_to_anchor": 1.0,
+          "score": 155.8,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "6.99",
+          "support_count": 2,
+          "average_confidence": 86.0,
+          "examples": [
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "6.99"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "6,99"
+            }
+          ],
+          "selection_reason": "selected from multiple independent OCR candidates"
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "EMPIRE KOSHER GROUND TRK 6.99",
+      "human_review": {
+        "total": "6.99",
+        "store": "Trader Joe's",
+        "six_digit_sku": "NA",
+        "product": "EMPIRE KOSHER GROUND TRK",
+        "tax_code": "NA",
+        "store_number": "0848",
+        "common_name": "Ground Turkey",
+        "category": "Meat & Seafood",
+        "date": "09/07/2026",
+        "price": "6.99"
+      }
+    },
+    {
+      "line_number": 5,
+      "candidate_id": "otsu_psm11",
+      "text": "EMPIRE KOSHER GROUND TRK",
+      "confidence": 90.0,
+      "source_candidate": "otsu_psm11",
+      "image_variant": "otsu",
+      "psm": 11,
+      "support_count": 10,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 92.4,
+      "consensus_score": 123.9,
+      "normalized_y": 0.426587,
+      "bbox": {
+        "left": 206,
+        "top": 1083,
+        "right": 1164,
+        "bottom": 1189,
+        "width": 958,
+        "height": 106
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 10,
+      "review_status": "accepted",
+      "original_ocr_text": "EMPIRE KOSHER GROUND TRK",
+      "human_review": {
+        "total": "6.99",
+        "store": "Trader Joe's",
+        "six_digit_sku": "NA",
+        "product": "EMPIRE KOSHER GROUND TRK",
+        "tax_code": "NA",
+        "store_number": "0848",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "09/07/2026",
+        "price": "NA"
+      }
+    },
+    {
+      "line_number": 6,
+      "candidate_id": "otsu_psm11",
+      "text": "EMPIRE KOSHER BNL/SKNL B 0.79",
+      "confidence": 93.67,
+      "source_candidate": "otsu_psm11",
+      "image_variant": "otsu",
+      "psm": 11,
+      "support_count": 9,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 95.47,
+      "consensus_score": 123.47,
+      "normalized_y": 0.457379,
+      "bbox": {
+        "left": 273,
+        "top": 1176,
+        "right": 865,
+        "bottom": 1260,
+        "width": 592,
+        "height": 84
+      },
+      "reconstructed": true,
+      "original_consensus_text": "TRE KOSHER BNL.",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "multiple matching row observations plus independent price support",
+        "family_candidate_count": 9
+      },
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
+        },
+        "description": {
+          "value": "TRE KOSHER BNL",
+          "source_candidate": "otsu_psm11",
+          "source_text": "TRE KOSHER BNL.",
+          "support_count": 8,
+          "confidence": 93.67,
+          "similarity_to_anchor": 1.0,
+          "score": 145.27,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "0.79",
+          "support_count": 3,
+          "average_confidence": 87.33,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "STRE KOSHER BNI./SKNL B 0,79"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "PTRE KOSHER BNI./SKNL B 0.79"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "0.79"
+            }
+          ],
+          "selection_reason": "selected from multiple independent OCR candidates"
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "EMPIRE KOSHER BNL/SKNL B 0.79",
+      "human_review": {
+        "total": "10.79",
+        "store": "Trader Joe's",
+        "six_digit_sku": "NA",
+        "product": "EMPIRE KOSHER BNL/SKNL B",
+        "tax_code": "NA",
+        "store_number": "0848",
+        "common_name": "NA",
+        "category": "Meat & Seafood",
+        "date": "09/07/2026",
+        "price": "0.79"
+      }
+    },
+    {
+      "line_number": 7,
+      "candidate_id": "otsu_psm11",
+      "text": "EMPIRE KOSHER BNL/SKNL B 10.95",
+      "confidence": 92.0,
+      "source_candidate": "otsu_psm11",
+      "image_variant": "otsu",
+      "psm": 11,
+      "support_count": 10,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 94.4,
+      "consensus_score": 125.9,
+      "normalized_y": 0.490988,
+      "bbox": {
+        "left": 272,
+        "top": 1262,
+        "right": 1164,
+        "bottom": 1353,
+        "width": 892,
+        "height": 91
+      },
+      "reconstructed": true,
+      "original_consensus_text": "TRE KOSHER BNL/SKNL B",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "multiple matching row observations plus independent price support",
+        "family_candidate_count": 10
+      },
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
+        },
+        "description": {
+          "value": "TRE KOSHER BNL/SKNL B",
+          "source_candidate": "otsu_psm11",
+          "source_text": "TRE KOSHER BNL/SKNL B",
+          "support_count": 9,
+          "confidence": 92.0,
+          "similarity_to_anchor": 1.0,
+          "score": 149.8,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "10.95",
+          "support_count": 4,
+          "average_confidence": 79.5,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "aTRE KOSHER BNL/SKNL B — $10.95"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "ITRE KOSHER BNL/SKNL B — $10.95"
+            },
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "$10.95"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": ". $10.95"
+            }
+          ],
+          "selection_reason": "selected from multiple independent OCR candidates"
+        },
+        "tax_code": {
+          "value": null,
+          "support_count": 0,
+          "average_confidence": null,
+          "examples": [],
+          "selection_reason": "no reliable OCR evidence"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "EMPIRE KOSHER BNL/SKNL B 10.95",
+      "human_review": {
+        "total": "10.95",
+        "store": "Trader Joe's",
+        "six_digit_sku": "NA",
+        "product": "EMPIRE KOSHER BNL/SKNL B",
+        "tax_code": "NA",
+        "store_number": "0848",
+        "common_name": "NA",
+        "category": "Meat & Seafood",
+        "date": "09/07/2026",
+        "price": "10.95"
+      }
+    },
+    {
+      "line_number": 8,
+      "candidate_id": "threshold_psm4",
+      "text": "BEEF KOSHER GROUND 85/15 35.97",
+      "confidence": 95.5,
+      "source_candidate": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "support_count": 10,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 97.9,
+      "consensus_score": 129.4,
+      "normalized_y": 0.526849,
+      "bbox": {
+        "left": 141,
+        "top": 1343,
+        "right": 1170,
+        "bottom": 1463,
+        "width": 1029,
+        "height": 120
+      },
+      "reconstructed": true,
+      "original_consensus_text": "BEEF KOSHER GROUND 85/15",
+      "reconstruction_method": "conservative receipt-row consensus: same-row geometry must also have textual/SKU agreement; SKU cannot be injected; price/tax additions require independent support; unsupported components remain absent",
+      "row_classification": {
+        "is_merchandise": true,
+        "reason": "multiple matching row observations plus independent price support",
+        "family_candidate_count": 10
+      },
+      "component_support": {
+        "sku": {
+          "value": null,
+          "support_count": 0,
+          "selection_reason": "SKU injection disabled because selected line had no SKU",
+          "examples": []
+        },
+        "description": {
+          "value": "BEEF KOSHER GROUND 85/15",
+          "source_candidate": "threshold_psm4",
+          "source_text": "BEEF KOSHER GROUND 85/15",
+          "support_count": 10,
+          "confidence": 95.5,
+          "similarity_to_anchor": 1.0,
+          "score": 158.3,
+          "selection_reason": "best description among strongly matched full-receipt row observations"
+        },
+        "price": {
+          "value": "35.97",
+          "support_count": 2,
+          "average_confidence": 47.5,
+          "examples": [
+            {
+              "candidate_id": "otsu_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "$35.97"
+            },
+            {
+              "candidate_id": "illumination_right_psm11",
+              "candidate_scope": "right_column",
+              "text": "$35.97"
+            }
+          ],
+          "selection_reason": "selected from multiple independent OCR candidates"
+        },
+        "tax_code": {
+          "value": "F",
+          "support_count": 4,
+          "average_confidence": 80.5,
+          "examples": [
+            {
+              "candidate_id": "grayscale_psm4",
+              "candidate_scope": "full",
+              "text": "F KOSHER GROUND 85/15 $35 07"
+            },
+            {
+              "candidate_id": "grayscale_psm11",
+              "candidate_scope": "full",
+              "text": "F KOSHER GROUN"
+            },
+            {
+              "candidate_id": "otsu_psm4",
+              "candidate_scope": "full",
+              "text": "F KOSHER GROUND 85/15 $35 07"
+            },
+            {
+              "candidate_id": "otsu_psm11",
+              "candidate_scope": "full",
+              "text": "F KOSHER GROUN"
+            }
+          ],
+          "selection_reason": "selected from multiple independent OCR candidates"
+        }
+      },
+      "review_status": "accepted",
+      "original_ocr_text": "BEEF KOSHER GROUND 85/15 35.97",
+      "human_review": {
+        "total": "35.97",
+        "store": "Trader Joe's",
+        "six_digit_sku": "NA",
+        "product": "BEEF KOSHER GROUND 85/15",
+        "tax_code": "F",
+        "store_number": "0848",
+        "common_name": "NA",
+        "category": "Meat & Seafood",
+        "date": "09/07/2026",
+        "price": "35.97"
+      }
+    },
+    {
+      "line_number": 9,
+      "candidate_id": "threshold_psm11",
+      "text": "CHOCOLATE BABKA",
+      "confidence": 92.5,
+      "source_candidate": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "support_count": 7,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 93.7,
+      "consensus_score": 114.7,
+      "normalized_y": 0.58881,
+      "bbox": {
+        "left": 140,
+        "top": 1527,
+        "right": 778,
+        "bottom": 1609,
+        "width": 638,
+        "height": 82
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 6,
+      "review_status": "accepted",
+      "original_ocr_text": "CHOCOLATE BABKA",
+      "human_review": {
+        "total": "5.99",
+        "store": "Trader Joe's",
+        "six_digit_sku": "NA",
+        "product": "CHOCOLATE BABKA",
+        "tax_code": "NA",
+        "store_number": "0848",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "09/07/2026",
+        "price": "NA"
+      }
+    },
+    {
+      "line_number": 10,
+      "candidate_id": "grayscale_psm11",
+      "text": "R-SALAD COMPLETE SWEET K",
+      "confidence": 91.33,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 10,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 93.13,
+      "consensus_score": 124.63,
+      "normalized_y": 0.623169,
+      "bbox": {
+        "left": 349,
+        "top": 1617,
+        "right": 1076,
+        "bottom": 1702,
+        "width": 727,
+        "height": 85
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 10,
+      "review_status": "accepted",
+      "original_ocr_text": "R-SALAD COMPLETE SWEET K",
+      "human_review": {
+        "total": "3.49",
+        "store": "Trader Joe's",
+        "six_digit_sku": "NA",
+        "product": "R-SALAD COMPLETE SWEET K",
+        "tax_code": "NA",
+        "store_number": "0848",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "09/07/2026",
+        "price": "NA"
+      }
+    },
+    {
+      "line_number": 11,
+      "candidate_id": "grayscale_psm11",
+      "text": "MUFFIN BLUEBERRY GLUTEN",
+      "confidence": 82.5,
+      "source_candidate": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "support_count": 10,
+      "match_method": "geometry_plus_text",
+      "line_quality_score": 80.9,
+      "consensus_score": 112.4,
+      "normalized_y": 0.659219,
+      "bbox": {
+        "left": 355,
+        "top": 1698,
+        "right": 1176,
+        "bottom": 1813,
+        "width": 821,
+        "height": 115
+      },
+      "reconstructed": false,
+      "reconstruction_reason": "no sufficiently supported merchandise evidence",
+      "row_family_support": 10,
+      "review_status": "accepted",
+      "original_ocr_text": "MUFFIN BLUEBERRY GLUTEN",
+      "human_review": {
+        "total": "5.99",
+        "store": "Trader Joe's",
+        "six_digit_sku": "NA",
+        "product": "MUFFIN BLUEBERRY GLUTEN",
+        "tax_code": "NA",
+        "store_number": "0848",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "09/07/2026",
+        "price": "NA"
+      }
+    }
+  ],
+  "candidate_ranking": [
+    {
+      "rank": 1,
+      "candidate_id": "sharpened_psm4",
+      "image_variant": "sharpened",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 84.8208,
+        "mean_word_confidence": 85.05,
+        "recognized_word_count": 38,
+        "low_confidence_rate": 0.0789,
+        "price_like_count": 0,
+        "sku_count": 0,
+        "plausible_line_count": 11,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 2,
+      "candidate_id": "grayscale_psm4",
+      "image_variant": "grayscale",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 66.7,
+        "mean_word_confidence": 69.98,
+        "recognized_word_count": 50,
+        "low_confidence_rate": 0.22,
+        "price_like_count": 2,
+        "sku_count": 0,
+        "plausible_line_count": 11,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 3,
+      "candidate_id": "threshold_psm4",
+      "image_variant": "threshold",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 66.6772,
+        "mean_word_confidence": 70.44,
+        "recognized_word_count": 39,
+        "low_confidence_rate": 0.2051,
+        "price_like_count": 0,
+        "sku_count": 0,
+        "plausible_line_count": 11,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 4,
+      "candidate_id": "otsu_psm4",
+      "image_variant": "otsu",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 65.0,
+        "mean_word_confidence": 68.84,
+        "recognized_word_count": 50,
+        "low_confidence_rate": 0.24,
+        "price_like_count": 2,
+        "sku_count": 0,
+        "plausible_line_count": 11,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 5,
+      "candidate_id": "threshold_psm11",
+      "image_variant": "threshold",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 56.666,
+        "mean_word_confidence": 64.52,
+        "recognized_word_count": 132,
+        "low_confidence_rate": 0.2955,
+        "price_like_count": 0,
+        "sku_count": 0,
+        "plausible_line_count": 33,
+        "garbage_line_count": 46
+      }
+    },
+    {
+      "rank": 6,
+      "candidate_id": "illumination_psm11",
+      "image_variant": "illumination",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 54.394,
+        "mean_word_confidence": 55.72,
+        "recognized_word_count": 109,
+        "low_confidence_rate": 0.3945,
+        "price_like_count": 10,
+        "sku_count": 0,
+        "plausible_line_count": 31,
+        "garbage_line_count": 3
+      }
+    },
+    {
+      "rank": 7,
+      "candidate_id": "illumination_psm4",
+      "image_variant": "illumination",
+      "psm": 4,
+      "comparison_metrics": {
+        "score": 44.0496,
+        "mean_word_confidence": 54.59,
+        "recognized_word_count": 69,
+        "low_confidence_rate": 0.4493,
+        "price_like_count": 0,
+        "sku_count": 0,
+        "plausible_line_count": 12,
+        "garbage_line_count": 1
+      }
+    },
+    {
+      "rank": 8,
+      "candidate_id": "otsu_psm11",
+      "image_variant": "otsu",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 31.6004,
+        "mean_word_confidence": 51.05,
+        "recognized_word_count": 179,
+        "low_confidence_rate": 0.5307,
+        "price_like_count": 1,
+        "sku_count": 0,
+        "plausible_line_count": 24,
+        "garbage_line_count": 78
+      }
+    },
+    {
+      "rank": 9,
+      "candidate_id": "grayscale_psm11",
+      "image_variant": "grayscale",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 31.2956,
+        "mean_word_confidence": 52.25,
+        "recognized_word_count": 172,
+        "low_confidence_rate": 0.5523,
+        "price_like_count": 1,
+        "sku_count": 0,
+        "plausible_line_count": 23,
+        "garbage_line_count": 84
+      }
+    },
+    {
+      "rank": 10,
+      "candidate_id": "illumination_psm6",
+      "image_variant": "illumination",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": 30.8904,
+        "mean_word_confidence": 47.0,
+        "recognized_word_count": 17,
+        "low_confidence_rate": 0.5882,
+        "price_like_count": 0,
+        "sku_count": 0,
+        "plausible_line_count": 2,
+        "garbage_line_count": 0
+      }
+    },
+    {
+      "rank": 11,
+      "candidate_id": "sharpened_psm11",
+      "image_variant": "sharpened",
+      "psm": 11,
+      "comparison_metrics": {
+        "score": 23.166,
+        "mean_word_confidence": 45.83,
+        "recognized_word_count": 193,
+        "low_confidence_rate": 0.5855,
+        "price_like_count": 1,
+        "sku_count": 0,
+        "plausible_line_count": 22,
+        "garbage_line_count": 89
+      }
+    },
+    {
+      "rank": 12,
+      "candidate_id": "otsu_psm6",
+      "image_variant": "otsu",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": -0.3028,
+        "mean_word_confidence": 24.94,
+        "recognized_word_count": 189,
+        "low_confidence_rate": 0.9101,
+        "price_like_count": 0,
+        "sku_count": 0,
+        "plausible_line_count": 2,
+        "garbage_line_count": 1
+      }
+    },
+    {
+      "rank": 13,
+      "candidate_id": "sharpened_psm6",
+      "image_variant": "sharpened",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": -2.4272,
+        "mean_word_confidence": 23.46,
+        "recognized_word_count": 270,
+        "low_confidence_rate": 0.9074,
+        "price_like_count": 0,
+        "sku_count": 0,
+        "plausible_line_count": 0,
+        "garbage_line_count": 4
+      }
+    },
+    {
+      "rank": 14,
+      "candidate_id": "grayscale_psm6",
+      "image_variant": "grayscale",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": -3.4312,
+        "mean_word_confidence": 21.79,
+        "recognized_word_count": 175,
+        "low_confidence_rate": 0.9029,
+        "price_like_count": 0,
+        "sku_count": 0,
+        "plausible_line_count": 1,
+        "garbage_line_count": 1
+      }
+    },
+    {
+      "rank": 15,
+      "candidate_id": "threshold_psm6",
+      "image_variant": "threshold",
+      "psm": 6,
+      "comparison_metrics": {
+        "score": -28.0,
+        "mean_word_confidence": 0.0,
+        "recognized_word_count": 0,
+        "low_confidence_rate": 1.0,
+        "price_like_count": 0,
+        "sku_count": 0,
+        "plausible_line_count": 0,
+        "garbage_line_count": 0
+      }
+    }
+  ],
+  "provenance": {
+    "candidates_file": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/ocr_candidates/090726_TraderJoes_0848_ocr_candidates.json",
+    "rule": "All output remains OCR-derived. A full-receipt observation may join another observation only through exact SKU agreement or close physical-row geometry plus textual agreement. Right-column observations can contribute only price/tax evidence at the same narrow row position. SKU values cannot be imported into rows that lacked a SKU in the selected full-receipt observation. Components with insufficient support are omitted rather than guessed."
+  },
+  "benchmark": {
+    "source_raw_ocr": "090726_TraderJoes_0848_raw_ocr.json",
+    "receipt_type": "Trader Joe's",
+    "store_number": "0848",
+    "receipt_date": "09/07/2026",
+    "starting_line_number": 1,
+    "reviewed_line_count": 11,
+    "accepted_purchase_count": 10,
+    "skipped_line_count": 1,
+    "ground_truth": true
+  }
+}
