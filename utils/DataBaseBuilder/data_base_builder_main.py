@@ -34,9 +34,6 @@ from utils.DataBaseBuilder.refined_json_loader import (
     load_matching_refined_json,
     merge_refined_guess,
 )
-from utils.DataBaseBuilder.receipt_item_interpreter import (
-    build_rule_based_line_interpretations,
-)
 from utils.DataBaseBuilder.filename_metadata import (
     parse_receipt_filename_metadata,
 )
@@ -420,22 +417,6 @@ def _display_auto_skip(
     )
 
 
-def _display_rule_auto_skip(
-    line: dict,
-    reason: str,
-) -> None:
-    print(
-        "\n[RULE AUTO-SKIP] "
-        f"OCR Line {line['line_number']} skipped."
-    )
-    print(
-        f'Text: "{line["text"]}"'
-    )
-    print(
-        f"Reason: {reason}"
-    )
-
-
 def _prompt_skip_substring(
     current_product: str,
 ) -> str | None:
@@ -744,39 +725,14 @@ def run_receipt_import(
         >= starting_line
     ]
 
-    # Apply the mature, store-neutral receipt rules deterministically before
-    # asking the user to review each proposed purchase. This layer handles
-    # Product/SKU/Final Item Price relationships only. Store, Store Number,
-    # and Date remain controlled by the existing workflow above.
-    rule_interpretations = (
-        build_rule_based_line_interpretations(
-            lines=eligible_lines,
-            parser=parser,
-            store_number=store_number,
-            receipt_date=receipt_date,
-        )
-    )
-
     def _initial_record(
         line: dict,
     ) -> PurchaseRecord:
-        interpretation = rule_interpretations.get(
-            line["line_number"]
+        parser_record = parser.parse_line(
+            text=line["text"],
+            store_number=store_number,
+            receipt_date=receipt_date,
         )
-
-        if (
-            interpretation is not None
-            and interpretation.record is not None
-        ):
-            parser_record = interpretation.record
-            rule_based_core = True
-        else:
-            parser_record = parser.parse_line(
-                text=line["text"],
-                store_number=store_number,
-                receipt_date=receipt_date,
-            )
-            rule_based_core = False
 
         # Store selection, Store Number, and Date have just been explicitly
         # confirmed by the user in this session. They outrank all other guesses.
@@ -797,20 +753,6 @@ def run_receipt_import(
             "date",
         }
 
-        # When the deterministic receipt-rules interpreter has made the core
-        # Product/SKU/Final Price decision, preserve it. In particular, an NA
-        # price may be intentional ambiguity and must not be replaced by a
-        # weaker one-line guess from refined JSON.
-        if rule_based_core:
-            protected_fields.update(
-                {
-                    "total",
-                    "six_digit_sku",
-                    "product",
-                    "price",
-                }
-            )
-
         return merge_refined_guess(
             parser_record,
             refined_line_map.get(
@@ -823,23 +765,6 @@ def run_receipt_import(
 
     for line in eligible_lines:
         record = _initial_record(line)
-
-        interpretation = rule_interpretations.get(
-            line["line_number"]
-        )
-
-        if (
-            interpretation is not None
-            and interpretation.auto_skip_reason
-        ):
-            _display_rule_auto_skip(
-                line,
-                interpretation.auto_skip_reason,
-            )
-            session.skip(
-                line["line_number"]
-            )
-            continue
 
         skip_match = _skip_rule_match(
             record
@@ -896,27 +821,6 @@ def run_receipt_import(
                         remaining_line
                     )
                 )
-
-                remaining_interpretation = (
-                    rule_interpretations.get(
-                        remaining_line["line_number"]
-                    )
-                )
-
-                if (
-                    remaining_interpretation is not None
-                    and remaining_interpretation.auto_skip_reason
-                ):
-                    _display_rule_auto_skip(
-                        remaining_line,
-                        remaining_interpretation.auto_skip_reason,
-                    )
-                    session.skip(
-                        remaining_line[
-                            "line_number"
-                        ]
-                    )
-                    continue
 
                 remaining_skip_match = (
                     _skip_rule_match(

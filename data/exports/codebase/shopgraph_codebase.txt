@@ -102,6 +102,7 @@ shopping_analysis/
         README_GLOBAL_MINUS_ONE_EXIT.txt
         README_HEIC_IMAGE_SUPPORT.txt
         README_HIERARCHICAL_CATEGORIES_ANALYTICS.txt
+        README_OLLAMA_CONTEXT_WINDOW_FIX.txt
         README_PDF_TO_JPG.txt
         README_PICTURE_IMPORTER.txt
         README_PICTURE_IMPORTER_FILTERED_LISTING.txt
@@ -144,7 +145,7 @@ shopping_analysis/
 
 ================================================================================
 
-Generated: 2026-09-07 23:32:59.749783
+Generated: 2026-09-08 21:08:20.697321
 Root: /Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis
 Mode: LLM-clean export
 Excluded: receipt images, OCR JSON, datasets, databases, logs, caches
@@ -1084,9 +1085,11 @@ from capabilities.OllamaReceiptAcquisitionPipeline.receipt_prompt import (
 
 MODEL_ENV = "SHOPGRAPH_OLLAMA_MODEL"
 BASE_URL_ENV = "SHOPGRAPH_OLLAMA_BASE_URL"
+NUM_CTX_ENV = "SHOPGRAPH_OLLAMA_NUM_CTX"
 
 DEFAULT_MODEL = "qwen2.5vl:7b"
 DEFAULT_BASE_URL = "http://localhost:11434"
+DEFAULT_NUM_CTX = 8192
 REQUEST_TIMEOUT_SECONDS = 180
 
 
@@ -1107,6 +1110,32 @@ def get_configured_base_url() -> str:
         or DEFAULT_BASE_URL
     )
     return value.rstrip("/")
+
+
+def get_configured_num_ctx() -> int:
+    raw_value = os.environ.get(
+        NUM_CTX_ENV,
+        "",
+    ).strip()
+
+    if not raw_value:
+        return DEFAULT_NUM_CTX
+
+    try:
+        value = int(raw_value)
+    except ValueError as error:
+        raise OllamaReceiptAcquisitionError(
+            f"{NUM_CTX_ENV} must be a whole number. "
+            f"Current value: {raw_value!r}"
+        ) from error
+
+    if value < 4096:
+        raise OllamaReceiptAcquisitionError(
+            f"{NUM_CTX_ENV} must be at least 4096. "
+            f"Current value: {value}"
+        )
+
+    return value
 
 
 def _image_bytes(image_path: Path) -> bytes:
@@ -1286,6 +1315,7 @@ def _model_is_installed(
 def verify_ollama_ready() -> dict:
     model = get_configured_model()
     base_url = get_configured_base_url()
+    num_ctx = get_configured_num_ctx()
 
     installed_names = _installed_model_names()
 
@@ -1304,6 +1334,7 @@ def verify_ollama_ready() -> dict:
         "provider": "Ollama",
         "model": model,
         "base_url": base_url,
+        "num_ctx": num_ctx,
         "local_only": True,
     }
 
@@ -1343,6 +1374,7 @@ def transcribe_receipt_image(
         ],
         "options": {
             "temperature": 0,
+            "num_ctx": readiness["num_ctx"],
         },
     }
 
@@ -1367,6 +1399,7 @@ def transcribe_receipt_image(
         "provider": "Ollama",
         "model": model,
         "base_url": readiness["base_url"],
+        "num_ctx": readiness["num_ctx"],
         "local_only": True,
         "done_reason": response_payload.get(
             "done_reason"
@@ -22973,6 +23006,44 @@ broad Category is not stored in Purchase History.
 
 
 ================================================================================
+FILE: README/README_OLLAMA_CONTEXT_WINDOW_FIX.txt
+================================================================================
+
+ShopGraph Ollama Context Window Fix
+======================================
+
+Problem
+-------
+The Ollama receipt request could fail with an error such as:
+
+    request (...) exceeds the available context size (4096 tokens)
+
+Fix
+---
+This update changes the Ollama request so ShopGraph explicitly requests an
+8192-token context window.
+
+Default:
+    SHOPGRAPH_OLLAMA_NUM_CTX = 8192
+
+Optional override
+-----------------
+You can override the context size before launching ShopGraph:
+
+    export SHOPGRAPH_OLLAMA_NUM_CTX=16384
+
+Then run ShopGraph from the same Terminal session.
+
+Files changed
+-------------
+capabilities/OllamaReceiptAcquisitionPipeline/ollama_client.py
+
+No other ShopGraph behavior is changed.
+The original OCR pipeline remains untouched.
+The Ollama model remains qwen2.5vl:7b unless separately configured.
+
+
+================================================================================
 FILE: README/README_PDF_TO_JPG.txt
 ================================================================================
 
@@ -24815,133 +24886,6 @@ Total,,Store,Six-Digit SKU,Product,Tax Code,Store Number,Common Name,Sub-Categor
 FILE: data/config/skip_terms.txt
 ================================================================================
 
-# ShopGraph store-specific automatic skip rules
-#
-# TERMS are exact Product matches for a store.
-# SUBSTRINGS match anywhere inside Product for a store.
-# Matching is case-insensitive and whitespace-normalized.
-
-[STORE:Aldi]
-TERMS:
-ALUL
-Store #238
-961 E Eau Gallie Blvd
-Melbourne, FL
-https://help.aldi .us
-Your cashier today was Candice
-(T) 0.0
-N) 1b x /1
-G) 3.4
-2.99
-1.49
-29
-3,89
-8.29
-870
-.
-ons
-SUBSTRINGS:
-
-[STORE:Publix]
-TERMS:
-F
-3,69
-5,15
-2.99
-If
-You saved
-vhs
-5.15
-3.19
-ic
-HY
-6.79
-is
-{\
-3.99
-5.45
-JF
-9.45
-a)
-14,29
-1.53
-/1b x Ib
-5,65
-0,00
-1 @3 for
-3.34
-3.33
-1@3 for
-Vou saved
-T
-T 7.19
-Age Bynasse
-Subtota |
-84.50
-les Tax 73
-0,50
-6.99
-0,00)
-5.89
-6,79
-6.69
-3.49
-FT
-9.75
-6,91
-6.91
-3.00
-fF
-1 @ 2 for
-4.10
-0.00
-3.32
-2@5 for
-().80
-46.91
-5.99
-1.55
-7,19
-11,59
-Age Bypassed
-| “ily @
-SUBSTRINGS:
-$
-
-[STORE:Trader Joe's]
-TERMS:
-SALE TRANSACTION
-SUBSTRINGS:
-
-[STORE:Walmart]
-TERMS:
-Walmart Invoice
-Buyer
-Michelle Garzon
-102 Marion St, Indian Harbour Beach, FL 32937
-Unavailable
-Qty1
-Qty2
-aty1
-Qty7
-2
-Subtotal
-2 substituted
-With 1/4 Moisturizing Cream, 2.6 oz
-aty 4
-Savings
-wt
-Total
-UUOQUVO MCT CATY AMC TOCCATA TU AT AT TY A A
-Vv
-https://www,walmart com/orders/20001 5112540156? groupld=1fe5aa3b2b le6cSda79b25db1
-SUBSTRINGS:
-Order#
-$
-shopped
-www.walmart.com
-- Walmart
-26,
 
 
 ================================================================================
