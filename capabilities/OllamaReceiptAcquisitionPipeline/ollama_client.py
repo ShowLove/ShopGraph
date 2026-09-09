@@ -270,6 +270,80 @@ def verify_ollama_ready() -> dict:
     }
 
 
+
+def run_local_json_prompt(
+    prompt: str,
+) -> tuple[dict, dict]:
+    """
+    Send a text-only JSON task to the same local Ollama model already used by
+    ShopGraph receipt acquisition.
+
+    This helper is deliberately local-only. It does not use a cloud API.
+    """
+    if not isinstance(prompt, str) or not prompt.strip():
+        raise OllamaReceiptAcquisitionError(
+            "Local Ollama prompt cannot be blank."
+        )
+
+    readiness = verify_ollama_ready()
+
+    payload = {
+        "model": readiness["model"],
+        "stream": False,
+        "format": "json",
+        "messages": [
+            {
+                "role": "user",
+                "content": prompt.strip(),
+            }
+        ],
+        "options": {
+            "temperature": 0,
+            "num_ctx": readiness["num_ctx"],
+        },
+    }
+
+    response_payload = _request_json(
+        f"{readiness['base_url']}/api/chat",
+        payload=payload,
+    )
+
+    message = response_payload.get("message")
+    if not isinstance(message, dict):
+        raise OllamaReceiptAcquisitionError(
+            "Ollama response did not contain a message object."
+        )
+
+    content = message.get("content")
+    if not isinstance(content, str) or not content.strip():
+        raise OllamaReceiptAcquisitionError(
+            "Ollama response did not contain JSON content."
+        )
+
+    try:
+        parsed = json.loads(content)
+    except json.JSONDecodeError as error:
+        raise OllamaReceiptAcquisitionError(
+            "Ollama returned invalid JSON for the local interpretation task."
+        ) from error
+
+    if not isinstance(parsed, dict):
+        raise OllamaReceiptAcquisitionError(
+            "Ollama interpretation response must be a JSON object."
+        )
+
+    metadata = {
+        "provider": "Ollama",
+        "model": readiness["model"],
+        "base_url": readiness["base_url"],
+        "num_ctx": readiness["num_ctx"],
+        "local_only": True,
+        "done_reason": response_payload.get("done_reason"),
+        "total_duration": response_payload.get("total_duration"),
+    }
+
+    return parsed, metadata
+
 def transcribe_receipt_image(
     image_path: str | Path,
 ) -> tuple[str, dict]:
@@ -344,3 +418,4 @@ def transcribe_receipt_image(
         content.strip(),
         provider_metadata,
     )
+

@@ -43,6 +43,10 @@ from utils.DataBaseBuilder.skip_terms import (
     get_skip_terms_file,
     match_product,
 )
+from utils.DataBaseBuilder.local_ai_receipt_interpreter import (
+    LocalAIReceiptInterpretationError,
+    build_local_ai_line_interpretations,
+)
 
 
 TEST_WORKBOOK_PATH = (
@@ -616,7 +620,7 @@ def run_receipt_import(
     if refined is None:
         print(
             "\n[INFO] No valid matching refined JSON was found. "
-            "Data Base Builder will use the existing parser guesses."
+            "Data Base Builder will use parser guesses plus local Ollama Product / Price interpretation."
         )
         refined_line_map = {}
         refined_context = {}
@@ -725,6 +729,32 @@ def run_receipt_import(
         >= starting_line
     ]
 
+    local_ai_line_map: dict[int, dict] = {}
+
+    print(
+        "\n[INFO] Improving Product / Price guesses with local Ollama..."
+    )
+
+    try:
+        local_ai_line_map = (
+            build_local_ai_line_interpretations(
+                eligible_lines,
+                parser.receipt_type,
+            )
+        )
+    except LocalAIReceiptInterpretationError as error:
+        print(
+            "\n[WARNING] Local Ollama Product / Price interpretation "
+            "was unavailable."
+            "\nExisting store parser guesses will be used instead."
+            f"\n\n{error}"
+        )
+    else:
+        print(
+            "[OK] Local Ollama Product / Price interpretation complete."
+            f"\nLines interpreted: {len(local_ai_line_map)}"
+        )
+
     def _initial_record(
         line: dict,
     ) -> PurchaseRecord:
@@ -753,13 +783,80 @@ def run_receipt_import(
             "date",
         }
 
-        return merge_refined_guess(
+        record = merge_refined_guess(
             parser_record,
             refined_line_map.get(
                 line["line_number"]
             ),
             protected_fields=protected_fields,
         )
+
+        # Local Ollama is used only to improve the Product / Price proposal.
+        # Store, Store Number, and Date stay owned by the existing confirmed
+        # filename/manual metadata workflow.
+        local_guess = local_ai_line_map.get(
+            line["line_number"]
+        )
+
+        if local_guess is not None:
+            if not local_guess.get(
+                "is_product",
+                False,
+            ):
+                record = record.with_value(
+                    "product",
+                    NA,
+                )
+                record = record.with_value(
+                    "price",
+                    NA,
+                )
+                record = record.with_value(
+                    "total",
+                    NA,
+                )
+            else:
+                product_guess = local_guess.get(
+                    "product",
+                    NA,
+                )
+                price_guess = local_guess.get(
+                    "price",
+                    NA,
+                )
+
+                if product_guess != NA:
+                    record = record.with_value(
+                        "product",
+                        product_guess,
+                    )
+
+                if price_guess != NA:
+                    record = record.with_value(
+                        "price",
+                        price_guess,
+                    )
+                    record = record.with_value(
+                        "total",
+                        price_guess,
+                    )
+
+        # Re-assert the three fields that the user explicitly selected or that
+        # were reliably parsed from the filename. AI never owns these values.
+        record = record.with_value(
+            "store",
+            confirmed_store_name,
+        )
+        record = record.with_value(
+            "store_number",
+            store_number,
+        )
+        record = record.with_value(
+            "date",
+            receipt_date,
+        )
+
+        return record
 
     should_commit = False
 
@@ -1066,3 +1163,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
