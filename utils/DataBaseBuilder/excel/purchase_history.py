@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import os
 import tempfile
-from datetime import datetime
+from copy import copy
+from datetime import date, datetime
 from pathlib import Path
 
 from openpyxl import Workbook, load_workbook
@@ -1011,6 +1012,236 @@ def _append_purchase(
     )
 
     return created
+
+
+# ---------------------------------------------------------------------------
+# PURCHASE HISTORY ROW SORTING
+# ---------------------------------------------------------------------------
+
+def _history_date_columns(
+    sheet,
+) -> list[int]:
+    """Return columns explicitly labeled Date N in Purchase History."""
+    columns = []
+
+    for column in range(
+        HISTORY_START_COLUMN,
+        sheet.max_column + 1,
+        2,
+    ):
+        header = str(
+            sheet.cell(
+                row=1,
+                column=column,
+            ).value
+            or ""
+        ).strip()
+
+        if header.startswith("Date "):
+            columns.append(column)
+
+    return columns
+
+
+def _sortable_history_date(
+    value,
+) -> date | None:
+    """Normalize an Excel/string history date for chronological row sorting."""
+    if isinstance(value, datetime):
+        return value.date()
+
+    if isinstance(value, date):
+        return value
+
+    if value in (None, "", NA):
+        return None
+
+    text = str(value).strip()
+
+    for date_format in (
+        "%m/%d/%Y",
+        "%m/%d/%y",
+        "%Y-%m-%d",
+    ):
+        try:
+            return datetime.strptime(
+                text,
+                date_format,
+            ).date()
+        except ValueError:
+            continue
+
+    return None
+
+
+def _latest_history_date(
+    sheet,
+    row: int,
+    date_columns: list[int],
+) -> date | None:
+    dates = [
+        parsed
+        for column in date_columns
+        if (
+            parsed := _sortable_history_date(
+                sheet.cell(
+                    row=row,
+                    column=column,
+                ).value
+            )
+        ) is not None
+    ]
+
+    return max(dates) if dates else None
+
+
+def _snapshot_cell(cell) -> dict:
+    """Capture cell content and formatting so sorting moves complete rows safely."""
+    return {
+        "value": cell.value,
+        "font": copy(cell.font),
+        "fill": copy(cell.fill),
+        "border": copy(cell.border),
+        "alignment": copy(cell.alignment),
+        "number_format": cell.number_format,
+        "protection": copy(cell.protection),
+        "comment": copy(cell.comment),
+        "hyperlink": copy(cell.hyperlink),
+    }
+
+
+def _restore_cell(cell, snapshot: dict) -> None:
+    cell.value = snapshot["value"]
+    cell.font = copy(snapshot["font"])
+    cell.fill = copy(snapshot["fill"])
+    cell.border = copy(snapshot["border"])
+    cell.alignment = copy(snapshot["alignment"])
+    cell.number_format = snapshot["number_format"]
+    cell.protection = copy(snapshot["protection"])
+    cell.comment = copy(snapshot["comment"])
+    cell._hyperlink = copy(snapshot["hyperlink"])
+
+
+def sort_purchase_history_by_latest_date(
+    workbook_path: str | Path = WORKBOOK_PATH,
+) -> dict:
+    """
+    Sort Purchase History from oldest to newest using each product row's
+    latest valid Date N value. The newest product histories therefore appear
+    at the bottom of the sheet.
+
+    This is an explicit maintenance action; normal receipt-import behavior is
+    unchanged. Rows with no valid Date N value stay at the top, and ties keep
+    their existing relative order.
+    """
+    workbook_path = (
+        Path(workbook_path)
+        .expanduser()
+        .resolve()
+    )
+
+    if not workbook_path.exists():
+        raise FileNotFoundError(
+            f"Purchase History workbook was not found: {workbook_path}"
+        )
+
+    workbook = _load_or_create_workbook(
+        workbook_path=workbook_path,
+    )
+    sheet = workbook[PURCHASE_SHEET]
+    date_columns = _history_date_columns(sheet)
+
+    if not date_columns:
+        raise ValueError(
+            "Purchase History does not contain any Date N columns."
+        )
+
+    data_rows = list(range(2, sheet.max_row + 1))
+
+    if len(data_rows) < 2:
+        _format_workbook(workbook)
+        _atomic_save(workbook, workbook_path=workbook_path)
+        return {
+            "workbook_path": workbook_path,
+            "rows_sorted": len(data_rows),
+            "date_columns_checked": len(date_columns),
+        }
+
+    max_column = sheet.max_column
+    snapshots = []
+
+    for original_position, row in enumerate(data_rows):
+        latest_date = _latest_history_date(
+            sheet,
+            row,
+            date_columns,
+        )
+        row_height = sheet.row_dimensions[row].height
+        cells = [
+            _snapshot_cell(
+                sheet.cell(
+                    row=row,
+                    column=column,
+                )
+            )
+            for column in range(1, max_column + 1)
+        ]
+        snapshots.append(
+            (
+                latest_date,
+                original_position,
+                row_height,
+                cells,
+            )
+        )
+
+    # None sorts first so undated rows remain above dated purchase histories.
+    # Python's stable sort preserves existing order for equal latest dates.
+    snapshots.sort(
+        key=lambda item: (
+            item[0] is not None,
+            item[0] or date.min,
+            item[1],
+        )
+    )
+
+    for destination_row, snapshot in zip(
+        data_rows,
+        snapshots,
+    ):
+        _, _, row_height, cells = snapshot
+        sheet.row_dimensions[destination_row].height = row_height
+
+        for column, cell_snapshot in enumerate(
+            cells,
+            start=1,
+        ):
+            _restore_cell(
+                sheet.cell(
+                    row=destination_row,
+                    column=column,
+                ),
+                cell_snapshot,
+            )
+
+        # Total is the one ShopGraph row formula. Rebuild it after the row has
+        # moved so its references always point at its new worksheet row.
+        _ensure_total_formula(
+            sheet,
+            destination_row,
+        )
+
+    _format_workbook(workbook)
+    _atomic_save(
+        workbook,
+        workbook_path=workbook_path,
+    )
+
+    return {
+        "workbook_path": workbook_path,
+        "rows_sorted": len(data_rows),
+        "date_columns_checked": len(date_columns),
+    }
 
 
 # ---------------------------------------------------------------------------

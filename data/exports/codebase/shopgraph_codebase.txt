@@ -62,6 +62,7 @@ shopping_analysis/
             benchmark_writer.py
             data_base_builder_main.py
             filename_metadata.py
+            local_ai_receipt_interpreter.py
             purchase_record.py
             receipt_item_interpreter.py
             receipt_loader.py
@@ -102,6 +103,7 @@ shopping_analysis/
         README_GLOBAL_MINUS_ONE_EXIT.txt
         README_HEIC_IMAGE_SUPPORT.txt
         README_HIERARCHICAL_CATEGORIES_ANALYTICS.txt
+        README_LOCAL_AI_PRODUCT_PRICE_INTERPRETER.txt
         README_OLLAMA_CONTEXT_WINDOW_FIX.txt
         README_PDF_TO_JPG.txt
         README_PICTURE_IMPORTER.txt
@@ -146,7 +148,7 @@ shopping_analysis/
 
 ================================================================================
 
-Generated: 2026-09-08 21:26:56.820277
+Generated: 2026-09-20 09:43:07.039663
 Root: /Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis
 Mode: LLM-clean export
 Excluded: receipt images, OCR JSON, datasets, databases, logs, caches
@@ -1340,6 +1342,80 @@ def verify_ollama_ready() -> dict:
     }
 
 
+
+def run_local_json_prompt(
+    prompt: str,
+) -> tuple[dict, dict]:
+    """
+    Send a text-only JSON task to the same local Ollama model already used by
+    ShopGraph receipt acquisition.
+
+    This helper is deliberately local-only. It does not use a cloud API.
+    """
+    if not isinstance(prompt, str) or not prompt.strip():
+        raise OllamaReceiptAcquisitionError(
+            "Local Ollama prompt cannot be blank."
+        )
+
+    readiness = verify_ollama_ready()
+
+    payload = {
+        "model": readiness["model"],
+        "stream": False,
+        "format": "json",
+        "messages": [
+            {
+                "role": "user",
+                "content": prompt.strip(),
+            }
+        ],
+        "options": {
+            "temperature": 0,
+            "num_ctx": readiness["num_ctx"],
+        },
+    }
+
+    response_payload = _request_json(
+        f"{readiness['base_url']}/api/chat",
+        payload=payload,
+    )
+
+    message = response_payload.get("message")
+    if not isinstance(message, dict):
+        raise OllamaReceiptAcquisitionError(
+            "Ollama response did not contain a message object."
+        )
+
+    content = message.get("content")
+    if not isinstance(content, str) or not content.strip():
+        raise OllamaReceiptAcquisitionError(
+            "Ollama response did not contain JSON content."
+        )
+
+    try:
+        parsed = json.loads(content)
+    except json.JSONDecodeError as error:
+        raise OllamaReceiptAcquisitionError(
+            "Ollama returned invalid JSON for the local interpretation task."
+        ) from error
+
+    if not isinstance(parsed, dict):
+        raise OllamaReceiptAcquisitionError(
+            "Ollama interpretation response must be a JSON object."
+        )
+
+    metadata = {
+        "provider": "Ollama",
+        "model": readiness["model"],
+        "base_url": readiness["base_url"],
+        "num_ctx": readiness["num_ctx"],
+        "local_only": True,
+        "done_reason": response_payload.get("done_reason"),
+        "total_duration": response_payload.get("total_duration"),
+    }
+
+    return parsed, metadata
+
 def transcribe_receipt_image(
     image_path: str | Path,
 ) -> tuple[str, dict]:
@@ -1414,6 +1490,7 @@ def transcribe_receipt_image(
         content.strip(),
         provider_metadata,
     )
+
 
 
 ================================================================================
@@ -9507,7 +9584,7 @@ FILE: utils/config.txt
 # Paths may use ~ and environment variables.
 
 code_update_import_location=~/Downloads
-selected_picture_filename=090726_Publix_120.JPG
+selected_picture_filename=091326_Walmart_0_page_002.jpg
 
 
 ================================================================================
@@ -12852,6 +12929,10 @@ from utils.DataBaseBuilder.skip_terms import (
     get_skip_terms_file,
     match_product,
 )
+from utils.DataBaseBuilder.local_ai_receipt_interpreter import (
+    LocalAIReceiptInterpretationError,
+    build_local_ai_line_interpretations,
+)
 
 
 TEST_WORKBOOK_PATH = (
@@ -13425,7 +13506,7 @@ def run_receipt_import(
     if refined is None:
         print(
             "\n[INFO] No valid matching refined JSON was found. "
-            "Data Base Builder will use the existing parser guesses."
+            "Data Base Builder will use parser guesses plus local Ollama Product / Price interpretation."
         )
         refined_line_map = {}
         refined_context = {}
@@ -13534,6 +13615,32 @@ def run_receipt_import(
         >= starting_line
     ]
 
+    local_ai_line_map: dict[int, dict] = {}
+
+    print(
+        "\n[INFO] Improving Product / Price guesses with local Ollama..."
+    )
+
+    try:
+        local_ai_line_map = (
+            build_local_ai_line_interpretations(
+                eligible_lines,
+                parser.receipt_type,
+            )
+        )
+    except LocalAIReceiptInterpretationError as error:
+        print(
+            "\n[WARNING] Local Ollama Product / Price interpretation "
+            "was unavailable."
+            "\nExisting store parser guesses will be used instead."
+            f"\n\n{error}"
+        )
+    else:
+        print(
+            "[OK] Local Ollama Product / Price interpretation complete."
+            f"\nLines interpreted: {len(local_ai_line_map)}"
+        )
+
     def _initial_record(
         line: dict,
     ) -> PurchaseRecord:
@@ -13562,13 +13669,80 @@ def run_receipt_import(
             "date",
         }
 
-        return merge_refined_guess(
+        record = merge_refined_guess(
             parser_record,
             refined_line_map.get(
                 line["line_number"]
             ),
             protected_fields=protected_fields,
         )
+
+        # Local Ollama is used only to improve the Product / Price proposal.
+        # Store, Store Number, and Date stay owned by the existing confirmed
+        # filename/manual metadata workflow.
+        local_guess = local_ai_line_map.get(
+            line["line_number"]
+        )
+
+        if local_guess is not None:
+            if not local_guess.get(
+                "is_product",
+                False,
+            ):
+                record = record.with_value(
+                    "product",
+                    NA,
+                )
+                record = record.with_value(
+                    "price",
+                    NA,
+                )
+                record = record.with_value(
+                    "total",
+                    NA,
+                )
+            else:
+                product_guess = local_guess.get(
+                    "product",
+                    NA,
+                )
+                price_guess = local_guess.get(
+                    "price",
+                    NA,
+                )
+
+                if product_guess != NA:
+                    record = record.with_value(
+                        "product",
+                        product_guess,
+                    )
+
+                if price_guess != NA:
+                    record = record.with_value(
+                        "price",
+                        price_guess,
+                    )
+                    record = record.with_value(
+                        "total",
+                        price_guess,
+                    )
+
+        # Re-assert the three fields that the user explicitly selected or that
+        # were reliably parsed from the filename. AI never owns these values.
+        record = record.with_value(
+            "store",
+            confirmed_store_name,
+        )
+        record = record.with_value(
+            "store_number",
+            store_number,
+        )
+        record = record.with_value(
+            "date",
+            receipt_date,
+        )
+
+        return record
 
     should_commit = False
 
@@ -13877,6 +14051,7 @@ if __name__ == "__main__":
     main()
 
 
+
 ================================================================================
 FILE: utils/DataBaseBuilder/filename_metadata.py
 ================================================================================
@@ -13974,6 +14149,189 @@ def parse_receipt_filename_metadata(path: str | Path) -> ReceiptFilenameMetadata
         store_number=store_number,
         parser_option=_parser_option_for_store(store_name),
     )
+
+
+================================================================================
+FILE: utils/DataBaseBuilder/local_ai_receipt_interpreter.py
+================================================================================
+
+from __future__ import annotations
+
+from capabilities.OllamaReceiptAcquisitionPipeline.ollama_client import (
+    OllamaReceiptAcquisitionError,
+    run_local_json_prompt,
+)
+from utils.DataBaseBuilder.purchase_record import NA
+
+
+class LocalAIReceiptInterpretationError(RuntimeError):
+    pass
+
+
+def _build_prompt(
+    lines: list[dict],
+    receipt_type: str,
+) -> str:
+    numbered_lines = "\n".join(
+        f'{line["line_number"]}: {line["text"]}'
+        for line in lines
+    )
+
+    return f"""
+You are ShopGraph's local receipt-line interpretation engine.
+
+Store: {receipt_type}
+
+Your task is NOT OCR. The text below has already been transcribed.
+Use the whole receipt context to make conservative initial guesses for only:
+- whether each source line contains a purchased product,
+- the printed product name,
+- the final item price actually charged.
+
+Return JSON only with exactly this shape:
+
+{{
+  "lines": [
+    {{
+      "line_number": 1,
+      "is_product": true,
+      "product": "printed merchandise name only",
+      "price": "0.00"
+    }}
+  ]
+}}
+
+Critical rules:
+
+1. Return exactly one interpretation object for every numbered input line.
+2. line_number must match the original input line_number.
+3. Product must contain the merchandise description only.
+4. Remove tax codes, SKU/PLU codes, quantities, promotion math, unit-price math,
+   savings text, and final-price numbers from Product.
+5. Price means the FINAL amount charged for that item.
+6. Do not choose a reference/promotion amount merely because it is larger.
+7. In text such as:
+      Chobani Fab 0% Blck Chry F 1 @ 10 for $10.00 1.00 You saved: $0.62
+   interpret:
+      product = "Chobani Fab 0% Blck Chry"
+      price = "1.00"
+   The $10.00 is promotion/reference math and $0.62 is savings, not item price.
+8. For "3 for $10.00 3.33", final item price is 3.33, not 10.00.
+9. For weight pricing, distinguish weight/unit price from the final extended charge.
+10. Preserve 0.00 as a legitimate item price.
+11. Use surrounding receipt lines for context when needed.
+12. If the line is receipt metadata, subtotal, tax, total, payment information,
+    savings-only text, promotion-only text, address/header/footer text, or otherwise
+    not a purchased product, return:
+      is_product = false
+      product = "NA"
+      price = "NA"
+13. If a product is visible but its final item price cannot be determined safely,
+    keep the product and return price = "NA".
+14. If a final item price is visible but a product cannot be identified safely,
+    return product = "NA".
+15. Never invent a brand, flavor, size, product, or price not supported by the text.
+16. Do not create Common Name, Sub-Category, Category, Store, Store Number, or Date.
+17. Do not add commentary outside the JSON.
+
+Receipt lines:
+{numbered_lines}
+""".strip()
+
+
+def build_local_ai_line_interpretations(
+    lines: list[dict],
+    receipt_type: str,
+) -> dict[int, dict]:
+    """
+    Interpret the full ordered receipt once with local Ollama.
+
+    Returned mapping is intentionally limited to Product / Price semantics.
+    Filename/store metadata remains owned by the existing Data Base Builder.
+    """
+    if not lines:
+        return {}
+
+    try:
+        payload, _metadata = run_local_json_prompt(
+            _build_prompt(
+                lines,
+                receipt_type,
+            )
+        )
+    except OllamaReceiptAcquisitionError as error:
+        raise LocalAIReceiptInterpretationError(
+            str(error)
+        ) from error
+
+    raw_lines = payload.get("lines")
+    if not isinstance(raw_lines, list):
+        raise LocalAIReceiptInterpretationError(
+            "Local Ollama interpretation response did not contain a 'lines' list."
+        )
+
+    valid_line_numbers = {
+        int(line["line_number"])
+        for line in lines
+    }
+    result: dict[int, dict] = {}
+
+    for item in raw_lines:
+        if not isinstance(item, dict):
+            continue
+
+        line_number = item.get("line_number")
+        if not isinstance(line_number, int):
+            continue
+        if line_number not in valid_line_numbers:
+            continue
+        if line_number in result:
+            continue
+
+        is_product = bool(item.get("is_product", False))
+
+        product_value = item.get("product", NA)
+        product = (
+            product_value.strip()
+            if isinstance(product_value, str)
+            else NA
+        )
+        if not product or product.upper() == NA:
+            product = NA
+
+        price_value = item.get("price", NA)
+        price = (
+            price_value.strip()
+            if isinstance(price_value, str)
+            else NA
+        )
+        if not price or price.upper() == NA:
+            price = NA
+
+        if price != NA:
+            try:
+                amount = float(
+                    price.replace("$", "").replace(",", "")
+                )
+            except ValueError:
+                price = NA
+            else:
+                if amount < 0:
+                    price = NA
+                else:
+                    price = f"{amount:.2f}"
+
+        if not is_product:
+            product = NA
+            price = NA
+
+        result[line_number] = {
+            "is_product": is_product,
+            "product": product,
+            "price": price,
+        }
+
+    return result
 
 
 ================================================================================
@@ -22264,6 +22622,92 @@ broad Category is not stored in Purchase History.
 
 
 ================================================================================
+FILE: README/README_LOCAL_AI_PRODUCT_PRICE_INTERPRETER.txt
+================================================================================
+
+SHOPGRAPH — LOCAL AI PRODUCT / PRICE INTERPRETER
+=================================================
+
+PURPOSE
+-------
+Improve the path between raw_ocr JSON and the Data Base Builder review screen.
+
+The existing filename/manual metadata logic remains authoritative for:
+- Store
+- Store Number
+- Receipt Date
+
+The new intelligence layer focuses only on:
+- Is this line actually a purchased product?
+- Product name
+- Final item price
+
+WHY
+---
+A raw line can contain several monetary values, for example:
+
+    Chobani Fab 0% Blck Chry F 1 @ 10 for $10.00 1.00 You saved: $0.62
+
+A simple decimal parser cannot know which amount is the final item charge.
+The new layer sends the full ordered receipt text to the same local Ollama model
+already installed for ShopGraph. It can use receipt context and distinguish:
+
+    Product: Chobani Fab 0% Blck Chry
+    Price:   1.00
+
+from:
+    promotion/reference amount: 10.00
+    savings amount:             0.62
+
+ARCHITECTURE
+------------
+New:
+    utils/DataBaseBuilder/local_ai_receipt_interpreter.py
+
+Changed:
+    capabilities/OllamaReceiptAcquisitionPipeline/ollama_client.py
+    utils/DataBaseBuilder/data_base_builder_main.py
+
+The receipt is interpreted in ONE batch request rather than one Ollama call per
+reviewed line.
+
+SAFETY / FALLBACK
+-----------------
+- Local Ollama only. No cloud API is introduced.
+- If Ollama is unavailable or returns invalid output, Data Base Builder prints a
+  warning and falls back to the existing store-specific parser guesses.
+- Store, Store Number, and Date are never taken from this AI interpretation.
+- Common Name and Sub-Category are not generated by this layer.
+- The normal interactive review screen remains the final authority.
+- Existing skip-term behavior remains unchanged.
+- The retired receipt_item_interpreter.py is not restored or reactivated.
+
+EXPECTED EXAMPLE
+----------------
+Raw:
+    Chobani Fab 0% Blck Chry F 1 @ 10 for $10.00 1.00 You saved: $0.62
+
+Proposed interpretation should normally become approximately:
+    Product: "Chobani Fab 0% Blck Chry"
+    Price 1: "1.00"
+
+while the existing code continues to supply:
+    Store: "Publix"
+    Store Number: "120"
+    Date 1: "09/07/2026"
+
+INSTALL
+-------
+Import this ZIP with ShopGraph's existing Code Update Importer.
+
+Then test first through:
+    Utilities
+      -> Data Base Builder
+        -> Test Mode
+          -> Add Receipt to Purchase History - Test Mode
+
+
+================================================================================
 FILE: README/README_OLLAMA_CONTEXT_WINDOW_FIX.txt
 ================================================================================
 
@@ -23900,76 +24344,83 @@ pillow-heif
 FILE: data/database/shopgraph_category_manager.txt
 ================================================================================
 
-Category,Sub-Category,Product 1,Product 2,Product 3,Product 4,Product 5,Product 6,Product 7,Product 8,Product 9,Product 10,Product 11,Product 12,Product 13,Product 14,Product 15,Product 16,Product 17
-Baby Care,Baby & Toddler Food,Once Upon a Farm Tractor Wheels Toddler Bars,,,,,,,,,,,,,,,,
-Baby Care,Baby Care,CeraVe Baby Healing Ointment,Desitin Maximum Strength Diaper Rash Cream,Huggies Natural Care Baby Wipes,Pampers Swaddlers Size 5 Diapers,Safety 1st Soft Grip Brush & Comb,,,,,,,,,,,,
-Pantry,Baking Ingredients,"King Arthur Unbleached Bread Flour, 10 lb",Nestle Toll House Allergen-Free Dark Chocolate Baking Chips,Nestle Toll House Dark Chocolate Baking Chips,,,,,,,,,,,,,,
-Dessert,Baking Mixes,Ghirardelli Gluten-Free Double Chocolate Brownie Mix,King Arthur Gluten-Free Pancake Mix,,,,,,,,,,,,,,,
-"Toiletries, Cleaning and Disposables",Body Wash,Dove Sensitive Skin Body Wash,,,,,,,,,,,,,,,,
-Bakery,Bread,Artisanal Buns,Dave's Killer Bread Oats & Blues,Dave's Killer Bread Organic Oats & Blues,Gluten-Free Wide Pan Bread,No [or possibly Nature's Own] Honey Wheat Bread,,,,,,,,,,,,
-Pantry,Canned Beans & Legumes,Dark Red Kidney Beans,Organic Chickpeas,,,,,,,,,,,,,,,
-Pets,Cat Litter,Purina Tidy Cats Clumping Cat Litter,,,,,,,,,,,,,,,,
-Dairy,Cheese,Cabot Mexican Shredded Cheese,Deli-Sliced Cheese,Deli-Sliced Colby Jack Cheese,Farmhouse Ranch Cheddar,Shredded Mozzarella Cheese,,,,,,,,,,,,
-Dairy,Coffee Creamer,Starbucks Oatmilk Brown Sugar Creamer,,,,,,,,,,,,,,,,
-Dessert,Cookies,Half Moon Cookies,,,,,,,,,,,,,,,,
-Pantry,Crackers,Peanut Butter Toast Crackers,,,,,,,,,,,,,,,,
-Dairy,Cream & Half-and-Half,"Publix Half & Half, Half Gallon",,,,,,,,,,,,,,,,
-Dairy,Cream Cheese,Pumpkin Cream Cheese,,,,,,,,,,,,,,,,
-Pantry,Croutons,Organic Croutons,,,,,,,,,,,,,,,,
-Meat,Deli Meat,Hillshire Farm Oven Roasted Turkey Breast,,,,,,,,,,,,,,,,
-"Toiletries, Cleaning and Disposables",Deodorant,Dove Men+Care Antiperspirant,,,,,,,,,,,,,,,,
-Condiments & Seasonings,Dips & Spreads,Hummus Mini Cups,,,,,,,,,,,,,,,,
-"Toiletries, Cleaning and Disposables",Dishwashing Supplies,Dawn Dish Cleaning Brush Wand,,,,,,,,,,,,,,,,
-"Toiletries, Cleaning and Disposables",Disposable Tableware,"Everyday Paper Plates, 8.5 Inch",,,,,,,,,,,,,,,,
-Produce,Dried Fruit,Sun-Maid Golden Raisins,,,,,,,,,,,,,,,,
-Eggs,Eggs,Great Value Large White Eggs,Large Eggs,,,,,,,,,,,,,,,
-Fees,Fees & Charges,Driver Tip,Express Delivery Fee,Price Adjustment,Sales Tax,Tax,Tip,,,,,,,,,,,
-"Toiletries, Cleaning and Disposables",Food Storage,Ziploc Gallon Freezer Bags,Ziploc Quart Freezer Bags,,,,,,,,,,,,,,,
-Meat,Fresh Beef,Kosher Ground Beef 85/15,,,,,,,,,,,,,,,,
-Produce,Fresh Fruit,Bananas,Blueberries,Golden Kiwi,Green Grapes,Mandarin Oranges,Mandarins,Mango,Persian Limes,Pink Lady Apples,Raspberries,Strawberries,"Strawberries, 1 lb",,,,,
-Produce,Fresh Herbs,Cilantro,Parsley,,,,,,,,,,,,,,,
-Meat,Fresh Poultry,Empire Kosher Boneless Skinless Chicken Breast,Empire Kosher Ground Turkey,Empire Kosher Turkey Half,,,,,,,,,,,,,,
-Fish,Fresh Seafood,GreenWise Keta Salmon Fillet,Salmon Fillet,Salmon Portions,,,,,,,,,,,,,,
-Produce,Fresh Vegetables,Baby Carrots,Beefsteak Tomatoes,Broccoli Crowns,Fresh Trimmed Green Beans,Green Beans,Little Yellow Potatoes,Medley Potatoes,Mini Cucumbers,"Multi-Color Peppers, 3-Pack",Organic Celery Hearts,Organic Kale,Red Onion,Red Onions,Ruby Sensation Potato Nibbles,Tomatoes on the Vine,Yellow Squash,Zucchini
-Produce,Fresh-Cut Fruit,Pineapple & Watermelon Spears,Seedless Watermelon Wedge,,,,,,,,,,,,,,,
-Frozen Food,Frozen Appetizers,Black Bean & Cheese Taquitos,,,,,,,,,,,,,,,,
-Frozen,Frozen Breakfast,Van's Gluten Free Blueberry Waffles,,,,,,,,,,,,,,,,
-Dessert,Frozen Desserts,Klondike Double Chocolate Bar,"Yasso Greek Yogurt Bars, Coffee Chocolate Chip","Yasso Greek Yogurt Bars, Mint Chocolate Chip",,,,,,,,,,,,,,
-Meat,Frozen Meat,Applegate Chicken & Maple Breakfast Sausage,,,,,,,,,,,,,,,,
-Frozen Food,Frozen Pizza,Cauliflower Crust Pizza,,,,,,,,,,,,,,,,
-Frozen Food,Frozen Vegetables,Birds Eye Steamfresh Sweet Peas,,,,,,,,,,,,,,,,
-Self Care,Hair Care,Head & Shoulders,Honest Company Conditioning Detangler,,,,,,,,,,,,,,,
-Home Improvement,Home Improvement,Command Heavy Duty Picture Hangers,,,,,,,,,,,,,,,,
-Meat,Hot Dogs & Sausages,Hebrew National Beef Franks,,,,,,,,,,,,,,,,
-"Toiletries, Cleaning and Disposables",Household Cleaners,Weiman Granite & Stone Cleaner & Polish,,,,,,,,,,,,,,,,
-Pantry,Jarred Vegetables,Fire Roasted Red Peppers,,,,,,,,,,,,,,,,
-Torah,Judaica,Yehuda Sabbath Candles,,,,,,,,,,,,,,,,
-Pantry,Macaroni & Cheese,Annie's Gluten-Free Deluxe Shells & Cheddar,Banza White Cheddar Shells,,,,,,,,,,,,,,,
-Dairy,Milk,Fairlife Chocolate Milk,,,,,,,,,,,,,,,,
-Bakery,Muffins & Pastries,Chocolate Babka,Gluten-Free Blueberry Muffins,,,,,,,,,,,,,,,
-"Toiletries, Cleaning and Disposables",Paper Towels,"Paper Towels, 2-Roll",,,,,,,,,,,,,,,,
-Pantry,Pasta,Chickpea Fusilli Pasta,,,,,,,,,,,,,,,,
-Pantry,Peanut Butter,Jif No Sugar Added Creamy Peanut Butter,,,,,,,,,,,,,,,,
-Dairy,Plant-Based Cheese,Daiya Mexican Blend Shreds,,,,,,,,,,,,,,,,
-Dairy,Plant-Based Milk,Chobani Extra Creamy Oatmilk,"Silk Organic Unsweet Soymilk, Half Gallon",,,,,,,,,,,,,,,
-Pantry,Popcorn,LesserEvil Popcorn,,,,,,,,,,,,,,,,
-Prepared Eating,Prepared Coffee,1 Caramel Macchiato,1 Iced Caramel Macchiato,,,,,,,,,,,,,,,
-Prepared Eating,Prepared Meals,1 Chicken N French Toast,1 Frenchy Plate,Papa John's Large NY Style 1-Topping Pizza,"Papa John's Pizza, Wings & Cheesesticks",,,,,,,,,,,,,
-Dessert,Refrigerated Dough,Pillsbury Flaky Biscuits,Sweet Loren's Gluten Free Brownie Cookie Dough,,,,,,,,,,,,,,,
-Pantry,Rice & Grains,Mahatma Jasmine Rice,,,,,,,,,,,,,,,,
-Pantry,Rice Cakes & Crisps,Quaker Rice Crisps Apple Cinnamon,Quaker Rice Crisps Chocolate,,,,,,,,,,,,,,,
-Pantry,Salad Dressing,Vinaigrette Dressing,,,,,,,,,,,,,,,,
-Produce,Salad Kits,Complete Sweet Kale Salad Kit,Publix Makoto Ginger Salad,Publix True Bleu Salad Kit,Taylor Farms Chopped Caesar Salad Kit,Taylor Farms Everything Chopped Salad Kit,,,,,,,,,,,,
-Condiments & Seasonings,Sauces & Condiments,Cholula Cremosa Cilantro Lime Sauce,,,,,,,,,,,,,,,,
-Condiments & Seasonings,Seasonings & Spices,Lawry's Garlic Salt,McCormick Everything Bagel Seasoning,McCormick Ground Cinnamon,McCormick Sea Salt Grinder,Peppercorn Grinder,Salt Grinder,,,,,,,,,,,
-Fish,Smoked Seafood,Smoked Salmon with Pepper,,,,,,,,,,,,,,,,
-Pantry,Snack Bars,Fruit & Grain Bars,Nature's Bakery Gluten-Free Raspberry Fig Bars,,,,,,,,,,,,,,,
-Dessert,Snack Cakes,Little Debbie Cosmic Brownies,,,,,,,,,,,,,,,,
-Dairy,Specialty Cheese,Feta Cheese Crumbles,Goat Cheese Logs,,,,,,,,,,,,,,,
-"Toiletries, Cleaning and Disposables",Storage & Organization,Collapsible Storage Container/Bin,,,,,,,,,,,,,,,,
-Wine,Wine,Häagen-Dazs Blackberry Ice Cream,Magen David Blackberry Wine,,,,,,,,,,,,,,,
-Office Supplies,Writing Supplies,"Gel Pens, 3-Pack",,,,,,,,,,,,,,,,
-Dairy,Yogurt,Chobani Black Cherry Greek Yogurt,Chobani Flip 4-Pack,"Chobani Greek Yogurt 4-Pack, Hero Batch",Chobani Hero Batch Greek Yogurt,Chobani Key Lime Greek Yogurt,Chobani Pineapple Greek Yogurt,"Chobani Protein Greek Yogurt Drink, Strawberries & Cream",Chobani Strawberry Banana Greek Yogurt,Chobani Vanilla Mixed Berry Greek Yogurt,"Stonyfield Organic YoBaby Yogurt Pouch, Banana","Stonyfield Organic YoBaby Yogurt Pouch, Peach",,,,,,
+Category,Sub-Category,Product 1,Product 2,Product 3,Product 4,Product 5,Product 6,Product 7,Product 8,Product 9,Product 10,Product 11,Product 12,Product 13,Product 14,Product 15,Product 16,Product 17,Product 18,Product 19,Product 20,Product 21,Product 22,Product 23,Product 24,Product 25
+Self Care,Antacids,"Tums Chewy Bites Berry, 60 Count",Tums Chewy Bites Ultra Strength Heartburn Relief Chews,,,,,,,,,,,,,,,,,,,,,,,
+NA,Applesauce,Mott's No Sugar Added Applesauce,,,,,,,,,,,,,,,,,,,,,,,,
+Baby Care,Baby & Toddler Food,Once Upon a Farm Tractor Wheels Toddler Bars,,,,,,,,,,,,,,,,,,,,,,,,
+Baby Care,Baby Care,CeraVe Baby Healing Ointment,Desitin Maximum Strength Diaper Rash Cream,Huggies Natural Care Baby Wipes,Pampers Swaddlers Size 5 Diapers,Safety 1st Soft Grip Brush & Comb,,,,,,,,,,,,,,,,,,,,
+Pantry,Baking Ingredients,"King Arthur Unbleached Bread Flour, 10 lb",Nestle Toll House Allergen-Free Dark Chocolate Baking Chips,Nestle Toll House Dark Chocolate Baking Chips,,,,,,,,,,,,,,,,,,,,,,
+Dessert,Baking Mixes,Ghirardelli Gluten-Free Double Chocolate Brownie Mix,King Arthur Gluten-Free Pancake Mix,,,,,,,,,,,,,,,,,,,,,,,
+NA,Beer,Busch American Lager Beer,,,,,,,,,,,,,,,,,,,,,,,,
+"Toiletries, Cleaning and Disposables",Body Wash,Dove Sensitive Skin Body Wash,,,,,,,,,,,,,,,,,,,,,,,,
+Bakery,Bread,Artisanal Buns,Ball Park White Hot Dog Buns,Dave's Killer Bread Oats & Blues,Dave's Killer Bread Organic Oats & Blues,Gluten-Free Wide Pan Bread,No [or possibly Nature's Own] Honey Wheat Bread,,,,,,,,,,,,,,,,,,,
+NA,Broth & Stock,Tabatchnick Classic Chicken Broth,,,,,,,,,,,,,,,,,,,,,,,,
+Pantry,Canned Beans & Legumes,Dark Red Kidney Beans,Organic Chickpeas,,,,,,,,,,,,,,,,,,,,,,,
+NA,Canned Tomatoes,Hunt's Crushed Tomatoes,Hunt's Tomato Paste,,,,,,,,,,,,,,,,,,,,,,,
+Pets,Cat Litter,Purina Tidy Cats Clumping Cat Litter,Purina Tidy Cats Free & Clean Clumping Cat Litter,,,,,,,,,,,,,,,,,,,,,,,
+Dairy,Cheese,Cabot Mexican Shredded Cheese,Cracker Barrel Cracker Cuts Variety Pack,Deli-Sliced Cheese,Deli-Sliced Colby Jack Cheese,Farmhouse Ranch Cheddar,Shredded Mozzarella Cheese,,,,,,,,,,,,,,,,,,,
+Dairy,Coffee Creamer,Starbucks Oatmilk Brown Sugar Creamer,,,,,,,,,,,,,,,,,,,,,,,,
+Dessert,Cookies,Half Moon Cookies,,,,,,,,,,,,,,,,,,,,,,,,
+Pantry,Crackers,Peanut Butter Toast Crackers,,,,,,,,,,,,,,,,,,,,,,,,
+Dairy,Cream & Half-and-Half,Great Value Half & Half,Great Value Heavy Whipping Cream,"Publix Half & Half, Half Gallon",,,,,,,,,,,,,,,,,,,,,,
+Dairy,Cream Cheese,Pumpkin Cream Cheese,,,,,,,,,,,,,,,,,,,,,,,,
+Pantry,Croutons,Organic Croutons,,,,,,,,,,,,,,,,,,,,,,,,
+Meat,Deli Meat,Hillshire Farm Oven Roasted Turkey Breast,,,,,,,,,,,,,,,,,,,,,,,,
+"Toiletries, Cleaning and Disposables",Deodorant,Dove Men+Care Antiperspirant,,,,,,,,,,,,,,,,,,,,,,,,
+Condiments & Seasonings,Dips & Spreads,Hummus Mini Cups,Mighty Sesame Organic Tahini,,,,,,,,,,,,,,,,,,,,,,,
+"Toiletries, Cleaning and Disposables",Dishwashing Supplies,Dawn Dish Cleaning Brush Wand,"Mainstays Kitchen Scrubber Dishcloth Set, 4-Pack",,,,,,,,,,,,,,,,,,,,,,,
+"Toiletries, Cleaning and Disposables",Disposable Tableware,"Everyday Paper Plates, 8.5 Inch","Great Value Paper Plates, 8.5 Inch",,,,,,,,,,,,,,,,,,,,,,,
+Produce,Dried Fruit,Ocean Spray Craisins,Sun-Maid Golden Raisins,,,,,,,,,,,,,,,,,,,,,,,
+Eggs,Eggs,Great Value Large White Eggs,Large Eggs,,,,,,,,,,,,,,,,,,,,,,,
+Fees,Fees & Charges,Driver Tip,Express Delivery Fee,Price Adjustment,Sales Tax,Tax,Tip,,,,,,,,,,,,,,,,,,,
+"Toiletries, Cleaning and Disposables",Food Storage,Ziploc Gallon Freezer Bags,Ziploc Quart Freezer Bags,,,,,,,,,,,,,,,,,,,,,,,
+Meat,Fresh Beef,Kosher Ground Beef 85/15,,,,,,,,,,,,,,,,,,,,,,,,
+Produce,Fresh Fruit,Bananas,Bartlett Pears,Blueberries,Golden Kiwi,Green Grapes,Mandarin Oranges,Mandarins,Mango,Mini Seedless Watermelon,Persian Limes,Pink Lady Apples,Raspberries,Strawberries,"Strawberries, 1 lb",,,,,,,,,,,
+Produce,Fresh Herbs,Cilantro,Parsley,,,,,,,,,,,,,,,,,,,,,,,
+Meat,Fresh Poultry,Empire Kosher Boneless Skinless Chicken Breast,Empire Kosher Ground Turkey,Empire Kosher Turkey Half,,,,,,,,,,,,,,,,,,,,,,
+Fish,Fresh Seafood,GreenWise Keta Salmon Fillet,Salmon Fillet,Salmon Portions,,,,,,,,,,,,,,,,,,,,,,
+Produce,Fresh Vegetables,Baby Carrots,Beefsteak Tomatoes,Bell Peppers,Broccoli Crowns,Fresh Trimmed Green Beans,Green Beans,Green Onions,Little Yellow Potatoes,Marketside Baby Spinach,Marketside Broccoli Florets,Marketside Organic Baby Carrots,Medley Potatoes,Mini Cucumbers,"Multi-Color Peppers, 3-Pack",Organic Celery Hearts,Organic Kale,Red Onion,Red Onions,Red Potatoes,Ruby Sensation Potato Nibbles,Spice World Fresh Peeled Garlic,Sweet Onion,Tomatoes on the Vine,Yellow Squash,Zucchini
+Produce,Fresh-Cut Fruit,Pineapple & Watermelon Spears,Seedless Watermelon Wedge,,,,,,,,,,,,,,,,,,,,,,,
+Frozen Food,Frozen Appetizers,Black Bean & Cheese Taquitos,,,,,,,,,,,,,,,,,,,,,,,,
+Frozen,Frozen Breakfast,Van's Gluten Free Blueberry Waffles,,,,,,,,,,,,,,,,,,,,,,,,
+Dessert,Frozen Desserts,Klondike Double Chocolate Bar,"Yasso Greek Yogurt Bars, Coffee Chocolate Chip","Yasso Greek Yogurt Bars, Mint Chocolate Chip",,,,,,,,,,,,,,,,,,,,,,
+Meat,Frozen Meat,Applegate Chicken & Maple Breakfast Sausage,,,,,,,,,,,,,,,,,,,,,,,,
+Frozen Food,Frozen Pizza,Cauliflower Crust Pizza,,,,,,,,,,,,,,,,,,,,,,,,
+Frozen Food,Frozen Vegetables,Birds Eye Steamfresh Sweet Peas,,,,,,,,,,,,,,,,,,,,,,,,
+Self Care,Hair Care,Head & Shoulders,Honest Company Conditioning Detangler,,,,,,,,,,,,,,,,,,,,,,,
+"Toiletries, Cleaning and Disposables",Hand Soap,Mrs. Meyer's Lemon Verbena Hand Soap,,,,,,,,,,,,,,,,,,,,,,,,
+Home Improvement,Home Improvement,Command Heavy Duty Picture Hangers,,,,,,,,,,,,,,,,,,,,,,,,
+Meat,Hot Dogs & Sausages,Hebrew National Beef Franks,Hebrew National Bun Length Beef Franks,,,,,,,,,,,,,,,,,,,,,,,
+"Toiletries, Cleaning and Disposables",Household Cleaners,Swiffer Sweep + Mop Dry Pads Refill,Weiman Granite & Stone Cleaner & Polish,,,,,,,,,,,,,,,,,,,,,,,
+Pantry,Jarred Vegetables,Fire Roasted Red Peppers,,,,,,,,,,,,,,,,,,,,,,,,
+Torah,Judaica,Yehuda Sabbath Candles,,,,,,,,,,,,,,,,,,,,,,,,
+Pantry,Macaroni & Cheese,Annie's Gluten-Free Deluxe Shells & Cheddar,Banza White Cheddar Shells,,,,,,,,,,,,,,,,,,,,,,,
+Dairy,Milk,Fairlife Chocolate Milk,,,,,,,,,,,,,,,,,,,,,,,,
+Bakery,Muffins & Pastries,Chocolate Babka,Gluten-Free Blueberry Muffins,,,,,,,,,,,,,,,,,,,,,,,
+"Toiletries, Cleaning and Disposables",Paper Towels,"Paper Towels, 2-Roll",,,,,,,,,,,,,,,,,,,,,,,,
+Pantry,Pasta,Barilla Gluten-Free Spaghetti,Chickpea Fusilli Pasta,,,,,,,,,,,,,,,,,,,,,,,
+Pantry,Peanut Butter,Jif No Sugar Added Creamy Peanut Butter,,,,,,,,,,,,,,,,,,,,,,,,
+Dairy,Plant-Based Cheese,Daiya Mexican Blend Shreds,,,,,,,,,,,,,,,,,,,,,,,,
+Dairy,Plant-Based Milk,Chobani Extra Creamy Oatmilk,"Silk Organic Unsweet Soymilk, Half Gallon",,,,,,,,,,,,,,,,,,,,,,,
+Pantry,Popcorn,LesserEvil Popcorn,,,,,,,,,,,,,,,,,,,,,,,,
+Prepared Eating,Prepared Coffee,1 Caramel Macchiato,1 Iced Caramel Macchiato,,,,,,,,,,,,,,,,,,,,,,,
+Prepared Eating,Prepared Meals,1 Chicken N French Toast,1 Frenchy Plate,Papa John's Large NY Style 1-Topping Pizza,"Papa John's Pizza, Wings & Cheesesticks",,,,,,,,,,,,,,,,,,,,,
+Dessert,Refrigerated Dough,Pillsbury Flaky Biscuits,Sweet Loren's Gluten Free Brownie Cookie Dough,,,,,,,,,,,,,,,,,,,,,,,
+NA,Refrigerated Pasta,Giovanni Rana Tortellini,,,,,,,,,,,,,,,,,,,,,,,,
+Pantry,Rice & Grains,Mahatma Jasmine Rice,,,,,,,,,,,,,,,,,,,,,,,,
+Pantry,Rice Cakes & Crisps,Quaker Rice Crisps Apple Cinnamon,Quaker Rice Crisps Chocolate,,,,,,,,,,,,,,,,,,,,,,,
+Pantry,Salad Dressing,Vinaigrette Dressing,,,,,,,,,,,,,,,,,,,,,,,,
+Produce,Salad Kits,Complete Sweet Kale Salad Kit,Fresh Express Avocado Twisted Caesar Chopped Salad Kit,Marketside Classic Italian Salad Kit,Publix Makoto Ginger Salad,Publix True Bleu Salad Kit,Taylor Farms Chopped Caesar Salad Kit,Taylor Farms Everything Chopped Salad Kit,,,,,,,,,,,,,,,,,,
+Condiments & Seasonings,Sauces & Condiments,Cholula Cremosa Cilantro Lime Sauce,Kikkoman Teriyaki Marinade & Sauce,,,,,,,,,,,,,,,,,,,,,,,
+Condiments & Seasonings,Seasonings & Spices,Great Value Organic Smoked Paprika,Lawry's Garlic Salt,McCormick Everything Bagel Seasoning,McCormick Ground Cinnamon,McCormick Sea Salt Grinder,Peppercorn Grinder,Salt Grinder,,,,,,,,,,,,,,,,,,
+Fish,Smoked Seafood,Smoked Salmon with Pepper,,,,,,,,,,,,,,,,,,,,,,,,
+Pantry,Snack Bars,Fruit & Grain Bars,Nature's Bakery Gluten-Free Raspberry Fig Bars,,,,,,,,,,,,,,,,,,,,,,,
+Dessert,Snack Cakes,Little Debbie Cosmic Brownies,,,,,,,,,,,,,,,,,,,,,,,,
+Dairy,Specialty Cheese,Feta Cheese Crumbles,Goat Cheese Logs,,,,,,,,,,,,,,,,,,,,,,,
+"Toiletries, Cleaning and Disposables",Storage & Organization,Collapsible Storage Container/Bin,Sterilite 6-Quart Storage Bin,,,,,,,,,,,,,,,,,,,,,,,
+Wine,Wine,Häagen-Dazs Blackberry Ice Cream,Magen David Blackberry Wine,,,,,,,,,,,,,,,,,,,,,,,
+Office Supplies,Writing Supplies,"Gel Pens, 3-Pack",,,,,,,,,,,,,,,,,,,,,,,,
+Dairy,Yogurt,Chobani Black Cherry Greek Yogurt,Chobani Flip 4-Pack,"Chobani Greek Yogurt 4-Pack, Hero Batch",Chobani Hero Batch Greek Yogurt,Chobani Key Lime Greek Yogurt,Chobani Pineapple Greek Yogurt,"Chobani Protein Greek Yogurt Drink, Strawberries & Cream",Chobani Strawberry Banana Greek Yogurt,Chobani Vanilla Mixed Berry Greek Yogurt,"Stonyfield Organic YoBaby Yogurt Pouch, Banana","Stonyfield Organic YoBaby Yogurt Pouch, Peach",,,,,,,,,,,,,,
 
 
 ================================================================================
@@ -23982,8 +24433,8 @@ Total,,Store,Six-Digit SKU,Product,Tax Code,Store Number,Common Name,Sub-Categor
 "=SUM(K4,M4,O4,Q4,S4,U4)",,Publix,NA,Sweet Loren's Gf Brownie,F,1058,Sweet Loren's Gluten Free Brownie Cookie Dough,Refrigerated Dough,2026-08-25 00:00:00,6.99,,,,,,,,,,
 "=SUM(K5,M5,O5,Q5,S5,U5)",,Publix,NA,Vans Waffle Blueberry Gf,F,1058,Van's Gluten Free Blueberry Waffles,Frozen Breakfast,2026-08-25 00:00:00,3.89,2026-08-25 00:00:00,3.89,,,,,,,,
 "=SUM(K6,M6,O6,Q6,S6,U6)",,Publix,NA,Chobani 4Pk Hero Batch,F,1058,"Chobani Greek Yogurt 4-Pack, Hero Batch",Yogurt,2026-08-25 00:00:00,5.65,,,,,,,,,,
-"=SUM(K7,M7,O7,Q7,S7,U7)",,Publix,NA,Silk Soy Organic Nsa Hg,F,1058,"Silk Organic Unsweet Soymilk, Half Gallon",Plant-Based Milk,2026-08-25 00:00:00,6.19,2026-08-25 00:00:00,6.19,2026-08-25 00:00:00,6.19,,,,,,
-"=SUM(K8,M8,O8,Q8,S8,U8)",,Publix,NA,Publix Half&Half Hg,F,1058,"Publix Half & Half, Half Gallon",Cream & Half-and-Half,2026-08-25 00:00:00,5.89,,,,,,,,,,
+"=SUM(K7,M7,O7,Q7,S7,U7)",,Publix,NA,Silk Soy Organic Nsa Hg,F,1058,"Silk Organic Unsweet Soymilk, Half Gallon",Plant-Based Milk,2026-08-25 00:00:00,6.19,2026-08-25 00:00:00,6.19,2026-08-25 00:00:00,6.19,2026-09-13 00:00:00,6.79,,,,
+"=SUM(K8,M8,O8,Q8,S8,U8)",,Publix,NA,Publix Half&Half Hg,F,1058,"Publix Half & Half, Half Gallon",Cream & Half-and-Half,2026-08-25 00:00:00,5.89,2026-09-13 00:00:00,5.89,,,,,,,,
 "=SUM(K9,M9,O9,Q9,S9,U9)",,Aldi,383212,GF Wide Pan Bread,NA,160,Gluten-Free Wide Pan Bread,Bread,2026-08-23 00:00:00,6.79,,,,,,,,,,
 "=SUM(K10,M10,O10,Q10,S10,U10)",,Aldi,356691,Zucchini,NA,160,Zucchini,Fresh Vegetables,2026-08-23 00:00:00,2.52,,,,,,,,,,
 "=SUM(K11,M11,O11,Q11,S11,U11)",,Aldi,356689,Yellow Squash,NA,160,Yellow Squash,Fresh Vegetables,2026-08-23 00:00:00,2.6,,,,,,,,,,
@@ -24172,6 +24623,57 @@ Total,,Store,Six-Digit SKU,Product,Tax Code,Store Number,Common Name,Sub-Categor
 "=SUM(K194,M194,O194,Q194,S194,U194)",,Publix,NA,Cho 4pk Flip Lto,NA,120,Chobani Flip 4-Pack,Yogurt,2026-09-07 00:00:00,7.19,,,,,,,,,,
 "=SUM(K195,M195,O195,Q195,S195,U195)",,PapaJohns,NA,Large NY Style 1-Topping Pizza,NA,0,Papa John's Large NY Style 1-Topping Pizza,Prepared Meals,2026-09-07 00:00:00,17.33,,,,,,,,,,
 "=SUM(K196,M196,O196,Q196,S196,U196)",,PapaJohns,NA,Pizza + Wings + Cheesesticks,NA,0,"Papa John's Pizza, Wings & Cheesesticks",Prepared Meals,2026-09-07 00:00:00,39.37,,,,,,,,,,
+"=SUM(K197,M197,O197,Q197,S197,U197)",,Publix,NA,Chobani 20G Drk 4PK Straw,F,1058,"Chobani Protein Greek Yogurt Drink, Strawberries & Cream",Yogurt,2026-09-13 00:00:00,10.99,,,,,,,,,,
+"=SUM(K198,M198,O198,Q198,S198,U198)",,Publix,NA,Meyers Hand Soap Lemon,T,1058,Mrs. Meyer's Lemon Verbena Hand Soap,Hand Soap,2026-09-13 00:00:00,4.99,,,,,,,,,,
+"=SUM(K199,M199,O199,Q199,S199,U199)",,Publix,NA,Tums Chwy Bites Brry 60ct,NA,1058,"Tums Chewy Bites Berry, 60 Count",Antacids,2026-09-13 00:00:00,10.29,,,,,,,,,,
+"=SUM(K200,M200,O200,Q200,S200,U200)",,Publix,NA,Tax,T,1058,Tax,Fees & Charges,2026-09-13 00:00:00,NA,,,,,,,,,,
+"=SUM(K201,M201,O201,Q201,S201,U201)",,Walmart,NA,Purina Tidy Cats Free and Clean Clumping Cat Litter,NA,0,Purina Tidy Cats Free & Clean Clumping Cat Litter,Cat Litter,2026-09-13 00:00:00,25.94,,,,,,,,,,
+"=SUM(K202,M202,O202,Q202,S202,U202)",,Walmart,NA,Mott's No Sugar Added Applesauce,NA,0,Mott's No Sugar Added Applesauce,Applesauce,2026-09-13 00:00:00,7.97,,,,,,,,,,
+"=SUM(K203,M203,O203,Q203,S203,U203)",,Walmart,NA,Giovanni Rana Tortellini,NA,0,Giovanni Rana Tortellini,Refrigerated Pasta,2026-09-13 00:00:00,8.74,,,,,,,,,,
+"=SUM(K204,M204,O204,Q204,S204,U204)",,Walmart,NA,Nature's Bakery Gluten Free Raspberry Fig Bars,NA,0,Nature's Bakery Gluten-Free Raspberry Fig Bars,Snack Bars,2026-09-13 00:00:00,5.97,,,,,,,,,,
+"=SUM(K205,M205,O205,Q205,S205,U205)",,Walmart,NA,Tums Chewy Bites Ultra Strength Heartburn Relief Chews,NA,0,Tums Chewy Bites Ultra Strength Heartburn Relief Chews,Antacids,2026-09-13 00:00:00,11.96,,,,,,,,,,
+"=SUM(K206,M206,O206,Q206,S206,U206)",,Walmart,NA,"Swiffer Sweep + Mop, Dry Pads Refill",NA,0,Swiffer Sweep + Mop Dry Pads Refill,Household Cleaners,2026-09-13 00:00:00,9.94,,,,,,,,,,
+"=SUM(K207,M207,O207,Q207,S207,U207)",,Walmart,NA,Fresh Mini Seedless Watermelon,NA,0,Mini Seedless Watermelon,Fresh Fruit,2026-09-13 00:00:00,4.48,,,,,,,,,,
+"=SUM(K208,M208,O208,Q208,S208,U208)",,Walmart,NA,Dave's Killer Bread Organic Oats & Blues,NA,0,Dave's Killer Bread Organic Oats & Blues,Bread,2026-09-13 00:00:00,5.98,,,,,,,,,,
+"=SUM(K209,M209,O209,Q209,S209,U209)",,Walmart,NA,Chobani Low-Fat Vanilla Greek Yogurt Mixed Berry On The Bottom,NA,0,Chobani Vanilla Mixed Berry Greek Yogurt,Yogurt,2026-09-13 00:00:00,4.67,,,,,,,,,,
+"=SUM(K210,M210,O210,Q210,S210,U210)",,Walmart,NA,Marketside Classic Italian Salad Kit,NA,0,Marketside Classic Italian Salad Kit,Salad Kits,2026-09-13 00:00:00,2.47,,,,,,,,,,
+"=SUM(K211,M211,O211,Q211,S211,U211)",,Walmart,NA,Fresh Express Avocado Twisted Caesar Chopped Salad Kit,NA,0,Fresh Express Avocado Twisted Caesar Chopped Salad Kit,Salad Kits,2026-09-13 00:00:00,3.98,,,,,,,,,,
+"=SUM(K212,M212,O212,Q212,S212,U212)",,Walmart,NA,Hunt's Tomato Paste,NA,0,Hunt's Tomato Paste,Canned Tomatoes,2026-09-13 00:00:00,1.16,,,,,,,,,,
+"=SUM(K213,M213,O213,Q213,S213,U213)",,Walmart,NA,Hunt's Crushed Tomatoes,NA,0,Hunt's Crushed Tomatoes,Canned Tomatoes,2026-09-13 00:00:00,2.22,,,,,,,,,,
+"=SUM(K214,M214,O214,Q214,S214,U214)",,Walmart,NA,Great Value Heavy Whipping Cream,NA,0,Great Value Heavy Whipping Cream,Cream & Half-and-Half,2026-09-13 00:00:00,2.96,,,,,,,,,,
+"=SUM(K215,M215,O215,Q215,S215,U215)",,Walmart,NA,Marketside Fresh Baby Spinach,NA,0,Marketside Baby Spinach,Fresh Vegetables,2026-09-13 00:00:00,2.18,,,,,,,,,,
+"=SUM(K216,M216,O216,Q216,S216,U216)",,Walmart,NA,Hebrew National Bun Length Beef Franks,NA,0,Hebrew National Bun Length Beef Franks,Hot Dogs & Sausages,2026-09-13 00:00:00,5.74,,,,,,,,,,
+"=SUM(K217,M217,O217,Q217,S217,U217)",,Walmart,NA,Ball Park White Hot Dog Buns,NA,0,Ball Park White Hot Dog Buns,Bread,2026-09-13 00:00:00,3.27,,,,,,,,,,
+"=SUM(K218,M218,O218,Q218,S218,U218)",,Walmart,NA,Fresh Whole Green Onion,NA,0,Green Onions,Fresh Vegetables,2026-09-13 00:00:00,0.97,,,,,,,,,,
+"=SUM(K219,M219,O219,Q219,S219,U219)",,Walmart,NA,Marketside Broccoli Florets,NA,0,Marketside Broccoli Florets,Fresh Vegetables,2026-09-13 00:00:00,2.47,,,,,,,,,,
+"=SUM(K220,M220,O220,Q220,S220,U220)",,Walmart,NA,Great Value Large White Eggs,NA,0,Great Value Large White Eggs,Eggs,2026-09-13 00:00:00,4.88,,,,,,,,,,
+"=SUM(K221,M221,O221,Q221,S221,U221)",,Walmart,NA,Organic Marketside Fresh Baby Peeled Carrots,NA,0,Marketside Organic Baby Carrots,Fresh Vegetables,2026-09-13 00:00:00,1.83,,,,,,,,,,
+"=SUM(K222,M222,O222,Q222,S222,U222)",,Walmart,NA,Taylor Farms Everything Chopped Salad Kit,NA,0,Taylor Farms Everything Chopped Salad Kit,Salad Kits,2026-09-13 00:00:00,8.24,,,,,,,,,,
+"=SUM(K223,M223,O223,Q223,S223,U223)",,Walmart,NA,Mighty Sesame Fine Organic Sesame Tahini,NA,0,Mighty Sesame Organic Tahini,Dips & Spreads,2026-09-13 00:00:00,5.78,,,,,,,,,,
+"=SUM(K224,M224,O224,Q224,S224,U224)",,Walmart,NA,Tabatchnick Classic Wholesome Chicken Broth,NA,0,Tabatchnick Classic Chicken Broth,Broth & Stock,2026-09-13 00:00:00,5.94,,,,,,,,,,
+"=SUM(K225,M225,O225,Q225,S225,U225)",,Walmart,NA,Barilla Gluten Free Spaghetti Pasta,NA,0,Barilla Gluten-Free Spaghetti,Pasta,2026-09-13 00:00:00,5.34,,,,,,,,,,
+"=SUM(K226,M226,O226,Q226,S226,U226)",,Walmart,NA,Great Value Organic Smoked Paprika Seasoning,NA,0,Great Value Organic Smoked Paprika,Seasonings & Spices,2026-09-13 00:00:00,4.36,,,,,,,,,,
+"=SUM(K227,M227,O227,Q227,S227,U227)",,Walmart,NA,Ocean Spray® Craisins®,NA,0,Ocean Spray Craisins,Dried Fruit,2026-09-13 00:00:00,3.97,,,,,,,,,,
+"=SUM(K228,M228,O228,Q228,S228,U228)",,Walmart,NA,Kikkoman Teriyaki Marinade & Sauce,NA,0,Kikkoman Teriyaki Marinade & Sauce,Sauces & Condiments,2026-09-13 00:00:00,3.77,,,,,,,,,,
+"=SUM(K229,M229,O229,Q229,S229,U229)",,Walmart,NA,Great Value 8.5 Inch Disposable Paper Plates,NA,0,"Great Value Paper Plates, 8.5 Inch",Disposable Tableware,2026-09-13 00:00:00,5.58,,,,,,,,,,
+"=SUM(K230,M230,O230,Q230,S230,U230)",,Walmart,NA,Sterilite 6 Quart Small Storage Bin,NA,0,Sterilite 6-Quart Storage Bin,Storage & Organization,2026-09-13 00:00:00,2.56,,,,,,,,,,
+"=SUM(K231,M231,O231,Q231,S231,U231)",,Walmart,NA,Mainstays 4 Pack Kitchen Scrubber Dishcloth Set,NA,0,"Mainstays Kitchen Scrubber Dishcloth Set, 4-Pack",Dishwashing Supplies,2026-09-13 00:00:00,3.58,,,,,,,,,,
+"=SUM(K232,M232,O232,Q232,S232,U232)",,Walmart,NA,Busch American Lager Beer,NA,0,Busch American Lager Beer,Beer,2026-09-13 00:00:00,17.87,,,,,,,,,,
+"=SUM(K233,M233,O233,Q233,S233,U233)",,Walmart,NA,Great Value Half and Half,NA,0,Great Value Half & Half,Cream & Half-and-Half,2026-09-13 00:00:00,9.84,,,,,,,,,,
+"=SUM(K234,M234,O234,Q234,S234,U234)",,Walmart,NA,Birds Eye Steamfresh Sweet Peas,NA,0,Birds Eye Steamfresh Sweet Peas,Frozen Vegetables,2026-09-13 00:00:00,1.27,,,,,,,,,,
+"=SUM(K235,M235,O235,Q235,S235,U235)",,Walmart,NA,Spice World Fresh Peeled Garlic,NA,0,Spice World Fresh Peeled Garlic,Fresh Vegetables,2026-09-13 00:00:00,3.07,,,,,,,,,,
+"=SUM(K236,M236,O236,Q236,S236,U236)",,Walmart,NA,Cracker Barrel Cracker Cuts Variety Pack Cheese Snacks,NA,0,Cracker Barrel Cracker Cuts Variety Pack,Cheese,2026-09-13 00:00:00,8.48,,,,,,,,,,
+"=SUM(K237,M237,O237,Q237,S237,U237)",,Walmart,NA,Fresh Pink Lady Apples,NA,0,Pink Lady Apples,Fresh Fruit,2026-09-13 00:00:00,4.97,,,,,,,,,,
+"=SUM(K238,M238,O238,Q238,S238,U238)",,Walmart,NA,Fresh Whole Red Potatoes,NA,0,Red Potatoes,Fresh Vegetables,2026-09-13 00:00:00,5.23,,,,,,,,,,
+"=SUM(K239,M239,O239,Q239,S239,U239)",,Walmart,NA,Fresh Blueberries,NA,0,Blueberries,Fresh Fruit,2026-09-13 00:00:00,4.67,,,,,,,,,,
+"=SUM(K240,M240,O240,Q240,S240,U240)",,Walmart,NA,Fresh Bell Peppers,NA,0,Bell Peppers,Fresh Vegetables,2026-09-13 00:00:00,2.97,,,,,,,,,,
+"=SUM(K241,M241,O241,Q241,S241,U241)",,Walmart,NA,Fresh Pears Bartlett Bulk,NA,0,Bartlett Pears,Fresh Fruit,2026-09-13 00:00:00,1.83,,,,,,,,,,
+"=SUM(K242,M242,O242,Q242,S242,U242)",,Walmart,NA,Fresh Tomato on the Vine,NA,0,Tomatoes on the Vine,Fresh Vegetables,2026-09-13 00:00:00,3.27,,,,,,,,,,
+"=SUM(K243,M243,O243,Q243,S243,U243)",,Walmart,NA,Fresh Whole Sweet Onion,NA,0,Sweet Onion,Fresh Vegetables,2026-09-13 00:00:00,0.91,,,,,,,,,,
+"=SUM(K244,M244,O244,Q244,S244,U244)",,Walmart,NA,Fresh Whole Red Onion,NA,0,Red Onion,Fresh Vegetables,2026-09-13 00:00:00,1.01,,,,,,,,,,
+"=SUM(K245,M245,O245,Q245,S245,U245)",,Walmart,NA,Fresh Banana,NA,0,Bananas,Fresh Fruit,2026-09-13 00:00:00,2.15,,,,,,,,,,
+"=SUM(K246,M246,O246,Q246,S246,U246)",,Walmart,NA,Tax,NA,0,Tax,Fees & Charges,2026-09-13 00:00:00,4.37,,,,,,,,,,
+"=SUM(K247,M247,O247,Q247,S247,U247)",,Walmart,NA,Driver Tip,NA,0,Driver Tip,Fees & Charges,2026-09-13 00:00:00,22.11,,,,,,,,,,
 
 
 ================================================================================

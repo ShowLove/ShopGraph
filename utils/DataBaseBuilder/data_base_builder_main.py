@@ -10,6 +10,7 @@ from utils.DataBaseBuilder.excel.purchase_history import (
     WORKBOOK_PATH,
     commit_receipt,
     source_already_imported,
+    sort_purchase_history_by_latest_date,
 )
 from utils.constants import DATA_DIR
 from utils.DataBaseBuilder.excel.purchase_analytics import (
@@ -74,6 +75,7 @@ def display_data_base_builder_menu() -> None:
     print("4. Category Manager")
     print("5. Budget Plans")
     print("6. Test Mode")
+    print("7. Sort Purchase History by Latest Date")
     print("0. Return to Main")
 
 
@@ -1104,6 +1106,34 @@ def _run_category_purchase_analytics() -> None:
     )
 
 
+def _run_purchase_history_latest_date_sort() -> None:
+    print("\n=== Sort Purchase History by Latest Date ===\n")
+    print(
+        "[INFO] Sorting each product row by its newest Date N value. "
+        "Oldest rows will be at the top; newest rows will be at the bottom."
+    )
+
+    try:
+        summary = sort_purchase_history_by_latest_date()
+    except (
+        FileNotFoundError,
+        OSError,
+        ValueError,
+    ) as error:
+        print(
+            "\n[ERROR] Could not sort Purchase History:"
+            f"\n{error}"
+        )
+        return
+
+    print(
+        "\n[OK] Purchase History sorted by latest Date N."
+        f"\nRows sorted: {summary['rows_sorted']}"
+        f"\nDate columns checked: {summary['date_columns_checked']}"
+        f"\n\nWorkbook:\n{summary['workbook_path']}"
+    )
+
+
 def display_test_mode_menu() -> None:
     print("\n=== ShopGraph Data Base Builder - Test Mode ===\n")
     print("1. Add Receipt to Purchase History - Test Mode")
@@ -1150,6 +1180,9 @@ def run_data_base_builder_menu() -> None:
         elif option == "6":
             run_test_mode_menu()
 
+        elif option == "7":
+            _run_purchase_history_latest_date_sort()
+
         elif option == "0":
             return
 
@@ -1163,4 +1196,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
