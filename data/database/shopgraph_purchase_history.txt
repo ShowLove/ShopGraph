@@ -263,3 +263,4 @@ Total,,Store,Six-Digit SKU,Product,Tax Code,Store Number,Common Name,Sub-Categor
 "=SUM(K263,M263,O263,Q263,S263,U263)",,Publix,NA,PROG VEG BROTH,F,1688,Progresso Vegetable Broth,Broth & Stock,2026-09-19 00:00:00,2.89,2026-09-19 00:00:00,2.89,,,,,,,,
 "=SUM(K264,M264,O264,Q264,S264,U264)",,Publix,NA,LSR EVL  SWT/SLT PN,F,1688,LesserEvil Sweet & Salty Popcorn,Popcorn,2026-09-19 00:00:00,4.25,,,,,,,,,,
 "=SUM(K265,M265,O265,Q265,S265,U265)",,Cosco,NA,Pampers Swaddlers Ultra Diapers Sizes,NA,0,Pampers Swaddlers Diapers,Baby Care,2026-09-20 00:00:00,46.79,,,,,,,,,,
+"=SUM(K266,M266,O266,Q266,S266,U266)",,Walmart,NA,Contribution,NA,0,Contribution,Contribution Shared Payment,2026-09-13 00:00:00,-144.14,,,,,,,,,,

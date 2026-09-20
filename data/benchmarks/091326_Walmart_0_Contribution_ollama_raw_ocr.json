@@ -1,0 +1,109 @@
+{
+  "source_receipt": "/Users/carlosgarzon/Desktop/Engineering/ShopGraph/shopping_analysis/data/current_pic/091326_Walmart_0_Contribution.png",
+  "selection_method": "local Ollama vision receipt transcription; visual rows preserved in reading order; downstream ShopGraph review remains authoritative",
+  "backbone_candidate": {
+    "candidate_id": "ollama_vision",
+    "image_variant": "original",
+    "psm": "OLLAMA",
+    "comparison_metrics": {}
+  },
+  "consensus_summary": {
+    "backbone_line_count": 3,
+    "consensus_line_count": 3,
+    "merchandise_line_count": 0,
+    "component_reconstruction_count": 0,
+    "candidate_count": 1,
+    "full_candidate_count": 1,
+    "right_column_candidate_count": 0
+  },
+  "raw_text": "Sep 14, 2026\nRefund\nMay take up to 7 days to process\n4:24 PM\n-$18.42\nItems Edited\nMay take up to 7 days to process\n11:34 AM\n-$7.44\nSep 13, 2026\nOrder charge\n9:44 PM\n$170.00",
+  "text": [
+    {
+      "line_number": 1,
+      "candidate_id": "ollama_vision",
+      "candidate_line_index": 0,
+      "candidate_scope": "full",
+      "text": "Contribution Shared Payment",
+      "confidence": null,
+      "source_candidate": "ollama_vision",
+      "image_variant": "original",
+      "psm": "OLLAMA",
+      "support_count": 1,
+      "match_method": "ollama_vision",
+      "line_quality_score": null,
+      "consensus_score": null,
+      "normalized_y": null,
+      "bbox": null,
+      "ai_uncertain": false,
+      "review_status": "accepted",
+      "original_ocr_text": "Sep 14, 2026\nRefund\nMay take up to 7 days to process\n4:24 PM\n-$18.42",
+      "human_review": {
+        "total": "144.14",
+        "store": "Walmart",
+        "six_digit_sku": "NA",
+        "product": "Contribution Shared Payment",
+        "tax_code": "NA",
+        "store_number": "0",
+        "common_name": "NA",
+        "category": "NA",
+        "date": "09/13/2026",
+        "price": "NA"
+      }
+    },
+    {
+      "line_number": 2,
+      "candidate_id": "ollama_vision",
+      "candidate_line_index": 1,
+      "candidate_scope": "full",
+      "text": "Items Edited\nMay take up to 7 days to process\n11:34 AM\n-$7.44",
+      "confidence": null,
+      "source_candidate": "ollama_vision",
+      "image_variant": "original",
+      "psm": "OLLAMA",
+      "support_count": 1,
+      "match_method": "ollama_vision",
+      "line_quality_score": null,
+      "consensus_score": null,
+      "normalized_y": null,
+      "bbox": null,
+      "ai_uncertain": false
+    },
+    {
+      "line_number": 3,
+      "candidate_id": "ollama_vision",
+      "candidate_line_index": 2,
+      "candidate_scope": "full",
+      "text": "Sep 13, 2026\nOrder charge\n9:44 PM\n$170.00",
+      "confidence": null,
+      "source_candidate": "ollama_vision",
+      "image_variant": "original",
+      "psm": "OLLAMA",
+      "support_count": 1,
+      "match_method": "ollama_vision",
+      "line_quality_score": null,
+      "consensus_score": null,
+      "normalized_y": null,
+      "bbox": null,
+      "ai_uncertain": false
+    }
+  ],
+  "candidate_ranking": [],
+  "provenance": {
+    "engine": "Ollama Receipt Acquisition Pipeline",
+    "provider": "Ollama",
+    "model": "qwen2.5vl:7b",
+    "response_id": null,
+    "rule": "Receipt text was transcribed by an local Ollama vision model. No Common Name, Sub-Category, or broad Category was generated here. The existing Data Base Builder remains the downstream review authority."
+  },
+  "benchmark": {
+    "source_raw_ocr": "091326_Walmart_0_Contribution_ollama_raw_ocr.json",
+    "receipt_type": "Other",
+    "store_number": "0",
+    "receipt_date": "09/13/2026",
+    "starting_line_number": 1,
+    "reviewed_line_count": 1,
+    "accepted_purchase_count": 2,
+    "skipped_line_count": 0,
+    "ground_truth": true
+  }
+}

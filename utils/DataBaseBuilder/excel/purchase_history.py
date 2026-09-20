@@ -711,6 +711,14 @@ def _find_matching_row(
         record.store_number
     )
 
+    store = _normalized(
+        record.store
+    )
+
+    is_contribution = (
+        product == "contribution"
+    )
+
     for row in range(
         2,
         sheet.max_row + 1,
@@ -749,6 +757,19 @@ def _find_matching_row(
             and row_store_number
             == store_number
         ):
+            # Receipt-level Contributions are tied to Store + Store Number.
+            # This prevents unrelated "Other" stores that both use Store
+            # Number=NA from sharing one Contribution history row.
+            if is_contribution:
+                row_store = _normalized(
+                    sheet.cell(
+                        row=row,
+                        column=STORE_COLUMN,
+                    ).value
+                )
+                if row_store != store:
+                    continue
+
             return row
 
     return None

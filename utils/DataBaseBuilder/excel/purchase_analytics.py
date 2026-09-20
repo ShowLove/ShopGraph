@@ -153,7 +153,7 @@ def _parse_price(value) -> float | None:
         except (TypeError, ValueError, OverflowError):
             return None
 
-        return amount if amount >= 0 else None
+        return amount
 
     text = str(value).strip()
 
@@ -167,7 +167,7 @@ def _parse_price(value) -> float | None:
     except ValueError:
         return None
 
-    return amount if amount >= 0 else None
+    return amount
 
 
 def _header_map(sheet) -> dict[str, int]:
@@ -288,6 +288,25 @@ def _flatten_purchase_history(sheet) -> tuple[list[dict], dict]:
         "skipped_pairs": skipped_pairs,
         "history_pairs_found": len(pairs),
     }
+
+
+def _filter_observations_by_date_range(
+    observations: list[dict],
+    start_date: date | None = None,
+    end_date: date | None = None,
+) -> list[dict]:
+    """Return observations inside the inclusive optional date range."""
+    if start_date is not None and end_date is not None and end_date < start_date:
+        raise PurchaseAnalyticsError(
+            "End Date cannot be before Start Date."
+        )
+
+    return [
+        item
+        for item in observations
+        if (start_date is None or item["date"] >= start_date)
+        and (end_date is None or item["date"] <= end_date)
+    ]
 
 
 def _month_start(value: date) -> date:
@@ -2061,6 +2080,9 @@ def _open_analytics_workbook(
 
 def generate_subcategory_purchase_analytics(
     workbook_path: Path = WORKBOOK_PATH,
+    *,
+    start_date: date | None = None,
+    end_date: date | None = None,
 ) -> dict:
     """
     Refresh only the detailed Sub-Category analytics dashboard.
@@ -2079,6 +2101,12 @@ def generate_subcategory_purchase_analytics(
     )
 
     try:
+        observations = _filter_observations_by_date_range(
+            observations,
+            start_date,
+            end_date,
+        )
+
         summary = _generate_dashboard(
             workbook,
             observations,
@@ -2106,6 +2134,9 @@ def generate_subcategory_purchase_analytics(
 
 def generate_category_purchase_analytics(
     workbook_path: Path = WORKBOOK_PATH,
+    *,
+    start_date: date | None = None,
+    end_date: date | None = None,
 ) -> dict:
     """
     Refresh only the broad Category analytics dashboard.
@@ -2125,6 +2156,12 @@ def generate_category_purchase_analytics(
     )
 
     try:
+        observations = _filter_observations_by_date_range(
+            observations,
+            start_date,
+            end_date,
+        )
+
         subcategory_to_category = (
             load_category_mapping_for_analytics(
                 workbook
@@ -2160,6 +2197,38 @@ def generate_category_purchase_analytics(
 
     finally:
         workbook.close()
+
+
+def generate_purchase_analytics_for_date_range(
+    start_date: date,
+    end_date: date,
+    workbook_path: Path = WORKBOOK_PATH,
+) -> dict:
+    """Overwrite both analytics dashboards using one inclusive date range."""
+    if end_date < start_date:
+        raise PurchaseAnalyticsError(
+            "End Date cannot be before Start Date."
+        )
+
+    sub_summary = generate_subcategory_purchase_analytics(
+        workbook_path,
+        start_date=start_date,
+        end_date=end_date,
+    )
+    category_summary = generate_category_purchase_analytics(
+        workbook_path,
+        start_date=start_date,
+        end_date=end_date,
+    )
+
+    return {
+        "success": True,
+        "workbook_path": Path(workbook_path).expanduser().resolve(),
+        "start_date": start_date,
+        "end_date": end_date,
+        "sub_analytics": sub_summary,
+        "analytics": category_summary,
+    }
 
 
 def generate_purchase_analytics(

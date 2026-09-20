@@ -301,6 +301,77 @@ def _prompt_tax_code(current_value: str) -> str:
         print("\n[ERROR] Invalid option.")
 
 
+CONTRIBUTION_PRODUCT = "Contribution"
+CONTRIBUTION_COMMON_NAME = "Contribution"
+CONTRIBUTION_SUBCATEGORY = "Contributions"
+
+
+def _prompt_receipt_contribution(
+    *,
+    store_name: str,
+    store_number: str,
+    receipt_date: str,
+) -> PurchaseRecord | None:
+    """Optionally create one receipt-level contribution adjustment.
+
+    A contribution is intentionally not allocated to individual products. It is
+    stored as a negative Purchase History observation tied only to the receipt's
+    confirmed store/store number/date. Normal merchandise price validation stays
+    unchanged and continues to reject negative prices.
+    """
+    while True:
+        answer = input(
+            "\nDid someone else contribute toward the total receipt? [y/N]: "
+        ).strip().casefold()
+
+        if answer in {"", "n", "no"}:
+            return None
+
+        if answer not in {"y", "yes"}:
+            print("\n[ERROR] Enter y or n.")
+            continue
+
+        while True:
+            raw_amount = input(
+                "\nEnter the total contribution amount: $"
+            ).strip()
+
+            try:
+                amount = float(
+                    raw_amount.replace("$", "").replace(",", "")
+                )
+            except ValueError:
+                print("\n[ERROR] Contribution must be a positive number.")
+                continue
+
+            if amount <= 0:
+                print("\n[ERROR] Contribution must be greater than zero.")
+                continue
+
+            negative_amount = f"{-amount:.2f}"
+
+            print(
+                "\n[INFO] Receipt-level contribution:"
+                f"\nStore: {store_name}"
+                f"\nDate: {receipt_date}"
+                f"\nContribution: ${amount:.2f}"
+                f"\nStored adjustment: {negative_amount}"
+            )
+
+            return PurchaseRecord(
+                total=negative_amount,
+                store=store_name,
+                six_digit_sku=NA,
+                product=CONTRIBUTION_PRODUCT,
+                tax_code=NA,
+                store_number=store_number,
+                common_name=CONTRIBUTION_COMMON_NAME,
+                category=CONTRIBUTION_SUBCATEGORY,
+                date=receipt_date,
+                price=negative_amount,
+            )
+
+
 def _valid_price(value: str) -> bool:
     if value == NA:
         return True
@@ -967,6 +1038,23 @@ def run_receipt_import(
 
     if not should_commit:
         return
+
+    confirmed_store_name = (
+        filename_metadata.store_name
+        if filename_metadata is not None
+        else parser.receipt_type
+    )
+
+    contribution = _prompt_receipt_contribution(
+        store_name=confirmed_store_name,
+        store_number=store_number,
+        receipt_date=receipt_date,
+    )
+
+    if contribution is not None:
+        # Keep synthetic receipt-level adjustments out of reviewed_lines so the
+        # corrected benchmark remains a record of actual OCR receipt lines.
+        session.accepted_purchases.append(contribution)
 
     if not session.accepted_purchases:
         print(

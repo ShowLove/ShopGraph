@@ -9,6 +9,9 @@ from utils.DataBaseBuilder.budget_plans.budget_plan_analytics import (
     generate_budget_plan,
     get_current_categories,
 )
+from utils.DataBaseBuilder.excel.purchase_analytics import (
+    generate_purchase_analytics_for_date_range,
+)
 from utils.DataBaseBuilder.budget_plans.budget_plan_config import (
     CATEGORY_SCOPE_ALL,
     CATEGORY_SCOPE_SELECTED,
@@ -358,6 +361,50 @@ def delete_budget_plan() -> None:
         print("[WARNING] Budget Plan configuration was already missing.")
 
 
+def refresh_analytics_for_date_range() -> None:
+    print("\n=== Refresh Analytics by Date Range ===\n")
+    print(
+        "[INFO] This overwrites the current Analytics and Sub Analytics "
+        "worksheets using only purchases in the selected inclusive date range."
+    )
+
+    start_date = _prompt_date("Start Date")
+    if start_date is None:
+        return
+
+    end_date = _prompt_date("End Date")
+    if end_date is None:
+        return
+
+    if end_date < start_date:
+        print("\n[ERROR] End Date cannot be before Start Date.")
+        return
+
+    try:
+        summary = generate_purchase_analytics_for_date_range(
+            start_date,
+            end_date,
+        )
+    except (FileNotFoundError, OSError, ValueError) as error:
+        print(f"\n[ERROR] Could not refresh date-range Analytics: {error}")
+        return
+
+    print("\n[OK] Analytics and Sub Analytics refreshed for the selected date range.")
+    print(
+        f"Date Range: {start_date.strftime(DATE_FORMAT)} - "
+        f"{end_date.strftime(DATE_FORMAT)}"
+    )
+    print(
+        "Sub Analytics purchase observations: "
+        f"{summary['sub_analytics']['purchase_observations']}"
+    )
+    print(
+        "Analytics purchase observations: "
+        f"{summary['analytics']['purchase_observations']}"
+    )
+    print(f"Workbook:\n{summary['workbook_path']}")
+
+
 def display_budget_plans_menu() -> None:
     print("\n=== ShopGraph Budget Plans ===\n")
     print("1. Create New Budget Plan")
@@ -365,6 +412,7 @@ def display_budget_plans_menu() -> None:
     print("3. Refresh All Budget Plans")
     print("4. View Budget Plans")
     print("5. Delete Budget Plan")
+    print("6. Refresh Analytics + Sub Analytics by Date Range")
     print("0. Return to Data Base Builder")
 
 
@@ -382,7 +430,10 @@ def run_budget_plans_menu() -> None:
             view_budget_plans()
         elif option == "5":
             delete_budget_plan()
+        elif option == "6":
+            refresh_analytics_for_date_range()
         elif option == "0":
             return
         else:
             print("\n[ERROR] Invalid option.")
+

@@ -23,6 +23,13 @@ from utils.DataBaseBuilder.purchase_record import NA
 CATEGORY_MANAGER_SHEET = "Category Manager"
 CATEGORY_HEADER = "Category"
 SUB_CATEGORY_HEADER = "Sub-Category"
+
+# ShopGraph-owned receipt-level adjustment taxonomy. This deterministic mapping
+# avoids sending the built-in Contribution concept through an AI completion
+# prompt while still allowing an existing user mapping to remain authoritative.
+BUILT_IN_CATEGORY_DEFAULTS = {
+    "contributions": "Adjustments",
+}
 PRODUCT_HEADER_PREFIX = "Product"
 
 HEADER_FILL = "1F4E78"
@@ -742,10 +749,14 @@ def create_or_refresh_category_manager(
         subcategory_to_category = {}
 
         for subcategory in set(purchase_data["mapping"].values()):
+            normalized_subcategory = _normalized(subcategory)
             subcategory_to_category[subcategory] = (
                 preserved_normalized.get(
-                    _normalized(subcategory),
-                    NA,
+                    normalized_subcategory,
+                    BUILT_IN_CATEGORY_DEFAULTS.get(
+                        normalized_subcategory,
+                        NA,
+                    ),
                 )
                 if not _is_na(subcategory)
                 else NA
