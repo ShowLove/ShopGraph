@@ -2,4 +2,4 @@
 # Paths may use ~ and environment variables.
 
 code_update_import_location=~/Downloads
-selected_picture_filename=091326_Walmart_0_Contribution.png
+selected_picture_filename=100426_Publix_1058.HEIC

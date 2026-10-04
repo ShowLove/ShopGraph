@@ -1,0 +1,886 @@
+# ShopGraph Development Prompt
+
+## Ollama Purchase History Blank/NA Common Name Completion
+
+I want to add a new ShopGraph pipeline capability that uses the existing local Ollama AI infrastructure to repair populated Purchase History rows whose **Common Name** value is blank or `NA`.
+
+The immediate problem this capability must solve is the existing Category Manager validation failure:
+
+```text
+[ERROR] Category Manager refresh failed.
+
+Category Manager cannot be created because Purchase History contains populated rows with blank/NA Common Name. Rows: 267, 268, 269, 270, 271, 272
+```
+
+Currently I must manually export Purchase History and repair these rows before Category Manager Completion can continue.
+
+I want ShopGraph to perform this repair locally using Ollama.
+
+==========================================================
+PRIMARY GOAL
+============
+
+Create a new pipeline capability that:
+
+1. Opens the live ShopGraph Purchase History.
+2. Finds populated Purchase History rows whose `Common Name` is blank or `NA`.
+3. Sends ONLY those problem rows, with useful contextual information, to the existing local Ollama infrastructure.
+4. Asks Ollama to determine an appropriate Common Name for each row.
+5. Strictly validates Ollama's response.
+6. Writes ONLY the repaired Common Name values back into the corresponding Purchase History rows.
+7. Leaves every other cell unchanged.
+8. Reports exactly which rows were repaired.
+9. Verifies afterward that no populated Purchase History rows still contain blank/NA Common Name values.
+
+The result should allow the existing:
+
+```
+Category Manager Completion
+```
+
+pipeline step to run successfully without requiring the user to manually repair Purchase History.
+
+==========================================================
+PIPELINES MENU
+==============
+
+The current menu is approximately:
+
+```
+=== ShopGraph Pipelines ===
+
+1. Pipeline Part 1
+2. Pipeline Part 1 - Ollama Receipt Acquisition
+3. Pipeline Export 1
+4. Category Manager Completion
+5. Pipeline Export 2
+6. Finalize Taxonomy + Budgets
+0. Return to Capabilities Menu
+```
+
+Change it to:
+
+```
+=== ShopGraph Pipelines ===
+
+1. Pipeline Part 1
+2. Pipeline Part 1 - Ollama Receipt Acquisition
+3. Pipeline Export 1
+4. Ollama Purchase History Blank/NA Completion
+5. Category Manager Completion
+6. Pipeline Export 2
+7. Finalize Taxonomy + Budgets
+0. Return to Capabilities Menu
+```
+
+Preserve every existing pipeline capability.
+
+Only renumber the existing later entries as necessary.
+
+==========================================================
+NEW OPTION 4
+============
+
+Add:
+
+```
+4. Ollama Purchase History Blank/NA Completion
+```
+
+When selected, display something similar to:
+
+```
+=== Ollama Purchase History Blank/NA Completion ===
+
+[1/4] Scan Purchase History
+
+Found 6 populated rows with blank/NA Common Name:
+267, 268, 269, 270, 271, 272
+
+[2/4] Analyze Missing Common Names with Ollama
+
+[3/4] Validate Ollama Results
+
+[4/4] Update Purchase History
+
+[OK] Purchase History Common Name completion finished.
+
+Rows updated: 6
+Remaining populated rows with blank/NA Common Name: 0
+```
+
+If no problem rows exist:
+
+```
+=== Ollama Purchase History Blank/NA Completion ===
+
+[1/4] Scan Purchase History
+
+[OK] No populated Purchase History rows contain blank/NA Common Name.
+
+No changes were required.
+```
+
+Return normally to the Pipelines menu afterward.
+
+==========================================================
+IMPORTANT: REUSE EXISTING VALIDATION LOGIC
+==========================================
+
+The Category Manager code already knows how to detect this condition:
+
+```
+Purchase History contains populated rows with blank/NA Common Name.
+```
+
+Do NOT create a second inconsistent definition of what constitutes a populated
+row or an invalid Common Name if the existing validation/scanning logic can
+reasonably be extracted or reused.
+
+Prefer a shared helper such as conceptually:
+
+```
+find_populated_rows_with_missing_common_name(...)
+```
+
+which can be used by:
+
+```
+Category Manager validation
+```
+
+and:
+
+```
+Ollama Purchase History Blank/NA Completion
+```
+
+This prevents the Ollama repair step and Category Manager validator from
+disagreeing about which rows are invalid.
+
+Preserve existing Category Manager protection.
+
+Category Manager must STILL refuse to operate if invalid rows remain.
+
+==========================================================
+SOURCE WORKBOOK
+===============
+
+Operate on the live ShopGraph workbook:
+
+```
+data/database/shopgraph_purchase_history.xlsx
+```
+
+and specifically its Purchase History worksheet.
+
+Do not operate on the Pipeline Export TXT copy as the authoritative database.
+
+Pipeline Export 1 may still be used independently exactly as it is today.
+
+The purpose of this new capability is to repair the LIVE Purchase History so
+the normal ShopGraph pipeline can continue.
+
+==========================================================
+TARGET ROW RULE
+===============
+
+A row is eligible for Ollama completion ONLY when BOTH conditions are true:
+
+1. The row qualifies as a populated Purchase History row according to
+   ShopGraph's existing logic.
+
+AND
+
+2. Common Name is:
+
+   ```
+   blank
+   empty
+   whitespace-only
+   NA
+   ```
+
+Use the project's existing normalization rules for NA if available.
+
+Do NOT send already valid Purchase History rows to Ollama unnecessarily.
+
+==========================================================
+ABSOLUTE DATA-SAFETY RULE
+=========================
+
+This capability may modify ONLY:
+
+```
+Common Name
+```
+
+for rows identified as having missing Common Name.
+
+It MUST NOT modify:
+
+```
+Product
+Store
+Date
+Price
+Quantity
+Tax
+Sub-Category
+Category
+receipt identifiers
+source information
+any other Purchase History field
+workbook formatting
+formulas
+other worksheets
+```
+
+Existing nonblank/non-NA Common Name values are authoritative.
+
+NEVER overwrite them.
+
+==========================================================
+OLLAMA INPUT
+============
+
+For each problem row, provide Ollama enough information to infer the normalized
+Common Name.
+
+At minimum include:
+
+```
+Excel Row Number
+Product
+```
+
+Also include other useful existing row fields when available, for example:
+
+```
+Store
+Sub-Category
+Category
+Quantity
+Unit
+Price
+```
+
+Do not invent columns that do not exist in the current ShopGraph Purchase
+History schema.
+
+Inspect the actual code/workbook schema and use the real column names.
+
+==========================================================
+USE EXISTING PURCHASE HISTORY AS REFERENCE DATA
+===============================================
+
+This is important.
+
+Do not ask Ollama to determine Common Names in isolation if ShopGraph already
+contains examples that can guide normalization.
+
+Build useful reference context from existing Purchase History rows whose Common
+Name is already populated.
+
+For example, if Purchase History contains:
+
+```
+Product:
+    DOVE MEN+CARE BODY WASH CLEAN COMFORT
+
+Common Name:
+    Body Wash
+```
+
+then that existing mapping is useful evidence when Ollama encounters another
+similar Dove body wash product.
+
+Prefer consistency with ShopGraph's existing Common Name vocabulary over
+inventing new terminology.
+
+Where practical, provide Ollama with relevant existing:
+
+```
+Product -> Common Name
+```
+
+examples.
+
+Do not dump the entire Purchase History into every request if unnecessary.
+
+Select relevant examples or construct a compact reference vocabulary.
+
+==========================================================
+DETERMINISTIC MATCH BEFORE AI
+=============================
+
+Before calling Ollama, attempt safe deterministic reuse of existing mappings.
+
+For example, if the exact normalized Product value has previously appeared in
+Purchase History with one consistent Common Name:
+
+```
+Product:
+    BANANAS
+```
+
+existing mapping:
+
+```
+BANANAS -> Bananas
+```
+
+then ShopGraph may safely reuse:
+
+```
+Bananas
+```
+
+without asking Ollama.
+
+Only do this when the existing mapping is unambiguous.
+
+If the same Product has conflicting historical Common Names, do NOT guess.
+
+Send that row to Ollama with the conflicting examples as context if useful.
+
+This provides the preferred order:
+
+```
+1. Exact reliable existing ShopGraph mapping
+2. Ollama inference using ShopGraph context
+3. Leave unresolved if confidence/validation is insufficient
+```
+
+Never silently invent a value merely to make validation pass.
+
+==========================================================
+OLLAMA PROMPT
+=============
+
+Create a dedicated prompt for this capability.
+
+Preferred location:
+
+```
+data/prompts/dev_prompts/
+    shopgraph_ollama_common_name_completion_prompt.txt
+```
+
+The prompt should explain that Ollama is acting as a ShopGraph normalization
+assistant.
+
+Use instructions conceptually equivalent to:
+
+---
+
+## SHOPGRAPH COMMON NAME COMPLETION
+
+You are completing missing Common Name values in ShopGraph Purchase History.
+
+For each supplied row, determine the most appropriate normalized Common Name
+for the Product.
+
+Common Name represents the ordinary generic identity of the purchased item.
+
+Examples:
+
+```
+"DOVE MEN+CARE CLEAN COMFORT BODY WASH"
+    -> "Body Wash"
+
+"GV WHOLE MILK 1GAL"
+    -> "Whole Milk"
+
+"BANANAS"
+    -> "Bananas"
+
+"OREO DOUBLE STUF"
+    -> "Cookies"
+
+"COLGATE TOTAL WHITENING"
+    -> "Toothpaste"
+```
+
+Prefer existing ShopGraph Common Name terminology when reference examples are
+provided.
+
+Do not include:
+
+```
+brand names unless necessary to identify the item
+package size
+price
+quantity
+promotional text
+store name
+receipt abbreviations that do not describe the item
+```
+
+Return one result for every requested row.
+
+Never change or reinterpret the Excel row number.
+
+If the product cannot be identified with reasonable confidence, return:
+
+```
+"NA"
+```
+
+rather than inventing an unsupported Common Name.
+
+Return ONLY valid JSON matching the requested schema.
+
+---
+
+==========================================================
+STRUCTURED OLLAMA RESPONSE
+==========================
+
+Do not parse conversational prose.
+
+Require strict structured JSON.
+
+Preferred schema:
+
+```
+{
+  "rows": [
+    {
+      "excel_row": 267,
+      "common_name": "Body Wash"
+    },
+    {
+      "excel_row": 268,
+      "common_name": "Whole Milk"
+    }
+  ]
+}
+```
+
+Every requested Excel row must appear exactly once.
+
+No unexpected Excel rows may appear.
+
+==========================================================
+STRICT RESPONSE VALIDATION
+==========================
+
+Before changing the workbook, validate the entire Ollama response.
+
+Check:
+
+1. Response is valid JSON.
+2. Top-level structure is correct.
+3. `rows` exists and is a list.
+4. Every requested row appears exactly once.
+5. No unrequested row appears.
+6. No duplicate Excel row numbers exist.
+7. `common_name` is a string.
+8. Common Name is normalized/trimmed.
+9. Empty strings are rejected.
+10. The target workbook row still has blank/NA Common Name before writing.
+11. The row number maps to the same source Product that was sent to Ollama.
+
+That last check is important.
+
+Do not allow an AI response to accidentally update the wrong Excel row.
+
+==========================================================
+HANDLING OLLAMA "NA"
+====================
+
+Ollama is allowed to return:
+
+```
+NA
+```
+
+when there is insufficient evidence.
+
+Do NOT convert an uncertain answer into a fabricated Common Name merely to
+satisfy Category Manager validation.
+
+If some rows remain unresolved, report them clearly:
+
+```
+[WARNING] Common Name completion was incomplete.
+
+Updated rows: 5
+Unresolved rows: 1
+
+Remaining blank/NA Common Name rows:
+- Row 271: Product = "XYZ ABC 14OZ"
+
+Category Manager Completion will continue to reject Purchase History
+until these rows are resolved.
+```
+
+This preserves data quality.
+
+==========================================================
+ATOMIC / SAFE WORKBOOK UPDATE
+=============================
+
+Do not progressively save uncertain AI output directly into the live workbook.
+
+Preferred workflow:
+
+```
+scan
+  ->
+build requests
+  ->
+call Ollama
+  ->
+parse
+  ->
+validate
+  ->
+prepare updates
+  ->
+create backup / safe temporary workbook
+  ->
+apply updates
+  ->
+save
+  ->
+re-open / verify
+  ->
+report
+```
+
+Use ShopGraph's existing workbook backup/update mechanisms where practical.
+
+If validation fails before writing, the live workbook should remain unchanged.
+
+If an exception occurs while writing, avoid leaving a partially corrupted
+workbook.
+
+==========================================================
+OLLAMA INFRASTRUCTURE
+=====================
+
+REUSE the Ollama infrastructure already created for:
+
+```
+Pipeline Part 1 - Ollama Receipt Acquisition
+```
+
+Do not create a completely separate Ollama configuration system.
+
+Reuse existing logic for:
+
+```
+Ollama host
+model configuration
+HTTP requests
+timeout handling
+connection errors
+JSON extraction where appropriate
+```
+
+However, keep this new Purchase History capability logically separate from
+receipt image acquisition.
+
+Receipt acquisition and Common Name completion solve different problems.
+
+A reasonable structure could be:
+
+```
+capabilities/
+    OllamaPurchaseHistoryCompletion/
+        __init__.py
+        main_ollama_purchase_history_completion.py
+        common_name_completion.py
+        response_parser.py
+```
+
+while reusing the existing general Ollama client/configuration.
+
+Do not duplicate Ollama networking code unnecessarily.
+
+==========================================================
+BATCHING
+========
+
+The example currently contains only six bad rows, but design the capability so
+it remains safe if there are dozens or hundreds.
+
+Do not assume there will always be fewer than ten rows.
+
+Use reasonable batching if necessary.
+
+For example:
+
+```
+25-50 problem rows per Ollama request
+```
+
+The exact batch size may be chosen based on the existing Ollama implementation.
+
+Every batch must retain the original Excel row number and Product identity.
+
+==========================================================
+FINAL VERIFICATION
+==================
+
+After successfully writing the updates, re-scan Purchase History using the SAME
+validation logic used by Category Manager.
+
+If all populated rows now have Common Names:
+
+```
+[OK] Purchase History Common Name validation passed.
+
+Populated rows with blank/NA Common Name: 0
+```
+
+If unresolved rows remain:
+
+```
+[WARNING] Purchase History still contains populated rows with blank/NA
+Common Name.
+
+Rows: ...
+```
+
+Do not report complete success when unresolved rows remain.
+
+==========================================================
+OPTIONAL PIPELINE HANDOFF
+=========================
+
+For this first implementation, do NOT automatically run Category Manager
+Completion afterward unless that fits cleanly into the existing pipeline
+architecture.
+
+The preferred behavior is:
+
+```
+Option 4
+    Repair Purchase History
+```
+
+then the user selects:
+
+```
+Option 5
+    Category Manager Completion
+```
+
+This keeps the steps individually testable.
+
+The workflow becomes:
+
+```
+Pipeline Part 1
+    ↓
+Pipeline Export 1
+    ↓
+Ollama Purchase History Blank/NA Completion
+    ↓
+Category Manager Completion
+    ↓
+Pipeline Export 2
+    ↓
+Finalize Taxonomy + Budgets
+```
+
+==========================================================
+PRESERVE PIPELINE EXPORT 1
+==========================
+
+Do NOT remove or materially change:
+
+```
+Pipeline Export 1
+```
+
+It remains useful for external/manual processing.
+
+The new Ollama capability is an additional local automated path.
+
+Pipeline Export 1 must continue creating its existing files and behaving as it
+does today.
+
+==========================================================
+PRESERVE CATEGORY MANAGER VALIDATION
+====================================
+
+Do NOT weaken or remove this protection:
+
+```
+Category Manager cannot be created because Purchase History contains
+populated rows with blank/NA Common Name.
+```
+
+That validation is correct and valuable.
+
+The purpose of the new capability is to fix the source data BEFORE Category
+Manager runs.
+
+Category Manager should continue refusing invalid Purchase History.
+
+==========================================================
+PRESERVE EXISTING FUNCTIONALITY
+===============================
+
+Do not break or remove:
+
+```
+Pipeline Part 1
+Pipeline Part 1 - Ollama Receipt Acquisition
+Pipeline Export 1
+Category Manager Completion
+Pipeline Export 2
+Finalize Taxonomy + Budgets
+Category Manager menus
+Purchase History
+Data Base Builder
+OCR Acquisition Pipeline
+Ollama Receipt Acquisition Pipeline
+Analytics
+Sub Analytics
+Budget Plans
+Utilities
+Code Update Importer
+global -1 exit behavior
+```
+
+Reuse existing ShopGraph functions whenever practical.
+
+Do not duplicate business logic merely to make this feature self-contained.
+
+==========================================================
+README
+======
+
+Create:
+
+```
+README/README_OLLAMA_PURCHASE_HISTORY_COMMON_NAME_COMPLETION.txt
+```
+
+Document:
+
+1. Purpose
+2. Pipeline location
+3. Why Category Manager requires the repair
+4. Which Purchase History rows qualify
+5. Deterministic Product -> Common Name reuse
+6. Ollama fallback
+7. Existing ShopGraph mappings as AI context
+8. Strict JSON validation
+9. Data-safety rules
+10. Workbook backup/update behavior
+11. Handling unresolved rows
+12. Final validation
+13. Files added/modified
+
+==========================================================
+EXPECTED EXAMPLE
+================
+
+Given:
+
+```
+Category Manager cannot be created because Purchase History contains
+populated rows with blank/NA Common Name.
+Rows: 267, 268, 269, 270, 271, 272
+```
+
+Selecting:
+
+```
+4. Ollama Purchase History Blank/NA Completion
+```
+
+should produce approximately:
+
+```
+=== Ollama Purchase History Blank/NA Completion ===
+
+[1/4] Scan Purchase History
+
+Found 6 populated rows with blank/NA Common Name:
+267, 268, 269, 270, 271, 272
+
+[2/4] Analyze Missing Common Names with Ollama
+
+Row 267 -> Body Wash
+Row 268 -> Whole Milk
+Row 269 -> Bananas
+Row 270 -> Cookies
+Row 271 -> Toothpaste
+Row 272 -> Paper Towels
+
+[3/4] Validate Ollama Results
+
+[OK] 6/6 results validated.
+
+[4/4] Update Purchase History
+
+[OK] Purchase History updated.
+
+Rows updated: 6
+
+[OK] Purchase History Common Name validation passed.
+Populated rows with blank/NA Common Name: 0
+```
+
+The user can then select:
+
+```
+5. Category Manager Completion
+```
+
+and the existing Category Manager pipeline proceeds normally.
+
+==========================================================
+IMPLEMENTATION PHILOSOPHY
+=========================
+
+Keep this change focused.
+
+The goal is NOT to redesign Purchase History or Category Manager.
+
+The goal is to insert one reliable AI-assisted repair stage between:
+
+```
+Pipeline Export 1
+```
+
+and:
+
+```
+Category Manager Completion
+```
+
+that solves:
+
+```
+populated Purchase History row
+    +
+blank/NA Common Name
+```
+
+using:
+
+```
+existing ShopGraph mappings first
+    ↓
+local Ollama inference second
+    ↓
+strict validation
+    ↓
+safe update of Common Name only
+```
+
+The final architecture should preserve the principle:
+
+```
+AI proposes.
+ShopGraph validates.
+ShopGraph controls what is written.
+```
