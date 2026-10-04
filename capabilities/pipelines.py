@@ -1,4 +1,5 @@
 
+
 from __future__ import annotations
 
 import shutil
@@ -9,6 +10,9 @@ from capabilities.OCRAcquisitionPipeline.main_OCRAcquisitionPipeline import (
 )
 from capabilities.OllamaReceiptAcquisitionPipeline.main_OllamaReceiptAcquisitionPipeline import (
     run_ollama_receipt_acquisition_pipeline_for_image,
+)
+from capabilities.OllamaPurchaseHistoryCompletion.main_ollama_purchase_history_completion import (
+    run_ollama_purchase_history_completion,
 )
 from utils.clean_ocr_acquisition_pipeline import (
     clean_ocr_acquisition_pipeline_data,
@@ -595,9 +599,10 @@ def display_pipelines_menu() -> None:
     print("1. Pipeline Part 1")
     print("2. Pipeline Part 1 - Ollama Receipt Acquisition")
     print("3. Pipeline Export 1")
-    print("4. Category Manager Completion")
-    print("5. Pipeline Export 2")
-    print("6. Finalize Taxonomy + Budgets")
+    print("4. Ollama Purchase History Blank/NA Completion")
+    print("5. Category Manager Completion")
+    print("6. Pipeline Export 2")
+    print("7. Finalize Taxonomy + Budgets")
     print("0. Return to Capabilities Menu")
 
 
@@ -619,12 +624,21 @@ def run_pipelines_menu() -> None:
             run_pipeline_export_1()
 
         elif option == "4":
-            run_category_manager_completion()
+            try:
+                run_ollama_purchase_history_completion()
+            except Exception as error:
+                print(
+                    "\n[ERROR] Ollama Purchase History completion failed:"
+                    f"\n{error}"
+                )
 
         elif option == "5":
-            run_pipeline_export_2()
+            run_category_manager_completion()
 
         elif option == "6":
+            run_pipeline_export_2()
+
+        elif option == "7":
             run_finalize_taxonomy_and_budgets()
 
         elif option == "0":

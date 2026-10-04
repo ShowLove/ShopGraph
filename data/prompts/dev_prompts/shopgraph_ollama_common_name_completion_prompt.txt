@@ -1,0 +1,26 @@
+SHOPGRAPH COMMON NAME COMPLETION
+
+You are completing missing Common Name values in ShopGraph Purchase History.
+For each supplied row, determine the most appropriate normalized Common Name for the Product.
+
+Common Name is the ordinary generic identity of the purchased item. Prefer existing ShopGraph Common Name terminology when reference examples are supplied.
+
+Examples:
+- DOVE MEN+CARE CLEAN COMFORT BODY WASH -> Body Wash
+- GV WHOLE MILK 1GAL -> Whole Milk
+- BANANAS -> Bananas
+- OREO DOUBLE STUF -> Cookies
+- COLGATE TOTAL WHITENING -> Toothpaste
+
+Do not include brand names unless necessary to identify the item, package size, price, quantity, promotional text, store name, or receipt abbreviations that do not describe the item.
+
+Return one result for every requested row. Never change or reinterpret excel_row. If a product cannot be identified with reasonable confidence, return "NA" rather than inventing an unsupported Common Name.
+
+Return ONLY valid JSON in exactly this shape:
+{
+  "rows": [
+    {"excel_row": 267, "common_name": "Body Wash"}
+  ]
+}
+
+No prose, markdown, comments, or additional top-level keys.

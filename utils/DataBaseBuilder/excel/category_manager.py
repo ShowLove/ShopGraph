@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 
 import os
@@ -59,6 +60,37 @@ def _is_na(value) -> bool:
     return _normalized(value) == _normalized(NA)
 
 
+
+
+def find_populated_rows_with_missing_common_name(purchase_sheet) -> list[int]:
+    """Return populated Purchase History rows whose Common Name is blank/NA.
+
+    This is the shared definition used by Category Manager validation and the
+    Ollama Purchase History repair capability. A row is considered populated
+    when its Product cell contains text, matching the historical Category
+    Manager behavior.
+    """
+    invalid_rows: list[int] = []
+
+    for row in range(2, purchase_sheet.max_row + 1):
+        product_value = _text(
+            purchase_sheet.cell(row=row, column=5).value
+        )
+        if not product_value:
+            continue
+
+        common_name = _text(
+            purchase_sheet.cell(
+                row=row,
+                column=COMMON_NAME_COLUMN,
+            ).value
+        )
+        if not common_name or _is_na(common_name):
+            invalid_rows.append(row)
+
+    return invalid_rows
+
+
 def _required_purchase_headers_are_valid(sheet) -> bool:
     actual = [
         _text(sheet.cell(row=1, column=column).value)
@@ -115,7 +147,9 @@ def _read_purchase_history(
     """
     subcategories_by_common_name: dict[str, set[str]] = defaultdict(set)
     rows_by_common_name: dict[str, list[int]] = defaultdict(list)
-    invalid_common_name_rows = []
+    invalid_common_name_rows = find_populated_rows_with_missing_common_name(
+        purchase_sheet
+    )
 
     for row in range(2, purchase_sheet.max_row + 1):
         common_name = _text(
@@ -140,8 +174,6 @@ def _read_purchase_history(
         )
 
         if not common_name or _is_na(common_name):
-            if product_value:
-                invalid_common_name_rows.append(row)
             continue
 
         if not subcategory:
