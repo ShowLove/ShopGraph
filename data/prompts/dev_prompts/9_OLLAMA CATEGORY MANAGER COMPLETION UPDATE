@@ -1,0 +1,763 @@
+# SHOPGRAPH — OLLAMA CATEGORY MANAGER COMPLETION UPDATE
+
+## PURPOSE
+
+Update the attached ShopGraph codebase so the current manual Pipeline Export 2 + external AI workflow can be performed locally with Ollama.
+
+Currently the user runs:
+
+```
+5. Category Manager Completion
+6. Pipeline Export 2
+```
+
+Pipeline Export 2 exports:
+
+```
+shopgraph_category_manager.txt
+shopgraph_category_completion_prompt.txt
+shopgraph_purchase_history.txt
+```
+
+The user then gives those files to an external AI, receives recommended broad Category assignments for Category Manager rows whose Category is NA, and manually enters those Categories into ShopGraph.
+
+Replace that manual AI step with a local Ollama-powered Category Manager completion capability.
+
+Do NOT remove Pipeline Export 2. Preserve it as a manual fallback.
+
+=======================================================
+TARGET PIPELINES MENU
+=====================
+
+Change the ShopGraph Pipelines menu to:
+
+```
+=== ShopGraph Pipelines ===
+
+1. Pipeline Part 1
+2. Pipeline Part 1 - Ollama Receipt Acquisition
+3. Pipeline Export 1
+4. Ollama Purchase History Blank/NA Completion
+5. Category Manager Completion
+6. Ollama Category Manager Completion
+7. Pipeline Export 2
+8. Finalize Taxonomy + Budgets
+0. Return to Capabilities Menu
+```
+
+Preserve global:
+
+```
+-1 = Exit ShopGraph
+```
+
+Do not remove or break any existing pipeline capability.
+
+=======================================================
+NEW CAPABILITY
+==============
+
+Create a new capability package:
+
+```
+capabilities/
+    OllamaCategoryManagerCompletion/
+        __init__.py
+        main_ollama_category_manager_completion.py
+```
+
+The capability should expose something equivalent to:
+
+```
+run_ollama_category_manager_completion()
+```
+
+Option 6 in capabilities/pipelines.py should call this function.
+
+=======================================================
+WORKFLOW
+========
+
+When selected, display:
+
+```
+=== Ollama Category Manager Completion ===
+```
+
+The workflow should be approximately:
+
+```
+[1/5] Load Category Manager
+[2/5] Identify Missing Categories
+[3/5] Analyze Missing Categories with Ollama
+[4/5] Validate Ollama Results
+[5/5] Update Category Manager
+```
+
+The exact wording may be adjusted to match existing ShopGraph style.
+
+=======================================================
+SOURCE OF TRUTH
+===============
+
+Use the LIVE ShopGraph workbook:
+
+```
+data/database/shopgraph_purchase_history.xlsx
+```
+
+Do NOT depend on Pipeline Export 2 TXT files for runtime operation.
+
+Read:
+
+```
+Category Manager
+```
+
+and:
+
+```
+Purchase History
+```
+
+directly from the workbook wherever practical.
+
+Reuse existing ShopGraph Category Manager helpers and constants rather than duplicating workbook schema logic unnecessarily.
+
+=======================================================
+SHOPGRAPH TAXONOMY
+==================
+
+The taxonomy is:
+
+```
+Common Name
+    ↓
+Sub-Category
+    ↓
+Category
+```
+
+Category Manager is authoritative for:
+
+```
+Sub-Category -> Category
+```
+
+Purchase History is authoritative/supporting evidence for:
+
+```
+Product
+Common Name
+Sub-Category
+Store
+SKU
+historical purchase information
+```
+
+=======================================================
+ONLY MODIFY CATEGORY = NA
+=========================
+
+This is a critical safety rule.
+
+Only Category Manager rows whose Category is blank or NA may be changed.
+
+Existing non-NA Category assignments are authoritative.
+
+NEVER allow Ollama to overwrite, rename, normalize, reorganize, or otherwise modify an existing non-NA Category.
+
+Before writing anything, capture the original Category Manager state.
+
+Immediately before writing, verify again that every proposed target still has Category blank/NA.
+
+If a target no longer has blank/NA Category, refuse to overwrite it.
+
+=======================================================
+DETERMINISTIC COMPLETION FIRST
+==============================
+
+Before calling Ollama, attempt deterministic completion.
+
+Build the existing authoritative:
+
+```
+Sub-Category -> Category
+```
+
+mapping from all valid non-NA Category Manager rows.
+
+If the same normalized Sub-Category already has exactly one authoritative Category elsewhere, reuse that Category without asking Ollama.
+
+Do not invent deterministic mappings from semantic similarity.
+
+Only exact/normalized identity mappings should bypass Ollama.
+
+Any genuinely unresolved Category = NA row should be sent to Ollama.
+
+=======================================================
+OLLAMA INTEGRATION
+==================
+
+Reuse the existing local Ollama infrastructure already present in:
+
+```
+capabilities/OllamaReceiptAcquisitionPipeline/ollama_client.py
+```
+
+In particular, reuse:
+
+```
+run_local_json_prompt(...)
+```
+
+Do not create another HTTP/Ollama implementation unless technically necessary.
+
+The existing Ollama configuration must remain authoritative, including:
+
+```
+SHOPGRAPH_OLLAMA_MODEL
+SHOPGRAPH_OLLAMA_BASE_URL
+SHOPGRAPH_OLLAMA_NUM_CTX
+```
+
+The workflow must remain local-only.
+
+Do not add OpenAI, Anthropic, Gemini, or another cloud AI dependency.
+
+=======================================================
+OLLAMA PROMPT FILE
+==================
+
+Create:
+
+```
+data/prompts/dev_prompts/
+    shopgraph_ollama_category_completion_prompt.txt
+```
+
+Adapt the logic of the EXISTING:
+
+```
+shopgraph_category_completion_prompt.txt
+```
+
+Do not redesign the taxonomy rules.
+
+The local Ollama prompt must preserve the important behavior of the existing external-AI prompt:
+
+1. Existing non-NA Category assignments teach the broad taxonomy.
+
+2. Only Category = NA rows are targets.
+
+3. Existing Category names should be reused exactly when appropriate.
+
+4. Products/Common Names belonging to the target Sub-Category should be used as evidence.
+
+5. Purchase History should be used as supporting evidence when useful.
+
+6. Prefer an existing broad Category when it genuinely fits.
+
+7. Do not create synonymous or near-duplicate Categories.
+
+8. A new Category may be created only when the Sub-Category belongs to a materially different purchasing domain not represented adequately by the existing taxonomy.
+
+9. New Categories should be:
+   concise
+   human-readable
+   broad
+   reusable
+   consistent with existing naming style
+
+10. Do not assume everything belongs to Food.
+
+11. Use NA only when evidence is genuinely insufficient.
+
+12. Never modify existing non-NA Category assignments.
+
+=======================================================
+STRUCTURED OLLAMA INPUT
+=======================
+
+Do not send the entire workbook blindly.
+
+Construct compact structured JSON for Ollama.
+
+It should contain approximately:
+
+```
+{
+  "existing_taxonomy": [
+    {
+      "sub_category": "...",
+      "category": "..."
+    }
+  ],
+
+  "rows_to_complete": [
+    {
+      "excel_row": 17,
+      "sub_category": "...",
+      "products": [
+        "...",
+        "..."
+      ],
+      "purchase_history_examples": [
+        {
+          "store": "...",
+          "product": "...",
+          "common_name": "...",
+          "sub_category": "..."
+        }
+      ]
+    }
+  ]
+}
+```
+
+The exact structure may be improved if needed.
+
+Keep the input compact enough for the configured Ollama context window.
+
+Avoid sending redundant purchase history records.
+
+=======================================================
+BATCHING
+========
+
+Support batching so a large Category Manager does not exceed Ollama's context window.
+
+Use a conservative batch size.
+
+A value around:
+
+```
+10-25 unresolved Sub-Categories per request
+```
+
+is reasonable, but choose an implementation appropriate for the existing context-window handling.
+
+Every batch must still receive enough existing taxonomy information to classify its targets consistently.
+
+=======================================================
+REQUIRED OLLAMA OUTPUT
+======================
+
+Require JSON only.
+
+Use a structure such as:
+
+```
+{
+  "rows": [
+    {
+      "excel_row": 17,
+      "sub_category": "Fresh Fruit",
+      "category": "Food"
+    },
+    {
+      "excel_row": 29,
+      "sub_category": "Motor Oil",
+      "category": "Automotive"
+    }
+  ]
+}
+```
+
+No Markdown.
+
+No prose outside JSON.
+
+Do not require Ollama to return the whole Category Manager.
+
+=======================================================
+STRICT RESPONSE VALIDATION
+==========================
+
+Treat Ollama output as untrusted.
+
+Validate all results before modifying the workbook.
+
+For every returned entry verify:
+
+1. "excel_row" is an integer.
+
+2. The row was actually requested.
+
+3. The returned Sub-Category exactly corresponds to the expected target row, allowing only the same normalization conventions already used by ShopGraph where appropriate.
+
+4. "category" is a non-empty string.
+
+5. No target row occurs twice.
+
+6. Ollama did not return a non-target row.
+
+7. Every requested row appears exactly once.
+
+8. Existing non-NA Category rows are never returned as targets.
+
+9. The Category Manager row still has blank/NA Category immediately before write.
+
+10. The Sub-Category identity has not changed since the Ollama request was created.
+
+Reject malformed or incomplete batches instead of partially trusting them.
+
+=======================================================
+CATEGORY REUSE
+==============
+
+Build a case-insensitive lookup of existing Category names.
+
+If Ollama returns an existing Category with only capitalization differences, normalize the result back to the EXACT spelling/capitalization already used in Category Manager.
+
+Example:
+
+Existing:
+
+```
+Household
+```
+
+Ollama:
+
+```
+household
+```
+
+Write:
+
+```
+Household
+```
+
+This prevents accidental duplicate broad Categories.
+
+Do not automatically replace genuinely different new Category names.
+
+=======================================================
+NEW CATEGORY SAFETY
+===================
+
+Ollama is allowed to propose a genuinely new broad Category because the existing ShopGraph prompt already permits this.
+
+However:
+
+* reject blank values;
+* reject NA as writable output;
+* trim whitespace;
+* reject obviously malformed values;
+* do not allow multiline Category values;
+* do not allow excessively long Category names;
+* do not allow Ollama to modify Sub-Category or Products.
+
+Use conservative validation without changing the intended taxonomy behavior.
+
+=======================================================
+PREVIEW BEFORE WRITE
+====================
+
+Before modifying the workbook, print the proposed changes.
+
+For example:
+
+```
+Proposed Category assignments:
+
+Row 17 | Fresh Fruit -> Food
+Row 29 | Motor Oil -> Automotive
+Row 41 | Baby Formula -> Baby
+```
+
+Also distinguish deterministic reuse from Ollama classification when practical.
+
+Then continue with the validated write.
+
+A confirmation prompt is not required unless existing ShopGraph conventions strongly favor one.
+
+=======================================================
+BACKUP
+======
+
+Before modifying the live workbook, create a backup.
+
+Use a clear name such as:
+
+```
+shopgraph_purchase_history.pre_ollama_category_completion.xlsx
+```
+
+Do not overwrite the backup until all Ollama results have passed validation.
+
+If an existing ShopGraph backup helper can safely be reused without changing its semantics, reuse it.
+
+Otherwise use a straightforward file copy.
+
+=======================================================
+ATOMIC SAVE
+===========
+
+Do not save directly over the live workbook in a way that risks corruption.
+
+Follow ShopGraph's existing safe-save philosophy:
+
+1. save to a temporary .xlsx file;
+2. reopen the temporary workbook to verify it is readable;
+3. atomically replace the live workbook.
+
+If an existing Category Manager helper already provides the correct safe-save behavior, reuse it rather than duplicating it.
+
+=======================================================
+POST-WRITE VALIDATION
+=====================
+
+After saving:
+
+Reopen the workbook.
+
+Verify that every Category Manager Sub-Category has a valid Category.
+
+Specifically verify that no current Category Manager target remains:
+
+```
+Category = NA
+```
+
+or blank.
+
+If unresolved rows remain, print them clearly.
+
+Example:
+
+```
+[WARNING] Category Manager still contains Sub-Categories without a valid Category.
+
+Rows: 17, 29
+```
+
+Do not claim success if unresolved rows remain.
+
+If everything is complete:
+
+```
+[OK] Category Manager Category validation passed.
+Category Manager rows with blank/NA Category: 0
+```
+
+=======================================================
+DO NOT APPLY CATEGORY MANAGER AUTOMATICALLY
+===========================================
+
+This option should COMPLETE Category Manager.
+
+It should NOT automatically run:
+
+```
+Apply Category Manager to Purchase History
+```
+
+and should NOT automatically refresh Budget Plans.
+
+The existing:
+
+```
+Finalize Taxonomy + Budgets
+```
+
+pipeline remains responsible for final application/validation and Budget Plan refresh.
+
+Preserve this separation of responsibilities.
+
+=======================================================
+PIPELINE EXPORT 2 REMAINS AVAILABLE
+===================================
+
+Do not delete:
+
+```
+run_pipeline_export_2()
+```
+
+Do not delete:
+
+```
+shopgraph_category_completion_prompt.txt
+```
+
+Do not remove Export_2 behavior.
+
+Move the menu entry so it becomes:
+
+```
+7. Pipeline Export 2
+```
+
+This remains the manual external-AI fallback.
+
+=======================================================
+EXPECTED NORMAL WORKFLOW
+========================
+
+After this update, the intended local-AI workflow becomes:
+
+```
+Pipeline Part 1
+    ↓
+Ollama Purchase History Blank/NA Completion
+    ↓
+Category Manager Completion
+    ↓
+Ollama Category Manager Completion
+    ↓
+Finalize Taxonomy + Budgets
+```
+
+Pipeline Export 1 and Pipeline Export 2 remain available as manual fallback/debugging workflows.
+
+=======================================================
+COMPATIBILITY
+=============
+
+Preserve all existing ShopGraph functionality.
+
+Do not unnecessarily rewrite:
+
+```
+Purchase History
+Category Manager
+Analytics
+Sub Analytics
+Budget Plans
+OCR acquisition
+Ollama Receipt Acquisition
+Ollama Purchase History Completion
+Pipeline Export 1
+Pipeline Export 2
+Finalize Taxonomy + Budgets
+Code Update Importer
+global -1 exit behavior
+```
+
+Prefer a small integration layer over broad refactoring.
+
+=======================================================
+README
+======
+
+Add:
+
+```
+README/
+    README_OLLAMA_CATEGORY_MANAGER_COMPLETION.txt
+```
+
+Document:
+
+* purpose;
+* new pipeline menu option;
+* local-only Ollama behavior;
+* Category = NA safety rule;
+* deterministic reuse behavior;
+* existing taxonomy as authority;
+* Purchase History as supporting evidence;
+* batching;
+* response validation;
+* backup behavior;
+* atomic save;
+* post-write validation;
+* Pipeline Export 2 remaining as fallback;
+* relationship to Finalize Taxonomy + Budgets.
+
+=======================================================
+TESTING / VALIDATION
+====================
+
+At minimum verify:
+
+1. Python syntax/compilation for every changed/new Python file.
+
+2. Pipelines menu numbering is correct.
+
+3. Existing Pipeline Export 2 still works.
+
+4. No Category Manager changes occur when there are zero blank/NA Categories.
+
+5. Existing non-NA Categories are never overwritten.
+
+6. Deterministic exact Sub-Category mappings are reused correctly.
+
+7. Ollama receives only unresolved targets.
+
+8. Invalid Ollama JSON causes no workbook modification.
+
+9. Missing Ollama rows cause no partial batch write.
+
+10. Unexpected rows cause rejection.
+
+11. Duplicate rows cause rejection.
+
+12. Existing Category capitalization is preserved.
+
+13. Backup is created before modification.
+
+14. Workbook is atomically saved.
+
+15. Workbook can be reopened after save.
+
+16. Post-write Category validation works.
+
+17. Finalize Taxonomy + Budgets continues to work after successful completion.
+
+=======================================================
+DELIVERABLE
+===========
+
+Return an importer-compatible ShopGraph overlay ZIP preserving project-relative paths.
+
+The ZIP should contain ONLY files that are new or intentionally changed.
+
+Likely files include:
+
+```
+capabilities/pipelines.py
+
+capabilities/OllamaCategoryManagerCompletion/
+    __init__.py
+    main_ollama_category_manager_completion.py
+
+data/prompts/dev_prompts/
+    shopgraph_ollama_category_completion_prompt.txt
+
+README/
+    README_OLLAMA_CATEGORY_MANAGER_COMPLETION.txt
+```
+
+Additional existing files may be changed only if genuinely necessary.
+
+Do NOT include:
+
+```
+runtime databases
+Purchase History workbooks
+Category Manager runtime exports
+PipelineExports
+receipt images
+OCR output
+Ollama output
+archives
+caches
+user-specific configuration
+installed Ollama models
+```
+
+Preserve ShopGraph's Code Update Importer overlay format.
+
+Also provide a concise summary of:
+
+```
+files added
+files changed
+menu changes
+Ollama workflow
+safety protections
+validation performed
+```

@@ -1,0 +1,6 @@
+SHOPGRAPH — OLLAMA PURCHASE HISTORY SUB-CATEGORY COMPLETION
+
+Classify ONLY the requested Purchase History rows whose Sub-Category is blank/NA. Prefer an existing Sub-Category from existing_taxonomy whenever it fits. Create a concise new Sub-Category only when none fits. Use Product and Common Name as primary evidence and Store only as supporting context. Do not change row identity. Return JSON only, with exactly one entry for every requested row and no extra rows. Blank/NA answers are forbidden.
+
+Required shape:
+{"rows":[{"excel_row":267,"sub_category":"Fresh Fruit"}]}

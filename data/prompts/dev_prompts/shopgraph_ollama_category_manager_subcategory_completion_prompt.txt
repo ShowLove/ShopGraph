@@ -1,0 +1,6 @@
+SHOPGRAPH — OLLAMA CATEGORY MANAGER SUB-CATEGORY COMPLETION
+
+Classify ONLY the requested Category Manager rows whose Sub-Category is blank/NA. Infer the best Sub-Category from the row's Category and Product/Common Name entries. Prefer an existing Sub-Category from existing_taxonomy whenever it fits and avoid unnecessary taxonomy fragmentation. Create a concise new Sub-Category only when none fits. Do not change row identity. Return JSON only, with exactly one entry for every requested row and no extra rows. Blank/NA answers are forbidden.
+
+Required shape:
+{"rows":[{"excel_row":14,"sub_category":"Fresh Fruit"}]}

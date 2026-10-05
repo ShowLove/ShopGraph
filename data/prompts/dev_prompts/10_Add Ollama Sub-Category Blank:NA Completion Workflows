@@ -1,0 +1,526 @@
+# ShopGraph — Add Ollama Sub-Category Blank/NA Completion Workflows
+
+Modify the attached/current ShopGraph codebase to add two new Ollama-powered completion workflows.
+
+The implementation must follow the architecture, safety checks, local Ollama integration, validation, batching, and atomic-save behavior already used by the existing:
+
+* `Ollama Purchase History Blank/NA Completion`
+* `Ollama Category Manager Completion`
+
+Do not redesign unrelated ShopGraph functionality.
+
+The authoritative workbook must remain:
+
+`data/database/shopgraph_purchase_history.xlsx`
+
+All four Ollama completion workflows must modify that same live workbook.
+
+Do NOT create persistent alternate workbooks such as:
+
+* `shopgraph_purchase_history.pre_ollama_*.xlsx`
+* temporary completion databases
+* copied databases used as the final output
+
+Temporary files used internally for verified atomic saving are acceptable and should be deleted automatically after the save succeeds.
+
+---
+
+# 1. UPDATE THE SHOPGRAPH PIPELINES MENU
+
+Change the ShopGraph Pipelines menu to exactly:
+
+1. Pipeline Part 1
+2. Pipeline Part 1 - Ollama Receipt Acquisition
+3. Pipeline Export 1
+4. Ollama Purchase History Blank/NA Completion
+5. Ollama Purchase History Sub-Category Blank/NA Completion
+6. Category Manager Completion
+7. Ollama Category Manager Completion
+8. Ollama Category Manager Sub-Category Blank/NA Completion
+9. Pipeline Export 2
+10. Finalize Taxonomy + Budgets
+11. Return to Capabilities Menu
+
+Preserve the existing global `-1 = Exit ShopGraph` behavior.
+
+Option 11 must return to the Capabilities Menu.
+
+Update both the displayed menu and option routing.
+
+Existing functionality must retain its current behavior; only renumber existing options as necessary.
+
+---
+
+# 2. OPTION 5 — OLLAMA PURCHASE HISTORY SUB-CATEGORY BLANK/NA COMPLETION
+
+Add a new capability:
+
+`Ollama Purchase History Sub-Category Blank/NA Completion`
+
+Its purpose is to inspect the:
+
+`Purchase History`
+
+worksheet inside:
+
+`data/database/shopgraph_purchase_history.xlsx`
+
+and fill blank or `NA` values in:
+
+`Column I — Sub-Category`
+
+Only rows representing populated Purchase History records should be considered.
+
+Do not alter rows that already contain a valid Sub-Category.
+
+Do not modify unrelated columns.
+
+## Target detection
+
+Identify every populated Purchase History row where Sub-Category is:
+
+* blank
+* `None`
+* empty after trimming
+* `NA`
+
+Use the project's existing Purchase History schema constants rather than hardcoding column numbers wherever possible.
+
+Confirm from the current schema that the Sub-Category field corresponds to column I.
+
+---
+
+# 3. PURCHASE HISTORY DETERMINISTIC COMPLETION FIRST
+
+Before calling Ollama, attempt to resolve missing Sub-Categories using authoritative existing ShopGraph data.
+
+Use existing valid Purchase History rows and Category Manager information where appropriate.
+
+Prefer deterministic mappings whenever the evidence is unambiguous.
+
+For example, if the same normalized Common Name has an existing valid Sub-Category and that mapping is unambiguous, reuse it.
+
+Likewise, use an authoritative Category Manager mapping when one clearly identifies the Sub-Category belonging to the Common Name/product.
+
+Do not guess when deterministic evidence conflicts.
+
+Rows that cannot be resolved deterministically should be sent to Ollama.
+
+Print how many rows were resolved deterministically and how many require Ollama.
+
+---
+
+# 4. PURCHASE HISTORY OLLAMA CONTEXT
+
+For unresolved Purchase History rows, provide Ollama enough context to classify the product intelligently.
+
+Include relevant fields when available, such as:
+
+* Excel row
+* Store
+* SKU
+* Product
+* Common Name
+* current Category if relevant
+* existing Sub-Category value
+* representative valid Purchase History mappings
+* Category Manager taxonomy/mappings
+
+The model should primarily classify from Common Name and Product while using the existing ShopGraph taxonomy as authoritative context.
+
+The AI should strongly prefer existing Sub-Categories rather than inventing unnecessary new ones.
+
+However, if no existing Sub-Category appropriately describes the item, it may create a concise new Sub-Category consistent with the existing taxonomy style.
+
+---
+
+# 5. PURCHASE HISTORY RESPONSE FORMAT
+
+Require strict JSON output.
+
+Example:
+
+{
+"rows": [
+{
+"excel_row": 267,
+"sub_category": "Fresh Fruit"
+},
+{
+"excel_row": 268,
+"sub_category": "Milk"
+}
+]
+}
+
+The response must contain exactly one result for every requested row.
+
+Reject:
+
+* missing rows
+* duplicate rows
+* unexpected rows
+* blank Sub-Categories
+* `NA` Sub-Categories
+* malformed values
+* excessively long classification values
+
+The AI must never be allowed to change the Excel row identity.
+
+---
+
+# 6. PURCHASE HISTORY WRITE SAFETY
+
+Immediately before writing each result:
+
+Re-check that:
+
+1. the row still represents the same product/Common Name originally analyzed;
+2. Sub-Category is still blank or `NA`;
+3. the proposed row is one of the requested target rows.
+
+Never overwrite an existing valid Sub-Category.
+
+Write only the Sub-Category cell.
+
+Save directly back to:
+
+`data/database/shopgraph_purchase_history.xlsx`
+
+Use the project's verified/atomic save architecture.
+
+After saving, reopen the workbook and rescan Purchase History.
+
+Report:
+
+* rows found initially
+* deterministic assignments
+* Ollama assignments
+* rows updated
+* remaining blank/NA Sub-Category rows
+
+Successful completion should end with output similar to:
+
+`[OK] Purchase History Sub-Category validation passed.`
+
+`Populated rows with blank/NA Sub-Category: 0`
+
+If unresolved rows remain, print their Excel row numbers.
+
+---
+
+# 7. OPTION 8 — OLLAMA CATEGORY MANAGER SUB-CATEGORY BLANK/NA COMPLETION
+
+Add a second new capability:
+
+`Ollama Category Manager Sub-Category Blank/NA Completion`
+
+This operates on the:
+
+`Category Manager`
+
+worksheet inside the same:
+
+`data/database/shopgraph_purchase_history.xlsx`
+
+workbook.
+
+Its purpose is specifically to fill:
+
+`Column B — Sub-Category`
+
+when the cell is blank or `NA`.
+
+Do NOT modify valid existing Sub-Category values.
+
+Do NOT modify Category Manager Category values in Column A as part of this workflow.
+
+Do NOT modify Product columns except for reading them as classification evidence.
+
+---
+
+# 8. CATEGORY MANAGER TARGET DETECTION
+
+A Category Manager row should be considered for Sub-Category completion when:
+
+* Column B / Sub-Category is blank or `NA`
+
+AND
+
+the row otherwise contains meaningful Category Manager information, such as:
+
+* a valid Category in column A,
+* one or more Product columns,
+* or other evidence showing that this is a real taxonomy row rather than an unused blank row.
+
+Completely empty worksheet rows must not be sent to Ollama.
+
+---
+
+# 9. CATEGORY MANAGER DETERMINISTIC COMPLETION FIRST
+
+Before Ollama, attempt deterministic resolution from existing ShopGraph taxonomy data.
+
+Examples:
+
+* existing Product/Common Name → Sub-Category mappings
+* existing Category Manager rows containing the same products
+* Purchase History Common Name → Sub-Category mappings
+* other unambiguous existing taxonomy relationships
+
+Only reuse a mapping when it is unambiguous.
+
+Conflicting mappings must be sent to Ollama instead of arbitrarily selecting one.
+
+---
+
+# 10. CATEGORY MANAGER OLLAMA CONTEXT
+
+For unresolved rows, send useful context including:
+
+* Excel row
+* Category
+* Product 1
+* Product 2
+* additional Product columns
+* relevant Purchase History examples
+* existing Category Manager taxonomy
+* existing valid Sub-Categories
+* relevant Common Names where available
+
+The model should classify the products represented by that Category Manager row into the most appropriate Sub-Category.
+
+Strongly prefer existing ShopGraph Sub-Categories when appropriate.
+
+Avoid unnecessary taxonomy fragmentation.
+
+If no existing Sub-Category reasonably fits, the model may create a concise new Sub-Category consistent with ShopGraph's existing taxonomy style.
+
+---
+
+# 11. CATEGORY MANAGER RESPONSE FORMAT
+
+Require strict JSON:
+
+{
+"rows": [
+{
+"excel_row": 14,
+"sub_category": "Fresh Fruit"
+},
+{
+"excel_row": 27,
+"sub_category": "Household Cleaning"
+}
+]
+}
+
+Require exactly one valid result per requested row.
+
+Reject:
+
+* omitted rows
+* unexpected rows
+* duplicate rows
+* blank results
+* `NA`
+* malformed strings
+* excessively long values
+
+---
+
+# 12. CATEGORY MANAGER WRITE SAFETY
+
+Before writing:
+
+Confirm that:
+
+* the row identity has not changed;
+* the original Category and/or Product evidence is unchanged;
+* Column B remains blank or `NA`;
+* the row is one of the originally requested target rows.
+
+Only modify Column B.
+
+Never overwrite a valid existing Sub-Category.
+
+Use verified atomic saving to update the authoritative live workbook.
+
+After saving, reopen the workbook and rescan Category Manager.
+
+Report:
+
+* target rows found
+* deterministic assignments
+* Ollama assignments
+* rows updated
+* remaining blank/NA Sub-Category rows
+
+Successful completion should print:
+
+`[OK] Category Manager Sub-Category validation passed.`
+
+`Category Manager rows with blank/NA Sub-Category: 0`
+
+---
+
+# 13. PROMPT FILES
+
+Create dedicated prompt files under:
+
+`data/prompts/dev_prompts/`
+
+Suggested names:
+
+`shopgraph_ollama_purchase_history_subcategory_completion_prompt.txt`
+
+and
+
+`shopgraph_ollama_category_manager_subcategory_completion_prompt.txt`
+
+Do not repurpose the existing Common Name or Category prompts.
+
+Each prompt should explicitly tell Ollama:
+
+* it is performing ShopGraph taxonomy classification;
+* existing ShopGraph taxonomy should be preferred;
+* classifications should be concise;
+* it must not alter row identity;
+* it must return JSON only;
+* every requested row must appear exactly once;
+* blank or `NA` answers are forbidden.
+
+---
+
+# 14. CAPABILITY STRUCTURE
+
+Follow the existing ShopGraph capability organization.
+
+Suggested additions:
+
+`capabilities/OllamaPurchaseHistorySubCategoryCompletion/`
+
+with:
+
+`__init__.py`
+
+`main_ollama_purchase_history_subcategory_completion.py`
+
+and:
+
+`capabilities/OllamaCategoryManagerSubCategoryCompletion/`
+
+with:
+
+`__init__.py`
+
+`main_ollama_category_manager_subcategory_completion.py`
+
+Use the existing:
+
+`run_local_json_prompt()`
+
+Ollama infrastructure rather than creating a second Ollama client.
+
+Reuse existing normalization, `NA`, workbook schema, Category Manager, Purchase History, and atomic-save utilities where practical.
+
+Avoid duplicating utility logic unnecessarily, but do not perform a broad unrelated refactor.
+
+---
+
+# 15. EXISTING WORKFLOWS MUST REMAIN INTACT
+
+The following must continue working:
+
+1. Pipeline Part 1
+2. Pipeline Part 1 - Ollama Receipt Acquisition
+3. Pipeline Export 1
+4. Ollama Purchase History Blank/NA Completion
+5. Category Manager Completion
+6. Ollama Category Manager Completion
+7. Pipeline Export 2
+8. Finalize Taxonomy + Budgets
+
+The new workflows supplement the existing ones.
+
+They must not replace Common Name completion or Category completion.
+
+The conceptual sequence is:
+
+Purchase History:
+Product
+→ Common Name
+→ Sub-Category
+
+Category Manager:
+Category
+← Sub-Category
+← Products/Common Names
+
+The new options specifically repair missing Sub-Category values.
+
+---
+
+# 16. MENU RESULT
+
+After implementation:
+
+=== ShopGraph Pipelines ===
+
+1. Pipeline Part 1
+2. Pipeline Part 1 - Ollama Receipt Acquisition
+3. Pipeline Export 1
+4. Ollama Purchase History Blank/NA Completion
+5. Ollama Purchase History Sub-Category Blank/NA Completion
+6. Category Manager Completion
+7. Ollama Category Manager Completion
+8. Ollama Category Manager Sub-Category Blank/NA Completion
+9. Pipeline Export 2
+10. Finalize Taxonomy + Budgets
+11. Return to Capabilities Menu
+
+---
+
+# 17. IMPLEMENTATION PRINCIPLES
+
+Preserve current ShopGraph coding style.
+
+Keep changes narrowly scoped.
+
+Do not remove existing functionality.
+
+Do not alter the Purchase History schema.
+
+Do not alter the Category Manager schema.
+
+Do not create another authoritative database.
+
+Do not silently overwrite non-NA taxonomy data.
+
+Prefer deterministic existing mappings before AI.
+
+Use Ollama only where classification is genuinely required.
+
+All AI processing must remain local through the existing Ollama infrastructure.
+
+Validate AI output before modifying the workbook.
+
+Verify the workbook after saving.
+
+---
+
+# 18. OUTPUT
+
+Return a complete corrected ZIP overlay that can be imported into the current ShopGraph project.
+
+The ZIP must preserve the ShopGraph directory structure and include:
+
+* all new Python modules;
+* modified `capabilities/pipelines.py`;
+* both new Ollama prompt files;
+* any narrowly necessary supporting changes;
+* a README describing the update and installation.
+
+Do not return snippets only.
+
+The result should be ready for use with ShopGraph's existing Code Update Importer / overlay workflow.

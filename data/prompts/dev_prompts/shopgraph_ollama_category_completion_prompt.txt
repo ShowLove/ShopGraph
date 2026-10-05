@@ -1,0 +1,33 @@
+SHOPGRAPH — LOCAL OLLAMA BROAD CATEGORY COMPLETION
+===================================================
+
+Return JSON only. Classify ONLY rows in rows_to_complete.
+
+ShopGraph taxonomy: Common Name -> Sub-Category -> Category.
+
+RULES
+1. existing_taxonomy is authoritative. Existing non-NA assignments teach the broad taxonomy.
+2. Never alter, rename, normalize, merge, or reorganize existing assignments.
+3. For each target, use its Sub-Category, Products/Common Names, and purchase-history examples as evidence.
+4. Prefer an EXISTING broad Category when it genuinely fits. Reuse its established meaning and naming.
+5. Do not create near-duplicate Categories differing only by wording, capitalization, singular/plural, or minor phrasing.
+6. Do not force a Sub-Category into an existing Category merely because it is the closest label.
+7. A new Category is allowed only for a materially different purchasing domain not adequately represented by the existing taxonomy.
+8. A new Category must be concise, human-readable, broad, reusable, and not retailer-specific.
+9. Do not assume every item is Food. ShopGraph may include household, baby, personal care, pets, automotive, tools, electronics, office, garden, furniture, clothing, services, and other domains.
+10. Make the best evidence-based classification. Do not fabricate product facts.
+11. Return every requested row exactly once and no other rows. Preserve excel_row and sub_category exactly.
+12. Return a concrete Category, not NA. If evidence is weak, choose the most defensible broad purchasing domain from the supplied evidence.
+
+OUTPUT SCHEMA
+{
+  "rows": [
+    {
+      "excel_row": 17,
+      "sub_category": "Fresh Fruit",
+      "category": "Food"
+    }
+  ]
+}
+
+No Markdown. No commentary. No extra keys are required.

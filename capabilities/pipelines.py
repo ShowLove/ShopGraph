@@ -1,5 +1,7 @@
 
 
+
+
 from __future__ import annotations
 
 import shutil
@@ -13,6 +15,15 @@ from capabilities.OllamaReceiptAcquisitionPipeline.main_OllamaReceiptAcquisition
 )
 from capabilities.OllamaPurchaseHistoryCompletion.main_ollama_purchase_history_completion import (
     run_ollama_purchase_history_completion,
+)
+from capabilities.OllamaCategoryManagerCompletion.main_ollama_category_manager_completion import (
+    run_ollama_category_manager_completion,
+)
+from capabilities.OllamaPurchaseHistorySubCategoryCompletion.main_ollama_purchase_history_subcategory_completion import (
+    run_ollama_purchase_history_subcategory_completion,
+)
+from capabilities.OllamaCategoryManagerSubCategoryCompletion.main_ollama_category_manager_subcategory_completion import (
+    run_ollama_category_manager_subcategory_completion,
 )
 from utils.clean_ocr_acquisition_pipeline import (
     clean_ocr_acquisition_pipeline_data,
@@ -600,51 +611,53 @@ def display_pipelines_menu() -> None:
     print("2. Pipeline Part 1 - Ollama Receipt Acquisition")
     print("3. Pipeline Export 1")
     print("4. Ollama Purchase History Blank/NA Completion")
-    print("5. Category Manager Completion")
-    print("6. Pipeline Export 2")
-    print("7. Finalize Taxonomy + Budgets")
-    print("0. Return to Capabilities Menu")
+    print("5. Ollama Purchase History Sub-Category Blank/NA Completion")
+    print("6. Category Manager Completion")
+    print("7. Ollama Category Manager Completion")
+    print("8. Ollama Category Manager Sub-Category Blank/NA Completion")
+    print("9. Pipeline Export 2")
+    print("10. Finalize Taxonomy + Budgets")
+    print("11. Return to Capabilities Menu")
 
 
 def run_pipelines_menu() -> None:
     while True:
         display_pipelines_menu()
-
-        option = input(
-            "\nSelect option: "
-        ).strip()
+        option = input("\nSelect option: ").strip()
 
         if option == "1":
             run_pipeline_part_1()
-
         elif option == "2":
             run_pipeline_part_1_ollama()
-
         elif option == "3":
             run_pipeline_export_1()
-
         elif option == "4":
             try:
                 run_ollama_purchase_history_completion()
             except Exception as error:
-                print(
-                    "\n[ERROR] Ollama Purchase History completion failed:"
-                    f"\n{error}"
-                )
-
+                print("\n[ERROR] Ollama Purchase History completion failed:" f"\n{error}")
         elif option == "5":
-            run_category_manager_completion()
-
+            try:
+                run_ollama_purchase_history_subcategory_completion()
+            except Exception as error:
+                print("\n[ERROR] Ollama Purchase History Sub-Category completion failed:" f"\n{error}")
         elif option == "6":
-            run_pipeline_export_2()
-
+            run_category_manager_completion()
         elif option == "7":
+            try:
+                run_ollama_category_manager_completion()
+            except Exception as error:
+                print("\n[ERROR] Ollama Category Manager completion failed:" f"\n{error}")
+        elif option == "8":
+            try:
+                run_ollama_category_manager_subcategory_completion()
+            except Exception as error:
+                print("\n[ERROR] Ollama Category Manager Sub-Category completion failed:" f"\n{error}")
+        elif option == "9":
+            run_pipeline_export_2()
+        elif option == "10":
             run_finalize_taxonomy_and_budgets()
-
-        elif option == "0":
+        elif option == "11":
             return
-
         else:
-            print(
-                "\n[ERROR] Invalid option."
-            )
+            print("\n[ERROR] Invalid option.")

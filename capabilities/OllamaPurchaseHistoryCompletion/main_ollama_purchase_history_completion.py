@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import json
 import os
-import shutil
 import tempfile
 from collections import defaultdict
 from pathlib import Path
@@ -203,14 +202,12 @@ def run_ollama_purchase_history_completion() -> dict:
         print("\n[4/4] Update Purchase History")
 
         if writable:
-            backup_path = workbook_path.with_name(workbook_path.stem + ".pre_ollama_common_name_completion.xlsx")
-            shutil.copy2(workbook_path, backup_path)
             for row, common_name in writable.items():
                 sheet.cell(row, COMMON_NAME_COLUMN, value=common_name)
             _atomic_save(workbook, workbook_path)
             print("\n[OK] Purchase History updated.")
             print(f"\nRows updated: {len(writable)}")
-            print(f"Backup:\n{backup_path}")
+            print(f"Workbook:\n{workbook_path}")
         else:
             print("\n[INFO] Ollama did not produce any writable Common Names.")
     finally:
@@ -243,3 +240,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
