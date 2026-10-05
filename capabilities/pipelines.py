@@ -55,6 +55,9 @@ from utils.DataBaseBuilder.excel.category_manager import (
     create_or_refresh_category_manager,
     apply_category_manager,
 )
+from utils.DataBaseBuilder.excel.purchase_history import (
+    sort_purchase_history_by_latest_date,
+)
 from utils.DataBaseBuilder.budget_plans.budget_plan_menu import (
     refresh_all_budget_plans,
 )
@@ -605,19 +608,45 @@ def run_pipeline_part_1_ollama() -> None:
     )
 
 
+def run_purchase_history_latest_date_sort() -> None:
+    """Sort Purchase History using the existing Data Base Builder action."""
+    print("\n=== Sort Purchase History by Latest Date ===\n")
+    print(
+        "[INFO] Sorting each product row by its newest Date N value. "
+        "Oldest rows will be at the top; newest rows will be at the bottom."
+    )
+
+    try:
+        summary = sort_purchase_history_by_latest_date()
+    except (FileNotFoundError, OSError, ValueError) as error:
+        print(
+            "\n[ERROR] Could not sort Purchase History:"
+            f"\n{error}"
+        )
+        return
+
+    print(
+        "\n[OK] Purchase History sorted by latest Date N."
+        f"\nRows sorted: {summary['rows_sorted']}"
+        f"\nDate columns checked: {summary['date_columns_checked']}"
+        f"\n\nWorkbook:\n{summary['workbook_path']}"
+    )
+
+
 def display_pipelines_menu() -> None:
     print("\n=== ShopGraph Pipelines ===\n")
     print("1. Pipeline Part 1")
     print("2. Pipeline Part 1 - Ollama Receipt Acquisition")
-    print("3. Pipeline Export 1")
-    print("4. Ollama Purchase History Blank/NA Completion")
-    print("5. Ollama Purchase History Sub-Category Blank/NA Completion")
-    print("6. Category Manager Completion")
-    print("7. Ollama Category Manager Completion")
-    print("8. Ollama Category Manager Sub-Category Blank/NA Completion")
-    print("9. Pipeline Export 2")
-    print("10. Finalize Taxonomy + Budgets")
-    print("11. Return to Capabilities Menu")
+    print("3. Sort Purchase History by Latest Date")
+    print("4. Pipeline Export 1")
+    print("5. Ollama Purchase History Blank/NA Completion")
+    print("6. Ollama Purchase History Sub-Category Blank/NA Completion")
+    print("7. Category Manager Completion")
+    print("8. Ollama Category Manager Completion")
+    print("9. Ollama Category Manager Sub-Category Blank/NA Completion")
+    print("10. Pipeline Export 2")
+    print("11. Finalize Taxonomy + Budgets")
+    print("12. Return to Capabilities Menu")
 
 
 def run_pipelines_menu() -> None:
@@ -630,34 +659,36 @@ def run_pipelines_menu() -> None:
         elif option == "2":
             run_pipeline_part_1_ollama()
         elif option == "3":
-            run_pipeline_export_1()
+            run_purchase_history_latest_date_sort()
         elif option == "4":
+            run_pipeline_export_1()
+        elif option == "5":
             try:
                 run_ollama_purchase_history_completion()
             except Exception as error:
                 print("\n[ERROR] Ollama Purchase History completion failed:" f"\n{error}")
-        elif option == "5":
+        elif option == "6":
             try:
                 run_ollama_purchase_history_subcategory_completion()
             except Exception as error:
                 print("\n[ERROR] Ollama Purchase History Sub-Category completion failed:" f"\n{error}")
-        elif option == "6":
-            run_category_manager_completion()
         elif option == "7":
+            run_category_manager_completion()
+        elif option == "8":
             try:
                 run_ollama_category_manager_completion()
             except Exception as error:
                 print("\n[ERROR] Ollama Category Manager completion failed:" f"\n{error}")
-        elif option == "8":
+        elif option == "9":
             try:
                 run_ollama_category_manager_subcategory_completion()
             except Exception as error:
                 print("\n[ERROR] Ollama Category Manager Sub-Category completion failed:" f"\n{error}")
-        elif option == "9":
-            run_pipeline_export_2()
         elif option == "10":
-            run_finalize_taxonomy_and_budgets()
+            run_pipeline_export_2()
         elif option == "11":
+            run_finalize_taxonomy_and_budgets()
+        elif option == "12":
             return
         else:
             print("\n[ERROR] Invalid option.")
